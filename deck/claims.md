@@ -7,13 +7,13 @@ Slide numbers follow the progress rail (on-stage slides); A1-A3 are appendix pag
 
 | Fact | Value | Source | Status | Slides |
 |---|---|---|---|---|
-| stores end 2025 | 7,453 stores | L-jiemian | OK | 1 |
+| stores end 2025 | 7,453 stores | L-jiemian | OK | - |
 | overseas stores | 345 stores | L-jiemian | OK | 1 |
 | overseas markets | 7 markets | L-jiemian | OK | 1, 3 |
-| gmv 2025 rmb bn | 31.58 RMB bn | L-jiemian | OK | 1 |
-| net revenue 2025 rmb bn | 12.91 RMB bn | L-jiemian | OK | 1 |
+| gmv 2025 rmb bn | 31.58 RMB bn | L-jiemian | OK | - |
+| net revenue 2025 rmb bn | 12.91 RMB bn | L-jiemian | OK | - |
 | tea latte share china | 0.91 share of China sales | L-prometheus | SECONDARY | - |
-| kl opening day cups | 1,000 cups (reported, '1,000+') | L-gabgrowth | SECONDARY | 1, 3 |
+| kl opening day cups | 1,000 cups (reported, '1,000+') | L-gabgrowth | SECONDARY | 3 |
 
 ## Ledger sources and where they are cited
 
@@ -60,7 +60,7 @@ Slide numbers follow the progress rail (on-stage slides); A1-A3 are appendix pag
 | Peak-hour time to serve: today's counter about 2.6 minutes, all-robot about 49 seconds (median) | 6 | sim/ serveTimes (cost model) | MODEL |
 | Best opening milk order holds above base unless waste costs over S$25.47 a litre | 4, 8 | sim/ milkTrigger | MODEL |
 | Best opening order costs S$1,064 with no signal against S$694 at the default band | 4 | sim/ provision | MODEL |
-| Choosing by trigger instead of one standard: about S$0.5m a year | 9 | sim/ volumeCurve, breakEven; openings spread evenly (illustrative) | MODEL |
+| Choosing each store's counter instead of mixed everywhere: about S$455k a year in counter costs plus S$74k once in opening stock | 9 | sim/ volumeCurve, breakEven; openings spread evenly (illustrative) | MODEL |
 | Week 5 check: pooled formula 4.7% and 6.8% above the Week 5 engine; the test fails | 7 | sim/ tests | MODEL |
 | Band narrows from ±50% to ±15% with signal | 3 | assumption, shown as a sensitivity | MODEL |
 
@@ -77,6 +77,9 @@ Slide numbers follow the progress rail (on-stage slides); A1-A3 are appendix pag
 - A saving against today's practice: the benefit is a modelled avoided cost against a standard counter.
 - Anything about menu prices: that would need a demand-elasticity assumption we do not have.
 - The informal sub-one-minute fulfilment target from the industry call: not used.
+- That the prototype contains a trained AI model: it calculates from synthetic, assumed inputs.
+- That rerunning the model with observed inputs validates it, or proves machines should be added.
+- That uncertainty never matters for the counter: the finding holds for the scenarios we tested.
 
 ## Likely Q&A: short answers
 

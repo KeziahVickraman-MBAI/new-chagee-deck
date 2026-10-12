@@ -64,6 +64,7 @@ function bandWidget(root){
       <svg class="chart" viewBox="0 0 470 206" role="img" aria-label="Weekly demand bands"></svg>
       <div class="controls"><label for="sig">Assumed signal strength</label><div class="rng"><input id="sig" type="range" min="0" max="1" step="any"><span class="val sigv"></span></div></div>
       <div class="variants" style="margin-top:5px"><button data-h="1">Opening hype removed</button><button data-h="0">Hype included</button></div>
+      <p class="plan"></p>
     </div><div class="out"></div></div>`;
   const svg=$(body,"svg"), out=$(body,".out"), sig=$(body,"#sig");
   sig.value=STATE.signal;
@@ -90,14 +91,16 @@ function bandWidget(root){
     const ds=root.closest(".slide").querySelector('.dstrip[data-lever="u"]');
     if(ds && ds.dataset.x!==""){ const x=+ds.dataset.x, above=b.u>x;
       ds.querySelector(".dnow").textContent=`Now ±${pct1(b.u)}: ${above?"above":"below"} the trigger, so on the band alone ${above?"mixed":"all-human"} is cheaper.`; }
-    out.innerHTML=`<h4>BAND HANDED ON</h4>
-      <div class="big">±${pct1(b.u)} <small>of base</small></div>
-      <div class="stat"><span>Low</span><b>${int(b.low)}</b></div>
-      <div class="stat"><span>Base</span><b>${int(b.base)}</b></div>
-      <div class="stat"><span>High</span><b>${int(b.high)}</b></div>
-      <div class="stat"><span>Width</span><b>${int(b.width)}</b></div>
-      <p class="note">Cups per week. ${b.removeHype?"Opening hype removed: steady demand.":"Hype included: opening-week demand."}</p>
-      <div class="handoff"><b>Not in the signal:</b> tourists and non-app orders, so true demand is likely higher.</div>`;
+    const cov=RAW.demand.band_coverage.value, kind=b.removeHype?"steady demand (opening hype removed)":"opening-week demand (hype included)";
+    $(body,".plan").innerHTML=`<b>Plan on about ${int(b.base)} cups a week</b> of ${kind}. Illustrative ${pct(cov)} demand range: ${int(b.low)} to ${int(b.high)}. The range is assumed, not calibrated; demand can fall outside it.`;
+    out.innerHTML=`<h4>WHAT THE RANGE IS FOR</h4>
+      <div class="stat"><span>Low end (${int(b.low)})</span></div><p class="note" style="margin:0 0 4px">Risk of excess fresh stock and unused capacity.</p>
+      <div class="stat"><span>High end (${int(b.high)})</span></div><p class="note" style="margin:0 0 4px">Risk of shortages, queues and lost sales.</p>
+      <p class="note" style="margin:0 0 3px"><b>Provision</b> uses the range with shortage and waste costs to choose the milk order.</p>
+      <p class="note" style="margin:0"><b>Counter</b> uses demand, uncertainty and local wages and machine costs together.</p>
+      <div class="handoff"><b>Not in the signal:</b> tourists and non-app orders.</div>`;
+    gateSet(root,{action:`Plan on about ${int(b.base)} cups a week, within an illustrative ${pct(cov)} range of ${int(b.low)} to ${int(b.high)}; treat it as an assumption to test.`,
+      base:`${int(b.base)} cups/week`, range:`${int(b.low)}–${int(b.high)}`, half:`±${pct1(b.u)}`});
   });
 }
 
@@ -106,10 +109,11 @@ function stockWidget(root){
   const body=$(root,".body"), [lo,hi]=RAW.provision.opening_stock_days.range;
   let days=RAW.provision.opening_stock_days.value;
   body.innerHTML=`<div class="exgrid"><div>
-      <svg class="chart" viewBox="0 0 470 236" role="img" aria-label="Expected cost by days of opening stock"></svg>
+      <svg class="chart" viewBox="0 0 470 196" role="img" aria-label="Expected cost by days of opening stock"></svg>
       <div class="dlegend" style="margin:4px 0 0"><span><span class="sw" style="background:#23272f"></span>Total expected cost</span>
         <span><span class="sw" style="background:${css("--c-human")}"></span>Milk wasted</span><span><span class="sw" style="background:${css("--red")}"></span>Cups missed</span></div>
       <div class="controls"><label for="days">Days of opening stock</label><div class="rng"><input id="days" type="range" min="${lo}" max="${hi}" step="1" value="${days}"><span class="val dv"></span></div></div>
+      <p class="rec"></p>
     </div><div class="out"></div></div>`;
   const svg=$(body,"svg"), out=$(body,".out");
   $(body,"#days").oninput=e=>{days=+e.target.value; draw(STATE.band);};
@@ -117,7 +121,7 @@ function stockWidget(root){
     const daily=b.base/7, r=Sim.provision(P,b.u,days,daily), strong=Sim.provision(P,P.uStrong,days,daily);
     $(body,".dv").textContent=`${days} days`;
     const n=40, pts=[...Array(n+1)].map((_,i)=>{const d=lo+(hi-lo)*i/n, c=r.curve(d); return {d,w:c.waste,s:c.stockout,t:c.waste+c.stockout};});
-    const ymax=Math.max(...pts.map(p=>p.t))*1.05, L=46,R=458,T=12,B=210;
+    const ymax=Math.max(...pts.map(p=>p.t))*1.05, L=46,R=458,T=12,B=170;
     const X=d=>L+(R-L)*(d-lo)/(hi-lo), Y=v=>B-(B-T)*v/ymax;
     const path=k=>pts.map((p,i)=>(i?"L":"M")+X(p.d).toFixed(1)+" "+Y(p[k]).toFixed(1)).join("");
     let s=ticks(ymax,4).map(v=>`<line x1="${L}" x2="${R}" y1="${Y(v)}" y2="${Y(v)}" stroke="#e5e7eb"/>`+txt(L-5,Y(v)+3,money0(v),'font-size="10" fill="#6b7280" text-anchor="end"')).join("");
@@ -135,6 +139,14 @@ function stockWidget(root){
     svg.innerHTML=s;
     const rows=DATA.sweeps[SURGE0].rows, cost=k=>Sim.atU(rows,b.u,r=>r[k].cost);
     const best=SETUPS.reduce((a,k)=>cost(k)<cost(a)?k:a), gap=cost("all_machine")-cost("mixed");
+    const litres=r.optDays*daily*P.milkPerCup, shelf=RAW.provision.milk_shelf_life_days.value, under=P.stockoutCost/P.milkPerCup;
+    const kind=b.removeHype?"steady demand (opening hype removed)":"opening-week demand (hype included)";
+    const topDays=shelf*b.high/b.base, rel=r.optDays>topDays+0.05?"just above the top of the range":r.optDays<r.base?"below base":"inside the range";
+    $(body,".rec").innerHTML=`<b>Order about ${int(litres)} L for the first ${shelf} days</b>, using ${kind}. That is ${r.optDays.toFixed(1)} days of base demand, ${rel} (top of range ${topDays.toFixed(1)} days).`+
+      (b.removeHype?` <span class="warn">The opening weeks are forecast higher (hype ×${RAW.demand.opening_hype_multiplier.value}); if that hype is real, this first delivery runs short: include it on slide ${REF.s2} to size for it.</span>`:"");
+    gateSet(root,{action:`Order about ${int(litres)} L for the first ${shelf} days, using ${kind}.`,
+      cost:`${money(under)} vs ${money(P.wasteCost)}`, cover:`${pct(r.criticalRatio)} of outcomes`,
+      waste:`${int(r.optWaste/P.wasteCost)} L`, short:`${int(r.optStockout/P.stockoutCost)} cups`});
     out.innerHTML=`<h4>AT ${days} DAYS OF STOCK</h4>
       <div class="big">${money0(r.total)} <small>expected</small></div>
       <div class="stat"><span>Milk wasted</span><b>${money0(r.waste)}</b></div>
@@ -290,14 +302,16 @@ function benefitWidget(root){
       if(on && p.n>=0.5) g+=txt(X(p.v),Bm-4-(p.std>0.5?Bm-Y(p.total):0),Math.round(p.n),'font-size="8.5" fill="#374151" text-anchor="middle"');
       g+=txt(X(p.v),Bm+12,int(p.v),`font-size="9" fill="${on?"#6b7280":"#c5cad3"}" text-anchor="middle"`); });
     g+=`<line x1="${X(be)}" x2="${X(be)}" y1="${T-2}" y2="${Bm}" stroke="#23272f" stroke-dasharray="4 3"/>`+
-       txt(X(be),T-6,`open all-human ← trigger ≈${int(be)} cups/day → mixed (the standard)`,'font-size="9.5" font-weight="700" fill="#23272f" text-anchor="middle"');
+       txt(X(be),T-6,`all-human cheaper ← ≈${int(be)} cups/day → mixed cheaper (other inputs at our defaults)`,'font-size="9.5" font-weight="700" fill="#23272f" text-anchor="middle"');
     g+=txt(R,Bm+26,"steady cups per day · numbers on bars = openings",'font-size="9" fill="#6b7280" text-anchor="end"')+txt(L,T-4,"",'');
     svg.innerHTML=g;
     const counter=bars.reduce((a,p)=>a+p.total,0), nBelow=bars.filter(p=>p.v<be).reduce((a,p)=>a+p.n,0), stock=st.stores*st.stock;
     const fl=Math.min(...per.map(p=>p.full)), fh=Math.max(...per.map(p=>p.full));
-    $(body,".formula").innerHTML=`<div class="big" style="margin-bottom:2px">≈ ${moneyM(counter+stock)} <small>a year, illustrative</small></div>
-      <span class="term"><b>${Math.round(nBelow)}</b> of ${int(st.stores)} openings below the trigger open all-human</span> → <b>${moneyM(counter)}</b>
-      + <span class="term"><b>${money0(st.stock)}</b> stock cost avoided × ${int(st.stores)}</span> → <b>${moneyM(stock)}</b>
+    const k=v=>"S$"+Math.round(v/1000).toLocaleString("en-SG")+"k";
+    $(body,".formula").innerHTML=`<div class="bsplit"><div><span>Recurring · counter costs</span><b>${k(counter)}</b><small>a year, for one year's openings</small></div>
+      <div><span>One-time · opening stock</span><b>${k(stock)}</b><small>once, at opening</small></div></div>
+      <span class="term"><b>${Math.round(nBelow)}</b> of ${int(st.stores)} openings sit where all-human is cheaper</span> → ${k(counter)} a year;
+      <span class="term"><b>${money0(st.stock)}</b> per opening × ${int(st.stores)}</span> → ${k(stock)} once
       <small style="margin-top:2px">Stock term only if the pre-launch signal works as assumed (slide ${REF.s2}). A fully automated standard would cost ${money0(fl)}–${money0(fh)} more per store a year.</small>`;
   }
   onBand(b=>{ const daily=b.base/7; st.stock=Sim.provision(P,P.uNone,days0,daily).optTotal-Sim.provision(P,b.u,days0,daily).optTotal; draw(); });
@@ -418,12 +432,12 @@ function volcostWidget(root){
       return {cost:a[k].cost+t*(b[k].cost-a[k].cost), busy:a[k].busy+t*(b[k].busy-a[k].busy)}; } return rows[rows.length-1][k]; };
   const body=$(root,".body");
   body.innerHTML=`<div class="dlegend" style="margin:0 0 2px">${SETUPS.map(k=>`<span><span class="sw" style="background:${COL[k]}"></span>${LABEL[k]}</span>`).join("")}</div>
-    <svg class="chart" viewBox="0 0 680 236" role="img" aria-label="Cost per cup against cups per day"></svg>
+    <svg class="chart" viewBox="0 0 680 206" role="img" aria-label="Cost per cup against cups per day"></svg>
     <div class="controls screenonly"><label for="cpd">Steady cups per day</label><div class="rng"><input id="cpd" type="range" min="${x0}" max="${x1}" step="any" value="${cpd0}"><span class="val cv"></span></div></div>
     <div class="vout"></div>`;
   const svg=$(body,"svg"), inp=$(body,"#cpd"), out=$(body,".vout");
   const ys=rows.flatMap(r=>SETUPS.map(k=>r[k].cost)), lo=Math.floor(Math.min(...ys)*10)/10, hi=Math.max(...ys)*1.04;
-  const L=50,R=590,T=12,B=208, X=v=>L+(R-L)*(v-x0)/(x1-x0), Y=v=>B-(B-T)*(v-lo)/(hi-lo);
+  const L=50,R=590,T=12,B=180, X=v=>L+(R-L)*(v-x0)/(x1-x0), Y=v=>B-(B-T)*(v-lo)/(hi-lo);
   const strip=root.closest(".slide").querySelector('.dstrip[data-lever="cupsPerDay"]');
   function draw(x){
     let s="";
@@ -443,6 +457,10 @@ function volcostWidget(root){
     $(body,".cv").textContent=`${int(x)} cups/day`;
     out.innerHTML=`<div class="vrow">${SETUPS.map(k=>`<div class="vc${k===best?" best":""}"><span>${LABEL[k]}</span><b>${money(c[k].cost)}</b><small>${k===best?"cheapest":"+"+money(c[k].cost-c[best].cost)}</small></div>`).join("")}</div>
       <p class="note">At ${int(x)} cups/day. All-robot machines are busy ${pct(c.all_machine.busy)} of open hours.</p>`;
+    const order=[...SETUPS].sort((a,b)=>c[a].cost-c[b].cost), m=c[order[1]].cost-c[order[0]].cost, TOL=RAW.validation.breakeven.value.tol_cost_sgd_per_cup;
+    gateSet(root,{action: m<TOL?`At ${int(x)} cups a day ${LABEL[order[0]]} and ${LABEL[order[1]]} are within ${money(TOL)} a cup: a tie on cost. Choose using all current inputs together.`
+        :`At ${int(x)} cups a day ${LABEL[order[0]].toLowerCase()} is cheaper by ${money(m)} a cup${m<3*TOL?": close, but above the "+money(TOL)+" tie line":""}. Choose using all current inputs together.`,
+      costs:`all-human ${money(c.all_human.cost)} · mixed ${money(c.mixed.cost)} · all-robot ${money(c.all_machine.cost)}`, busy:`${pct(c.all_machine.busy)} of open hours`});
     if(strip && b1.kind==="value") strip.querySelector(".dnow").textContent=`Now ${int(x)} cups/day: ${x>b1.x?"above":"below"} the volume trigger, so on volume alone ${x>b1.x?"mixed":"all-human"} is cheaper.`;
   }
   inp.oninput=e=>draw(+e.target.value);
@@ -604,9 +622,10 @@ function playbookWidget(root){
     {k:"u", label:"Forecast band (±)", r:P.ranges.u, v:Sim.defaultU(P), f:v=>"±"+(+(v*100).toFixed(1))+"%"},
     {k:"milk", label:"Milk waste cost per litre", r:P.ranges.milkWaste, v:P.wasteCost, f:v=>money(v)},
   ];
-  const val=Object.fromEntries(IN.map(i=>[i.k,i.v]));
+  const val=Object.fromEntries(IN.map(i=>[i.k,i.v])), base=Object.fromEntries(IN.map(i=>[i.k,i.v]));
+  let orig=null;                                                     // the original plan: our default inputs
   body.innerHTML=`<div class="ymin">${IN.map(i=>`<label for="ym-${i.k}">${i.label}</label><div class="rng"><input id="ym-${i.k}" type="range" min="${i.r[0]}" max="${i.r[1]}" step="any" value="${i.v}"><span class="val" data-v="${i.k}"></span></div>`).join("")}</div>
-    <p class="note ymnote screenonly">Above about ${int(P.ranges.cupsPerDay[1])} cups a day is a trigger range, not a new-store forecast.</p>
+
     <div class="ymout"></div>`;
   const out=$(body,".ymout");
   const params=(o=val)=>({...P, wage:o.wage, machineMonth:o.machineMonth, cupsYear:o.cupsPerDay*P.days, wasteCost:o.milk});
@@ -626,23 +645,50 @@ function playbookWidget(root){
     return best;
   }
   function compute(){
-    out.innerHTML=`<p class="note">Computing…</p>`;
-    setTimeout(()=>{
+    out.classList.add("busy"); gateSet(root,{},"computing");
+    setTimeout(()=>{ try{
+      if(!orig){ const c0=costs(base,P.draws), o0=[...SETUPS].sort((a,b)=>c0[a]-c0[b]); orig={win:o0[0],run:o0[1],m:c0[o0[1]]-c0[o0[0]]}; }
       const c=costs(val,P.draws), order=[...SETUPS].sort((a,b)=>c[a]-c[b]), [win,run]=order, margin=c[run]-c[win], tie=margin<TOL;
       const flip=tie?null:nearestFlip(win,run);
       const under=P.stockoutCost/P.milkPerCup, cr=under/(under+val.milk);
       out.innerHTML=`<div class="ymv"><span>Counter</span><b>${tie?"Too close to call":LABEL[win]}</b>
           <small>${tie?`${LABEL[win]} and ${LABEL[run]} within ${money(TOL)} a cup`:`cheaper than ${LABEL[run]} by ${money(margin)} a cup`}</small></div>
         <div class="ymc">${SETUPS.map(s=>`<span class="${s===win?"w":""}"><i style="background:${COL[s]}"></i>${LABEL[s]} <b>${money(c[s])}</b></span>`).join("")}</div>
-        <p class="ymf">${flip?`<b>Nearest trigger</b> (live estimate): ${LABEL[run]} wins if ${flip.i.label.toLowerCase()} ${flip.dir} about <b>${flip.i.f(flip.x)}</b> (${flip.d<0.005?"<1":Math.round(flip.d*100)}% away).`
-          :tie?"<b>Nearest trigger:</b> you are on one; decide on service, risk or brand.":"<b>Nearest trigger:</b> none within the input ranges; this verdict holds for any single change."}</p>
+        <p class="ymf">${flip?`<b>Nearest threshold</b> (live estimate): ${LABEL[run]} would be cheaper if ${flip.i.label.toLowerCase()} ${flip.dir} about <b>${flip.i.f(flip.x)}</b> (${flip.d<0.005?"<1":Math.round(flip.d*100)}% away).`
+          :tie?"<b>Tie:</b> decide on service, staffing risk or brand.":"<b>Nearest threshold:</b> none within the input ranges for a single change."}</p>
         <p class="ymf"><b>Stock:</b> ${val.milk<under?`order above the base forecast (best order at the ${pct(cr)} point of demand); flips only if waste costs over ${money(under)} a litre.`
           :`order at or below the base forecast: waste costs more than ${money(under)} a litre.`}</p>`;
+      const same=IN.every(i=>Math.abs(val[i.k]-base[i.k])<1e-9);
+      const planTxt=`${LABEL[orig.win]} by ${money(orig.m)} a cup`, updTxt=tie?`a tie (${LABEL[win]} and ${LABEL[run]})`:`${LABEL[win]} by ${money(margin)} a cup`;
+      out.insertAdjacentHTML("afterbegin",`<p class="ymcmp"><b>Original plan:</b> ${planTxt}. <b>Updated scenario:</b> ${same?"same inputs as the plan":updTxt+(orig.win===win?" (same choice)":" (different choice: review it with the full comparison)")}.</p>`);
+      out.classList.remove("busy");
+      gateSet(root,{action:`Create an updated scenario using observed inputs and compare it with the original plan (${planTxt}).`+(same?"":` Updated: ${updTxt}.`)});
+    }catch(err){ out.classList.remove("busy"); out.innerHTML=`<p class="note err">Could not compute this scenario. The previous result no longer applies.</p>`; gateSet(root,{},"error"); }
     },20);
   }
   IN.forEach(i=>{ const el=$(body,`#ym-${i.k}`), lab=$(body,`[data-v="${i.k}"]`);
     lab.textContent=i.f(val[i.k]);
-    el.oninput=e=>{ val[i.k]=+e.target.value; lab.textContent=i.f(val[i.k]); };
+    el.oninput=e=>{ val[i.k]=+e.target.value; lab.textContent=i.f(val[i.k]); out.classList.add("busy"); gateSet(root,{},"stale"); };
     el.onchange=compute; });
   compute();
+}
+
+/* ================= decision strips: collapsed by default, open on demand (always open in print) ================= */
+document.addEventListener("click",e=>{
+  const b=e.target.closest&&e.target.closest(".dtoggle"); if(!b) return;
+  const d=b.closest(".dstrip"), open=d.classList.toggle("collapsed")===false;
+  b.setAttribute("aria-expanded",String(open)); b.textContent=open?"Hide ▾":"What to do ▸";
+});
+
+/* ================= gate cards: details open on request; widgets fill data-g fields live ================= */
+document.addEventListener("click",e=>{
+  const b=e.target.closest&&e.target.closest(".gc-toggle"); if(!b) return;
+  const c=b.closest(".gate-card"), open=c.classList.toggle("collapsed")===false;
+  b.setAttribute("aria-expanded",String(open)); b.textContent=open?"Hide ▾":"Who does what · how it is calculated ▸";
+});
+function gateSet(root,vals,state=""){                               // vals: {action, <evidence key>: text}; state: "", "stale", "computing", "error"
+  const c=root.closest(".slide").querySelector(".gate-card"); if(!c) return;
+  for(const [k,v] of Object.entries(vals)){ const el=c.querySelector(`[data-g="${k}"]`); if(el) el.textContent=v; }
+  c.classList.toggle("stale",!!state);
+  const st=c.querySelector(".gstate"); if(st) st.textContent=state==="stale"?"· inputs changed, recomputing on release":state==="computing"?"· computing…":state==="error"?"· could not compute":"";
 }
