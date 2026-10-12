@@ -479,6 +479,14 @@ CONTENT = [
         sources="assumptions.json.",
     ),
     dict(
+        key="a1d", widget="a1", kicker="Appendix A1 · assumptions (continued)", chapter="appendix",
+        headline="Every assumption, with its unit, range and source (continued): business case",
+        sections=["business_case"],
+        notes="Handout only. Generated from assumptions.json at build time. These cost lines are approved illustrative assumptions and feed "
+              "only the A4 revenue and cost analysis, never the simulator.",
+        sources="assumptions.json.",
+    ),
+    dict(
         key="a2", widget="a2", kicker="Appendix A2 · model and validation", chapter="appendix",
         headline="The model is stable across seeds but misses its Week 5 check, and a handful of inputs decide "
                  "all-human versus mixed",
@@ -504,10 +512,19 @@ CONTENT = [
             "That the prototype contains a trained AI model: it calculates from synthetic, assumed inputs.",
             "That rerunning the model with observed inputs validates it, or proves machines should be added.",
             "That uncertainty never matters for the counter: the finding holds for the scenarios we tested.",
+            "Sales revenue or a payback for Chagee: A4 sets modelled avoided cost against approved but illustrative costs.",
         ],
         notes="Handout only. Ledger from assumptions.json _sources; the list of claims not made follows brief.md "
               "section 9 plus the limits found while building the deck.",
         sources="assumptions.json _sources; brief.md section 9.",
+    ),
+    dict(
+        key="a4", widget="a4", kicker="Appendix A4 · revenue and cost analysis", chapter="appendix",
+        headline="Over {{business_case.horizon_years|int}} years the modelled savings {{sim.fin_verdict|txt}} (illustrative)",
+        notes="Handout only. Benefit lines come from the benefit slide's calculation (sim/ volumeCurve and "
+              "provision); cost lines are the approved business-case assumptions (illustrative). No sales revenue is modelled.",
+        sources="Openings: L-jiemian (2026 only; held flat after). Benefit: benefit_values in deck/build_deck.py from "
+                "data.json. Costs: assumptions.json business_case (approved, illustrative).",
     ),
     dict(
         key="s4", widget="cross",
@@ -751,13 +768,13 @@ PLACEHOLDERS = {
                     plan="Chagee scale facts, the core processes AI can enhance (demand forecasting, opening "
                          "inventory, counter service), the problem statement and its significance."),
 }
-DECK = ["c1", "sc", "s2", "s3", "mech", "store", "cost", "playbook", "s5", "a1", "a1b", "a1c", "a2", "s4", "a3"]
+DECK = ["c1", "sc", "s2", "s3", "mech", "store", "cost", "playbook", "s5", "a1", "a1b", "a1c", "a1d", "a2", "s4", "a3", "a4"]
 
 # ---------------------------------------------------------------------------
 # Placeholders and the no-raw-numbers check
 # ---------------------------------------------------------------------------
 PH = re.compile(r"\{\{([\w.]+)\|(\w+)\}\}")
-ALLOW = re.compile(r"\bAY20\d\d-\d\d\b|\bTopics? \d+(?:(?:, | and | to )\d+)*|\bstep \d+|\bA[1-3]\b|^\d · |^About \d+(?:\.\d+)? (?:minutes?|seconds)|\bsection \d+|\b(?:FY)?20\d\d\b|\bWeeks? \d+(?:[–-]\d+)?(?: and \d+)?|OPIM639|\bQ[1-4]\b|\b[LI]-[\w-]+")
+ALLOW = re.compile(r"\bAY20\d\d-\d\d\b|\bTopics? \d+(?:(?:, | and | to )\d+)*|\bstep \d+|\bA[1-4]\b|^\d · |^About \d+(?:\.\d+)? (?:minutes?|seconds)|\bsection \d+|\b(?:FY)?20\d\d\b|\bWeeks? \d+(?:[–-]\d+)?(?: and \d+)?|OPIM639|\bQ[1-4]\b|\b[LI]-[\w-]+")
 FMT = {
     "int": lambda v: f"{v:,.0f}",
     "pct": lambda v: f"{v * 100:.0f}%",
@@ -839,6 +856,7 @@ def sim_values(d: dict) -> dict:
         "opt_litres": d["provision"]["def"]["optDays"] * d["defaults"]["band"]["base"] / 7
                       * A["provision"]["milk_litres_per_cup"]["value"],
         **benefit_values(d),
+        **business_values(d),
         "critical_ratio": under / (under + pv["milk_waste_cost_per_litre"]["value"]),
         "prov_none": d["provision"]["none"]["optTotal"],
         "prov_def": d["provision"]["def"]["optTotal"],
@@ -898,6 +916,49 @@ def benefit_values(d: dict) -> dict:
     stock = stores * (d["provision"]["none"]["optTotal"] - d["provision"]["def"]["optTotal"])
     return {"bn_store": per, "bn_share": share, "bn_counter": counter, "bn_stock": stock,
             "bn_total": counter + stock, "bn_full_lo": min(full), "bn_full_hi": max(full)}
+
+
+def business_case(d: dict, openings: float = None, one_time_mult: float = 1.0, saving_mult: float = 1.0) -> dict:
+    """Appendix A4: yearly modelled benefit of the four gates against the cost of building and running them."""
+    B, bv = A["business_case"], benefit_values(d)
+    v = lambda k: B[k]["value"]
+    stores = A["benefit"]["overseas_stores_per_year"]["value"]
+    opens = stores if openings is None else openings
+    rate, mday = v("specialist_day_rate"), v("working_days_per_month")
+    per_store = bv["bn_counter"] / stores * saving_mult          # counter saving per store-year
+    per_open = bv["bn_stock"] / stores                            # one-time stock saving per opening
+    build = v("build_people") * v("build_months") * mday * rate * one_time_mult
+    integ = v("integration_one_time") * one_time_mult
+    maint = v("maintenance_people") * 12 * mday * rate
+    years, cum = [], 0.0
+    for y in range(v("horizon_years")):
+        sy = opens * y + opens * v("opening_year_share")          # earlier cohorts trade all year, new ones part
+        r = dict(opens=opens, store_years=sy, counter=sy * per_store, stock=opens * per_open,
+                 build=build if y == 0 else 0.0, integ=integ if y == 0 else 0.0, maint=maint,
+                 platform=sy * v("platform_per_store_month") * 12, review=opens * v("review_days_per_opening") * rate)
+        r["benefit"] = r["counter"] + r["stock"]
+        r["one_time"] = r["build"] + r["integ"]
+        r["recurring"] = r["maint"] + r["platform"] + r["review"]
+        r["cost"] = r["one_time"] + r["recurring"]
+        r["net"] = r["benefit"] - r["cost"]
+        cum += r["net"]
+        r["cum"] = cum
+        years.append(r)
+    payback = next((i + 1 for i, r in enumerate(years) if r["cum"] >= 0), None)
+    return dict(years=years, payback=payback, per_store=per_store, per_open=per_open, build=build, integ=integ,
+                maint=maint, rate=rate, mday=mday)
+
+
+def business_values(d: dict) -> dict:
+    bc = business_case(d)
+    ys, n = bc["years"], len(bc["years"])
+    cum = ys[-1]["cum"]
+    k = lambda x: f"S${abs(x) / 1e3:,.0f}k"
+    verdict = (f"cover the cost of building and running the gates in year {bc['payback']}, leaving about {k(cum)} "
+               f"ahead" if bc["payback"] else
+               f"do not cover the cost of building and running the gates within {n} years: about {k(cum)} short")
+    return {"fin_verdict": verdict, "fin_cum": cum, "fin_benefit": sum(r["benefit"] for r in ys),
+            "fin_cost": sum(r["cost"] for r in ys)}
 
 
 def lookup(path: str, simv: dict):
@@ -1423,6 +1484,64 @@ def render_a1(s: dict) -> str:
             f'the sliders and the sensitivity chart in A2.</p></div>')
 
 
+def render_a4(s: dict) -> str:
+    d, B = DATA_CACHE, A["business_case"]
+    bc = business_case(d)
+    ys, v = bc["years"], (lambda k: B[k]["value"])
+    money = lambda x: (f'<span class="neg">(S${-x / 1e3:,.0f}k)</span>' if x < -0.5
+                       else "–" if abs(x) < 0.5 else f"S${x / 1e3:,.0f}k")
+    def row(label, key, note, cls="", f=money):
+        return (f'<tr class="{cls}"><th>{esc(label)}</th>' + "".join(f"<td>{f(r[key])}</td>" for r in ys)
+                + f'<td class="how">{esc(note)}</td></tr>')
+    grp = lambda t: f'<tr class="grp"><th colspan="{len(ys) + 2}">{esc(t)}</th></tr>'
+    stores = A["benefit"]["overseas_stores_per_year"]["value"]
+    k = lambda x: f"S${x / 1e3:,.0f}k"
+    rows = [
+        grp("Benefit: modelled avoided cost (no sales revenue)"),
+        row("New stores opened", "opens", f"About {stores} overseas openings planned for 2026 (L-jiemian); held flat "
+            "after that (no later figure in our sources)", f=lambda x: f"{x:,.0f}"),
+        row("Store-years using the gates", "store_years", f"Earlier stores trade all year; new stores "
+            f"{v('opening_year_share'):.0%} of a year (mid-year openings)", f=lambda x: f"{x:,.0f}"),
+        row("Counter saving (recurring)", "counter", f"Store-years × S${bc['per_store']:,.0f}: the mixed counter's yearly "
+            f"cost above the cheapest counter, openings spread over our volume range (slide {REFNUM['s5']})"),
+        row("Opening-stock saving (once per opening)", "stock", f"Openings × S${bc['per_open']:,.0f}: best milk order "
+            "with no signal minus with the member signal; holds only if the signal narrows the range as assumed"),
+        row("Total benefit", "benefit", "", "tot"),
+        grp("Cost of the initiative: one-time"),
+        row("Build the four gates", "build", f"{v('build_people')} people × {v('build_months')} months × "
+            f"{bc['mday']} days × S${bc['rate']:,.0f} a day: forecast, ordering, counter comparison, review"),
+        row("Data integration and set-up", "integ", "POS sales, app sign-ups and supplier order feeds; lump sum"),
+        row("Total one-time cost", "one_time", "", "stot"),
+        grp("Cost of the initiative: recurring"),
+        row("Maintenance team", "maint", f"{v('maintenance_people')} people × 12 months × {bc['mday']} days × "
+            f"S${bc['rate']:,.0f}; counted from year 1 (conservative)"),
+        row("Platform and licences", "platform", f"Store-years × S${v('platform_per_store_month'):,.0f} a month × 12"),
+        row("Gate 4 reviews", "review", f"Openings × {v('review_days_per_opening')} analyst day × "
+            f"S${bc['rate']:,.0f}: updated scenario against the original plan"),
+        row("Total recurring cost", "recurring", "", "stot"),
+        row("Total cost", "cost", "", "tot"),
+        row("Net benefit", "net", "Total benefit minus total cost", "tot"),
+        row("Cumulative net", "cum", "From year 1", "cum"),
+    ]
+    sens = [("one-time costs double", business_case(d, one_time_mult=2)),
+            ("counter saving halves", business_case(d, saving_mult=0.5)),
+            (f"openings fall to {stores // 2} a year", business_case(d, openings=stores // 2))]
+    cumtxt = lambda x: (f"{k(x)} ahead" if x >= 0 else f"{k(-x)} short")
+    stxt = "; ".join(f"{t}: {cumtxt(b['years'][-1]['cum'])}" + (f", payback year {b['payback']}" if b["payback"]
+                                                                  else ", no payback") for t, b in sens)
+    head = "".join(f"<th>Year {i + 1}</th>" for i in range(len(ys)))
+    return (f'<div class="apx a4t"><table><colgroup><col style="width:220px">'
+            + "".join('<col style="width:92px">' for _ in ys) + '<col></colgroup>'
+            f'<thead><tr><th>Item</th>{head}<th>Assumption / how calculated</th></tr></thead>'
+            f'<tbody>{"".join(rows)}</tbody></table>'
+            f'<p class="tnote"><b>Sensitivity, cumulative net after {len(ys)} years.</b> {esc(stxt)}.</p>'
+            f'<p class="tnote"><b>Read with care.</b> No sales revenue: we have no price or demand-elasticity '
+            f'assumption, so the benefit is the modelled avoided cost from slide {REFNUM["s5"]}, against a mixed '
+            f'counter at every opening; it is not a demonstrated AI saving. The cost lines are our approved '
+            f'illustrative assumptions (A1, business case), not Chagee or vendor figures. Values in S$ thousands; '
+            f'brackets are negative.</p></div>')
+
+
 def render_a2(s: dict) -> str:
     d = DATA_CACHE
     W = A["validation"]["week5_comparison"]["value"]
@@ -1515,8 +1634,8 @@ def render_slide(page: int, s: dict, n: int = 0, total: int = 0) -> str:
                 f'<div class="right">{render_view(s)}</div></div>')
     elif s["widget"] == "playbook":
         grid = render_playbook(s)
-    elif s["widget"] in ("a1", "a2", "a3"):
-        grid = {"a1": render_a1, "a2": render_a2, "a3": render_a3}[s["widget"]](s)
+    elif s["widget"] in ("a1", "a2", "a3", "a4"):
+        grid = {"a1": render_a1, "a2": render_a2, "a3": render_a3, "a4": render_a4}[s["widget"]](s)
     elif s["widget"] == "volcost":
         conf = ed(f"{k}.conf", s["confidence"], "p", "conf")
         grid = (f'<div class="grid gcost"><div class="left">{render_explainer(s)}</div>'
@@ -1589,7 +1708,7 @@ def timing_check(filled: dict) -> None:
 def slide_label(key: str, filled: dict) -> str:
     if key in REFNUM:
         return str(REFNUM[key])
-    m = re.search(r"\bA[1-3]\b", filled[key]["kicker"])
+    m = re.search(r"\bA[1-4]\b", filled[key]["kicker"])
     return m.group(0) if m else key
 
 
@@ -1601,7 +1720,7 @@ def write_claims(filled: dict, simv: dict) -> None:
     status = lambda t: ("INFORMAL" if "INFORMAL" in t.upper() else "SECONDARY" if "SECONDARY" in t.upper() else "OK")
     out = ["# Claims register: Chagee deck", "",
            "Generated by deck/build_deck.py from assumptions.json, data.json and the slide text. Do not edit by hand.",
-           "Slide numbers follow the progress rail (on-stage slides); A1-A3 are appendix pages. Status: OK = public "
+           "Slide numbers follow the progress rail (on-stage slides); A1-A4 are appendix pages. Status: OK = public "
            "ledger source; SECONDARY = secondary source, flagged where shown; INFORMAL / CHECK = confirm before "
            "presenting; MODEL = simulator or assumption (illustrative).", "",
            "## Chagee facts", "", "| Fact | Value | Source | Status | Slides |", "|---|---|---|---|---|"]
@@ -1625,6 +1744,108 @@ def write_claims(filled: dict, simv: dict) -> None:
     (HERE / "claims.md").write_text("\n".join(out) + "\n", encoding="utf-8")
 
 
+def write_revcost(simv: dict) -> None:
+    """deck/revenue_cost.md: the A4 revenue and cost structure as a handout, from the same calculation as the slide."""
+    d, B = DATA_CACHE, A["business_case"]
+    bc = business_case(d)
+    ys, n = bc["years"], len(bc["years"])
+    stores = A["benefit"]["overseas_stores_per_year"]["value"]
+    k = lambda x: f"(S${-x / 1e3:,.0f}k)" if x < -0.5 else "–" if abs(x) < 0.5 else f"S${x / 1e3:,.0f}k"
+    c = lambda x: f"{x:,.0f}"
+    hdr = "| Item | " + " | ".join(f"Year {i + 1}" for i in range(n)) + " | How calculated |"
+    line = lambda label, key, how, f=k, bold=False: (
+        f"| {'**' + label + '**' if bold else label} | " + " | ".join((f"**{f(r[key])}**" if bold else f(r[key])) for r in ys)
+        + f" | {how} |")
+    grp = lambda t: f"| *{t}* |" + " |" * (n + 1)
+    table = [hdr, "|---|" + "---:|" * n + "---|",
+             grp("Benefit: modelled avoided cost (no sales revenue)"),
+             line("New stores opened", "opens", f"About {stores} overseas openings planned for 2026 (L-jiemian); held flat after", c),
+             line("Store-years using the gates", "store_years",
+                  f"Earlier stores trade all year; new stores {B['opening_year_share']['value']:.0%} of a year", c),
+             line("Counter saving (recurring)", "counter", f"Store-years × S${bc['per_store']:,.0f}"),
+             line("Opening-stock saving (once per opening)", "stock", f"Openings × S${bc['per_open']:,.0f}"),
+             line("Total benefit", "benefit", "", bold=True),
+             grp("Cost of the initiative: one-time"),
+             line("Build the four gates", "build", f"{B['build_people']['value']} people × {B['build_months']['value']} months × "
+                  f"{bc['mday']} days × S${bc['rate']:,.0f} a day"),
+             line("Data integration and set-up", "integ", "Lump sum"),
+             line("Total one-time cost", "one_time", "", bold=True),
+             grp("Cost of the initiative: recurring"),
+             line("Maintenance team", "maint", f"{B['maintenance_people']['value']} people × 12 months × {bc['mday']} days × "
+                  f"S${bc['rate']:,.0f}, from year 1"),
+             line("Platform and licences", "platform", f"Store-years × S${B['platform_per_store_month']['value']:,.0f} a month × 12"),
+             line("Gate 4 reviews", "review", f"Openings × {B['review_days_per_opening']['value']} analyst day × S${bc['rate']:,.0f}"),
+             line("Total recurring cost", "recurring", "", bold=True),
+             line("Total cost", "cost", "", bold=True),
+             line("Net benefit", "net", "Total benefit minus total cost", bold=True),
+             line("Cumulative net", "cum", "From year 1", bold=True)]
+    arows = ["| Assumption | Value | Unit | Why |", "|---|---|---|---|"]
+    for key, a in B.items():
+        if isinstance(a, dict) and "value" in a:
+            arows.append(f"| {key.replace('_', ' ')} | {fmt_value(a['value'])} | {a['unit']} | "
+                         f"{re.sub(r'^APPROVED [(][^)]*[)][.]\s*', '', a['rationale'])} |")
+    sens = [("Base case (approved assumptions)", bc),
+            ("One-time costs double", business_case(d, one_time_mult=2)),
+            ("Counter saving halves", business_case(d, saving_mult=0.5)),
+            (f"Openings fall to {stores // 2} a year", business_case(d, openings=stores // 2))]
+    srows = ["| Case | Cumulative net after year " + str(n) + " | Payback |", "|---|---:|---|"]
+    srows += [f"| {t} | {k(b['years'][-1]['cum'])} | {'year ' + str(b['payback']) if b['payback'] else 'not within ' + str(n) + ' years'} |"
+              for t, b in sens]
+    tot_b, tot_c = sum(r["benefit"] for r in ys), sum(r["cost"] for r in ys)
+    s5, a4 = REFNUM["s5"], "A4"
+    out = [
+        "# Revenue and cost structure: the four decision gates", "",
+        "Appendix A4 of the Chagee deck (OPIM639, Group 3). Generated by deck/build_deck.py from assumptions.json and "
+        "the simulator output, so every figure matches the slide. Do not edit by hand. All figures are illustrative "
+        "assumptions.", "",
+        "## The question", "",
+        f"Does what the four gates (Predict, Provision, Counter, Review) save across Chagee's overseas openings cover "
+        f"the cost of building and running them? Over {n} years, at our approved assumptions, the modelled savings "
+        f"{simv['fin_verdict']}.", "",
+        "## How the analysis is structured", "",
+        "It follows the course examples of a revenue and cost analysis: a benefit line, one-time (fixed) costs, "
+        "recurring (variable) costs, net benefit and cumulative net, year by year, with the assumption behind each line.", "",
+        f"- **Benefit (the \"revenue\" side).** The modelled avoided cost from the benefit slide (slide {s5}): choosing "
+        "each store's counter for its conditions instead of a mixed counter at every opening, plus a better first milk "
+        "order. It is not sales revenue.",
+        "- **One-time costs.** Building the four gates and connecting the data (POS sales, app sign-ups, supplier "
+        "orders). Year 1 only.",
+        "- **Recurring costs.** A maintenance team, a platform fee for every store using the gates, and one analyst "
+        "day per opening for the Review gate.", "",
+        "## Where the benefit numbers come from", "",
+        f"- **Counter saving, S${bc['per_store']:,.0f} per store-year.** The simulator's yearly cost of the mixed counter "
+        f"above the cheapest of the three counters, averaged over openings spread evenly across our volume range. "
+        f"About S${simv['bn_counter'] / 1e3:,.0f}k a year for {stores} stores. It recurs: a store keeps the cheaper counter.",
+        f"- **Opening-stock saving, S${bc['per_open']:,.0f} per opening.** The best first milk order's expected cost "
+        "with no pre-launch signal minus with the member signal. Once per opening. It holds only if member sign-ups "
+        "narrow the demand range as assumed; that narrowing is our assumption, not a finding.",
+        "- **Store-years.** Stores opened in earlier years trade all year; stores opened this year trade half a year "
+        "(openings spread through the year).", "",
+        f"## {n}-year table (S$ thousands; brackets are negative)", "", *table, "",
+        f"Over {n} years: total benefit {k(tot_b)}, total cost {k(tot_c)}, cumulative net {k(ys[-1]['cum'])}.", "",
+        "## Assumptions (approved 13 Oct 2026, illustrative)", "", *arows, "",
+        f"Openings: about {stores} a year (benefit.overseas_stores_per_year, L-jiemian, 2026 only), held flat for "
+        "every year because no later figure is in our sources.", "",
+        "## Sensitivity", "", *srows, "",
+        "## How to read it", "",
+        f"- The payback is thin: it arrives in the last year of {n}, and none of the three stress cases pays back "
+        "within the horizon. The result depends on the counter saving, which grows only as stores accumulate.",
+        "- The benefit is a modelled avoided cost against a mixed counter at every opening. It is not a measured "
+        "saving and not a demonstrated AI saving.",
+        "- No sales revenue is modelled: we have no price-per-cup or demand-elasticity assumption.",
+        "- The cost lines are our illustrative assumptions, not Chagee or vendor figures.",
+        "- The maintenance team is costed from year 1, alongside the build: conservative, and it may double-count "
+        "part of year 1.", "",
+        "## If asked in Q&A (about 20 seconds)", "",
+        f"\"We set what the gates save against what they cost to build and run. At our assumptions they pay back in "
+        f"year {bc['payback']}, but only just, and not if build costs double, the counter saving halves, or openings "
+        f"halve. So the case rests on the per-store counter saving, which is what a pilot with real Chagee data "
+        f"should test first. The full table is in appendix {a4}.\"",
+        "",
+    ]
+    (HERE / "revenue_cost.md").write_text("\n".join(out), encoding="utf-8")
+
+
 CONTENT_RAW: dict = {}
 
 
@@ -1639,6 +1860,7 @@ def build() -> Path:
     ledger_check()
     timing_check(filled)
     write_claims(filled, simv)
+    write_revcost(simv)
     for ph in PLACEHOLDERS.values():
         check_and_fill(ph, simv, ph["key"])
     items = [filled[d] if d in filled else PLACEHOLDERS[d] for d in DECK]

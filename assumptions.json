@@ -549,6 +549,79 @@
       "rationale": "Default = slide 3 waste-plus-stockout saving from a narrower band. Not hand-set."
     }
   },
+  "business_case": {
+    "_note": "Appendix A4 revenue and cost analysis only. Costs of building and running the four gates. Never feeds the cost model in sim/. No sales revenue: there is no price or demand-elasticity assumption, so the benefit side is the modelled avoided cost from the benefit slide.",
+    "horizon_years": {
+      "value": 5,
+      "unit": "years",
+      "range": null,
+      "source": "assumption",
+      "rationale": "APPROVED (user, 13 Oct 2026).Length of the A4 table, matching the five-year horizon of the course examples of a revenue and cost analysis."
+    },
+    "opening_year_share": {
+      "value": 0.5,
+      "unit": "share of a year a store trades in its opening year",
+      "range": null,
+      "source": "assumption",
+      "rationale": "APPROVED (user, 13 Oct 2026).Mid-year convention: openings spread evenly through the year, so a new store earns half a year of counter saving in its opening year. Openings are held flat at benefit.overseas_stores_per_year every year: L-jiemian covers 2026 only, so we assume no growth."
+    },
+    "specialist_day_rate": {
+      "value": 1000,
+      "unit": "SGD per person-day",
+      "range": null,
+      "source": "assumption",
+      "rationale": "APPROVED (user, 13 Oct 2026).Blended rate for data, software and analyst staff, in-house or outsourced. No ledger figure; illustrative. Same structure as the course examples (people x days x rate)."
+    },
+    "working_days_per_month": {
+      "value": 21,
+      "unit": "days/month",
+      "range": null,
+      "source": "assumption",
+      "rationale": "APPROVED (user, 13 Oct 2026).Standard working month, used to turn person-months into person-days."
+    },
+    "build_people": {
+      "value": 4,
+      "unit": "people",
+      "range": null,
+      "source": "assumption",
+      "rationale": "APPROVED (user, 13 Oct 2026).Year 1 build team, one per gate: demand forecast (Predict), ordering calculator (Provision), counter comparison (Counter), review dashboard (Review)."
+    },
+    "build_months": {
+      "value": 6,
+      "unit": "months",
+      "range": null,
+      "source": "assumption",
+      "rationale": "APPROVED (user, 13 Oct 2026).Build and pilot in one market before roll-out."
+    },
+    "integration_one_time": {
+      "value": 250000,
+      "unit": "SGD, one time",
+      "range": null,
+      "source": "assumption",
+      "rationale": "APPROVED (user, 13 Oct 2026).Connecting POS sales, app membership sign-ups and supplier order feeds, plus hardware and software set-up. Lump sum, illustrative."
+    },
+    "maintenance_people": {
+      "value": 2,
+      "unit": "full-time people, every year",
+      "range": null,
+      "source": "assumption",
+      "rationale": "APPROVED (user, 13 Oct 2026).Keep the tools running, refresh assumptions, support market teams."
+    },
+    "platform_per_store_month": {
+      "value": 50,
+      "unit": "SGD per store in operation per month",
+      "range": null,
+      "source": "assumption",
+      "rationale": "APPROVED (user, 13 Oct 2026).Cloud, licences and dashboards for each store using the gates."
+    },
+    "review_days_per_opening": {
+      "value": 1,
+      "unit": "analyst person-days per new store",
+      "range": null,
+      "source": "assumption",
+      "rationale": "APPROVED (user, 13 Oct 2026).Gate 4: build the updated scenario from observed inputs and compare it with the original plan."
+    }
+  },
   "simulation": {
     "monte_carlo_draws": {
       "value": 500,
