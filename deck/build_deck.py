@@ -93,7 +93,7 @@ CONTENT = [
             ("counter", "Counter",
              "Moving toward semi-automation: QR-scan dispensing, Chagee Express.",
              "Simulate the counter before the store exists, and flag which inputs would change the choice.",
-             "Store format / equipment; franchisees", "slides {{ref.mech|int}} and {{ref.cost|int}}"),
+             "Store format / equipment; franchisees", "slides {{ref.mech|int}} to {{ref.cost|int}}"),
             ("after", "After opening",
              "Not covered by public sources.",
              "Compare actual demand with the range to narrow the next market's forecast.",
@@ -140,7 +140,7 @@ CONTENT = [
             (5, "Order Fulfillment for Online Retailing", "in", "Provision · Counter",
              "Preparing the opening inventory, and work shared by people and robots (the bucket brigade).",
              "How to prepare inventory for effective fulfilment; how to perform efficient order-picking using "
-             "humans and robots. Used on slides {{ref.inv|int}} and {{ref.s3|int}} (inventory) and slide {{ref.mech|int}} (counter)."),
+             "humans and robots. Used on slides {{ref.inv|int}} and {{ref.s3|int}} (inventory) and slides {{ref.mech|int}} and {{ref.store|int}} (counter)."),
             (6, "Last-mile Delivery for Online Retailing", "unused", "",
              "Outside our question, which stops at the counter.",
              "Planning last-mile delivery using AI; uberization and autonomous vehicles."),
@@ -279,29 +279,26 @@ CONTENT = [
              "and idle capacity is what a store pays for."),
         ],
         explainer_title="Counter flow: people and machines in a surge",
-        caption="Movement illustration in Week 5 units: not a cost model, not measured times. More detail: appendix A5.",
+        caption="Movement illustration in Week 5 units: not a cost model, not measured times. The store replica is next.",
         concepts=[("brigade", "how much a crew absorbs in a surge", "Illustration with the Week 5 rules"),
                   ("bottleneck", "where a fixed machine line queues", "Illustration and cost model")],
         printnote="Printed at the end of the surge window; the table compares both sizing settings over the full "
                   "run.",
         view_kicker="Our view",
         view_lead="Materials are half of opening; service capacity is the other half.",
-        view_body="People flex; machines come in whole units. So the counter choice turns on volume and local "
-                  "costs: next slide.",
-        notes=("About 40 seconds. Materials are only half of an opening; the counter is the other half. Press "
-               "play. Top lane: people work as a bucket brigade, a course concept: each carries a drink along and "
-               "hands it over, so when the surge hits the load evens out. Bottom lane: machines are fixed at their "
-               "station, so the queue builds at the slowest one: the bottleneck. Flip to as sized in our cost "
-               "model: the machines stop queuing, but sit idle much of the run, and idle capacity is what a store "
-               "pays for. This is one mechanism, in the Week 5 units, not measured times; the worker-order "
-               "comparison and time to serve are in appendix A5. Next: what each counter costs."),
+        view_body="People flex; machines come in whole units. Next: the same counter in a store replica, then its cost.",
+        notes=("About 25 seconds. Materials are only half of an opening; the counter is the other half. Two "
+               "course concepts. Bucket brigade: people carry a drink along and hand it over, so in a surge the "
+               "load evens out. Bottleneck: machines are fixed at their station, so the queue builds at the slowest "
+               "one. Flip to as sized in our cost model: no queue, but the machines sit idle much of the run, and "
+               "idle capacity is what a store pays for. Next, the same idea inside a real store layout."),
         sources="Bucket-brigade engine: course Week 5 explainer (reference, read-only), wrapped by "
                 "sim/mechanism.js. As-sized ratios read from sim/ peakUtilisation and plan. Illustration settings: "
                 "assumptions.json illustration (mixed_sizing needs approval).",
     ),
     dict(
         key="store", widget="storefront",
-        kicker="Appendix A5 · store replica and time to serve", chapter="appendix",
+        kicker="Counter", chapter="perform",
         headline="In the peak hour, robots hand over a cup in about {{sim.st_med_all_machine|sec}}; a counter "
                  "like today's takes about {{sim.st_med_mixed|min1}}",
         explainer_title="Store replica: two counters in the peak hour, side by side",
@@ -316,18 +313,15 @@ CONTENT = [
                       "{{validation.crossover_stability.seeds|int}} simulated days per bar.",
         serve_printnote="Printed at the moderate surge.",
         view_kicker="Our view",
-        view_lead="Robots buy speed in the peak; whether it pays is the counter-cost slide.",
-        notes=("Handout only (appendix): detail behind the counter-flow slide. Two counters laid out like a Chagee "
-               "tea bar, seeing the same customers: order on "
-               "the right, brewing behind the counter, pick-up on the left. It plays on its own. Top: people as the "
-               "Week 5 bucket brigade, slowest first. Each worker carries a cup towards pick-up; the last hands it "
-               "over, walks back and takes over from the colleague behind, so the line balances itself. Bottom: the "
-               "same people, fastest first. The fast worker keeps catching the slow one and is held back, the red "
-               "ring, and fewer cups get out. Switch the bottom to All-robot: nobody moves, the cups move from "
-               "machine to machine. The times come from the cost model, in the line underneath: today's counter "
-               "hands over a cup in about {{sim.st_med_mixed|min1}} at the median, an all-robot counter in about "
-               "{{sim.st_med_all_machine|sec}}; open it for the chart. None of these is measured. The counter-cost "
-               "slide puts a price on each counter."),
+        view_lead="Robots buy speed in the peak; whether it pays is the next slide.",
+        notes=("About 40 seconds. The main counter view: two counters laid out like a Chagee tea bar, seeing the "
+               "same customers. Order on the right, brewing behind the counter, pick-up on the left; it plays on its "
+               "own. Top: people as the Week 5 bucket brigade, slowest first: the last worker hands over, walks "
+               "back and takes over from the colleague behind, so the line balances itself. Bottom: fastest first. "
+               "The fast worker is held back by the slow one, the red ring, and fewer cups get out. Switch the "
+               "bottom to All-robot: nobody moves, the cups move. Underneath, from the cost model: today's counter "
+               "hands over a cup in about {{sim.st_med_mixed|min1}} at the median, all-robot in about "
+               "{{sim.st_med_all_machine|sec}}. None of it is measured. Next: what each counter costs."),
         sources="Semi-automation (machine dispenses the formulation): L-unsw; Chagee Express semi-automated "
                 "machine: L-cyberrt. Layout: illustrative, after a Chagee tea-bar storefront (order right, pick-up "
                 "left). Animation: sim/store.js (Week 5 brigade rules, illustration.walk_back_speed). Times and lost "
@@ -382,16 +376,12 @@ CONTENT = [
                   "One-variable thresholds (right) move one input at a time with the rest at our defaults: they show "
                   "which assumptions deserve closer attention, not a rule to switch setups."],
         ),
-        notes=("About 45 seconds; under time pressure, read only the gate card. Speed has a price. The chart is "
-               "the cost model: labour, machines and lost sales per cup against steady cups per day. At our "
-               "forecast of about {{sim.cpd0|int}} cups a day all-human is cheaper, but only by {{sim.vc_hm|sgd}} a "
-               "cup, so we do not recommend a default. The table says when mixed wins instead, nearest first: "
-               "machine cost below about {{sim.be_machineMonth_all_human_mixed|sgd0}} a month, all-human staff "
-               "coordinating a little worse than we assume (below {{sim.be_coordHuman_all_human_mixed|f2}}), or a "
-               "wage above about {{sim.be_wage_all_human_mixed|sgd}} an hour; each is only a few per cent away. "
-               "Volume needs about {{sim.be_cupsPerDay_all_human_mixed|int}} cups a day. Full automation needs about {{sim.be_cupsPerDay_mixed_all_machine|int}}. And be clear "
-               "how sure we are: it is a close call on a simplified staffing model, so it is a candidate to test in a pilot, "
-               "not an instruction to install equipment."),
+        notes=("About 30 seconds; under time pressure, read only the gate card. Speed has a price: faster is not "
+               "cheaper per cup. At our forecast of about {{sim.cpd0|int}} cups a day all-human is cheaper, but only "
+               "by {{sim.vc_hm|sgd}} a cup, so no default. The table flags the nearest inputs that would change it: "
+               "machine cost, staff coordination and the wage, each a few per cent away; volume needs about "
+               "{{sim.be_cupsPerDay_all_human_mixed|int}} cups a day. It is a close call on a simplified staffing "
+               "model: a candidate to test in a pilot, not an instruction to install equipment."),
         sources="Wage S$ per hour worked, fully loaded: L-mom-pwm, L-mom-ows, L-cpf, L-sdl, L-mom-leave, L-mom-ph. "
                 "Costs and break-evens: sim/ cost model and breakEven over cups per day (data.json volumeCurve, "
                 "breakEven), default band, moderate surge. All inputs: assumptions.json (illustrative).",
@@ -445,7 +435,7 @@ CONTENT = [
         view_kicker="Materials and capacity",
         view_lead="A forecast becomes sales only if the store has both materials and service capacity.",
         view_body="Enough milk is not enough if tea or cups run out. Enough ingredients are not enough if the counter "
-                  "cannot serve customers (slides {{ref.mech|int}} and {{ref.cost|int}}). Both use the Predict "
+                  "cannot serve customers (slides {{ref.mech|int}} to {{ref.cost|int}}). Both use the Predict "
                   "range; the prototype does not optimise them together.",
         gate=dict(
             n=2, name="Provision", who=["supply", "entry"],
@@ -871,7 +861,7 @@ CHAPTERS = [
     ("scope", "Scope", "Which course topics we use, which we leave out, and why", 40),
     ("predict", "Predict", "Gate 1: what demand the whole store should plan for", 40),
     ("provision", "Provision", "Gate 2: the opening inventory plan, with fresh milk as the worked example", 75),
-    ("perform", "Counter", "Gate 3: how the counter flows, and which one to install", 90),
+    ("perform", "Counter", "Gate 3: how the counter flows in a store, and which one to install", 95),
     ("decide", "Review", "Gate 4: review after opening, and the conditional business case", 110),
 ]
 CONTENTS_SECONDS = 10          # the Contents slide itself
@@ -883,8 +873,8 @@ PLACEHOLDERS = {
                     plan="Chagee scale facts, the core processes AI can enhance (demand forecasting, opening "
                          "inventory, counter service), the problem statement and its significance."),
 }
-DECK = ["c1", "sc", "s2", "inv", "s3", "mech", "cost", "playbook", "s5", "a1", "a1b", "a1c", "a1d", "a2", "s4", "a3",
-        "a4", "store"]
+DECK = ["c1", "sc", "s2", "inv", "s3", "mech", "store", "cost", "playbook", "s5", "a1", "a1b", "a1c", "a1d", "a2", "s4",
+        "a3", "a4"]
 
 # ---------------------------------------------------------------------------
 # Placeholders and the no-raw-numbers check
@@ -1860,7 +1850,7 @@ def write_claims(filled: dict, simv: dict) -> None:
     status = lambda t: ("INFORMAL" if "INFORMAL" in t.upper() else "SECONDARY" if "SECONDARY" in t.upper() else "OK")
     out = ["# Claims register: Chagee deck", "",
            "Generated by deck/build_deck.py from assumptions.json, data.json and the slide text. Do not edit by hand.",
-           "Slide numbers follow the progress rail (on-stage slides); A1-A5 are appendix pages. Status: OK = public "
+           "Slide numbers follow the progress rail (on-stage slides); A1-A4 are appendix pages. Status: OK = public "
            "ledger source; SECONDARY = secondary source, flagged where shown; INFORMAL / CHECK = confirm before "
            "presenting; MODEL = simulator or assumption (illustrative).", "",
            "## Chagee facts", "", "| Fact | Value | Source | Status | Slides |", "|---|---|---|---|---|"]
