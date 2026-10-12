@@ -94,9 +94,9 @@ function bandWidget(root){
     const cov=RAW.demand.band_coverage.value, kind=b.removeHype?"steady demand (opening hype removed)":"opening-week demand (hype included)";
     $(body,".plan").innerHTML=`<b>Plan on about ${int(b.base)} cups a week</b> of ${kind}. Illustrative ${pct(cov)} demand range: ${int(b.low)} to ${int(b.high)}. The range is assumed, not calibrated; demand can fall outside it.`;
     out.innerHTML=`<h4>WHAT THE RANGE IS FOR</h4>
-      <div class="stat"><span>Low end (${int(b.low)})</span></div><p class="note" style="margin:0 0 4px">Risk of excess fresh stock and unused capacity.</p>
+      <div class="stat"><span>Low end (${int(b.low)})</span></div><p class="note" style="margin:0 0 4px">Risk of excess stock (perishables expire) and unused capacity.</p>
       <div class="stat"><span>High end (${int(b.high)})</span></div><p class="note" style="margin:0 0 4px">Risk of shortages, queues and lost sales.</p>
-      <p class="note" style="margin:0 0 3px"><b>Provision</b> uses the range with shortage and waste costs to choose the milk order.</p>
+      <p class="note" style="margin:0 0 3px"><b>Provision</b> turns the range into the opening inventory list; fresh milk adds shortage and waste costs.</p>
       <p class="note" style="margin:0"><b>Counter</b> uses demand, uncertainty and local wages and machine costs together.</p>
       <div class="handoff"><b>Not in the signal:</b> tourists and non-app orders.</div>`;
     gateSet(root,{action:`Plan on about ${int(b.base)} cups a week, within an illustrative ${pct(cov)} range of ${int(b.low)} to ${int(b.high)}; treat it as an assumption to test.`,
@@ -141,10 +141,14 @@ function stockWidget(root){
     const best=SETUPS.reduce((a,k)=>cost(k)<cost(a)?k:a), gap=cost("all_machine")-cost("mixed");
     const litres=r.optDays*daily*P.milkPerCup, shelf=RAW.provision.milk_shelf_life_days.value, under=P.stockoutCost/P.milkPerCup;
     const kind=b.removeHype?"steady demand (opening hype removed)":"opening-week demand (hype included)";
+    // the best order in days of demand depends on the band width, not its level, so the surge order scales by the hype multiplier
+    const litresHype=b.removeHype?litres*P.hype:litres, litresSteady=b.removeHype?litres:litres/P.hype;
     const topDays=shelf*b.high/b.base, rel=r.optDays>topDays+0.05?"just above the top of the range":r.optDays<r.base?"below base":"inside the range";
     $(body,".rec").innerHTML=`<b>Order about ${int(litres)} L for the first ${shelf} days</b>, using ${kind}. That is ${r.optDays.toFixed(1)} days of base demand, ${rel} (top of range ${topDays.toFixed(1)} days).`+
-      (b.removeHype?` <span class="warn">The opening weeks are forecast higher (hype ×${RAW.demand.opening_hype_multiplier.value}); if that hype is real, this first delivery runs short: include it on slide ${REF.s2} to size for it.</span>`:"");
-    gateSet(root,{action:`Order about ${int(litres)} L for the first ${shelf} days, using ${kind}.`,
+      (b.removeHype?` <span class="warn">This delivery falls inside the assumed ${RAW.demand.opening_hype_weeks.value}-week opening surge (×${P.hype}): if the surge is real, order about ${int(litresHype)} L, or include it on slide ${REF.s2}.</span>`:"");
+    gateSet(root,{action:b.removeHype
+        ?`Steady demand: about ${int(litresSteady)} L for the first ${shelf} days. If the expected opening surge is real, about ${int(litresHype)} L: this delivery falls inside it.`
+        :`Opening surge included: about ${int(litresHype)} L for the first ${shelf} days; about ${int(litresSteady)} L on steady demand alone.`,
       cost:`${money(under)} vs ${money(P.wasteCost)}`, cover:`${pct(r.criticalRatio)} of outcomes`,
       waste:`${int(r.optWaste/P.wasteCost)} L`, short:`${int(r.optStockout/P.stockoutCost)} cups`});
     out.innerHTML=`<h4>AT ${days} DAYS OF STOCK</h4>
@@ -154,7 +158,7 @@ function stockWidget(root){
       <hr><h4>BEST ORDER AT THIS BAND (±${pct1(b.u)})</h4>
       <div class="stat best"><span>${r.optDays.toFixed(1)} days</span><b>${money0(r.optTotal)}</b></div>
       <div class="stat"><span>Same order, strong signal</span><b>${money0(strong.optTotal)}</b></div>
-      <div class="handoff"><b>Hand-off:</b> open with ${int(r.optDays*daily*P.milkPerCup)} L of milk. The counter is decided by volume and input costs, not this band (slide ${REF.cost}).</div>`;
+      <div class="handoff"><b>Hand-off:</b> fresh milk is one line of the opening list (slide ${REF.inv}). The counter is decided by volume and input costs, not this band (slide ${REF.cost}).</div>`;
     const ds=root.closest(".slide").querySelector('.dstrip[data-lever="milk"]');
     if(ds) ds.querySelector(".dnow").textContent=`Now ±${pct1(b.u)}: best order ${r.optDays.toFixed(1)} days, about ${int(r.optDays*daily*P.milkPerCup)} L of milk.`;
   }
@@ -309,10 +313,10 @@ function benefitWidget(root){
     const fl=Math.min(...per.map(p=>p.full)), fh=Math.max(...per.map(p=>p.full));
     const k=v=>"S$"+Math.round(v/1000).toLocaleString("en-SG")+"k";
     $(body,".formula").innerHTML=`<div class="bsplit"><div><span>Recurring · counter costs</span><b>${k(counter)}</b><small>a year, for one year's openings</small></div>
-      <div><span>One-time · opening stock</span><b>${k(stock)}</b><small>once, at opening</small></div></div>
+      <div><span>One-time · fresh-milk stock</span><b>${k(stock)}</b><small>once; other inventory not estimated</small></div></div>
       <span class="term"><b>${Math.round(nBelow)}</b> of ${int(st.stores)} openings sit where all-human is cheaper</span> → ${k(counter)} a year;
       <span class="term"><b>${money0(st.stock)}</b> per opening × ${int(st.stores)}</span> → ${k(stock)} once
-      <small style="margin-top:2px">Stock term only if the pre-launch signal works as assumed (slide ${REF.s2}). A fully automated standard would cost ${money0(fl)}–${money0(fh)} more per store a year.</small>`;
+      <small style="margin-top:2px">Stock term: fresh milk only, and only if the pre-launch signal works as assumed (slide ${REF.s2}). A fully automated standard would cost ${money0(fl)}–${money0(fh)} more per store a year.</small>`;
   }
   onBand(b=>{ const daily=b.base/7; st.stock=Sim.provision(P,P.uNone,days0,daily).optTotal-Sim.provision(P,b.u,days0,daily).optTotal; draw(); });
 }
@@ -656,7 +660,7 @@ function playbookWidget(root){
         <div class="ymc">${SETUPS.map(s=>`<span class="${s===win?"w":""}"><i style="background:${COL[s]}"></i>${LABEL[s]} <b>${money(c[s])}</b></span>`).join("")}</div>
         <p class="ymf">${flip?`<b>Nearest threshold</b> (live estimate): ${LABEL[run]} would be cheaper if ${flip.i.label.toLowerCase()} ${flip.dir} about <b>${flip.i.f(flip.x)}</b> (${flip.d<0.005?"<1":Math.round(flip.d*100)}% away).`
           :tie?"<b>Tie:</b> decide on service, staffing risk or brand.":"<b>Nearest threshold:</b> none within the input ranges for a single change."}</p>
-        <p class="ymf"><b>Stock:</b> ${val.milk<under?`order above the base forecast (best order at the ${pct(cr)} point of demand); flips only if waste costs over ${money(under)} a litre.`
+        <p class="ymf"><b>Fresh milk:</b> ${val.milk<under?`order above the base forecast (best order at the ${pct(cr)} point of demand); flips only if waste costs over ${money(under)} a litre.`
           :`order at or below the base forecast: waste costs more than ${money(under)} a litre.`}</p>`;
       const same=IN.every(i=>Math.abs(val[i.k]-base[i.k])<1e-9);
       const planTxt=`${LABEL[orig.win]} by ${money(orig.m)} a cup`, updTxt=tie?`a tie (${LABEL[win]} and ${LABEL[run]})`:`${LABEL[win]} by ${money(margin)} a cup`;

@@ -42,7 +42,7 @@ esc = html.escape
 TITLE = dict(
     course="OPIM639 · Innovations & Operations of Intelligent Online Marketplaces",
     title="Chagee: opening overseas stores right",
-    topic="Predict demand, provision the store, size the counter",
+    topic="One new store: forecast demand, plan the inventory, choose the counter, review",
     group="Group 3",
     members=["Keziah, Jin, Ayumi, Revan"],
 )
@@ -55,22 +55,23 @@ CONTENT = [
     dict(
         key="c1", widget="aimap",
         kicker="Context and problem", chapter="context",
-        headline="One new store, no local sales history: four decisions before and after it opens",
-        sub="We are opening a store with no local sales history. What demand should we plan for, how much milk "
-            "should we order, which counter should we install, and what should change after actual sales arrive?",
+        headline="One new store, no local sales history: estimate demand, plan the inventory, choose a counter, then "
+                 "update",
+        sub="We are opening a store with no local sales history. We need to estimate demand, translate that demand "
+            "into an inventory plan, choose a counter configuration, and update those decisions after opening.",
         points=[
             ("trend", "Why it matters for Chagee",
              "{{facts.overseas_stores|int}} overseas stores in {{facts.overseas_markets|int}} markets and about "
              "{{benefit.overseas_stores_per_year|int}} openings planned a year; each commits stock and a counter "
              "before local sales exist."),
             ("phone", "Proposed AI (not built here)",
-             "Estimate a new store's demand from comparable stores, cross-checked by pre-launch app sign-ups, and "
-             "validate it against actual sales."),
+             "Forecast the whole store's demand from comparable stores, cross-checked by pre-launch app sign-ups, "
+             "and validate it against actual sales."),
             ("box", "What this prototype calculates",
-             "Synthetic inputs and assumed relationships: a demand range, a milk-order calculation and a counter "
-             "simulation. No trained model; membership data has not been shown to improve forecasts."),
+             "Synthetic inputs: a demand range, one inventory worked example (fresh milk) and a counter simulation. "
+             "Tea, other ingredients and packaging are planned qualitatively. No trained model."),
             ("users", "Who decides",
-             "People: teams choose the milk order and the counter from these outputs and local constraints."),
+             "People: teams set the inventory plan and choose the counter from these outputs and local constraints."),
         ],
         explainer_title="Where AI enters a new store's opening",
         caption="Click a step. Today's practice is our reading of public sources and one industry conversation, "
@@ -84,14 +85,15 @@ CONTENT = [
              "Judgement-led by a local General Manager (our reading).",
              "A proposed demand range from member signals, with hype and habit separated by existing-market proxies.",
              "Market-entry leads and GMs", "slide {{ref.s2|int}}"),
-            ("stock", "Opening stock",
-             "Central, standardised supply of tea and milk.",
-             "Size the first fresh-milk order to that range with newsvendor logic.",
-             "Supply chain / planning", "slide {{ref.s3|int}}"),
+            ("stock", "Opening inventory",
+             "Direct, standardised sourcing of tea and milk for domestic stores (company release).",
+             "Turn the forecast into an item-by-item opening list; size fresh milk with newsvendor logic as the "
+             "worked example.",
+             "Supply chain / planning", "slides {{ref.inv|int}} and {{ref.s3|int}}"),
             ("counter", "Counter",
              "Moving toward semi-automation: QR-scan dispensing, Chagee Express.",
              "Simulate the counter before the store exists, and flag which inputs would change the choice.",
-             "Store format / equipment; franchisees", "slides {{ref.mech|int}} to {{ref.cost|int}}"),
+             "Store format / equipment; franchisees", "slides {{ref.mech|int}} and {{ref.cost|int}}"),
             ("after", "After opening",
              "Not covered by public sources.",
              "Compare actual demand with the range to narrow the next market's forecast.",
@@ -100,16 +102,17 @@ CONTENT = [
         printnote="Printed with all five steps shown. Live: click a step to see one at a time.",
         view_kicker="Four gates",
         view_lead="Predict → Provision → Counter → Review.",
-        view_body="Each gate states the decision, its evidence, a suggested action, the trade-off and what the model "
-                  "cannot establish. All figures are illustrative assumptions.",
-        notes=("About 50 seconds. Start with one store: we are opening a store with no local sales history. What "
-               "demand should we plan for, how much milk should we order, which counter should we install, and what "
-               "should change once actual sales arrive? Chagee faces that about {{benefit.overseas_stores_per_year|int}} "
-               "times a year abroad. Be clear about three layers. The AI we propose would estimate a new store's "
-               "demand from comparable stores, cross-checked by pre-launch app sign-ups, and be validated on actual "
-               "sales; it is not built here. This prototype calculates from synthetic, assumed inputs: a demand "
-               "range, a milk order and a counter simulation. People make the decisions. The deck walks the four "
-               "gates: Predict, Provision, Counter, Review."),
+        view_body="Scope: the whole store. Each gate states the decision, its evidence, a suggested action, the "
+                  "trade-off and what the model cannot establish. Figures are illustrative assumptions.",
+        notes=("About 50 seconds. Start with one store: we are opening a store with no local sales history. We need "
+               "to estimate demand, translate it into an inventory plan, choose a counter, and update those "
+               "decisions after opening. Chagee faces that about {{benefit.overseas_stores_per_year|int}} times a "
+               "year abroad. The scope is the whole store: demand for every drink, and an inventory plan for tea, "
+               "fresh milk and alternatives, other ingredients, cups, lids and packaging. Be clear about three "
+               "layers. The AI we propose would forecast the store's demand from comparable stores, cross-checked "
+               "by pre-launch sign-ups; it is not built here. This prototype calculates from synthetic, assumed "
+               "inputs: a demand range, one inventory worked example, fresh milk, and a counter simulation. People "
+               "make the decisions. The deck walks the four gates: Predict, Provision, Counter, Review."),
         sources="Scale facts and planned openings: L-jiemian. Direct sourcing, HQ distribution: L-prn (company "
                 "release). Semi-automation: L-unsw, L-cyberrt. Kuala Lumpur opening day: L-gabgrowth (secondary). "
                 "App ordering and GM-led forecasting: I-leeyen (INFORMAL - check with Lee Yen before presenting).",
@@ -130,14 +133,14 @@ CONTENT = [
              "Predicting a new market's demand from app-member signals.",
              "Predicting demand and optimizing price using data; the importance of data in the AI era. "
              "Price optimisation stays out: we have no demand-elasticity assumption."),
-            (4, "Supply Chain Management using AI and Robotics", "in", "Provision · Perform",
-             "Supply-chain planning sizes the stock; equipment selection sizes the counter.",
+            (4, "Supply Chain Management using AI and Robotics", "in", "Provision · Counter",
+             "Supply-chain planning turns the forecast into stock; equipment selection sizes the counter.",
              "AI decision making for aggregate supply-chain planning; how to select robotics equipment and AI "
-             "technology for effective fulfilment. Used on slide {{ref.s3|int}} (stock) and slides {{ref.mech|int}} to {{ref.cost|int}} (counter)."),
-            (5, "Order Fulfillment for Online Retailing", "in", "Perform · Provision",
-             "Picking with humans and robots: the bucket brigade behind our counter model.",
+             "technology for effective fulfilment. Used on slides {{ref.inv|int}} and {{ref.s3|int}} (inventory) and slide {{ref.cost|int}} (counter)."),
+            (5, "Order Fulfillment for Online Retailing", "in", "Provision · Counter",
+             "Preparing the opening inventory, and work shared by people and robots (the bucket brigade).",
              "How to prepare inventory for effective fulfilment; how to perform efficient order-picking using "
-             "humans and robots. Used on slides {{ref.mech|int}} to {{ref.cost|int}} (counter) and slide {{ref.s3|int}} (stock)."),
+             "humans and robots. Used on slides {{ref.inv|int}} and {{ref.s3|int}} (inventory) and slide {{ref.mech|int}} (counter)."),
             (6, "Last-mile Delivery for Online Retailing", "unused", "",
              "Outside our question, which stops at the counter.",
              "Planning last-mile delivery using AI; uberization and autonomous vehicles."),
@@ -170,21 +173,21 @@ CONTENT = [
              "A local supplier can resend stock quickly, so part of a stock miss is absorbed upstream. The counter "
              "still has to serve the queue on the day, so it stays exposed."),
             ("So our slice",
-             "We take sourcing as given and work on the two buffers a new store controls: opening stock (Topic 4, "
-             "Provision) and counter speed (Topic 5, Perform)."),
+             "We take sourcing as given and work on the two buffers a new store controls: opening stock (Topics 4 and 5, "
+             "Provision) and counter speed (Topic 5, Counter)."),
         ],
         where_caption="Why this slice: with sourcing fixed, a demand miss lands in the store, on its opening stock "
                       "or its counter speed (our reading, not a Chagee statement).",
         printnote="Printed: every tile shows its status and reason; both sourcing columns are shown.",
         view_kicker="Our scope",
         view_lead="Three topics, three decisions.",
-        view_body="Topic 3 feeds Predict; Topics 4 and 5 feed Provision and Perform. Sourcing is fixed by design, "
+        view_body="Topic 3 feeds Predict; Topics 4 and 5 feed Provision and Counter. Sourcing is fixed by design, "
                   "so we take it as given, and the franchise revenue share stays out of scope.",
         notes=("About 40 seconds. The course has eight topics. Chagee runs one closed channel, from its app to its "
                "own stores, so the marketplace topics do not arise: there are no third-party sellers, no "
                "fulfilment-service choice and no channel conflict. Topics 6 and 7 are simply outside our question, "
                "which stops at the counter. Topics 3, 4 and 5 are where a new store's risk sits: predicting demand, "
-               "planning the opening stock, and choosing people or robots at the counter. Use the toggle: because "
+               "planning the opening inventory, and choosing people or robots at the counter. Use the toggle: because "
                "Chagee's sourcing is fixed, a demand miss can only be absorbed in the store. If asked why, open "
                "How the logic works: goods flow from suppliers through warehouses to stores, and a miss is absorbed "
                "wherever something can still change in time; with origin and routes fixed long before opening, "
@@ -214,26 +217,26 @@ CONTENT = [
         explainer_title="Demand range before opening: a sensitivity",
         caption="Weekly cups at one new store. The bar is an illustrative {{demand.band_coverage|pct}} demand range: "
                 "we assume about that share of outcomes falls inside it.",
-        concepts=[("demand", "the demand assumptions for stock and counter planning")],
+        concepts=[("demand", "the whole store's inventory and counter planning", "Prototype: an assumed range, no trained forecast")],
         printnote="Printed at the default assumed signal strength ({{predict.signal_strength_default|pct}}) with "
                   "opening hype removed.",
         gate=dict(
             n=1, name="Predict", who=["entry", "crm"],
-            decision="What demand should opening-stock and counter planning assume?",
+            decision="What demand should the whole store's inventory and counter planning assume?",
             action="Plan on about {{sim.band_base|int}} cups a week, within an illustrative {{demand.band_coverage|pct}} "
                    "range of {{sim.band_low|int}} to {{sim.band_high|int}}; treat it as an assumption to test.",
             evidence=[("base", "Base", "{{sim.band_base|int}} cups/week"),
                       ("range", "{{demand.band_coverage|pct}} range", "{{sim.band_low|int}}–{{sim.band_high|int}}"),
                       ("half", "Half-width", "±{{sim.u0|pct1}}")],
-            tradeoff="Plan too low: shortages, queues and lost sales. Plan too high: wasted fresh milk and machines "
-                     "or staff that sit idle.",
+            tradeoff="Plan too low: stockouts, queues and lost sales. Plan too high: stock that expires or ties up "
+                     "cash, and machines or staff that sit idle.",
             limitation="The range is assumed, not calibrated, and demand can fall outside it. It cannot approve a "
                        "site or show that a store is viable.",
             actions=[
                 ("crm", "Before the site is committed, open a pre-launch waitlist and tag each sign-up as new or "
                         "already a Chagee member in another market."),
                 ("entry", "Set the base from comparable stores; use sign-ups only to cross-check it. Send the range "
-                          "to supply chain (slide {{ref.s3|int}}) and to store format (slide {{ref.playbook|int}})."),
+                          "to supply chain (slide {{ref.inv|int}}) and to store format (slide {{ref.playbook|int}})."),
                 ("entry", "Widen the range where tourists or walk-ups matter, and back-test it on recent openings "
                           "before narrowing it."),
             ],
@@ -252,7 +255,7 @@ CONTENT = [
                "in Chagee's existing overseas markets, nearby stores, or waitlist members who already order "
                "elsewhere. So this is a method to back-test on past openings. Gate card: does the band change "
                "the counter? Barely: mixed overtakes all-human only beyond about "
-               "±{{sim.be_u_all_human_mixed|pct}}. The band matters most for stock, the next slide."),
+               "±{{sim.be_u_all_human_mixed|pct}}. The range matters most for the inventory plan, next."),
         sources="App-only ordering with tourist exceptions: I-leeyen (INFORMAL - check before presenting). Kuala "
                 "Lumpur opening day: L-gabgrowth (secondary). Existing overseas markets: L-jiemian ({{facts.overseas_markets|int}} markets). "
                 "Not novel - AI forecasting and siting: L-starbucks. Band narrowing with signal: assumption "
@@ -261,43 +264,44 @@ CONTENT = [
     ),
     dict(
         key="mech", widget="brigade",
-        kicker="Perform", chapter="perform",
-        headline="In a surge, people pass work along like a bucket brigade; machines cannot, so the slowest "
-                 "station sets the pace",
+        kicker="Counter", chapter="perform",
+        headline="Counter flow: people pass work along like a bucket brigade; machines are fixed, so they queue at "
+                 "the bottleneck or sit idle",
         points=[
             ("users", "People pass the work along",
              "Each worker carries a drink downstream and hands it over. In a surge the handover point moves, so "
-             "the load evens out: the Week 5 bucket-brigade result."),
+             "the load evens out: one way a crew shares work."),
             ("box", "Machines stay at their station",
              "A fixed station cannot hand work back or take on more. The queue builds at the slowest one, "
              "wherever it sits on the line."),
-            ("coins", "Sized for the peak, machines sit idle",
-             "Switch to as sized in our cost model: the robots stop queuing, but they are busy only part of the "
-             "time. Idle capacity is what a store pays for."),
+            ("coins", "Faster in the peak, idle at low volume",
+             "Machines can cut the wait in a surge, but sized for the peak they are busy only part of the day, "
+             "and idle capacity is what a store pays for."),
         ],
-        explainer_title="Inside the store: a bucket brigade at the counter",
-        caption="A movement illustration in the Week 5 units, not a cost model and not measured Chagee service times. "
-                "Times and costs come from the next two slides.",
-        concepts=[("brigade", "why people absorb a surge"), ("bottleneck", "why fixed machines queue at the slowest step")],
+        explainer_title="Counter flow: people and machines in a surge",
+        caption="Movement illustration in Week 5 units: not a cost model, not measured times. More detail: appendix A5.",
+        concepts=[("brigade", "how much a crew absorbs in a surge", "Illustration with the Week 5 rules"),
+                  ("bottleneck", "where a fixed machine line queues", "Illustration and cost model")],
         printnote="Printed at the end of the surge window; the table compares both sizing settings over the full "
                   "run.",
         view_kicker="Our view",
-        view_lead="People flex; machines come in whole units.",
-        view_body="So the counter choice turns on volume. The next two slides measure it: time to serve, then cost.",
-        notes=("About 35 seconds. Press play. Top lane: people work as a bucket brigade. When the surge hits, the "
-               "faster worker takes over more of each drink, the handover point moves and the load evens out. "
-               "Bottom lane: robots are fixed at their station, so the queue builds at the slowest one and nobody "
-               "can take its work. Flip to "
-               "as sized in our cost model: the robots stop queuing, but they sit idle much of the run, and idle "
-               "machines are what you pay for. This is a mechanism, in the Week 5 units; the next slide puts it "
-               "in a real store layout in seconds."),
+        view_lead="Materials are half of opening; service capacity is the other half.",
+        view_body="People flex; machines come in whole units. So the counter choice turns on volume and local "
+                  "costs: next slide.",
+        notes=("About 40 seconds. Materials are only half of an opening; the counter is the other half. Press "
+               "play. Top lane: people work as a bucket brigade, a course concept: each carries a drink along and "
+               "hands it over, so when the surge hits the load evens out. Bottom lane: machines are fixed at their "
+               "station, so the queue builds at the slowest one: the bottleneck. Flip to as sized in our cost "
+               "model: the machines stop queuing, but sit idle much of the run, and idle capacity is what a store "
+               "pays for. This is one mechanism, in the Week 5 units, not measured times; the worker-order "
+               "comparison and time to serve are in appendix A5. Next: what each counter costs."),
         sources="Bucket-brigade engine: course Week 5 explainer (reference, read-only), wrapped by "
                 "sim/mechanism.js. As-sized ratios read from sim/ peakUtilisation and plan. Illustration settings: "
                 "assumptions.json illustration (mixed_sizing needs approval).",
     ),
     dict(
         key="store", widget="storefront",
-        kicker="Perform", chapter="perform",
+        kicker="Appendix A5 · store replica and time to serve", chapter="appendix",
         headline="In the peak hour, robots hand over a cup in about {{sim.st_med_all_machine|sec}}; a counter "
                  "like today's takes about {{sim.st_med_mixed|min1}}",
         explainer_title="Store replica: two counters in the peak hour, side by side",
@@ -312,8 +316,9 @@ CONTENT = [
                       "{{validation.crossover_stability.seeds|int}} simulated days per bar.",
         serve_printnote="Printed at the moderate surge.",
         view_kicker="Our view",
-        view_lead="Robots buy speed in the peak; whether it pays is the next slide.",
-        notes=("About 45 seconds. Two counters laid out like a Chagee tea bar, seeing the same customers: order on "
+        view_lead="Robots buy speed in the peak; whether it pays is the counter-cost slide.",
+        notes=("Handout only (appendix): detail behind the counter-flow slide. Two counters laid out like a Chagee "
+               "tea bar, seeing the same customers: order on "
                "the right, brewing behind the counter, pick-up on the left. It plays on its own. Top: people as the "
                "Week 5 bucket brigade, slowest first. Each worker carries a cup towards pick-up; the last hands it "
                "over, walks back and takes over from the colleague behind, so the line balances itself. Bottom: the "
@@ -321,8 +326,8 @@ CONTENT = [
                "ring, and fewer cups get out. Switch the bottom to All-robot: nobody moves, the cups move from "
                "machine to machine. The times come from the cost model, in the line underneath: today's counter "
                "hands over a cup in about {{sim.st_med_mixed|min1}} at the median, an all-robot counter in about "
-               "{{sim.st_med_all_machine|sec}}; open it for the chart. None of these is measured. The next slide "
-               "puts a price on each counter."),
+               "{{sim.st_med_all_machine|sec}}; open it for the chart. None of these is measured. The counter-cost "
+               "slide puts a price on each counter."),
         sources="Semi-automation (machine dispenses the formulation): L-unsw; Chagee Express semi-automated "
                 "machine: L-cyberrt. Layout: illustrative, after a Chagee tea-bar storefront (order right, pick-up "
                 "left). Animation: sim/store.js (Week 5 brigade rules, illustration.walk_back_speed). Times and lost "
@@ -332,14 +337,14 @@ CONTENT = [
     ),
     dict(
         key="cost", widget="volcost",
-        kicker="Perform", chapter="perform",
+        kicker="Counter", chapter="perform",
         headline="Counter: at our inputs all-human and mixed are {{sim.vc_hm|sgd}} a cup apart, so choose with all "
                  "inputs together",
         explainer_title="Cost per cup, by counter",
         caption="Faster service does not mean a lower cost per cup: at low volume, machine capacity sits unused. "
                 "Labour, machines and lost sales per cup served, by steady volume.",
-        concepts=[("utilisation", "why idle machines raise the cost per cup"),
-                  ("robotics", "which counter to install")],
+        concepts=[("utilisation", "why idle machines raise the cost per cup", "In the cost model"),
+                  ("robotics", "which counter to install", "Compared in the cost model")],
         printnote="Printed at the default forecast.",
         tradeoff_title="One-variable thresholds: which assumptions deserve a closer look",
         tradeoff=["wage", "cupsPerDay", "machineMonth", "u", "coordHuman", "coordMixed", "newShare", "machineMult"],
@@ -361,7 +366,7 @@ CONTENT = [
                      "idle and costly when volume is low.",
             limitation="Small gap on a simplified staffing model that misses its Week 5 check "
                        "({{sim.w5_lo|f1}}% and {{sim.w5_hi|f1}}% against ±{{validation.week5_comparison.tolerance_pct|int}}%). "
-                       "No measured Chagee service times.",
+                       "No measured service times: a candidate to test in a pilot, not an instruction to install.",
             actions=[
                 ("format", "Enter the store's expected steady volume, local wage and machine quote into the "
                            "playbook (slide {{ref.playbook|int}})."),
@@ -385,39 +390,136 @@ CONTENT = [
                "coordinating a little worse than we assume (below {{sim.be_coordHuman_all_human_mixed|f2}}), or a "
                "wage above about {{sim.be_wage_all_human_mixed|sgd}} an hour; each is only a few per cent away. "
                "Volume needs about {{sim.be_cupsPerDay_all_human_mixed|int}} cups a day. Full automation needs about {{sim.be_cupsPerDay_mixed_all_machine|int}}. And be clear "
-               "how sure we are: it is a close call on a simplified staffing model."),
+               "how sure we are: it is a close call on a simplified staffing model, so it is a candidate to test in a pilot, "
+               "not an instruction to install equipment."),
         sources="Wage S$ per hour worked, fully loaded: L-mom-pwm, L-mom-ows, L-cpf, L-sdl, L-mom-leave, L-mom-ph. "
                 "Costs and break-evens: sim/ cost model and breakEven over cups per day (data.json volumeCurve, "
                 "breakEven), default band, moderate surge. All inputs: assumptions.json (illustrative).",
     ),
     dict(
-        key="s3", widget="stock",
+        key="inv", widget="invplan",
         kicker="Provision", chapter="provision",
-        headline="Provision: size the first milk delivery by weighing unused milk against running short",
-        points=[
-            ("scale", "Two ways to be wrong",
-             "Too much fresh milk expires; too little turns customers away. Newsvendor logic: order until one "
-             "more litre's expected waste cost equals the expected lost-sale cost it avoids."),
-            ("coins", "Here a stockout costs more than waste",
-             "A missed cup loses {{provision.stockout_cost_per_cup|sgd}}; a spare litre of milk wastes "
-             "{{provision.milk_waste_cost_per_litre|sgd}}. So the best order sits high in the band, at the "
-             "{{sim.critical_ratio|pct}} point of demand."),
-            ("moon", "Shelf life caps the buffer",
-             "Fresh milk keeps about {{provision.milk_shelf_life_days|int}} days (illustrative), so extra stock "
-             "cannot be carried forward. A narrower band from slide {{ref.s2|int}} is the cheaper fix."),
+        headline="Provision: translate the sales forecast into an opening inventory plan",
+        chain_title="From forecast to purchase order",
+        chain=[
+            ("Forecast cups", "The whole store's weekly range (slide {{ref.s2|int}}). Cups alone are not enough: "
+                              "drinks use different ingredients."),
+            ("Product mix", "Share of each drink and format (size, hot or cold). Requires menu-mix data."),
+            ("Recipes and materials", "Ingredient requirement = forecast drink quantities × ingredient amount per "
+                                      "drink. Packaging follows orders and formats."),
+            ("Deliveries and stock", "The order nets off usable stock and deliveries due, adds expected losses, and "
+                                     "fits lead times, shelf life, storage and supplier minimums."),
         ],
-        explainer_title="Opening stock calculator",
-        caption="Expected cost of the first delivery at one store, using the range from slide {{ref.s2|int}}. Milk costs are "
-                "generic: overseas sourcing is not public.",
-        concepts=[("newsvendor", "the size of the first milk delivery"),
-                  ("inventory", "what the store holds before its first customers")],
-        printnote="Printed at the band from slide {{ref.s2|int}} and the default of {{provision.opening_stock_days|int}} days "
-                  "of stock.",
+        matrix_title="Opening plan by category: qualitative, no quantities",
+        matrix_cols=["Item", "What drives its demand", "Main constraint", "Opening decision", "Replenishment",
+                     "Needed for a number"],
+        matrix=[
+            ("Tea leaves", "Tea drinks in the mix × tea per drink",
+             "Sourcing lead time, minimum orders, storage; quality fades with age and handling, so tea also has "
+             "waste and quality risk",
+             "How much to hold before opening: the opening weeks plus the time a reorder takes to arrive",
+             "Reorder when stock reaches usage over the lead time plus a buffer",
+             "Recipes · supplier lead time · minimum order · usable life"),
+            ("Fresh milk and alternatives", "Milk drinks × milk per drink; alternatives by customer choice",
+             "Short shelf life, chilled space, delivery frequency",
+             "First fresh-milk delivery: the worked example (slide {{ref.s3|int}})",
+             "Each delivery sized on actual sales",
+             "Recipes · share of alternative milks · delivery schedule"),
+            ("Other ingredients", "Each recipe's amounts",
+             "Each has its own shelf life and supplier terms",
+             "Plan per recipe and shelf life: perishables like milk, longer-life items like tea",
+             "Per item's usage and lead time",
+             "Menu recipes · shelf lives · supplier terms"),
+            ("Cups, lids, seals, packaging", "Orders by format",
+             "Lead time, minimum orders, bulky storage",
+             "Cover opening demand plus the reorder lead time: no cup or seal, no sale, even with ingredients ready",
+             "Reorder on usage and lead time",
+             "Format mix · supplier lead time · storage space"),
+        ],
+        matrix_note="Origin (imported or local) is not public for overseas stores: Chagee's direct sourcing of tea "
+                    "and milk is documented for its domestic operations (L-prn). Quantities, lead times, shelf lives "
+                    "and service levels are not in our sources, so none are shown.",
+        concepts=[("inventory", "what must be on hand on opening day", "Prototype: fresh milk only"),
+                  ("leadtime", "how early each item is ordered", "Explained, not modelled"),
+                  ("reorder", "when each item is replenished", "Explained, not modelled")],
+        view_kicker="Materials and capacity",
+        view_lead="A forecast becomes sales only if the store has both materials and service capacity.",
+        view_body="Enough milk is not enough if tea or cups run out. Enough ingredients are not enough if the counter "
+                  "cannot serve customers (slides {{ref.mech|int}} and {{ref.cost|int}}). Both use the Predict "
+                  "range; the prototype does not optimise them together.",
         gate=dict(
             n=2, name="Provision", who=["supply", "entry"],
+            decision="What must be on hand on opening day, what should the first delivery bring, and what is "
+                     "replenished later?",
+            action="Build the opening list item by item from the demand range: tea, milk and alternatives, other "
+                   "ingredients, cups, lids and packaging. Size fresh milk with the worked example.",
+            evidence=[("q", "Quantified here", "fresh milk only (slide {{ref.s3|int}})"),
+                      ("need", "Needs Chagee data", "menu mix · recipes · lead times · minimum orders")],
+            tradeoff="Too little of any one item stops sales. Too much ties up cash and storage, and perishables "
+                     "expire or lose quality.",
+            limitation="No quantities for tea, other ingredients or packaging: their inputs are not in our "
+                       "sources. Inventory and counter are not optimised together.",
+            actions=[
+                ("supply", "Collect recipes, the expected menu mix, and each supplier's lead time and minimum "
+                           "order for the market."),
+                ("supply", "Draft the opening list: requirement = forecast drinks × amount per drink, net of stock "
+                           "on hand and deliveries already due."),
+                ("entry", "Send any change to the demand range, including expected opening hype; supply chain "
+                          "recomputes the list."),
+                ("ops", "Count stock at opening and log stockouts of every item for Review."),
+            ],
+            calc=["Ingredient requirement = forecast drink quantities × ingredient amount per drink.",
+                  "Purchase order = requirement over the cover period − usable stock − deliveries already due + "
+                  "expected losses, rounded to the supplier's minimum and delivery days.",
+                  "Reorder point: reorder when stock falls to the usage expected during the lead time, plus safety "
+                  "stock for demand above that. Explained here; not implemented in the prototype.",
+                  "Implemented in the prototype: the first fresh-milk delivery only (slide {{ref.s3|int}})."],
+        ),
+        notes=("About 40 seconds. Predict gives us cups for the whole store, but cups alone do not tell us what to "
+               "buy: different drinks use different ingredients. So the plan runs from forecast cups, to the product "
+               "mix, to recipes, to deliveries. Ingredient requirement is forecast drinks times the amount per "
+               "drink; the purchase order then nets off stock on hand and deliveries already due, adds expected "
+               "losses, and fits supplier minimums. The table goes item by item. Tea keeps longer than milk, but it "
+               "still has lead times, minimum orders and quality that fades, so it is not risk-free. Milk is "
+               "perishable: that is our worked example, next. Packaging is easy to forget: no cup or seal, no sale. "
+               "We show no quantities: recipes, menu mix, lead times and minimum orders are not in our sources. And "
+               "materials are only half: enough ingredients are not enough if the counter cannot serve customers."),
+        sources="Direct sourcing of tea and milk, domestic operations: L-prn (company release); overseas origin not "
+                "claimed. Demand range: the Predict model (assumptions.json, illustrative). Every other cell: our "
+                "qualitative planning logic, no Chagee figure.",
+    ),
+    dict(
+        key="s3", widget="stock",
+        kicker="Provision · worked example", chapter="provision",
+        headline="Worked example: choosing the first fresh-milk delivery",
+        sub="The whole-store plan includes many materials. We use fresh milk to demonstrate the ordering trade-off "
+            "because unused stock can expire quickly.",
+        points=[
+            ("scale", "Decision and method",
+             "How much milk should the first delivery bring? Newsvendor logic balances the cost of leftover stock "
+             "against the cost of running short."),
+            ("coins", "Inputs",
+             "The demand range from slide {{ref.s2|int}}; a missed cup costs {{provision.stockout_cost_per_cup|sgd}}, "
+             "a wasted litre {{provision.milk_waste_cost_per_litre|sgd}}; shelf life about "
+             "{{provision.milk_shelf_life_days|int}} days. Simplification: every cup uses "
+             "{{provision.milk_litres_per_cup|f2}} L; real recipes differ."),
+            ("moon", "Opening surge or steady demand",
+             "The surge is assumed to last {{demand.opening_hype_weeks|int}} weeks, so this delivery falls inside "
+             "it: about {{sim.opt_litres_hype|int}} L if the surge is real, {{sim.opt_litres|int}} L on steady "
+             "demand."),
+        ],
+        explainer_title="First fresh-milk delivery calculator",
+        caption="Expected cost of the first delivery at one store, using the range from slide {{ref.s2|int}}. Milk costs are "
+                "generic: overseas sourcing is not public.",
+        concepts=[("newsvendor", "the size of the first fresh-milk delivery", "Implemented for fresh milk")],
+        printnote="Printed at the band from slide {{ref.s2|int}} (opening hype removed) and the default of "
+                  "{{provision.opening_stock_days|int}} days of stock.",
+        gate=dict(
+            n=2, name="Provision · fresh milk", who=["supply", "entry"],
             decision="How much fresh milk should the first delivery bring?",
-            action="Order about {{sim.opt_litres|int}} L for the first {{provision.milk_shelf_life_days|int}} days, "
-                   "using steady demand (opening hype removed).",
+            action="Steady demand: about {{sim.opt_litres|int}} L for the first {{provision.milk_shelf_life_days|int}} "
+                   "days. If the expected opening surge is real, about {{sim.opt_litres_hype|int}} L: this delivery "
+                   "falls inside it.",
             evidence=[("cost", "Short vs waste, per L", "{{sim.milk_trigger|sgd}} vs {{provision.milk_waste_cost_per_litre|sgd}}"),
                       ("cover", "Order covers", "{{sim.critical_ratio|pct}} of outcomes"),
                       ("waste", "Expected waste", "{{sim.opt_waste_l|int}} L"),
@@ -425,13 +527,12 @@ CONTENT = [
             tradeoff="Order less: more missed cups at {{provision.stockout_cost_per_cup|sgd}} each. Order more: more "
                      "milk thrown away at {{provision.milk_waste_cost_per_litre|sgd}} a litre. A shortage costs more, "
                      "so the order sits above base demand.",
-            limitation="Still runs short in about {{sim.short_share|pct}} of outcomes. It sizes the first delivery "
-                       "only; later deliveries should follow actual sales. Milk costs are generic.",
+            limitation="Sizes one delivery of one item; it does not optimise the whole inventory. Still runs short "
+                       "in about {{sim.short_share|pct}} of outcomes. Generic milk costs, one amount per cup.",
             actions=[
+                ("entry", "Say whether the opening surge is expected; size the first delivery on it if so."),
                 ("supply", "Place the first delivery at the suggested order, not at the base forecast or the top of "
                            "the range."),
-                ("entry", "Send supply chain any change to the range, including whether opening hype is expected; "
-                          "supply chain recomputes the order."),
                 ("ops", "From the second delivery on, order on actual sales; log waste and shortages for Review."),
             ],
             calc=["Newsvendor logic: order up to the point where the chance of running short equals waste cost ÷ "
@@ -439,23 +540,25 @@ CONTENT = [
                   "({{sim.milk_trigger|sgd}} + {{provision.milk_waste_cost_per_litre|sgd}}), so the order covers "
                   "about {{sim.critical_ratio|pct}} of outcomes.",
                   "Shortage cost per litre = {{provision.stockout_cost_per_cup|sgd}} per missed cup ÷ "
-                  "{{provision.milk_litres_per_cup|f2}} L per cup.",
-                  "The top of the {{demand.band_coverage|pct}} range is about {{sim.top_days|f1}} days of base demand; "
-                  "the best order, {{sim.opt_days|f1}} days, sits just above it because a shortage costs far more "
-                  "than waste. With cheaper shortages it would sit lower.",
-                  "The first delivery covers one shelf life ({{provision.milk_shelf_life_days|int}} days); the "
-                  "opening hype is assumed to last {{demand.opening_hype_weeks|int}} weeks, so it outlasts the "
-                  "first delivery."],
+                  "{{provision.milk_litres_per_cup|f2}} L per cup, the same for every drink (a simplification).",
+                  "The best order is {{sim.opt_days|f1}} days of the demand it is sized on, just above the top of the "
+                  "{{demand.band_coverage|pct}} range ({{sim.top_days|f1}} days), because a shortage costs far more "
+                  "than waste.",
+                  "Surge: opening demand is assumed {{demand.opening_hype_multiplier|x}} steady demand for "
+                  "{{demand.opening_hype_weeks|int}} weeks, longer than this {{provision.milk_shelf_life_days|int}}-day "
+                  "delivery, so the same calculation on surge demand gives the larger order."],
         ),
-        notes=("About 30 seconds; under time pressure, read only the gate card. Fresh milk is a newsvendor "
-               "problem: order until one more litre's expected waste cost equals the expected lost-sale cost it "
-               "avoids. A lost cup costs far more than a wasted litre, so the best order sits above the base "
-               "forecast, and that holds unless waste costs over {{sim.milk_trigger|sgd}} a litre. A wider band "
-               "raises the cost of even the best order: that is the pre-launch signal's value in stock terms. "
-               "Caveat: milk costs are generic; Chagee's overseas sourcing is not public."),
-        sources="All figures: assumptions.json (illustrative). Milk trigger: sim/ milkTrigger, stockout cost per "
-                "cup / milk per cup, against the approved milk waste range. Overseas milk sourcing: unknown, "
-                "deliberately not claimed (brief.md section 9).",
+        notes=("About 35 seconds; under time pressure, read only the gate card. The whole-store plan includes many "
+               "materials; we use fresh milk to show the ordering trade-off because unused milk expires quickly. "
+               "Newsvendor logic balances the cost of leftover stock against the cost of running short. A missed "
+               "cup costs far more than a wasted litre, so the best order sits above the base forecast. Be clear "
+               "about the opening surge: we assume it lasts {{demand.opening_hype_weeks|int}} weeks, longer than "
+               "this delivery, so if it is real the order is about {{sim.opt_litres_hype|int}} L, not the "
+               "{{sim.opt_litres|int}} L steady demand gives. Limits: one item, one delivery, one milk amount per "
+               "cup, generic costs."),
+        sources="All figures: assumptions.json (illustrative). Best order: sim/ provision at the Predict range; the "
+                "surge order is the same optimum in days of demand applied to opening-week demand. Milk trigger: "
+                "sim/ milkTrigger. Overseas milk sourcing: unknown, deliberately not claimed (brief.md section 9).",
     ),
     dict(
         key="a1", widget="a1", kicker="Appendix A1 · assumptions", chapter="appendix",
@@ -513,6 +616,9 @@ CONTENT = [
             "That rerunning the model with observed inputs validates it, or proves machines should be added.",
             "That uncertainty never matters for the counter: the finding holds for the scenarios we tested.",
             "Sales revenue or a payback for Chagee: A4 sets modelled avoided cost against approved but illustrative costs.",
+            "Quantities, lead times, shelf lives, minimum orders or origin for tea, other ingredients or packaging.",
+            "Inventory savings beyond fresh milk: tea, other ingredients and packaging have not been estimated.",
+            "That inventory and counter are optimised together: the prototype treats them separately.",
         ],
         notes="Handout only. Ledger from assumptions.json _sources; the list of claims not made follows brief.md "
               "section 9 plus the limits found while building the deck.",
@@ -579,7 +685,7 @@ CONTENT = [
             ("Counter: when full automation beats mixed", "Store format / equipment, with franchisees",
              ("mixed", "all_machine"), ["cupsPerDay", "wage", "machineMonth", "u", "machineMult"]),
         ],
-        stock_group=("Stock: when to order at or below the base forecast", "Supply chain / planning"),
+        stock_group=("Fresh milk: when to order at or below the base forecast", "Supply chain / planning"),
         table_note="One input at a time, the rest at our defaults; nearest first. Thresholds flag what to recheck, "
                    "not when to switch (slide {{ref.cost|int}}).",
         explainer_title="Updated scenario versus the original plan",
@@ -591,24 +697,24 @@ CONTENT = [
             decision="After real sales arrive, does the plan still hold?",
             action="Create an updated scenario using observed inputs and compare it with the original plan.",
             evidence=[("feeds", "Feeds the model", "steady sales · wage · machine quote · milk costs"),
-                      ("diag", "Check by hand", "service times · lost orders · waste and shortages vs plan")],
+                      ("diag", "Check by hand", "service times · lost orders · waste and stockouts of every item vs plan")],
             tradeoff="Change too early and you chase the opening hype; change too late and the store keeps the "
                      "wrong stock or counter.",
             limitation="Rerunning the model does not validate it, and a new result does not by itself prove that "
                        "machines should be added.",
             actions=[
                 ("ops", "After the first {{demand.opening_hype_weeks|int}} weeks, record steady sales, waste, "
-                        "shortages, service times and lost orders."),
+                        "stockouts of every item, service times and lost orders."),
                 ("entry", "Revise the demand estimate from post-hype sales and enter it, with the latest wage and "
                           "machine quote, as the updated scenario (right)."),
-                ("supply", "Compare actual waste and shortages with the expected values (slide {{ref.s3|int}}); "
-                           "update the milk costs only if they differ for a known reason."),
+                ("supply", "Compare milk waste and shortages with the worked example (slide {{ref.s3|int}}) and "
+                           "other stockouts with the opening list (slide {{ref.inv|int}}); update inputs only for a known reason."),
                 ("format", "Change the counter only if the full updated comparison changes, not because one "
                            "threshold was crossed."),
             ],
             calc=["Post-hype sales: revise the demand estimate. Feeds the model (steady cups per day).",
-                  "Waste and shortages: reassess the ordering assumptions. Diagnostic: compare with the expected "
-                  "waste and shortage, then update milk costs by hand if needed.",
+                  "Waste and stockouts: reassess the ordering assumptions. Diagnostic: milk against the expected "
+                  "waste and shortage; other items against the opening list (not modelled).",
                   "Service times and lost orders: check whether the service model matches reality. Diagnostic only: "
                   "the model contains no measured service times.",
                   "Updated wages and machine quotes: rerun the counter comparison. Feeds the model directly."],
@@ -618,8 +724,8 @@ CONTENT = [
                "per cent of our defaults: machine cost, how well staff coordinate, and the wage. Volume needs "
                "about {{sim.be_cupsPerDay_all_human_mixed|int}} cups a day. Full automation needs about "
                "{{sim.be_cupsPerDay_mixed_all_machine|int}} cups a day, and nothing else in range gets it there. "
-               "Stock: order above the base forecast unless milk waste costs over {{sim.milk_trigger|sgd}} a litre, "
-               "which is far outside our range. On the right, put in a market: say a higher wage, or a cheaper "
+               "Fresh milk: order above the base forecast unless waste costs over {{sim.milk_trigger|sgd}} a litre, "
+               "far outside our range; check stockouts of every other item against the opening list. On the right, put in a market: say a higher wage, or a cheaper "
                "machine. The panel recomputes the verdict, how much it wins by, and which trigger is closest to "
                "flipping it. If the margin is under a cent a cup, call it a tie and decide on other grounds."),
         sources="Wage: L-mom-pwm, L-mom-ows, L-cpf, L-sdl, L-mom-leave, L-mom-ph. Triggers: sim/ breakEven "
@@ -629,27 +735,28 @@ CONTENT = [
     ),
     dict(
         key="s5", widget="benefit",
-        kicker="Benefit, risks, next step", chapter="decide",
-        headline="Choosing each store's counter for its conditions is worth about {{sim.bn_counter|sgdk}} a year in "
-                 "counter costs, plus {{sim.bn_stock|sgdk}} once in opening stock (illustrative)",
-        explainer_title="Opening pipeline: what choosing per store is worth",
-        comparator="Comparison: a mixed counter at every opening versus choosing a counter for each store's modelled "
-                   "conditions. A modelled avoided cost, not a demonstrated AI saving.",
+        kicker="Conclusion, benefit, next step", chapter="decide",
+        headline="Each opening gets a demand estimate, an inventory plan, a counter tested on local costs and a "
+                 "review; only counter and fresh-milk benefits are quantified",
+        explainer_title="What choosing per store is worth (quantified part only)",
+        comparator="Comparison: a mixed counter at every opening versus choosing each store's counter for its modelled "
+                   "conditions. The quantified inventory benefit currently covers the fresh-milk example only. "
+                   "Benefits for tea, other ingredients, and packaging have not been estimated.",
         caption="Bar = openings at that volume × the standard's yearly cost above the cheapest counter (our defaults).",
         printnote="Printed at our defaults: openings spread evenly over our volume range.",
-        gates_title="How each opening is decided",
+        gates_title="Four outputs for each opening",
         gates=[
             ("Before committing the site", "Predict", ["entry", "crm"],
-             "Open the waitlist and read the demand band; back-test it on past openings.", "{{ref.s2|int}}"),
+             "A demand estimate for the whole store: a range to test, back-tested on past openings.", "{{ref.s2|int}}"),
             ("Before the first order", "Provision", ["supply"],
-             "Order milk at the best order, above the base forecast; that holds unless waste costs over "
-             "{{sim.milk_trigger|sgd}} a litre.", "{{ref.s3|int}}"),
+             "An opening inventory and replenishment plan, item by item; fresh milk sized with newsvendor logic.",
+             "{{ref.inv|int}}"),
             ("Before fit-out", "Counter", ["format"],
-             "Compare all three setups with all current inputs together; thresholds only flag what to recheck.",
+             "A counter compared on demand and local costs, all inputs together; a candidate to pilot.",
              "{{ref.cost|int}}"),
             ("After opening", "Review", ["ops", "entry"],
-             "Build an updated scenario from observed sales, wages and machine quotes, and compare it with the "
-             "original plan.", "{{ref.playbook|int}}"),
+             "Compare sales, stockouts, waste and service with the plan; rerun with observed inputs.",
+             "{{ref.playbook|int}}"),
         ],
         risks=[
             ("Staff dependence and turnover",
@@ -672,22 +779,21 @@ CONTENT = [
         view_body="Volume and operating costs mattered more; demand uncertainty still matters for inventory. This "
                   "holds for the scenarios we tested, not as a general rule. Next: replace the assumptions with "
                   "Chagee data and back-test on recent openings such as Korea (Q2 2026).",
-        notes=("About 1 minute. This is how an opening is actually decided: four gates. Before committing the site, "
-               "read the waitlist band. Before the first order, stock milk above the base forecast. Before fit-out, "
-               "put the store's volume, wage and machine price into the playbook and pick the counter. After "
-               "opening, measure steady volume and add machine stations at about "
-               "{{sim.be_cupsPerDay_all_human_mixed|int}} cups a day. On the left, what that is worth against one "
-               "standard counter everywhere, Chagee's semi-automated one: move the openings and the expected volume "
-               "range and the bars follow. Below the trigger the standard costs about {{sim.bn_store|sgd0}} a store a "
-               "year more than the cheapest counter; above it, nothing. Across about "
-               "{{benefit.overseas_stores_per_year|int}} openings that is about {{sim.bn_counter|sgdk}} a year in counter "
-               "costs, plus a one-time {{sim.bn_stock|sgdk}} of opening stock if the signal works as assumed. A modelled avoided cost, not a "
-               "demonstrated saving. The risks are on the slide with one mitigation each. Close on the next step: "
-               "real data, a back-test on recent openings such as Korea, and a paired pilot."),
+        notes=("About 1 minute. To close: for each opening the four gates give four outputs. A demand estimate for "
+               "the whole store. An opening inventory and replenishment plan, item by item, with fresh milk worked "
+               "through. A counter evaluated against demand and local costs. And a review once sales, stockouts, "
+               "waste and service performance come in. What is it worth? Only part is quantified. Choosing each "
+               "store's counter, rather than a mixed counter everywhere, is worth about {{sim.bn_counter|sgdk}} a "
+               "year in counter costs across about {{benefit.overseas_stores_per_year|int}} openings: move the "
+               "openings and the volume range and the bars follow. The only inventory benefit we quantified is fresh "
+               "milk, about {{sim.bn_stock|sgdk}} once, and only if the pre-launch signal narrows the range as "
+               "assumed. Tea, other ingredients and packaging have not been estimated. These are modelled avoided "
+               "costs, not demonstrated savings; appendix A4 sets them against the cost of building the gates. "
+               "Close on the next step: real data, a back-test on recent openings such as Korea, and a paired pilot."),
         sources="Overseas openings planned for 2026 and Korea launch: L-jiemian. Semi-automated counter as Chagee's "
                 "standard: L-unsw, L-cyberrt (our reading). Per-store cost: data.json volumeCurve and the cups-per-day "
                 "break-even, x open days. Share below the trigger: openings assumed evenly spread over the approved "
-                "cups range (illustrative). Stock term: provision best-order cost, no signal minus default band. "
+                "cups range (illustrative). Stock term: fresh milk only, provision best-order cost, no signal minus default band. "
                 "Everything else: assumptions.json and sim/ (illustrative).",
     ),
 ]
@@ -705,6 +811,8 @@ CHECK_CLAIMS = [
      "CHECK: our reading"),
     ("Chagee's counter today is semi-automated, modelled as our mixed setup", ["store", "s5"], "L-unsw, L-cyberrt",
      "CHECK: our reading of public sources"),
+    ("Chagee sources tea and milk directly for domestic operations; overseas origin not claimed", ["c1", "inv"],
+     "L-prn", "OK for domestic; overseas deliberately not claimed"),
 ]
 MODEL_CLAIMS = [
     ("Labour cost {{costs.labour_cost_per_hour|sgd}} per hour worked, fully loaded", ["cost", "playbook"],
@@ -718,12 +826,14 @@ MODEL_CLAIMS = [
      "(a step)", ["cost", "playbook"], "sim/ breakEven"),
     ("Peak-hour time to serve: today's counter about {{sim.st_med_mixed|min1}}, all-robot about "
      "{{sim.st_med_all_machine|sec}} (median)", ["store"], "sim/ serveTimes (cost model)"),
+    ("First fresh-milk delivery: about {{sim.opt_litres|int}} L on steady demand, about {{sim.opt_litres_hype|int}} L "
+     "if the opening surge is real", ["s3"], "sim/ provision (same optimum in days of demand)"),
     ("Best opening milk order holds above base unless waste costs over {{sim.milk_trigger|sgd}} a litre",
      ["s3", "playbook"], "sim/ milkTrigger"),
     ("Best opening order costs {{sim.prov_none|sgd0}} with no signal against {{sim.prov_def|sgd0}} at the "
      "default band", ["s3"], "sim/ provision"),
     ("Choosing each store's counter instead of mixed everywhere: about {{sim.bn_counter|sgdk}} a year in counter "
-     "costs plus {{sim.bn_stock|sgdk}} once in opening stock", ["s5"],
+     "costs plus {{sim.bn_stock|sgdk}} once in fresh-milk opening stock (the only inventory item quantified)", ["s5", "a4"],
      "sim/ volumeCurve, breakEven; openings spread evenly (illustrative)"),
     ("Week 5 check: pooled formula {{sim.w5_lo|f1}}% and {{sim.w5_hi|f1}}% above the Week 5 engine; the test fails",
      ["cost"], "sim/ tests"),
@@ -731,6 +841,11 @@ MODEL_CLAIMS = [
      "signal", ["s2"], "assumption, shown as a sensitivity"),
 ]
 QA = [
+    ("Is this only about milk?", "No. The plan covers the whole store: demand for every drink, and an inventory plan "
+     "for tea, milk and alternatives, other ingredients and packaging. Fresh milk is the one item we quantify, as a "
+     "worked example of the ordering trade-off; the others need recipe and supplier data we do not have."),
+    ("What does the bucket brigade add?", "One service-capacity mechanism: how a crew shares work in a surge, and "
+     "why fixed machines queue at a bottleneck or sit idle. It informs the counter choice; it is not the solution."),
     ("Why not a marketplace?", "Chagee runs one closed app-to-store channel, so the marketplace-design topics do not "
      "apply (our reading, partly from an informal call)."),
     ("So which counter should a new store open with?", "No default. All-human is cheaper at our forecast by "
@@ -752,12 +867,12 @@ QA = [
 # Times are a talk plan, not model inputs, so they live here rather than in assumptions.json.
 # ---------------------------------------------------------------------------
 CHAPTERS = [
-    ("context", "Context", "One new store: the problem, and what AI would add", 50),
+    ("context", "Context", "One new store: the whole-store problem, and what AI would add", 50),
     ("scope", "Scope", "Which course topics we use, which we leave out, and why", 40),
-    ("predict", "Predict", "Gate 1: what demand to plan for", 40),
-    ("provision", "Provision", "Gate 2: how much milk the first delivery brings", 30),
-    ("perform", "Perform", "Gate 3: which counter to install; speed is not cost", 140),
-    ("decide", "Decide", "Gate 4: review after opening, and what choosing well is worth", 110),
+    ("predict", "Predict", "Gate 1: what demand the whole store should plan for", 40),
+    ("provision", "Provision", "Gate 2: the opening inventory plan, with fresh milk as the worked example", 75),
+    ("perform", "Counter", "Gate 3: how the counter flows, and which one to install", 90),
+    ("decide", "Review", "Gate 4: review after opening, and the conditional business case", 110),
 ]
 CONTENTS_SECONDS = 10          # the Contents slide itself
 QA_SECONDS = 180               # brief.md: about 3 minutes of Q&A
@@ -768,13 +883,14 @@ PLACEHOLDERS = {
                     plan="Chagee scale facts, the core processes AI can enhance (demand forecasting, opening "
                          "inventory, counter service), the problem statement and its significance."),
 }
-DECK = ["c1", "sc", "s2", "s3", "mech", "store", "cost", "playbook", "s5", "a1", "a1b", "a1c", "a1d", "a2", "s4", "a3", "a4"]
+DECK = ["c1", "sc", "s2", "inv", "s3", "mech", "cost", "playbook", "s5", "a1", "a1b", "a1c", "a1d", "a2", "s4", "a3",
+        "a4", "store"]
 
 # ---------------------------------------------------------------------------
 # Placeholders and the no-raw-numbers check
 # ---------------------------------------------------------------------------
 PH = re.compile(r"\{\{([\w.]+)\|(\w+)\}\}")
-ALLOW = re.compile(r"\bAY20\d\d-\d\d\b|\bTopics? \d+(?:(?:, | and | to )\d+)*|\bstep \d+|\bA[1-4]\b|^\d · |^About \d+(?:\.\d+)? (?:minutes?|seconds)|\bsection \d+|\b(?:FY)?20\d\d\b|\bWeeks? \d+(?:[–-]\d+)?(?: and \d+)?|OPIM639|\bQ[1-4]\b|\b[LI]-[\w-]+")
+ALLOW = re.compile(r"\bAY20\d\d-\d\d\b|\bTopics? \d+(?:(?:, | and | to )\d+)*|\bstep \d+|\bA[1-5]\b|^\d · |^About \d+(?:\.\d+)? (?:minutes?|seconds)|\bsection \d+|\b(?:FY)?20\d\d\b|\bWeeks? \d+(?:[–-]\d+)?(?: and \d+)?|OPIM639|\bQ[1-4]\b|\b[LI]-[\w-]+")
 FMT = {
     "int": lambda v: f"{v:,.0f}",
     "pct": lambda v: f"{v * 100:.0f}%",
@@ -855,6 +971,10 @@ def sim_values(d: dict) -> dict:
         "opt_days": d["provision"]["def"]["optDays"],
         "opt_litres": d["provision"]["def"]["optDays"] * d["defaults"]["band"]["base"] / 7
                       * A["provision"]["milk_litres_per_cup"]["value"],
+        # same optimum in days of demand (it depends on the band width, not its level) on opening-week demand
+        "opt_litres_hype": d["provision"]["def"]["optDays"] * d["defaults"]["band"]["base"] / 7
+                           * (A["demand"]["opening_hype_multiplier"]["value"] if d["defaults"]["removeHype"] else 1)
+                           * A["provision"]["milk_litres_per_cup"]["value"],
         **benefit_values(d),
         **business_values(d),
         "critical_ratio": under / (under + pv["milk_waste_cost_per_litre"]["value"]),
@@ -867,7 +987,9 @@ def sim_values(d: dict) -> dict:
 
 CONCEPTS = {   # name: (badge or None, plain-language line). Badges only where OPIM639 materials support them.
     "demand": ("Demand prediction", "Topic 3", "Estimate how much customers will buy, as a range rather than one number."),
-    "inventory": ("Preparing inventory for fulfilment", "Topic 5", "Hold the right stock before the orders arrive."),
+    "inventory": ("Preparing inventory for fulfilment", "Topic 5", "Have every material on hand before the orders arrive, item by item."),
+    "leadtime": ("Lead time", None, "The time from placing an order to having it usable in the store."),
+    "reorder": ("Reorder point and safety stock", None, "Reorder when stock falls to the usage expected during the lead time, plus a buffer for demand above it."),
     "newsvendor": ("Newsvendor logic", None, "Choose the order quantity by balancing the cost of unused stock against the cost of running short."),
     "brigade": ("Bucket brigade", "Topic 5", "Workers pass each order along a line and rebalance themselves, slowest first."),
     "bottleneck": ("Bottleneck", "Topic 5", "The slowest step sets the pace of the whole line."),
@@ -876,10 +998,11 @@ CONCEPTS = {   # name: (badge or None, plain-language line). Badges only where O
 }
 
 
-def concept_line(key: str, informs: str) -> str:
+def concept_line(key: str, informs: str, status: str = "") -> str:
     name, badge, line = CONCEPTS[key]
     b = f' <span class="ccb">Course concept · {esc(badge)}</span>' if badge else ""
-    return (f'<p class="concept"><b>{esc(name)}</b>{b} <span class="cl">{esc(line)}</span> '
+    st = f' <span class="cst">{esc(status)}</span>' if status else ""
+    return (f'<p class="concept"><b>{esc(name)}</b>{b}{st} <span class="cl">{esc(line)}</span> '
             f'<span class="ci">Informs: {esc(informs)}</span></p>')
 
 
@@ -1154,7 +1277,7 @@ def render_explainer(s: dict) -> str:
     if s.get("comparator"):
         cap = ed(f"{k}.cmp", s["comparator"], "p", "comparator") + cap
     if not s.get("points"):
-        cap += "".join(concept_line(c, informs) for c, informs in s.get("concepts", []))
+        cap += "".join(concept_line(*c) for c in s.get("concepts", []))
     pn = f'<p class="printonly pnote">{esc(s["printnote"])}</p>'
     if s["widget"] == "where":
         inner = render_where(s)
@@ -1401,6 +1524,21 @@ def milk_trigger_text() -> tuple:
     return (f"S${m['value']:.2f}/L", f"{conv}. Above it, order at or below base.", {"lever": "milk", "x": m["value"]})
 
 
+def render_inv(s: dict) -> str:
+    """Whole-store inventory slide: forecast-to-order chain and concepts (left), qualitative plan matrix (right)."""
+    k = s["key"]
+    cons = "".join(concept_line(*c) for c in s.get("concepts", []))
+    chain = "".join(f'<div class="cstep"><span class="cn">{i + 1}</span><div>{ed(f"{k}.c{i}.t", t, "h4")}'
+                    f'{ed(f"{k}.c{i}.b", b, "p")}</div></div>' for i, (t, b) in enumerate(s["chain"]))
+    head = "".join(f"<th>{esc(c)}</th>" for c in s["matrix_cols"])
+    rows = "".join("<tr>" + f"<th>{esc(r[0])}</th>" + "".join(f"<td>{esc(x)}</td>" for x in r[1:]) + "</tr>"
+                   for r in s["matrix"])
+    return (f'<div class="grid ginv"><div class="left"><div class="chain"><h4>{esc(s["chain_title"])}</h4>{chain}</div>'
+            f'<div class="concepts">{cons}</div></div>'
+            f'<div class="right"><div class="invm"><h4>{esc(s["matrix_title"])}</h4><table><thead><tr>{head}</tr></thead>'
+            f'<tbody>{rows}</tbody></table><p class="tnote">{esc(s["matrix_note"])}</p></div>{render_view(s)}</div></div>')
+
+
 def render_gate(s: dict) -> str:
     """Gate card: decision and suggested action first, the few numbers under them, then trade-off and limitation;
     owners' actions and the calculation open on request. Elements with data-g are filled live by the widgets."""
@@ -1504,8 +1642,8 @@ def render_a4(s: dict) -> str:
             f"{v('opening_year_share'):.0%} of a year (mid-year openings)", f=lambda x: f"{x:,.0f}"),
         row("Counter saving (recurring)", "counter", f"Store-years × S${bc['per_store']:,.0f}: the mixed counter's yearly "
             f"cost above the cheapest counter, openings spread over our volume range (slide {REFNUM['s5']})"),
-        row("Opening-stock saving (once per opening)", "stock", f"Openings × S${bc['per_open']:,.0f}: best milk order "
-            "with no signal minus with the member signal; holds only if the signal narrows the range as assumed"),
+        row("Fresh-milk opening stock (once per opening)", "stock", f"Openings × S${bc['per_open']:,.0f}: best milk order "
+            "with no signal minus with the member signal; if the signal narrows the range as assumed. Tea, other ingredients and packaging: not estimated"),
         row("Total benefit", "benefit", "", "tot"),
         grp("Cost of the initiative: one-time"),
         row("Build the four gates", "build", f"{v('build_people')} people × {v('build_months')} months × "
@@ -1634,6 +1772,8 @@ def render_slide(page: int, s: dict, n: int = 0, total: int = 0) -> str:
                 f'<div class="right">{render_view(s)}</div></div>')
     elif s["widget"] == "playbook":
         grid = render_playbook(s)
+    elif s["widget"] == "invplan":
+        grid = render_inv(s)
     elif s["widget"] in ("a1", "a2", "a3", "a4"):
         grid = {"a1": render_a1, "a2": render_a2, "a3": render_a3, "a4": render_a4}[s["widget"]](s)
     elif s["widget"] == "volcost":
@@ -1653,7 +1793,7 @@ def render_slide(page: int, s: dict, n: int = 0, total: int = 0) -> str:
                 f'<div class="right"><div class="gates"><h4>{esc(s["gates_title"])}</h4>{gates}</div>'
                 f'{render_view(s)}</div></div>')
     else:
-        cons = "".join(concept_line(c, informs) for c, informs in s.get("concepts", []))
+        cons = "".join(concept_line(*c) for c in s.get("concepts", []))
         cons = f'<div class="concepts">{cons}</div>' if cons else ""
         grid = (f'<div class="grid"><div class="points">{cons}{render_points(s)}</div>'
                 f'<div class="right">{render_explainer(s)}{render_view(s)}</div></div>')
@@ -1708,7 +1848,7 @@ def timing_check(filled: dict) -> None:
 def slide_label(key: str, filled: dict) -> str:
     if key in REFNUM:
         return str(REFNUM[key])
-    m = re.search(r"\bA[1-4]\b", filled[key]["kicker"])
+    m = re.search(r"\bA[1-5]\b", filled[key]["kicker"])
     return m.group(0) if m else key
 
 
@@ -1720,7 +1860,7 @@ def write_claims(filled: dict, simv: dict) -> None:
     status = lambda t: ("INFORMAL" if "INFORMAL" in t.upper() else "SECONDARY" if "SECONDARY" in t.upper() else "OK")
     out = ["# Claims register: Chagee deck", "",
            "Generated by deck/build_deck.py from assumptions.json, data.json and the slide text. Do not edit by hand.",
-           "Slide numbers follow the progress rail (on-stage slides); A1-A4 are appendix pages. Status: OK = public "
+           "Slide numbers follow the progress rail (on-stage slides); A1-A5 are appendix pages. Status: OK = public "
            "ledger source; SECONDARY = secondary source, flagged where shown; INFORMAL / CHECK = confirm before "
            "presenting; MODEL = simulator or assumption (illustrative).", "",
            "## Chagee facts", "", "| Fact | Value | Source | Status | Slides |", "|---|---|---|---|---|"]
@@ -1763,7 +1903,7 @@ def write_revcost(simv: dict) -> None:
              line("Store-years using the gates", "store_years",
                   f"Earlier stores trade all year; new stores {B['opening_year_share']['value']:.0%} of a year", c),
              line("Counter saving (recurring)", "counter", f"Store-years × S${bc['per_store']:,.0f}"),
-             line("Opening-stock saving (once per opening)", "stock", f"Openings × S${bc['per_open']:,.0f}"),
+             line("Fresh-milk opening stock (once per opening)", "stock", f"Openings × S${bc['per_open']:,.0f}; other inventory not estimated"),
              line("Total benefit", "benefit", "", bold=True),
              grp("Cost of the initiative: one-time"),
              line("Build the four gates", "build", f"{B['build_people']['value']} people × {B['build_months']['value']} months × "
@@ -1806,8 +1946,8 @@ def write_revcost(simv: dict) -> None:
         "It follows the course examples of a revenue and cost analysis: a benefit line, one-time (fixed) costs, "
         "recurring (variable) costs, net benefit and cumulative net, year by year, with the assumption behind each line.", "",
         f"- **Benefit (the \"revenue\" side).** The modelled avoided cost from the benefit slide (slide {s5}): choosing "
-        "each store's counter for its conditions instead of a mixed counter at every opening, plus a better first milk "
-        "order. It is not sales revenue.",
+        "each store's counter for its conditions instead of a mixed counter at every opening, plus a better first "
+        "fresh-milk order. It is not sales revenue, and it covers no inventory other than fresh milk.",
         "- **One-time costs.** Building the four gates and connecting the data (POS sales, app sign-ups, supplier "
         "orders). Year 1 only.",
         "- **Recurring costs.** A maintenance team, a platform fee for every store using the gates, and one analyst "
@@ -1816,7 +1956,8 @@ def write_revcost(simv: dict) -> None:
         f"- **Counter saving, S${bc['per_store']:,.0f} per store-year.** The simulator's yearly cost of the mixed counter "
         f"above the cheapest of the three counters, averaged over openings spread evenly across our volume range. "
         f"About S${simv['bn_counter'] / 1e3:,.0f}k a year for {stores} stores. It recurs: a store keeps the cheaper counter.",
-        f"- **Opening-stock saving, S${bc['per_open']:,.0f} per opening.** The best first milk order's expected cost "
+        f"- **Fresh-milk opening-stock saving, S${bc['per_open']:,.0f} per opening.** The only inventory item quantified; "
+        "tea, other ingredients and packaging have not been estimated. The best first milk order's expected cost "
         "with no pre-launch signal minus with the member signal. Once per opening. It holds only if member sign-ups "
         "narrow the demand range as assumed; that narrowing is our assumption, not a finding.",
         "- **Store-years.** Stores opened in earlier years trade all year; stores opened this year trade half a year "

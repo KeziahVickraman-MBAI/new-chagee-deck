@@ -10,14 +10,14 @@ Does what the four gates (Predict, Provision, Counter, Review) save across Chage
 
 It follows the course examples of a revenue and cost analysis: a benefit line, one-time (fixed) costs, recurring (variable) costs, net benefit and cumulative net, year by year, with the assumption behind each line.
 
-- **Benefit (the "revenue" side).** The modelled avoided cost from the benefit slide (slide 9): choosing each store's counter for its conditions instead of a mixed counter at every opening, plus a better first milk order. It is not sales revenue.
+- **Benefit (the "revenue" side).** The modelled avoided cost from the benefit slide (slide 9): choosing each store's counter for its conditions instead of a mixed counter at every opening, plus a better first fresh-milk order. It is not sales revenue, and it covers no inventory other than fresh milk.
 - **One-time costs.** Building the four gates and connecting the data (POS sales, app sign-ups, supplier orders). Year 1 only.
 - **Recurring costs.** A maintenance team, a platform fee for every store using the gates, and one analyst day per opening for the Review gate.
 
 ## Where the benefit numbers come from
 
 - **Counter saving, S$2,277 per store-year.** The simulator's yearly cost of the mixed counter above the cheapest of the three counters, averaged over openings spread evenly across our volume range. About S$455k a year for 200 stores. It recurs: a store keeps the cheaper counter.
-- **Opening-stock saving, S$370 per opening.** The best first milk order's expected cost with no pre-launch signal minus with the member signal. Once per opening. It holds only if member sign-ups narrow the demand range as assumed; that narrowing is our assumption, not a finding.
+- **Fresh-milk opening-stock saving, S$370 per opening.** The only inventory item quantified; tea, other ingredients and packaging have not been estimated. The best first milk order's expected cost with no pre-launch signal minus with the member signal. Once per opening. It holds only if member sign-ups narrow the demand range as assumed; that narrowing is our assumption, not a finding.
 - **Store-years.** Stores opened in earlier years trade all year; stores opened this year trade half a year (openings spread through the year).
 
 ## 5-year table (S$ thousands; brackets are negative)
@@ -28,7 +28,7 @@ It follows the course examples of a revenue and cost analysis: a benefit line, o
 | New stores opened | 200 | 200 | 200 | 200 | 200 | About 200 overseas openings planned for 2026 (L-jiemian); held flat after |
 | Store-years using the gates | 100 | 300 | 500 | 700 | 900 | Earlier stores trade all year; new stores 50% of a year |
 | Counter saving (recurring) | S$228k | S$683k | S$1,138k | S$1,594k | S$2,049k | Store-years × S$2,277 |
-| Opening-stock saving (once per opening) | S$74k | S$74k | S$74k | S$74k | S$74k | Openings × S$370 |
+| Fresh-milk opening stock (once per opening) | S$74k | S$74k | S$74k | S$74k | S$74k | Openings × S$370; other inventory not estimated |
 | **Total benefit** | **S$302k** | **S$757k** | **S$1,213k** | **S$1,668k** | **S$2,123k** |  |
 | *Cost of the initiative: one-time* | | | | | | |
 | Build the four gates | S$504k | – | – | – | – | 4 people × 6 months × 21 days × S$1,000 a day |
