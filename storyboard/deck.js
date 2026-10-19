@@ -490,8 +490,8 @@
     const wi = $(p.closest(".slide"), ".vs .wi");
     if (wi) { const b = document.createElement("button"); b.className = "btn vsb screenonly"; b.innerHTML = "◧ See it on the map";
       b.title = "Show both sites side by side on the map"; b.onclick = () => (cmpv.classList.contains("open") ? cmpv.classList.remove("open") : openCmp()); wi.append(b); }
-    function sideSvg(pp, f, accent) {
-      const W = 500, H = 300, x0 = Math.max(0, Math.min(1672 - W, pp.x - W / 2)), y0 = Math.max(0, Math.min(640 - H, pp.y - H / 2));
+    function sideSvg(pp, f, accent, fr) {
+      const W = 500, H = 300, x0 = Math.max(0, Math.min(1672 - W, fr.x - W / 2)), y0 = Math.max(0, Math.min(640 - H, fr.y - H / 2));
       const inV = (x, y) => x > x0 - 30 && x < x0 + W + 30 && y > y0 - 30 && y < y0 + H + 30, walkPx = M.walkKm / M.kmpx;
       let s = `<image href="${window.STORY.MAP}" x="0" y="0" width="1672" height="640" opacity=".5"/>`;
       M.ev.forEach((e, i) => { if (inV(e.x, e.y)) s += `<circle cx="${e.x.toFixed(0)}" cy="${e.y.toFixed(0)}" r="3.2" fill="${M.unmet[i] ? COL.red : COL.gold}" opacity="${M.unmet[i] ? 0.75 : 0.45}"/>`; });
@@ -505,16 +505,22 @@
       return `<svg viewBox="${x0} ${y0} ${W} ${H}" preserveAspectRatio="xMidYMid slice">${s}</svg>`;
     }
     function openCmp() {
-      const order = M.storeCups.map((c, j) => [c, j]).sort((a, b) => a[0] - b[0]), j = order[Math.floor(order.length / 2)][1];
-      const nd = { x: GEO.outlets[j][0] + 3, y: GEO.outlets[j][1] }, top = M.candidates[0];
+      const top = M.candidates[0];                                    // same new store, same neighbourhood: beside the nearest outlet vs the AI site
+      const j = GEO.outlets.map(([x, y], k) => [Math.hypot(x - top.x, y - top.y), k]).sort((a, b) => a[0] - b[0])[0][1];
+      const nd = { x: GEO.outlets[j][0] + 3, y: GEO.outlets[j][1] };
+      const frame = { x: (nd.x + top.x) / 2, y: (nd.y + top.y) / 2 };
       const hub = HUBS.reduce((a, h) => (Math.hypot(h.x - top.x, h.y - top.y) < Math.hypot(a.x - top.x, a.y - top.y) ? h : a)).name;
       const fN = Site.forecast(M, nd), fT = Site.forecast(M, top);
-      const col = (cls, lab, title, pp, f, accent) => `<div class="cv ${cls}"><div class="ch"><b>${lab}</b>${title}</div>${sideSvg(pp, f, accent)}` +
+      const col = (cls, lab, title, pp, f, accent, ghost) => `<div class="cv ${cls}"><div class="ch"><b>${lab}</b>${title}</div>${sideSvg(pp, f, accent, frame).replace("</svg>", ghost + "</svg>")}` +
         `<div class="cn"><span>Sells <b>${Math.round(f.cups)}</b></span><span>Moved from outlets <b class="mv">−${Math.round(f.cannibal)}</b></span>` +
         `<span class="net">For Chagee <b>+${Math.round(f.netNew)}</b></span></div></div>`;
-      cmpv.innerHTML = col("wo", "Without AI · our assumed baseline", `Pick the site that sells most: beside ${oname(j)}`, nd, fN, COL.ink2) +
-        col("wi", "With AI · our proposal", `App-search cluster (DBSCAN) near ${hub}`, top, fT, COL.navy) +
-        `<button class="btn cx" title="Back to the map">✕</button><p class="cmpn">Cups a day, at the current inputs. Red lines and labels: cups moved from existing outlets.</p>`;
+      const km = (Math.hypot(GEO.outlets[j][0] - top.x, GEO.outlets[j][1] - top.y) * M.kmpx).toFixed(1), nn = GEO.numbers.length + 1;
+      const ghost = (q, lab) => `<path d="M${q.x} ${q.y} l-15 -34 a16 16 0 1 1 30 0 z" fill="#fff" fill-opacity=".85" stroke="${COL.ink2}" stroke-width="2.5" stroke-dasharray="5 4"/>` +
+        `<rect x="${q.x - 58}" y="${q.y + 6}" width="116" height="22" rx="5" fill="#fff" stroke="${COL.ink2}" stroke-dasharray="4 3"/>` +
+        T(q.x, q.y + 22, lab, `font-size="13" font-weight="600" fill="${COL.ink2}" text-anchor="middle"`);
+      cmpv.innerHTML = col("wo", "Without AI · our assumed baseline", `Outlet ${nn} beside ${oname(j)}`, nd, fN, COL.ink2, ghost(top, "the AI site")) +
+        col("wi", "With AI · our proposal", `Same outlet ${nn}, ${km} km away, near ${hub}`, top, fT, COL.navy, ghost(nd, "the baseline site")) +
+        `<button class="btn cx" title="Back to the map">✕</button><p class="cmpn">Same new store, same map frame; only the pin moves. Cups a day at the current inputs; red: cups moved from existing outlets; dashed: the other side's site.</p>`;
       $(cmpv, ".cx").onclick = () => cmpv.classList.remove("open");
       cmpv.classList.add("open");
     }

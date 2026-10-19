@@ -217,8 +217,10 @@ def values(d: dict) -> dict:
     v["r.ben_profit"] = Y["ab"]["profit"]
     v["r.ben_profit_fragile"] = S["fragile"]["year"]["ab"]["profit"]
     # the Without AI / With AI band at the end of each explainer (slides 05-10); every figure computed
-    nd = st["nextDoor"]
-    v["r.nd_cups"], v["r.nd_net"] = nd["cups"], nd["netNew"]
+    nd = st["besideTop"]
+    GEO_ = json.loads((ROOT / "sim" / "sg_geo.json").read_text())
+    v["s.bt_outlet"] = f'{GEO_["numbers"][nd["j"]]} · {GEO_["names"][nd["j"]]}'
+    v["r.nd_cups"], v["r.nd_net"], v["r.nd_moved"], v["r.bt_km"] = nd["cups"], nd["netNew"], nd["cannibal"] / nd["cups"], nd["km"]
     if not st["top"]["netNew"] > nd["netNew"]:
         raise SystemExit("build: slide 05 band says the app-search site adds more than a store beside an outlet; rewrite it")
     L_ = d["splits"][day]; hand, ch = L_["all_hand"], L_[L_["_cheapest"]]
@@ -385,6 +387,7 @@ FMT = {
     "min": lambda x: f"{x:g} min",
     "g": lambda x: f"{x:g}",
     "m2": lambda x: f"{x / 1e6:.2f}m",
+    "km": lambda x: f"{x:.1f}",
 }
 
 

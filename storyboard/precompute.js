@@ -57,6 +57,10 @@ const hubOf = pt => RAW.sitepick.hubs.value.reduce((a, h) => (Math.hypot(h.x - p
 const order = SM.storeCups.map((c, j) => [c, j]).sort((a, b) => a[0] - b[0]), mid = GEO.outlets[order[Math.floor(order.length / 2)][1]];
 const site = { top: { x: top.x, y: top.y, hub: hubOf(top), ...top.f }, nextDoor: Site.forecast(SM, { x: mid[0] + 3, y: mid[1] }),
                clusters: SM.clusters.length, unmetShare: SM.unmet.filter(Boolean).length / SM.ev.length };
+// the same store placed without AI: beside the existing outlet nearest the top site (slide 05's comparison)
+const bj = GEO.outlets.map(([x, y], k) => [Math.hypot(x - top.x, y - top.y), k]).sort((a, b) => a[0] - b[0])[0][1];
+site.besideTop = { j: bj, km: Math.hypot(GEO.outlets[bj][0] - top.x, GEO.outlets[bj][1] - top.y) * SM.kmpx,
+                   ...Site.forecast(SM, { x: GEO.outlets[bj][0] + 3, y: GEO.outlets[bj][1] }) };
 
 // slide 08: the machine ladder at the default outlet, and the volume bands across the per-outlet range
 const ladderAt = { cupsDay: Math.round(Sim.dailyBase(P)), wage: P.wage, unitMonth: P.machineMonth };
