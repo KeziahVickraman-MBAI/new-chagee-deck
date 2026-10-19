@@ -360,7 +360,7 @@ def appendix() -> str:
     out.append("<p>We make no claim about: <b>Singapore ownership structure</b> (an anonymous Chagee source says outlets run under one company and "
                "one data system, and that the ownership form does not matter here; I-chagee-contact); <b>delivery profit by channel</b>; "
                "<b>Chagee's own equipment cost</b> (not public); <b>gross margin per cup</b> (our assumption); "
-               "<b>Chagee's current rostering</b> (unknown; slide 09's baseline is ours).</p>")
+               "<b>Chagee's current rostering</b> beyond what an anonymous Chagee source told us (people are deployed on local expertise by the GM and outlet teams; slide 09's baseline is ours).</p>")
     return "\n".join(out)
 
 

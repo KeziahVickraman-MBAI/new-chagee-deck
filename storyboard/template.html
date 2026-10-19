@@ -679,12 +679,12 @@ aside.notes{display:none}
         <div class="card"><h4>So we stop at the counter</h4><p>The open question is not the shipment. It is how many people the counter needs this hour, and how they work.</p></div>
       </div>
     </div>
-    <div class="takeaway"><span class="lab">TAKEAWAY</span><span>Chagee already plans its stock (public sources). How it rosters to the hourly peak is not public; that is the question we model.</span></div>
+    <div class="takeaway"><span class="lab">TAKEAWAY</span><span>Chagee already plans its stock (public sources). People are deployed on local expertise, by the GM and outlet teams (Chagee source, anonymous); that is the call we model.</span></div>
   </div>
   <div class="foot"><span>OPIM639 · Group 3 · explainer figures are illustrative assumptions</span><span class="rail"></span><span class="pg"></span></div>
   <aside class="notes">
     <p>Press play and the cup travels farm to customer. Sourcing is standard; only fresh milk and fruit are local (YF Chuhai). Chagee runs central and regional warehouses (Form 20-F) and already plans restocking from forecasts.</p>
-    <p>The volatile part is the counter, the red chips. We do not know how Chagee forecasts or rosters the counter today; we model one way to do it. Under time pressure, one sentence: supply is planned publicly; how the counter is planned is not public. About forty seconds.</p>
+    <p>The volatile part is the counter, the red chips. At the counter, a Chagee source who asked not to be named told us the GM and outlet teams deploy people on local expertise; we model how a forecast could support those calls. Under time pressure, one sentence: supply is planned ahead; the counter runs on local judgement. About forty seconds.</p>
   </aside>
 </section>
 
@@ -730,7 +730,7 @@ aside.notes{display:none}
         <div class="card"><h4>What we take forward</h4><p>Demand forecast, then staffing, then queue capacity: one chain that ends with the GM's counter and roster.</p></div>
       </div>
     </div>
-    <div class="takeaway"><span class="lab">TAKEAWAY</span><span>Orders by hour are recorded; searches, location, waits and walk-aways need confirming. How Chagee forecasts and rosters today is not public; we show one way.</span></div>
+    <div class="takeaway"><span class="lab">TAKEAWAY</span><span>Orders by hour are recorded; searches, location, waits and walk-aways need confirming. Today the GM and outlet teams deploy people on local expertise (Chagee source, anonymous); we show how a forecast could support those calls.</span></div>
   </div>
   <div class="foot"><span>OPIM639 · Group 3 · explainer figures are illustrative assumptions</span><span class="rail"></span><span class="pg"></span></div>
   <aside class="notes">
@@ -785,7 +785,7 @@ aside.notes{display:none}
             <dt>Decides</dt><dd>Where to open next, which counter steps go to machines, how many people work the peak, and how they share it</dd>
             <dt>When</dt><dd>Before a store opens, and when rosters are set</dd>
             <dt>Uses</dt><dd>The forecasts and the simulations</dd>
-            <dt>Today</dt><dd>To confirm with Chagee: how rosters are set now</dd>
+            <dt>Today</dt><dd>People deployed on local expertise: the GM and outlet teams make the calls (Chagee source, anonymous)</dd>
           </dl>
         </div>
         <div class="trade"><div class="tl">Simulated, with the trade-off the GM weighs</div>
@@ -801,7 +801,7 @@ aside.notes{display:none}
   <aside class="notes">
     <p>Our ideation produced three areas. Online retailing is not covered yet and will be added; for now we take two: new stores, for expansion, and the in-store peak.</p>
     <p>AI comes in two kinds here. Predictive AI forecasts demand: where a new outlet adds cups, and how busy each hour will be. Physical AI is automation and machines at the counter, from dispensers up to machines that make the drink; that is a type of machine, not a claim about Chagee's plans. Bucket brigade and cross-training are operations tools from Topic 5, order fulfilment, but they decide whether a lean roster actually works.</p>
-    <p>Every part of the deck is a simulation with a trade-off the GM has to weigh: cups added against cups moved, brigade against fixed posts, a shorter wait against a higher cost, and orders kept against extra labour. The decision-maker is the GM; we do not yet know how Chagee sets rosters today. About fifty seconds.</p>
+    <p>Every part of the deck is a simulation with a trade-off the GM has to weigh: cups added against cups moved, brigade against fixed posts, a shorter wait against a higher cost, and orders kept against extra labour. The decision-maker is the GM. Today the GM and outlet teams deploy people on local expertise, according to an anonymous Chagee source; the forecast is meant to support those calls, not replace them. About fifty seconds.</p>
   </aside>
 </section>
 
@@ -959,7 +959,7 @@ aside.notes{display:none}
           <div class="phases"><span><b>Shadow</b>forecast only</span><span><b>Roster</b>economic rule</span><span><b>Machine</b>one vs today's split</span></div>
           <p style="margin-top:6px">KPIs: cups per labour hour, wait time and walk-aways at the peak. Compare forecast and actual cups weekly.</p></div>
         <div class="card"><h4>Limits we know</h4><p>All figures are illustrative assumptions, not Chagee data. Machine costs and speeds are assumed; breakdowns and breaks are not modelled.</p></div>
-        <div class="card"><h4>To confirm with Chagee</h4><p>How rosters are set today, the real machine cost per unit, and whether outlets log wait times and walk-aways.</p></div>
+        <div class="card"><h4>To confirm with Chagee</h4><p>The real machine cost per unit, whether outlets log wait times and walk-aways, and how today's local staffing calls compare with the forecast.</p></div>
       </div>
     </div>
     <div class="vs"><div class="wo"><span class="lab">Assumed baseline<br><small style="letter-spacing:.06em;text-transform:none;font-weight:400">illustrative</small></span><span>One machine and a flat crew of {{r.dec_flat}} every day: <b>{{r.pb_ev_flat_lost|pct}}</b> of event-day peak orders walk away.</span></div><div class="wi"><span class="lab">Proposed scenario<br><small style="letter-spacing:.06em;text-transform:none;font-weight:400">in our model</small></span><span>The forecast and the economic rule add a person on event days only ({{r.dec_flat}} → {{r.dec_event}}): <b>{{r.pb_ev_econ_lost|pct1}}</b> walk away; busy days stay at {{r.dec_busy}} ({{r.pb_busy_flat_lost|pct1}}).</span></div></div>
@@ -980,7 +980,7 @@ aside.notes{display:none}
   <div class="inner">
     <p class="kicker">09 · The size of the benefit · Singapore only<span class="tbc">TBC · draft, to be confirmed</span></p>
     <h2 class="head">In our model, about S${{r.ben_profit_sg|m2}} a year across {{facts.sg_outlets}} outlets against an illustrative baseline, almost all from one machine's labour saving</h2>
-    <p class="sub">Modelled avoided costs on stated assumptions, not demonstrated savings and not savings against Chagee's actual operations, which we do not know. The pilot compares one machine with today's split (our scenario).</p>
+    <p class="sub">Modelled avoided costs on stated assumptions, not demonstrated savings and not savings against Chagee's actual operations, where the GM and teams staff on local expertise. The pilot compares one machine with today's split (our scenario).</p>
     <div class="body" style="grid-template-columns:1fr 400px">
       <div class="panel">
         <div class="ptop"><span class="ptitle">Profit a year, all {{facts.sg_outlets}} outlets · economic rule throughout</span></div>
@@ -1073,7 +1073,7 @@ aside.notes{display:none}
         </div>
       </div>
       <div class="cards" style="gap:7px">
-        <div class="box"><h4>Against what</h4>A flat normal-day roster and an all-by-hand counter. We do not know how Chagee sets rosters today (to confirm with Chagee).</div>
+        <div class="box"><h4>Against what</h4>A flat normal-day roster and an all-by-hand counter. Chagee deploys people on local expertise (Chagee source, anonymous), so this baseline is ours, not Chagee's.</div>
         <div class="box"><h4>All inputs at their worst/best end together</h4><span class="rng"></span><svg class="torn" viewBox="0 0 300 92"></svg></div>
         <div class="box warn"><h4>Fragile: the minimum crew</h4><span class="frag"></span></div>
         <div class="box"><h4>Not sized</h4>Delivery levers (third-party; channel margins not disclosed), membership and CRM, waste (no inventory model in this deck), and the new-store site forecast (shown as cups added only).</div>
@@ -1083,7 +1083,7 @@ aside.notes{display:none}
   </div>
   <div class="foot"><span>OPIM639 · Group 3 · model figures are illustrative assumptions · peak hour only · Singapore, {{facts.sg_outlets}} outlets</span><span class="rail"></span><span class="pg"></span></div>
   <aside class="notes">
-    <p>Backup for slide 09. This answers part c of the brief: how big is the benefit, for Singapore only. Against what: a flat normal-day roster and an all-by-hand counter. We do not know how Chagee rosters today, so that is a question for Chagee.</p>
+    <p>Backup for slide 09. This answers part c of the brief: how big is the benefit, for Singapore only. Against what: a flat normal-day roster and an all-by-hand counter. Chagee deploys people on local expertise, the GM and outlet teams making the calls, so this baseline is ours, not Chagee's practice.</p>
     <p>Lead with orders. On an event day the model keeps about {{r.ben_event_orders}} orders per outlet in the peak hour that would otherwise walk away, about S${{r.ben_event_rev}} of revenue; on a busy day about {{r.ben_busy_orders}}. Over a year it depends on how many such days there are: our illustrative calendar is {{sb.busy_days_per_year}} busy days, the weekends, and {{sb.event_days_per_year}} event days, the public holidays. That is an input, not a measurement.</p>
     <p>Profit is the second line, using a margin we assume because Chagee does not disclose one. The labour saving is shown separately and never added to revenue. The two levers are run together, not added, because they share the same labour hours. The strip at the top splits the profit: most is counter automation, physical AI, the machine on its own; the forecast, predictive AI, adds a small share on top.</p>
     <p>Two crew rules for rostering to the forecast. The walk-away rule adds people until peak-hour walk-aways are within {{sb.walkaway_target|pct}}; at our default volume that is exactly the forecast crew. The economic rule adds a person only when the orders kept are worth more than the extra hours. They differ on busy days by hand, where the economic rule adds no one.</p>
