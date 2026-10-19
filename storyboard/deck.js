@@ -371,6 +371,7 @@
     svg.innerHTML = `<image href="${window.STORY.MAP}" x="0" y="0" width="1672" height="640"/><g></g>`;
     const mapImg = $(svg, "image"), layer = $(svg, "g");
     let M = null, pin = null, userPin = false, step = S.N;
+    const oname = j => `${GEO.numbers[j]} · ${GEO.names[j]}`;
     const nearHub = pt => SP.hubs.value.reduce((a, h) => (Math.hypot(h.x - pt.x, h.y - pt.y) < Math.hypot(a.x - pt.x, a.y - pt.y) ? h : a)).name;
     const CL = [COL.red, "#8E5BA8", "#D07A2D", "#2E8B7A", "#B8860B", "#C0457A", "#5470A8"];
     const avg = RAW.store.cups_per_store_per_year.value / RAW.store.open_days_per_year.value;
@@ -393,6 +394,8 @@
         (s += `<g><circle cx="${c.x}" cy="${c.y}" r="22" fill="#fff" stroke="${COL.navy}" stroke-width="4"/>` +
               T(c.x, c.y + 9, k + 1, `font-size="26" font-weight="700" fill="${COL.navy}" text-anchor="middle"`) +
               T(c.x + 30, c.y + 9, `+${Math.round(c.f.netNew)} new cups`, `font-size="27" font-weight="700" fill="${COL.navy}" paint-order="stroke" stroke="#fff" stroke-width="7"`) + `</g>`));
+      // existing outlets: hover for name and the model's cups a day today (a click still drops a new pin)
+      GEO.outlets.forEach(([x, y], j) => (s += `<circle cx="${x}" cy="${y - 18}" r="20" fill="transparent"><title>${oname(j)}: about ${Math.round(M.storeCups[j])} cups a day today (model)</title></circle>`));
       if (step >= 4) {
         s += `<circle cx="${pin.x}" cy="${pin.y}" r="${walkPx}" fill="rgba(184,50,43,.08)" stroke="${COL.red}" stroke-width="2"/>`;
         f.hit.slice(0, 4).forEach(h => (s += `<line x1="${pin.x}" y1="${pin.y}" x2="${h.x}" y2="${h.y}" stroke="${COL.red}" stroke-width="${Math.max(1.5, Math.min(9, h.cups / 15))}" opacity=".55"/>`));
@@ -400,11 +403,12 @@
       }
       layer.innerHTML = s;
       const pf = C.forecastDay(Sim, { ...P, cupsYear: f.cups * P.days }, "none");
-      const at = userPin ? `Your pin, near ${nearHub(pin)}` : `Suggested pin 1, near ${nearHub(pin)}`;
+      const beside = GEO.outlets.findIndex(([x, y]) => Math.hypot(x - pin.x, y - pin.y) * M.kmpx < 0.3);
+      const at = beside >= 0 ? `Your pin, beside ${oname(beside)}` : userPin ? `Your pin, near ${nearHub(pin)}` : `Suggested pin 1, near ${nearHub(pin)}`;
       fc.innerHTML = `<div class="t">${at}</div><div class="big">${Math.round(f.cups).toLocaleString("en-SG")}<small>cups a day forecast</small></div>
         <dl><dt>New to Chagee (no store nearby today)</dt><dd>${Math.round(f.netNew)}</dd>
             <dt>Taken from existing outlets</dt><dd>${Math.round(f.cannibal)}</dd>
-            ${f.hit.slice(0, 2).map(h => `<dt>&nbsp;· outlet ${h.km.toFixed(1)} km away</dt><dd>−${Math.round(h.cups)}</dd>`).join("")}
+            ${f.hit.slice(0, 2).map(h => `<dt>&nbsp;· ${oname(h.j)}, ${h.km.toFixed(1)} km<br><span class="muted">&nbsp;&nbsp;${Math.round(M.storeCups[h.j])} → ${Math.round(M.storeCups[h.j] - h.cups)} a day</span></dt><dd>−${Math.round(h.cups)}</dd>`).join("")}
             <dt>Against the average outlet</dt><dd>${(f.cups / avg).toFixed(1)}×</dd></dl>
         <div class="peak">Peak hour ${hourLabel(pf.peak)}: <b>${Math.round(pf.peakCups)} cups</b> → <b>${pf.peakStaff} ${pf.peakStaff === 1 ? "person" : "people"}</b> on today's counter (slides 06–07).</div>`;
       $$(ctlEl, "[data-v]").forEach(el => { const d = sl.find(x => x[0] === el.dataset.v); el.textContent = d[4](par[d[0]]); });

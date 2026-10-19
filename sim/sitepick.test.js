@@ -62,3 +62,17 @@ test("site: suggested pins are ranked by net new cups; a wider walk leaves less 
   const far = T.model(Sim, RAW, geo, { walkKm: RAW.sitepick.walk_km.range[1] });
   assert.ok(far.unmet.filter(Boolean).length < M.unmet.filter(Boolean).length);
 });
+
+test("site: a store opened beside an outlet takes the most from that outlet", () => {
+  // an outlet on its own loses far more than anyone else; where outlets bunch, it is still in the top two
+  for (const j of [0, 23]) {
+    const [x, y] = geo.outlets[j], f = T.forecast(M, { x, y });
+    assert.equal(f.hit[0].j, j, `outlet ${geo.numbers[j]}: biggest loss at ${geo.numbers[f.hit[0].j]}`);
+    assert.ok(f.hit[0].cups > 2 * (f.hit[1]?.cups || 0));
+  }
+  geo.outlets.forEach(([x, y], j) => {
+    const f = T.forecast(M, { x, y });
+    assert.ok(f.hit.slice(0, 2).some(h => h.j === j), `outlet ${geo.numbers[j]}`);
+  });
+  assert.equal(geo.numbers.length, 44); assert.equal(geo.names[geo.numbers.indexOf(44)], "The Star Vista");
+});

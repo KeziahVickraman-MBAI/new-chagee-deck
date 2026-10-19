@@ -1160,22 +1160,36 @@
       "source": "assumption",
       "rationale": "Demand outside the town centres."
     },
+    "mall_share": {
+      "value": 0.35,
+      "unit": "share of dots placed around the outlets' malls",
+      "range": null,
+      "source": "assumption",
+      "rationale": "Outlets sit in malls with their own footfall, so part of app intent is centred on each outlet (equal for every outlet). Without it, a store opened beside an outlet barely touched that outlet's sales."
+    },
+    "mall_spread_km": {
+      "value": 0.4,
+      "unit": "km, standard deviation around an outlet",
+      "range": null,
+      "source": "assumption",
+      "rationale": "A mall's walk-in catchment."
+    },
     "walk_km": {
-      "value": 1.2,
+      "value": 1.0,
       "unit": "km a customer will walk to collect",
       "range": [
         0.6,
         2.0
       ],
       "source": "assumption",
-      "rationale": "Slider. A session whose nearest outlet is further than this is logged as a 'no store nearby' search; it also sets the distance decay (decay_share). Tuned with decay_share and hub_spread_km so about half of app intent is unmet and the middle 80% of outlets sell roughly 150 to 1,050 cups a day around the calibrated average."
+      "rationale": "Slider. A session whose nearest outlet is further than this is logged as a 'no store nearby' search; it also sets the distance decay (decay_share). Tuned with decay_share, hub_spread_km and mall_share so a bit under half of app intent is unmet, the middle 80% of outlets sell roughly 300 to 870 cups a day, and a store opened beside an outlet takes most from that outlet."
     },
     "decay_share": {
       "value": 1.0,
       "unit": "distance decay length as a share of walk_km",
       "range": null,
       "source": "assumption",
-      "rationale": "Pull of a store = exp(-distance / (walk_km x decay_share)): a store at the walking limit pulls exp(-1), about 37%, of one next door. App ordering ahead lets customers collect along a commute, so the pull fades slowly."
+      "rationale": "Pull of a store = exp(-(distance / L)^2 / 2), L = walk_km x decay_share: bell-shaped, so a store at the walking limit pulls about 61% of one next door and almost nothing beyond 3 L. (A slower exponential decay was tried first; it spread a new store's cannibalisation over outlets several km away, which is not credible.)"
     },
     "outside_option": {
       "value": 0.3,

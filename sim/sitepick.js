@@ -13,7 +13,7 @@
  *   forecast(M, pin)             a new outlet at pin (map pixels): its cups/day, how many come from
  *                                demand no outlet serves today (net new) and how many from existing
  *                                outlets (cannibalised, with the outlets it takes most from).
- * Proximity split (Huff-style): pull of store j on a dot = exp(-d / L), L = walk_km x decay_share;
+ * Proximity split (Huff-style): pull of store j on a dot = exp(-(d / L)^2 / 2), L = walk_km x decay_share;
  * share of the dot bought at j = pull_j / (outside_option + sum of pulls).
  */
 (function (root) {
@@ -26,10 +26,18 @@
     const isLand = (x, y) => { const r = geo.land[Math.floor(y / geo.cell)]; return !!r && r[Math.floor(x / geo.cell)] === "1"; };
     const hubs = v("hubs"), wsum = hubs.reduce((a, h) => a + h.weight, 0), sd = v("hub_spread_km") / v("km_per_px");
     const n = v("events"), nBg = Math.round(n * v("background_share")), out = [];
+    const nMall = Math.round(n * (S.mall_share ? S.mall_share.value : 0)), mallSd = (S.mall_spread_km ? S.mall_spread_km.value : 0) / v("km_per_px");
     const gauss = () => { let u = 0; while (u === 0) u = R(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * R()); };
     for (let i = 0; i < nBg; i++) {
       const [cx, cy] = cells[Math.floor(R() * cells.length)];
       out.push({ x: (cx + R()) * geo.cell, y: (cy + R()) * geo.cell });
+    }
+    for (let i = 0; i < nMall; i++) {                                 // footfall at the malls the outlets sit in
+      const [ox, oy] = geo.outlets[i % geo.outlets.length];
+      for (let t = 0; t < 20; t++) {
+        const x = ox + gauss() * mallSd, y = oy + gauss() * mallSd;
+        if (isLand(x, y)) { out.push({ x, y, mall: i % geo.outlets.length }); break; }
+      }
     }
     while (out.length < n) {
       let u = R() * wsum, h = hubs[0];
@@ -68,14 +76,15 @@
     const S = RAW.sitepick, v = k => S[k].value, kmpx = v("km_per_px");
     const walkKm = o.walkKm ?? v("walk_km"), epsKm = o.epsKm ?? v("dbscan_eps_km"), minPts = o.minPts ?? v("dbscan_min_points");
     const L = walkKm * v("decay_share") / kmpx, a0 = v("outside_option"), walkPx = walkKm / kmpx;
+    const pull = d => Math.exp(-0.5 * (d / L) * (d / L));                    // bell-shaped: fades fast beyond 2 L
     const ev = o.events || events(Sim, RAW, geo), stores = geo.outlets;
     const sum = new Float64Array(ev.length), nearest = new Float64Array(ev.length);
     const storeRaw = new Float64Array(stores.length);
     ev.forEach((e, i) => {
       let s = 0, dmin = Infinity;
-      stores.forEach(([x, y]) => { const d = Math.hypot(e.x - x, e.y - y); s += Math.exp(-d / L); if (d < dmin) dmin = d; });
+      stores.forEach(([x, y]) => { const d = Math.hypot(e.x - x, e.y - y); s += pull(d); if (d < dmin) dmin = d; });
       sum[i] = s; nearest[i] = dmin;
-      stores.forEach(([x, y], j) => { storeRaw[j] += Math.exp(-Math.hypot(e.x - x, e.y - y) / L) / (a0 + s); });
+      stores.forEach(([x, y], j) => { storeRaw[j] += pull(Math.hypot(e.x - x, e.y - y)) / (a0 + s); });
     });
     const target = RAW.store.cups_per_store_per_year.value / RAW.store.open_days_per_year.value;
     const scale = target / (storeRaw.reduce((a, b) => a + b, 0) / stores.length);   // cups/day per dot
@@ -83,7 +92,7 @@
     const pts = ev.filter((e, i) => unmet[i]), idx = ev.map((e, i) => i).filter(i => unmet[i]);
     const lab = dbscan(pts, epsKm / kmpx, minPts), labels = new Array(ev.length).fill(null);
     idx.forEach((i, k) => (labels[i] = lab[k]));
-    const M = { ev, stores, sum, nearest, unmet, labels, scale, L, a0, kmpx, walkKm, epsKm, minPts, target,
+    const M = { ev, stores, sum, nearest, unmet, labels, scale, L, a0, kmpx, pull, walkKm, epsKm, minPts, target,
                 storeCups: Array.from(storeRaw, x => x * scale) };
     const k = Math.max(-1, ...lab);
     M.clusters = Array.from({ length: k + 1 }, (_, c) => {
@@ -96,11 +105,11 @@
   }
 
   function forecast(M, pin) {
-    const { ev, stores, sum, L, a0, scale } = M;
+    const { ev, stores, sum, a0, scale, pull } = M;
     let cups = 0, netNew = 0, fromUnmet = 0;
     const take = new Float64Array(stores.length);
     ev.forEach((e, i) => {
-      const a = Math.exp(-Math.hypot(e.x - pin.x, e.y - pin.y) / L);
+      const a = pull(Math.hypot(e.x - pin.x, e.y - pin.y));
       if (a < 1e-9) return;
       const s = sum[i], before = s / (a0 + s), after = s / (a0 + s + a);
       const c = a / (a0 + s + a);
@@ -108,7 +117,7 @@
       if (M.unmet[i]) fromUnmet += c;
       if (before - after > 1e-9)
         stores.forEach(([x, y], j) => {
-          const p = Math.exp(-Math.hypot(e.x - x, e.y - y) / L);
+          const p = pull(Math.hypot(e.x - x, e.y - y));
           take[j] += p / (a0 + s) - p / (a0 + s + a);
         });
     });
