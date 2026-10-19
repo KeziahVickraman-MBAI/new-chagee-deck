@@ -79,12 +79,12 @@ html,body{margin:0;background:#E7E3DC;color:var(--ink);font-family:var(--sans);-
 .slide.cover .rule{width:72px;height:2px;background:var(--red);margin:20px auto}
 .slide.cover .meta{font:400 13.5px/1.5 var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--taupe)}
 .slide.agenda .inner{position:absolute;inset:0;padding:56px 90px}
-.slide.agenda h2{margin:0 0 26px;font:500 46px/1 var(--serif)}
+.slide.agenda h2{margin:0 0 18px;font:500 46px/1 var(--serif)}
 .slide.agenda ol{list-style:none;margin:0;padding:0;width:600px}
-.slide.agenda li{display:grid;grid-template-columns:56px 1fr auto;align-items:baseline;padding:11px 0;border-bottom:1px solid var(--line);cursor:pointer}
+.slide.agenda li{display:grid;grid-template-columns:56px 1fr auto;align-items:baseline;padding:8px 0;border-bottom:1px solid var(--line);cursor:pointer}
 .slide.agenda li .no{font:500 19px var(--serif);color:var(--red)}
 .slide.agenda li .nm{font:400 19.5px/1.2 var(--sans);color:var(--ink)}
-.slide.agenda li .why{display:block;font:13px/1.3 var(--sans);color:var(--taupe);margin-top:3px}
+.slide.agenda li .why{display:block;font:12.5px/1.25 var(--sans);color:var(--taupe);margin-top:2px}
 .slide.agenda li:hover .nm{color:var(--red)}
 .slide.agenda .cups{position:absolute;right:70px;top:170px;width:470px;height:380px}
 .slide.agenda .cups img{position:absolute}
@@ -281,8 +281,46 @@ html,body{margin:0;background:#E7E3DC;color:var(--ink);font-family:var(--sans);-
 .simtab td:first-child{font-weight:600;color:var(--ink);white-space:nowrap}
 .simtab td:last-child{text-align:right;color:var(--navy);font-weight:600;white-space:nowrap}
 .simtab .num{width:17px;height:17px;font-size:10px;margin-right:6px}
-.apx{columns:2;column-gap:28px;font:11.3px/1.42 var(--sans);color:var(--ink2)}
-.apx p{margin:0 0 7px;break-inside:avoid}
+/* ---------- 08 machine ladder ---------- */
+.lad{display:flex;flex-direction:column;gap:5px;margin-top:6px}
+.lad .hd,.lad .rung{display:grid;grid-template-columns:22px 1.3fr 1.1fr 146px 112px;gap:8px;align-items:center}
+.lad .hd{font:600 9.5px/1.2 var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--taupe);padding:0 8px}
+.lad .rung{background:#fff;border:1px solid var(--line);border-radius:8px;padding:5px 8px;min-height:44px}
+.lad .rung .nm{font:600 12.5px/1.2 var(--sans);color:var(--ink)}
+.lad .rung .ex{font:11px/1.25 var(--sans);color:var(--ink2);margin-top:1px}
+.lad .rung .pr{display:block;font:11.5px/1.25 var(--sans);color:var(--ink)}
+.lad .rung .pr.nd{color:var(--taupe);font-style:italic}
+.lad .tagr{display:inline-block;margin-top:2px;font:600 9.5px/1 var(--sans);letter-spacing:.06em;text-transform:uppercase;padding:3px 5px;border-radius:4px;background:#ECE8E0;color:var(--ink2)}
+.lad .tagr.claim{background:#FBEDEC;color:var(--red)} .lad .tagr.vendor{background:#E6EEF8;color:var(--navy)} .lad .tagr.press{background:#FBF5E8;color:#7A6432}
+.lad .steps{display:grid;grid-template-columns:repeat(6,1fr);gap:2px}
+.lad .steps span{font:500 9.5px/1 var(--sans);padding:5px 0;text-align:center;border-radius:4px;border:1px solid #D8D1C3;color:var(--taupe);background:#fff}
+.lad .steps span.m{background:var(--navy);border-color:var(--navy);color:#fff}
+.lad .rung.base{background:transparent;border:1.5px dashed var(--navy)}
+.lad .rung.base .nm{color:var(--navy)}
+.lad .strip{position:relative;height:14px;border-radius:3px;background:#EEE9E0;overflow:hidden}
+.lad .strip i{position:absolute;top:0;bottom:0;background:#4E8A63}
+.lad .strip.none{background:repeating-linear-gradient(45deg,#EEE9E0 0 4px,#fff 4px 8px)}
+.lad .strip b{position:absolute;top:-2px;bottom:-2px;width:2px;background:var(--red)}
+.lad .sl{font:10.5px/1.2 var(--sans);color:var(--ink2);margin-top:3px;white-space:nowrap}
+.lad .badge{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font:600 11px/1 var(--sans);background:var(--red);color:#fff}
+.lad .rung.base .badge{background:transparent;color:var(--navy);border:1.5px solid var(--navy)}
+.yo{display:flex;flex-direction:column;gap:7px}
+.yo .sitectl{padding:6px 12px;gap:0}
+.yo .sitectl label{font-size:11.5px}
+.yo table{width:100%;border-collapse:collapse;font:11.3px/1.25 var(--sans)}
+.yo th{font:600 9.5px/1.2 var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--taupe);text-align:left;padding:0 3px 3px;border-bottom:1px solid var(--line)}
+.yo th.sv{text-align:right}
+.yo td{padding:3.5px 3px;border-bottom:1px solid var(--line);vertical-align:top;color:var(--ink2)}
+.yo td:first-child{font-weight:600;color:var(--ink);white-space:nowrap;width:1%}
+.yo td.sv{text-align:right;white-space:nowrap;width:17%;color:var(--ink)}
+.yo .v{font-weight:600} .yo .v.good{color:#2F6B45} .yo .v.bad{color:var(--red)} .yo .v.mid{color:#7A6432}
+.yo .small{display:block;font-size:10.5px;color:var(--taupe);font-weight:400;white-space:nowrap}
+.yo .at{font:12px/1.35 var(--sans);color:var(--ink2)}
+.lnote{font:10.5px/1.36 var(--sans);color:var(--ink2);margin:6px 0 0}
+.lnote li{margin:0 0 2px}
+.lnote b{color:var(--ink)}
+.apx{columns:3;column-gap:22px;font:9.6px/1.36 var(--sans);color:var(--ink2)}
+.apx p{margin:0 0 4px;break-inside:avoid}
 .apx b{color:var(--ink)}
 .apx h5{margin:0 0 6px;font:600 10.5px/1.2 var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--red);break-after:avoid}
 
@@ -342,13 +380,13 @@ aside.notes{display:none}
     <h1>Chagee Singapore</h1>
     <p class="tl">Forecast the peak, share the counter</p>
     <div class="rule"></div>
-    <p class="meta">Predictive AI and robots at the counter: what the GM decides for the busiest hour<br>
+    <p class="meta">Predictive AI and counter automation: what the GM decides for the busiest hour<br>
       OPIM639 &nbsp;·&nbsp; Group 3 &nbsp;·&nbsp; Keziah, Jin, Ayumi, Revan &nbsp;·&nbsp; October 2026</p>
   </div>
   <img class="cup" src="{img:cup_navy}" alt="">
   <aside class="notes">
     <p>Good morning. We are Group 3. Our company is Chagee, and we look at one place in its business: the counter of a Singapore outlet in its busiest hour.</p>
-    <p>Two kinds of AI meet there. Predictive AI forecasts how busy the hour will be. Robotics, Chagee's tea machines, brew the fixed steps. Around them, people share the hand steps like a bucket brigade.</p>
+    <p>Two kinds of technology meet there. Predictive AI forecasts how busy the hour will be; that is the AI in our project. Machines do the fixed steps; that is robotics and automation, not AI. Around them, people share the hand steps like a bucket brigade.</p>
     <p>Our decision-maker throughout is the GM, Chagee Singapore's general manager. Timing: title and agenda together, about twenty seconds.</p>
   </aside>
 </section>
@@ -366,7 +404,8 @@ aside.notes{display:none}
       <li data-go="c5"><span class="no">05</span><span class="nm">Predict demand<span class="why">App searches, DBSCAN and a new-store pin</span></span></li>
       <li data-go="c6"><span class="no">06</span><span class="nm">Share the counter<span class="why">The bucket brigade, side by side</span></span></li>
       <li data-go="c7"><span class="no">07</span><span class="nm">Split the counter<span class="why">Which steps stay human: the GM's call</span></span></li>
-      <li data-go="c8"><span class="no">08</span><span class="nm">The GM's playbook<span class="why">Triggers, pilot and limits</span></span></li>
+      <li data-go="cm"><span class="no">08</span><span class="nm">Machine ladder<span class="why">What machines exist, what they cost, when to add them</span></span></li>
+      <li data-go="c8"><span class="no">09</span><span class="nm">The GM's playbook<span class="why">Triggers, pilot and limits</span></span></li>
     </ol>
   </div>
   <div class="cups">
@@ -568,7 +607,7 @@ aside.notes{display:none}
           </div>
           <div class="aiwrap" data-s="4">
             <div class="aibox ai"><div class="k">AI · predictive</div><p>Forecast cups per hour from history, calendar and app orders.</p></div>
-            <div class="aibox ai"><div class="k">AI · robotics</div><p>Tea machines brew the fixed steps from a scanned recipe.</p></div>
+            <div class="aibox ops"><div class="k">Automation, not AI</div><p>Machines do the fixed steps, such as dispensing tea from a scanned recipe.</p></div>
             <div class="aibox ops"><div class="k">Operations tools, not AI</div><p>Bucket brigade and cross-training: how people share the hand steps.</p></div>
           </div>
         </div>
@@ -576,7 +615,7 @@ aside.notes{display:none}
           <li data-s="1"><span class="n">1</span><span>Online retailing is promising but depends on platform fees and pricing tests. We park it as future work.</span></li>
           <li data-s="2"><span class="n">2</span><span>New stores: we forecast demand from the app; the property and payback decision stays future work.</span></li>
           <li data-s="3"><span class="n">3</span><span>In-store operations: a daily decision, with data that already exists. This is our focus.</span></li>
-          <li data-s="4"><span class="n">4</span><span>We are explicit about the AI: predictive AI and the machines. The bucket brigade is the operations rule around them.</span></li>
+          <li data-s="4"><span class="n">4</span><span>We are explicit about the AI: only the forecast. The machines are robotics and automation; the bucket brigade is the operations rule around them.</span></li>
         </ol>
       </div>
       <div class="cards">
@@ -597,7 +636,7 @@ aside.notes{display:none}
   <div class="foot"><span>OPIM639 · Group 3 · explainer figures are illustrative assumptions</span><span class="rail"></span><span class="pg"></span></div>
   <aside class="notes">
     <p>Our ideation produced three areas. We park online retailing as future work, forecast new stores from app data, and focus on the in-store peak.</p>
-    <p>We are careful about what counts as AI: the forecast and the machines. Bucket brigade and cross-training are operations tools, but they decide whether a lean roster actually works.</p>
+    <p>We are careful about what counts as AI: only the forecast. The machines are robotics and automation. Bucket brigade and cross-training are operations tools, but they decide whether a lean roster actually works.</p>
     <p>The decision-maker is the GM; outlet teams run the roster day to day. We do not yet know how Chagee sets rosters today; that is a question for our industry contact. About fifty seconds.</p>
   </aside>
 </section>
@@ -707,9 +746,39 @@ aside.notes{display:none}
   </div>
   <div class="foot"><span>OPIM639 · Group 3 · explainer figures are illustrative assumptions · robot speeds and costs are assumptions, not Chagee data</span><span class="rail"></span><span class="pg"></span></div>
   <aside class="notes">
-    <p>This is the GM's decision: which steps of the counter stay human and which go to robots. Our research says Chagee is heading towards machines making the drink while people tag the order and hand it over; that is side B.</p>
+    <p>This is the GM's decision: which steps of the counter stay human and which go to robots. Side B is a scenario, not a claim about Chagee: machines make the drink while people tag the order and hand it over. Chagee's own equipment cost is not public; its Singapore relaunch used semi-automated equipment, according to Vulcan Post.</p>
     <p>Click any station to switch it. Each side gets its forecast roster; change people with plus and minus. The table on the right is the simulation run for all four splits.</p>
     <p>What it shows, honestly: on a normal day, all by hand is cheapest; robots buy a shorter wait, not a lower cost, at about {{d.cupsPerDay}} cups a day. On an event day, today's split is cheapest within the limit. Machines making the drink needs a second person at the peak, because one person cannot tag and hand over at opposite ends of the counter. About one and a half minutes.</p>
+  </aside>
+</section>
+
+<!-- ======================================================= 08 MACHINE LADDER -->
+<section class="slide content" id="cm" data-chapter="Machines" data-title="Machine ladder">
+  <div class="leafart" aria-hidden="true"></div>
+  <div class="inner">
+    <p class="kicker">08 · Machine ladder · robotics and automation, not AI</p>
+    <h2 class="head" style="font-size:33px">What machines exist, what they cost, and when to add them</h2>
+    <p class="sub" style="font-size:13.5px;max-width:1000px">To our knowledge, based on public sources; vendor list prices, not the cost to implement. Chagee's own equipment cost is not public; its Singapore relaunch used semi-automated equipment (Vulcan Post).</p>
+    <div class="body" style="grid-template-columns:1fr 378px;margin-top:10px;gap:14px">
+      <div class="panel" style="padding:10px 14px 9px">
+        <div class="ptop" style="min-height:20px"><span class="ptitle">The ladder · navy = steps on machines</span></div>
+        <div class="lad"></div>
+        <p class="lnote">Green = beats all by hand, across our per-outlet range of {{r.vol_lo}} to {{r.vol_hi}} cups a day; red line = your outlet. Rosters step in whole people, so wins come and go. The model's S${{r.unit_month}} a month is per station unit (our reading: a semi-automated station); robot prices are per setup.</p>
+      </div>
+      <div class="cards yo">
+        <div class="cset screenonly sitectl ladctl"></div>
+        <p class="at printonly"></p>
+        <table></table>
+        <p class="lnote"><b>Model rule, an assumption:</b> at least {{r.min_mixed}} person on the counter all day with machines, {{r.min_hand}} by hand; so robot rungs save no more labour than today's split until about {{r.ladder_more}} cups a day. Station speeds are the model's, not vendor claims. Simple payback = list price ÷ labour saved a month; excludes installation, training, maintenance, power, space, import, financing.</p>
+      </div>
+    </div>
+    <div class="takeaway" style="margin-top:10px;padding:10px 22px"><span class="lab">TAKEAWAY</span><span>At {{r.ladder_cups}} cups a day, {{s.ladder_wins}} pay at the model's rate. Robot rungs save no more labour than today's split until about {{r.ladder_more}} cups a day, under the model's one-person rule.</span></div>
+  </div>
+  <div class="foot"><span>OPIM639 · Group 3 · Vendor and press figures; not Chagee data · model figures are illustrative assumptions</span><span class="rail"></span><span class="pg"></span></div>
+  <aside class="notes">
+    <p>This is robotics and automation, not AI; the AI in our project is the forecast that sets the roster. The ladder runs from semi-automation, kiosks and sealers, up to a robot barista. Navy chips are the counter steps each rung puts on machines. The dashed row is our own scenario, today's split from slide 07, so the ladder does not start from an all-human counter.</p>
+    <p>Prices are vendor list prices from public sources, not the cost to implement. Gong cha and Richtech do not publish prices, so we show the cost a setup would need to stay under to break even. The robot barista is coffee-first; no tea drinks are listed for Oli.</p>
+    <p>On the right, set your outlet's cups a day, the wage and the machine rate. The honest reading: the cheap semi-automated rungs can pay at our rate; the robot rungs save no more labour than today's split until volume is high, because the model keeps at least one person on the counter all day. That rule is our assumption. Chagee's own equipment cost is not public. About one minute.</p>
   </aside>
 </section>
 
@@ -717,7 +786,7 @@ aside.notes{display:none}
 <section class="slide content" id="c8" data-chapter="Decide" data-title="The GM's playbook">
   <div class="leafart" aria-hidden="true"></div>
   <div class="inner">
-    <p class="kicker">08 · The GM's playbook</p>
+    <p class="kicker">09 · The GM's playbook</p>
     <h2 class="head">Choose the split, roster to the forecast, and share the work to suit the split</h2>
     <p class="sub">Three moves for the GM, each with a trigger, then a pilot to test them.</p>
     <div class="body">

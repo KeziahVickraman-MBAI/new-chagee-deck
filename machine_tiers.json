@@ -1,0 +1,184 @@
+{
+  "_note": "Machine ladder for the storyboard deck (slide 08 and its appendix). Vendor and press figures, not Chagee data. Every figure comes from the source URL on its row; a gap is 'not_disclosed', never a guess. USD amounts convert at assumptions.json _meta.fx_sgd_per_usd. Prices are vendor list prices, not cost to implement (installation, training, maintenance, power, space and import are not included). Vendor speed or throughput claims are NOT model inputs: every rung uses the model's station speeds (assumptions.json stations). Station mapping ('replaces') is our assumption. model_rate_applies: the model's machine cost per station unit (assumptions.json costs.machine_cost_per_unit_per_month, a semi-automated station unit) is used as this rung's cost basis; robot rungs use only their own published price.",
+  "reliability_tags": [
+    "company claim",
+    "vendor page",
+    "press",
+    "our assumption"
+  ],
+  "baseline": {
+    "label": "Our scenario: today's split",
+    "replaces_from": "assumptions.json stations.mixed_machine_stations",
+    "note": "The counter slides 06 and 07 run: ticket, tea-milk and shake-seal on machines. A scenario of ours, not Chagee's disclosed setup.",
+    "reliability": "our assumption"
+  },
+  "chagee": {
+    "text": "Chagee's own equipment cost is not public. Its Singapore relaunch used semi-automated equipment.",
+    "source": "https://vulcanpost.com/872176/chagee-singapore-comeback-after-sudden-exit/",
+    "reliability": "press"
+  },
+  "tiers": [
+    {
+      "id": "semi",
+      "name": "Semi-automation",
+      "automates": "Sugar dispensers, cup sealers, self-order kiosks",
+      "replaces": [
+        "ticket",
+        "shake_seal"
+      ],
+      "replaces_reliability": "our assumption",
+      "replaces_note": "Kiosk = ticket, sealer = shake-seal. Sugar dispensing is part of the model's tea-milk step, so it is not modelled.",
+      "model_rate_applies": true,
+      "examples": [
+        {
+          "name": "Gong Cha Singapore",
+          "cost": {
+            "kind": "not_disclosed"
+          },
+          "claims": [
+            "Over 20% productivity from self-ordering",
+            "5% manpower saving (no baseline given)"
+          ],
+          "source": "https://www.ntuc.org.sg/uportal/news/Technology-Brewing-Up-the-Bubble-Tea-Business/",
+          "reliability": "press"
+        }
+      ]
+    },
+    {
+      "id": "platform",
+      "name": "Beverage platform",
+      "automates": "Dispenses tea, sweeteners and syrups; brewing and shaking stay manual",
+      "replaces": [
+        "tea_milk"
+      ],
+      "replaces_reliability": "our assumption",
+      "model_rate_applies": true,
+      "examples": [
+        {
+          "name": "Gong cha Super Wu (Feb 2026)",
+          "cost": {
+            "kind": "not_disclosed"
+          },
+          "claims": [
+            "Up to 65% higher peak productivity"
+          ],
+          "source": "https://marketech-apac.com/gong-cha-launches-gong-cha-2-0-to-modernise-global-operations-and-store-design/",
+          "reliability": "company claim"
+        }
+      ]
+    },
+    {
+      "id": "single",
+      "name": "Single automated milk-tea machine",
+      "automates": "Makes the milk tea itself",
+      "replaces": [
+        "tea_milk"
+      ],
+      "replaces_reliability": "our assumption",
+      "model_rate_applies": true,
+      "examples": [
+        {
+          "name": "Amacha (one small shop, owner interview)",
+          "cost": {
+            "kind": "purchase",
+            "currency": "SGD",
+            "purchase": 10000
+          },
+          "claims": [
+            "The shop's total opening cost was S$209,000 (not a machine cost)"
+          ],
+          "source": "https://www.malaymail.com/news/life/2026/10/05/opening-a-milk-tea-shop-in-singapore-can-rack-up-to-s209000-even-before-the-first-cup-is-poured/237715",
+          "reliability": "press"
+        }
+      ]
+    },
+    {
+      "id": "arm",
+      "name": "Robot arm that makes boba",
+      "automates": "Cup, ice, tea, toppings and sealing by one robot arm",
+      "replaces": [
+        "cup_ice",
+        "tea_milk",
+        "topping_finish",
+        "shake_seal"
+      ],
+      "replaces_reliability": "our assumption",
+      "model_rate_applies": false,
+      "examples": [
+        {
+          "name": "Richtech ADAM",
+          "cost": {
+            "kind": "not_disclosed",
+            "note": "Rental only; price not published"
+          },
+          "claims": [],
+          "source": "https://richtechrobotics.com/solutions/adam",
+          "reliability": "vendor page"
+        }
+      ]
+    },
+    {
+      "id": "barista",
+      "name": "Robot barista",
+      "automates": "A whole drink station in one unit",
+      "replaces": [
+        "cup_ice",
+        "tea_milk",
+        "topping_finish",
+        "shake_seal"
+      ],
+      "replaces_reliability": "our assumption",
+      "model_rate_applies": false,
+      "note": "Coffee-first. No tea drinks listed for Oli or Artly.",
+      "examples": [
+        {
+          "name": "Oli",
+          "cost": {
+            "kind": "purchase_or_lease",
+            "currency": "USD",
+            "purchase": 59000,
+            "lease_month": 4990
+          },
+          "claims": [],
+          "source": "https://olirobotics.com/best-robot-barista",
+          "reliability": "vendor page"
+        },
+        {
+          "name": "Artly",
+          "cost": {
+            "kind": "estimate",
+            "currency": "USD",
+            "purchase": [
+              68000,
+              88000
+            ],
+            "lease_month": [
+              2500,
+              4000
+            ],
+            "software_month": [
+              2500,
+              4000
+            ]
+          },
+          "claims": [],
+          "cost_note": "Oli's estimate of a competitor's price, as given in the brief: about US$68-88k plus US$2.5-4k a month lease and US$2.5-4k a month software. Whether the lease replaces or adds to the purchase is not stated here, so no verdict is computed for Artly.",
+          "source": "https://olirobotics.com/best-robot-barista",
+          "reliability": "vendor page"
+        },
+        {
+          "name": "Cafe X",
+          "cost": {
+            "kind": "estimate",
+            "currency": "USD",
+            "purchase": 250000
+          },
+          "claims": [],
+          "cost_note": "Oli's estimate of a competitor's price.",
+          "source": "https://olirobotics.com/best-robot-barista",
+          "reliability": "vendor page"
+        }
+      ]
+    }
+  ]
+}

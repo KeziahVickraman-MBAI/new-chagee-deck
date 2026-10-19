@@ -455,6 +455,7 @@
       "value": 1908.75,
       "value_usd": 1500.0,
       "unit": "SGD per station machine unit per month",
+      "represents": "Our reading: one semi-automated station unit (for example a dispenser or a cup sealer), amortised with upkeep. Not a robot barista lease; robot prices in machine_tiers.json are per setup. Display text only.",
       "range": [
         636.25,
         3817.5

@@ -567,6 +567,81 @@
     }, true);
   });
 
+  /* ---------------------------------------------------------------- 08 machine ladder (sim/ladder.js, machine_tiers.json) */
+  (function ladder() {
+    const sl = $(document, "#cm"); if (!sl) return;
+    const L = window.ChageeLadder, TI = window.STORY.TIERS, fx = RAW._meta.fx_sgd_per_usd.value;
+    const lad = $(sl, ".lad"), tb = $(sl, ".yo table"), ctl = $(sl, ".ladctl"), atP = $(sl, ".yo .at");
+    const SHORT = { ticket: "Tag", cup_ice: "Cup", tea_milk: "Tea", topping_finish: "Top", shake_seal: "Seal", handover: "Hand" };
+    const RUNG = { semi: "Semi-automation", platform: "Beverage platform", single: "Milk-tea machine", today: "Today's split", arm: "Robot arm", barista: "Robot barista" };
+    const EX = { semi: "Gong Cha Singapore", platform: "Gong cha Super Wu, Feb 2026", single: "Amacha, one small shop", today: "Our scenario (slides 06 and 07), not Chagee's disclosed setup",
+                 arm: "Richtech ADAM, makes boba", barista: "Oli; coffee-first, no tea listed" };
+    const money = (x, cur = "S$") => `${cur}${Math.round(x).toLocaleString("en-SG")}`;
+    const TAG = { "company claim": "claim", "vendor page": "vendor", press: "press", "our assumption": "" };
+    const tier = id => TI.tiers.find(t => t.id === id);
+    const ORDER = ["semi", "platform", "single", "today", "arm", "barista"];
+    const D0 = DATA.ladder.at, cr = RAW.costs;
+    const IN = [["cupsDay", "Cups a day at your outlet", DATA.ladder.volumes.lo, DATA.ladder.volumes.hi, 1, v => `${v}`],
+                ["wage", "Wage, S$ an hour, fully loaded", ...cr.labour_cost_per_hour.range, 0.01, v => `S$${v.toFixed(2)}`],
+                ["unitMonth", "Model machine rate, per station unit a month", ...cr.machine_cost_per_unit_per_month.range, 1, v => money(v)]];
+    const o = { ...D0 };
+    ctl.innerHTML = IN.map(([k, lab, lo, hi, st, f]) =>
+      `<label>${lab}<span class="val" data-v="${k}">${f(o[k])}</span><input type="range" data-k="${k}" min="${lo}" max="${hi}" step="${st}" value="${o[k]}"></label>`).join("");
+    const priceText = (ex) => {
+      const c = ex.cost;
+      if (c.kind === "not_disclosed") return `<span class="pr nd">Not disclosed${c.note ? ", rental only" : ""}</span>`;
+      const cur = c.currency === "USD" ? "US$" : "S$";
+      if (c.kind === "purchase") return `<span class="pr">${money(c.purchase, cur)} to buy</span>`;
+      return `<span class="pr">${money(c.lease_month, cur)}/mo lease, ${money(c.purchase, cur)} buy</span>`;
+    };
+    let VOL = DATA.ladder.volumes, volKey = "";
+    function draw() {
+      const ev = L.evaluate(Sim, C, RAW, P, TI, o), E = Object.fromEntries(ev.map(r => [r.id, r]));
+      const key = `${o.wage}|${o.unitMonth}`;
+      if (key !== volKey) { VOL = (o.wage === D0.wage && o.unitMonth === D0.unitMonth) ? DATA.ladder.volumes : L.volumes(Sim, C, RAW, P, TI, o); volKey = key; }
+      const VR = Object.fromEntries(VOL.rungs.map(r => [r.id, r])), span = VOL.hi - VOL.lo;
+      const pos = x => `${(100 * (x - VOL.lo)) / span}%`;
+      let n = 0;
+      lad.innerHTML = `<div class="hd"><span></span><span>Rung · example</span><span>Vendor list price · source</span><span>Steps on machines</span><span>Beats hand, cups/day</span></div>` +
+        ORDER.map(id => {
+          const r = E[id], v = VR[id], base = id === "today", t = base ? null : tier(id);
+          const shown = base ? [] : t.examples.filter(e => e.cost.kind !== "estimate");
+          const ex = EX[id];
+          const rel = base ? TI.baseline.reliability : shown[0].reliability;
+          const price = base ? `<span class="pr">Model: ${money(o.unitMonth)}/mo per station unit</span>` : shown.map(priceText).join("");
+          const strip = v.basis === "none"
+            ? `<div class="strip none"><b style="left:${pos(o.cupsDay)}"></b></div><div class="sl">No price to test</div>`
+            : `<div class="strip">${v.beatsBands.map(([a, b]) => `<i style="left:${pos(a - 0.5)};width:${(100 * (b - a + 1)) / span}%"></i>`).join("")}<b style="left:${pos(o.cupsDay)}"></b></div>
+               <div class="sl">${v.beatsBands.length ? v.beatsBands.map(([a, b]) => (a === b ? `${a}` : `${a}–${b}`)).join(", ") : "Not in this range"}${v.basis === "lease" ? " at lease" : ""}</div>`;
+          return `<div class="rung${base ? " base" : ""}"><span class="badge">${base ? "" : ++n}</span>
+            <div><div class="nm">${RUNG[id]}</div><div class="ex">${ex}</div></div>
+            <div>${price}<span class="tagr ${TAG[rel] ?? ""}">${rel}</span></div>
+            <div class="steps">${P.stations.map(st => `<span class="${r.robots.includes(st) ? "m" : ""}">${SHORT[st]}</span>`).join("")}</div>
+            <div>${strip}</div></div>`;
+        }).join("");
+      const rateLine = r => `Model: ${r.units} × ${money(o.unitMonth)}, ${r.modelMargin >= 0 ? `beats by ${money(r.modelMargin)}` : `${money(-r.modelMargin)} more`}`;
+      tb.innerHTML = `<tr><th>A month</th><th class="sv">Labour saved</th><th>Against all by hand</th></tr>` + ORDER.map(id => {
+        const r = E[id];
+        let main, small = "";
+        if (id === "today") { main = `<span class="v ${r.modelMargin >= 0 ? "good" : "bad"}">${r.modelMargin >= 0 ? `Beats by ${money(r.modelMargin)}` : `${money(-r.modelMargin)} more`}</span>`; small = `Model: ${r.units} × ${money(o.unitMonth)}`; }
+        else if (r.lease) { const m = r.leaseMargin;
+          main = `<span class="v ${m >= 0 ? "good" : "bad"}">${r.lease.name} lease ${money(r.lease.lease)}: ${m >= 0 ? `beats by ${money(m)}` : `${money(-m)} more`}</span>`;
+          small = r.payback.map(p => `Buy ${money(p.priceRaw, p.currency === "USD" ? "US$" : "S$")}: payback ${p.months.toFixed(1)} months`).join("; "); }
+        else if (r.payback.length) { const p = r.payback[0];
+          main = `<span class="v mid">Payback ${p.months.toFixed(1)} months on ${money(p.priceRaw)}</span>`; small = r.modelRate ? rateLine(r) : ""; }
+        else { main = `<span class="v mid">Break-even: setup under ${money(r.breakEvenSetup)}/mo</span>`; small = r.modelRate ? rateLine(r) : "No public price"; }
+        return `<tr><td>${RUNG[id]}</td><td class="sv">${money(r.saved)}</td><td>${main}<span class="small">${small}</span></td></tr>`;
+      }).join("");
+      atP.textContent = `Your outlet: ${o.cupsDay} cups a day, wage S$${o.wage.toFixed(2)} an hour, ${money(o.unitMonth)} a month per station unit (the model's defaults; sliders on screen).`;
+      $$(ctl, "[data-v]").forEach(el => { const d = IN.find(x => x[0] === el.dataset.v); el.textContent = d[5](o[d[0]]); });
+    }
+    ctl.addEventListener("input", e => { const k = e.target.dataset.k; if (!k) return; o[k] = +e.target.value;
+      $$(ctl, "[data-v]").forEach(el => { const d = IN.find(x => x[0] === el.dataset.v); el.textContent = d[5](o[d[0]]); });
+      clearTimeout(ctl.tm); ctl.tm = setTimeout(draw, 60); });
+    printers.push(() => { Object.assign(o, D0); $$(ctl, "input").forEach(i => (i.value = o[i.dataset.k])); draw(); });
+    draw();
+  })();
+
   /* ---------------------------------------------------------------- 08 playbook */
   (function playbook() {
     const tb = $(document, "#c8 .pb"); if (!tb) return;

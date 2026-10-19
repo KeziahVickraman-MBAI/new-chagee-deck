@@ -10,6 +10,8 @@ const Store = require("../sim/store.js");
 const C = require("../sim/counter.js");
 const Site = require("../sim/sitepick.js");
 const GEO = require("../sim/sg_geo.json");
+const L = require("../sim/ladder.js");
+const TIERS = require("../machine_tiers.json");
 
 const RAW = JSON.parse(fs.readFileSync(path.join(__dirname, "..", "assumptions.json"), "utf8"));
 const P = Sim.params(RAW), SB = RAW.storyboard;
@@ -55,10 +57,14 @@ const order = SM.storeCups.map((c, j) => [c, j]).sort((a, b) => a[0] - b[0]), mi
 const site = { top: { x: top.x, y: top.y, hub: hubOf(top), ...top.f }, nextDoor: Site.forecast(SM, { x: mid[0] + 3, y: mid[1] }),
                clusters: SM.clusters.length, unmetShare: SM.unmet.filter(Boolean).length / SM.ev.length };
 
+// slide 08: the machine ladder at the default outlet, and the volume bands across the per-outlet range
+const ladderAt = { cupsDay: Math.round(Sim.dailyBase(P)), wage: P.wage, unitMonth: P.machineMonth };
+const ladder = { at: ladderAt, rungs: L.evaluate(Sim, C, RAW, P, TIERS, ladderAt), volumes: L.volumes(Sim, C, RAW, P, TIERS, ladderAt) };
+
 const pl = Sim.plan(P, "mixed");
 const data = {
   generated: new Date().toISOString(), seeds,
-  grid, splits, site,
+  grid, splits, site, ladder,
   counter: {
     peakHour: C.peakHour(P), firstHour: 10, cupsPerDay: Sim.dailyBase(P),
     perWorkerHour: pl.perWorker * 60, handSeconds: pl.W,

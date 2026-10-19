@@ -49,7 +49,7 @@ DOCX_MAP = "word/media/image3.png"          # the team's "Chagee in Singapore" m
 
 
 def ensure_data() -> dict:
-    srcs = [ROOT / "assumptions.json", HERE / "precompute.js", ROOT / "sim" / "sg_geo.json", *(ROOT / "sim").glob("*.js")]
+    srcs = [ROOT / "assumptions.json", ROOT / "machine_tiers.json", HERE / "precompute.js", ROOT / "sim" / "sg_geo.json", *(ROOT / "sim").glob("*.js")]
     if not DATA.exists() or DATA.stat().st_mtime < max(p.stat().st_mtime for p in srcs):
         subprocess.run(["node", str(HERE / "precompute.js"), str(DATA)], check=True, cwd=ROOT)
     return json.loads(DATA.read_text(encoding="utf-8"))
@@ -151,6 +151,23 @@ def values(d: dict) -> dict:
     v["r.weak"] = SP["verdict"]["value"]["weak_new_share"]
     if round(st["top"]["cups"]) - round(st["top"]["cannibal"]) != round(st["top"]["netNew"]):
         v["r.top_moved"] = round(st["top"]["cups"]) - round(st["top"]["netNew"])     # so the printed sum adds up
+    # slide 08: the machine ladder (sim/ladder.js via precompute.js)
+    lad = d["ladder"]; at = lad["at"]; R = {r["id"]: r for r in lad["rungs"]}; V = {r["id"]: r for r in lad["volumes"]["rungs"]}
+    v["r.vol_lo"], v["r.vol_hi"] = lad["volumes"]["lo"], lad["volumes"]["hi"]
+    v["r.ladder_cups"] = at["cupsDay"]
+    v["r.unit_month"] = RAW["costs"]["machine_cost_per_unit_per_month"]["value"]
+    v["r.min_mixed"] = RAW["people"]["min_staff_on_shift"]["value"]["mixed"]
+    v["r.min_hand"] = RAW["people"]["min_staff_on_shift"]["value"]["all_human"]
+    wins = [r for r in lad["rungs"] if r["basis"] == "model" and not r.get("baseline") and r["modelMargin"] > 0]
+    if not wins:
+        raise SystemExit("build: the ladder takeaway names the rungs that beat all by hand at the default outlet; none do, rewrite it")
+    names = ["the " + r["name"][0].lower() + r["name"][1:] for r in wins]
+    v["s.ladder_wins"] = names[0] if len(names) == 1 else ", ".join(names[:-1]) + " and " + names[-1]
+    starts = [V[k]["moreBands"][0][0] for k in ("arm", "barista") if V[k]["moreBands"]]
+    if len(starts) != 2 or len(set(starts)) != 1 or starts[0] <= at["cupsDay"] \
+            or any(abs(R[k]["saved"] - R["today"]["saved"]) > 1e-6 for k in ("arm", "barista")):
+        raise SystemExit("build: the ladder says robot rungs save no more labour than today's split until one volume above the default; rewrite it")
+    v["r.ladder_more"] = starts[0]
     # the roster trigger: forecast peak cups per person, after the capacity safety margin (plan()'s rule)
     v["r.cups_per_person"] = d["counter"]["perWorkerHour"] / RAW["costs"]["capacity_safety_margin"]["value"]
     return v
@@ -206,7 +223,7 @@ def appendix() -> str:
         f = RAW["facts"][k]
         out.append(f"<p><b>{label}: {short(f['value'])}</b>. {esc(f['rationale'])} <i>[{esc(f['source'])}]</i></p>")
     out.append("<h5>Sources</h5>")
-    for k in ("L-sg-directory", "L-koalagains", "L-yfchuhai", "L-sec20f", "L-unsw", "I-sg-owned", "I-sg-groundfloor", "I-team-automation", "I-team-app-first", "L-ester1996"):
+    for k in ("L-sg-directory", "L-koalagains", "L-yfchuhai", "L-sec20f", "L-unsw", "I-sg-owned", "I-sg-groundfloor", "I-team-app-first", "L-ester1996"):
         out.append(f"<p><b>{k}</b> {esc(RAW['_sources'][k])}</p>")
     out.append("<h5>Assumptions (assumptions.json, illustrative)</h5>")
     for sec, key, label in USED:
@@ -263,10 +280,11 @@ def build() -> Path:
     imgs = images()
     html = re.sub(r"\{img:(\w+)\}", lambda m: imgs[m.group(1)], html)
     html = html.replace("<!--APPENDIX-->", appendix())
-    js = "\n".join((ROOT / "sim" / f).read_text(encoding="utf-8") for f in ("sim.js", "store.js", "counter.js", "sitepick.js"))
+    js = "\n".join((ROOT / "sim" / f).read_text(encoding="utf-8") for f in ("sim.js", "store.js", "counter.js", "sitepick.js", "ladder.js"))
     js += "\n" + (HERE / "deck.js").read_text(encoding="utf-8")
     payload = {"RAW": RAW, "DATA": d, "GEO": json.loads((ROOT / "sim" / "sg_geo.json").read_text(encoding="utf-8")),
-               "MAP": imgs["sg_map_crop"]}
+               "MAP": imgs["sg_map_crop"],
+               "TIERS": json.loads((ROOT / "machine_tiers.json").read_text(encoding="utf-8"))}
     html = html.replace("/*__DATA__*/", "window.STORY=" + json.dumps(payload, ensure_ascii=False).replace("</", "<\\/") + ";")
     html = html.replace("/*__JS__*/", js.replace("</script", "<\\/script"))
     OUT.write_text(html, encoding="utf-8")
