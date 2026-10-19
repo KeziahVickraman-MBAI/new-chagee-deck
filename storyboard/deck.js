@@ -741,7 +741,7 @@
 
   /* ---------------------------------------------------------------- 10 benefit (sim/benefit.js) */
   (function benefit() {
-    const sl = $(document, "#c9"); if (!sl) return;
+    const sl = $(document, "#ab"); if (!sl) return;
     const B = window.ChageeBenefit, BD = DATA.benefit, N = RAW.facts.sg_outlets.value, SBk = RAW.storyboard;
     const Ps = Object.fromEntries(Object.entries(BD.P).map(([k, p]) => [k, { ...P, ...p }]));
     const e0 = B.econ(RAW, P), e = { ...e0, days: { ...e0.days } };
@@ -795,6 +795,23 @@
       e.days[k] = Math.min(+ev.target.value, P.days - e.days[k === "busy" ? "event" : "busy"]); ev.target.value = e.days[k]; draw(); });
     printers.push(() => { e.days = { ...e0.days }; $$(ctl, "input").forEach(i => (i.value = e.days[i.dataset.k])); draw(); });
     draw();
+  })();
+
+  /* ---------------------------------------------------------------- 09 benefit, simple: four bars */
+  (function benefitBars() {
+    const el = $(document, "#c9 .bars"); if (!el) return;
+    const S = DATA.benefit.summary, Y = S.base.year, N = RAW.facts.sg_outlets.value, F = S.fragile.year.ab, mh = P.minStaff.all_human, mm = P.minStaff.mixed;
+    const M = x => `S$${(x / 1e6).toFixed(2)}m`, n = x => Math.round(x).toLocaleString("en-SG");
+    const rows = [
+      ["Forecast roster only", "predictive AI", Y.a.profit, `${n(Y.a.orders * N)} orders kept`, COL.navy, ""],
+      ["Tea-and-milk machine only", "physical AI", Y.b.profit, `labour saved off-peak`, "#2F6B45", ""],
+      ["Both, one run", "the headline", Y.ab.profit, `${n(Y.ab.orders * N)} orders kept`, COL.red, "tot"],
+      ["Both, without the minimum-crew assumption", `${mm} person either way`, F.profit, "", COL.taupe, "frag"]];
+    const max = Math.max(...rows.map(r => r[2]));
+    el.innerHTML = rows.map(([nm, sub, v, note, col, cls]) => { const w = Math.max(0.6, 100 * Math.max(0, v) / max * 0.7);
+      return `<div class="row ${cls}"><div class="nm">${nm}<small>${sub}${note ? ` · ${note}` : ""}</small></div><div class="tr">` +
+        `<div class="b" style="width:${w}%;background:${cls === "frag" ? `repeating-linear-gradient(45deg,${col} 0 6px,#CFC8BC 6px 12px)` : col}"></div>` +
+        `<span class="v" style="left:calc(${w}% + 10px)">${M(v * N)}</span></div></div>`; }).join("");
   })();
 
   /* ---------------------------------------------------------------- 08 playbook */

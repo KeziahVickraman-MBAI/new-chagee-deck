@@ -441,6 +441,21 @@ html,body{margin:0;background:#E7E3DC;color:var(--ink);font-family:var(--sans);-
 .revctl{position:absolute;right:150px;top:34px;display:flex;align-items:center;gap:8px;z-index:3}
 .revctl .lab{font:600 10px/1 var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--taupe)}
 .revctl .btn{height:24px;padding:0 9px;font-size:11px}
+/* ---------- 09 benefit, simple ---------- */
+.bars{display:flex;flex-direction:column;gap:14px;margin-top:14px}
+.bars .row{display:grid;grid-template-columns:270px 1fr;gap:14px;align-items:center}
+.bars .nm{font:600 14px/1.25 var(--sans);color:var(--ink)}
+.bars .nm small{display:block;font:400 11.5px/1.3 var(--sans);color:var(--taupe);margin-top:2px}
+.bars .tr{position:relative;height:34px;background:#fff;border:1px solid var(--line);border-radius:6px}
+.bars .b{position:absolute;left:0;top:0;bottom:0;border-radius:5px}
+.bars .v{position:absolute;top:50%;transform:translateY(-50%);font:500 22px/1 var(--serif);color:var(--ink);white-space:nowrap}
+.bars .row.tot .nm{font-size:15px}
+.bc{background:#fff;border:1px solid var(--line);border-left:4px solid var(--navy);border-radius:9px;padding:8px 12px}
+.bc.phys{border-left-color:#2F6B45} .bc.warn{border-left-color:var(--red);background:#FFF9F8}
+.bc .k{font:600 9.5px/1.2 var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--taupe)}
+.bc h4{margin:2px 0 3px;font:600 14px/1.25 var(--sans);color:var(--ink)}
+.bc p{margin:0;font:12px/1.42 var(--sans);color:var(--ink2)}
+.bc b{color:var(--ink)}
 .apx{columns:3;column-gap:22px;font:9.6px/1.36 var(--sans);color:var(--ink2)}
 .apx p{margin:0 0 4px;break-inside:avoid}
 .apx b{color:var(--ink)}
@@ -932,45 +947,36 @@ aside.notes{display:none}
   </aside>
 </section>
 
-<!-- ======================================================= 10 BENEFIT -->
-<section class="slide content bn" id="c9" data-chapter="Benefit" data-title="The size of the benefit">
+
+<!-- ======================================================= 09 BENEFIT -->
+<section class="slide content bs" id="c9" data-chapter="Benefit" data-title="The size of the benefit">
   <div class="leafart" aria-hidden="true"></div>
   <div class="inner">
     <p class="kicker">09 · The size of the benefit · Singapore only</p>
-    <h2 class="head" style="font-size:29px;max-width:1010px">Per outlet, about {{r.ben_event_orders}} orders kept on an event day and {{r.ben_busy_orders}} on a busy day; on an illustrative calendar, S${{r.ben_year_rev}} of revenue a year</h2>
-    <p class="sub" style="font-size:12.5px;margin-top:4px;max-width:1080px">Modelled avoided costs on stated assumptions, not demonstrated savings. Peak hour only; conservative. Prices to our knowledge, based on public sources.</p>
-    <div class="hstrip"></div>
-    <div class="body" style="grid-template-columns:1fr 330px;margin-top:8px;gap:14px">
-      <div class="panel" style="padding:9px 14px 8px">
-        <div class="ptop" style="min-height:18px"><span class="ptitle">One outlet at {{r.ben_cups}} cups a day · both levers, one run</span></div>
-        <div class="daycards"></div>
-        <div class="yr">
-          <div><table class="ytab"></table><p class="lnote" style="margin-top:4px">Revenue and labour are never added: revenue is orders × price; profit is orders × price × margin, plus labour saved, minus machine cost.</p></div>
-          <div style="display:flex;flex-direction:column;gap:6px">
-            <div class="cset screenonly sitectl daysctl"></div>
-            <p class="lnote printonly bdays" style="margin:0"></p>
-            <table class="ltab"></table>
-            <p class="lnote" style="margin:0;font-size:9.8px"><span class="rules"></span> <span class="ixnote"></span></p>
-          </div>
-        </div>
+    <h2 class="head">Across Singapore's {{facts.sg_outlets}} outlets, about S${{r.ben_profit_sg|m2}} a year: the machine saves labour, the forecast keeps orders</h2>
+    <p class="sub">Modelled avoided costs on stated assumptions, not demonstrated savings. Against a flat normal-day roster and an all-by-hand counter; we do not know how Chagee rosters today.</p>
+    <div class="body" style="grid-template-columns:1fr 400px">
+      <div class="panel">
+        <div class="ptop"><span class="ptitle">Profit a year, all {{facts.sg_outlets}} outlets</span></div>
+        <div class="bars"></div>
+        <p class="lnote" style="margin-top:auto">Profit = orders kept × price × margin, plus labour saved, minus machine cost. Calendar: {{sb.busy_days_per_year}} busy days (weekends) and {{sb.event_days_per_year}} event days (public holidays) a year, an illustrative definition. Peak hour only, so orders kept are a floor. Every figure, range and rule: appendix.</p>
       </div>
-      <div class="cards" style="gap:7px">
-        <div class="box"><h4>Against what</h4>A flat normal-day roster and an all-by-hand counter. We do not know how Chagee sets rosters today (to confirm with Chagee).</div>
-        <div class="box"><h4>All inputs at their worst/best end together</h4><span class="rng"></span><svg class="torn" viewBox="0 0 300 92"></svg></div>
-        <div class="box warn"><h4>Fragile: the minimum crew</h4><span class="frag"></span></div>
-        <div class="box"><h4>Not sized</h4>Delivery levers (third-party; channel margins not disclosed), membership and CRM, waste (no inventory model in this deck), and the new-store site forecast (shown as cups added only).</div>
+      <div class="cards" style="gap:9px">
+        <div class="bc ai"><div class="k">Predictive AI · roster to the forecast</div><h4>Keeps orders, but staff cost most of the margin</h4>
+          <p>About <b>{{r.sg_a_orders}}</b> peak-hour orders a year kept across Singapore, mostly on event days ({{r.a_event_orders}} per outlet that day). That is S${{r.sg_a_rev|m2}} of revenue but only S${{r.sg_a_profit|m2}} of profit, or S${{r.sg_aE_profit|m2}} if a person is added only when it pays.</p></div>
+        <div class="bc phys"><div class="k">Physical AI · one tea-and-milk machine</div><h4>Saves labour: the big number</h4>
+          <p>Lets the roster drop from {{r.min_hand}} people to {{r.min_mixed}} in the off-peak hours: <b>S${{r.sg_b_profit|m2}}</b> a year after the machine's cost.</p></div>
+        <div class="bc warn"><div class="k">Read with care</div><h4>The big number rests on one assumption</h4>
+          <p>The minimum crew, {{r.min_hand}} by hand and {{r.min_mixed}} with machines, is ours. Without it, S${{r.ben_profit_sg|m2}} falls to <b>S${{r.ben_fragile_sg|m2}}</b>.</p></div>
       </div>
     </div>
     <div class="vs"><div class="wo"><span class="lab">Without AI<br><small style="letter-spacing:.06em;text-transform:none;font-weight:400">our assumed baseline</small></span><span>Flat normal-day roster, all by hand: about <b>{{r.cf_lost_year}}</b> peak-hour orders a year walk away per outlet.</span></div><div class="wi"><span class="lab">With AI<br><small style="letter-spacing:.06em;text-transform:none;font-weight:400">our proposal</small></span><span>Both levers, one run: <b>{{r.ben_orders}}</b> kept a year per outlet, profit <b>S${{r.ben_profit_sg|m2}}</b> across {{facts.sg_outlets}} outlets (S${{r.ben_fragile_sg|m2}} without the minimum-crew rule).</span></div></div>
   </div>
   <div class="foot"><span>OPIM639 · Group 3 · model figures are illustrative assumptions · peak hour only · Singapore, {{facts.sg_outlets}} outlets</span><span class="rail"></span><span class="pg"></span></div>
   <aside class="notes">
-    <p>This answers part c of the brief: how big is the benefit, for Singapore only. Against what: a flat normal-day roster and an all-by-hand counter. We do not know how Chagee rosters today, so that is a question for Chagee.</p>
-    <p>Lead with orders. On an event day the model keeps about {{r.ben_event_orders}} orders per outlet in the peak hour that would otherwise walk away, about S${{r.ben_event_rev}} of revenue; on a busy day about {{r.ben_busy_orders}}. Over a year it depends on how many such days there are: our illustrative calendar is {{sb.busy_days_per_year}} busy days, the weekends, and {{sb.event_days_per_year}} event days, the public holidays. That is an input, not a measurement.</p>
-    <p>Profit is the second line, using a margin we assume because Chagee does not disclose one. The labour saving is shown separately and never added to revenue. The two levers are run together, not added, because they share the same labour hours. The strip at the top splits the profit: most is counter automation, physical AI, the machine on its own; the forecast, predictive AI, adds a small share on top.</p>
-    <p>Two crew rules for rostering to the forecast. The walk-away rule adds people until peak-hour walk-aways are within {{sb.walkaway_target|pct}}; at our default volume that is exactly the forecast crew. The economic rule adds a person only when the orders kept are worth more than the extra hours. They differ on busy days by hand, where the economic rule adds no one.</p>
-    <p>Be honest about fragility: most of the profit is the counter's labour saving, and it comes from the model's minimum crew, {{r.min_hand}} by hand and {{r.min_mixed}} with machines. Drop that rule and the profit falls to about S${{r.ben_profit_fragile}} a year per outlet. And rostering to the forecast pays on event days, not on busy days, where the extra hours cost more than the orders won back. These are modelled avoided costs on stated assumptions, not demonstrated savings. About one minute.</p>
-    <p>Takeaway: Most modelled profit is counter labour, and it rests on the minimum-crew rule (S${{r.ben_profit}} falls to S${{r.ben_profit_fragile}} a year per outlet without it). The forecast pays on event days; on busy days only the economic rule avoids a loss.</p>
+    <p>One number and where it comes from. Across Singapore's {{facts.sg_outlets}} outlets the model gives about S${{r.ben_profit_sg|m2}} a year, against a flat normal-day roster and an all-by-hand counter. These are modelled avoided costs on our assumptions, not demonstrated savings.</p>
+    <p>Read the bars top to bottom. The forecast on its own keeps orders, about {{r.sg_a_orders}} a year, mostly on event days, but the extra staff it rosters cost most of the margin. The machine on its own is the big number, because it lets the roster drop a person off-peak. Both together is the headline.</p>
+    <p>Say the caveat out loud: the machine's saving comes from our minimum-crew assumption. Without it, the total falls to about S${{r.ben_fragile_sg|m2}}. The detail, ranges and both crew rules are in the appendix. About one minute.</p>
   </aside>
 </section>
 
@@ -1014,6 +1020,48 @@ aside.notes{display:none}
     <p>The chart shows the net gain a month against an all-by-hand counter as volume changes; above the line it pays. One tea-and-milk machine lets the roster drop from {{r.min_hand}} people to {{r.min_mixed}} in {{r.single_hours}} off-peak hours, about one person-shift a day, for one station unit: it pays across most of the range. Today's split saves {{r.today_hours}} person-hours but pays for {{r.today_units}} units, so it ends up a little dearer than all by hand. A robot saves no more labour than today's split until about {{r.ladder_more}} cups a day, so at Oli's lease it only pays at the top of our range.</p>
     <p>Three things to say out loud. The minimum crew, {{r.min_hand}} by hand and {{r.min_mixed}} with machines, is our model's assumption and drives this result. Every option runs at the model's station speeds, not vendor claims. Payback is simple payback, if the machine lets the roster drop one person-shift, with no installation, maintenance or financing. Chagee's own equipment cost is not public. About one minute.</p>
     <p>Takeaway: At {{r.ladder_cups}} cups a day: start with one machine (about +S${{r.single_net}} a month); today's {{r.today_units}}-station split costs S${{r.today_more}} a month more than all by hand; robots save no more labour than today's split until about {{r.ladder_more}} cups a day.</p>
+  </aside>
+</section>
+
+<!-- ======================================================= APPENDIX: BENEFIT IN DETAIL (backs slide 09) -->
+<section class="slide content bn" id="ab" data-chapter="Appendix" data-title="The benefit in detail">
+  <div class="leafart" aria-hidden="true"></div>
+  <div class="inner">
+    <p class="kicker">Appendix · The benefit in detail (backs slide 09) · Singapore only</p>
+    <h2 class="head" style="font-size:29px;max-width:1010px">Per outlet, about {{r.ben_event_orders}} orders kept on an event day and {{r.ben_busy_orders}} on a busy day; on an illustrative calendar, S${{r.ben_year_rev}} of revenue a year</h2>
+    <p class="sub" style="font-size:12.5px;margin-top:4px;max-width:1080px">Modelled avoided costs on stated assumptions, not demonstrated savings. Peak hour only; conservative. Prices to our knowledge, based on public sources.</p>
+    <div class="hstrip"></div>
+    <div class="body" style="grid-template-columns:1fr 330px;margin-top:8px;gap:14px">
+      <div class="panel" style="padding:9px 14px 8px">
+        <div class="ptop" style="min-height:18px"><span class="ptitle">One outlet at {{r.ben_cups}} cups a day · both levers, one run</span></div>
+        <div class="daycards"></div>
+        <div class="yr">
+          <div><table class="ytab"></table><p class="lnote" style="margin-top:4px">Revenue and labour are never added: revenue is orders × price; profit is orders × price × margin, plus labour saved, minus machine cost.</p></div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <div class="cset screenonly sitectl daysctl"></div>
+            <p class="lnote printonly bdays" style="margin:0"></p>
+            <table class="ltab"></table>
+            <p class="lnote" style="margin:0;font-size:9.8px"><span class="rules"></span> <span class="ixnote"></span></p>
+          </div>
+        </div>
+      </div>
+      <div class="cards" style="gap:7px">
+        <div class="box"><h4>Against what</h4>A flat normal-day roster and an all-by-hand counter. We do not know how Chagee sets rosters today (to confirm with Chagee).</div>
+        <div class="box"><h4>All inputs at their worst/best end together</h4><span class="rng"></span><svg class="torn" viewBox="0 0 300 92"></svg></div>
+        <div class="box warn"><h4>Fragile: the minimum crew</h4><span class="frag"></span></div>
+        <div class="box"><h4>Not sized</h4>Delivery levers (third-party; channel margins not disclosed), membership and CRM, waste (no inventory model in this deck), and the new-store site forecast (shown as cups added only).</div>
+      </div>
+    </div>
+    <div class="vs"><div class="wo"><span class="lab">Without AI<br><small style="letter-spacing:.06em;text-transform:none;font-weight:400">our assumed baseline</small></span><span>Flat normal-day roster, all by hand: about <b>{{r.cf_lost_year}}</b> peak-hour orders a year walk away per outlet.</span></div><div class="wi"><span class="lab">With AI<br><small style="letter-spacing:.06em;text-transform:none;font-weight:400">our proposal</small></span><span>Both levers, one run: <b>{{r.ben_orders}}</b> kept a year per outlet, profit <b>S${{r.ben_profit_sg|m2}}</b> across {{facts.sg_outlets}} outlets (S${{r.ben_fragile_sg|m2}} without the minimum-crew rule).</span></div></div>
+  </div>
+  <div class="foot"><span>OPIM639 · Group 3 · model figures are illustrative assumptions · peak hour only · Singapore, {{facts.sg_outlets}} outlets</span><span class="rail"></span><span class="pg"></span></div>
+  <aside class="notes">
+    <p>Backup for slide 09. This answers part c of the brief: how big is the benefit, for Singapore only. Against what: a flat normal-day roster and an all-by-hand counter. We do not know how Chagee rosters today, so that is a question for Chagee.</p>
+    <p>Lead with orders. On an event day the model keeps about {{r.ben_event_orders}} orders per outlet in the peak hour that would otherwise walk away, about S${{r.ben_event_rev}} of revenue; on a busy day about {{r.ben_busy_orders}}. Over a year it depends on how many such days there are: our illustrative calendar is {{sb.busy_days_per_year}} busy days, the weekends, and {{sb.event_days_per_year}} event days, the public holidays. That is an input, not a measurement.</p>
+    <p>Profit is the second line, using a margin we assume because Chagee does not disclose one. The labour saving is shown separately and never added to revenue. The two levers are run together, not added, because they share the same labour hours. The strip at the top splits the profit: most is counter automation, physical AI, the machine on its own; the forecast, predictive AI, adds a small share on top.</p>
+    <p>Two crew rules for rostering to the forecast. The walk-away rule adds people until peak-hour walk-aways are within {{sb.walkaway_target|pct}}; at our default volume that is exactly the forecast crew. The economic rule adds a person only when the orders kept are worth more than the extra hours. They differ on busy days by hand, where the economic rule adds no one.</p>
+    <p>Be honest about fragility: most of the profit is the counter's labour saving, and it comes from the model's minimum crew, {{r.min_hand}} by hand and {{r.min_mixed}} with machines. Drop that rule and the profit falls to about S${{r.ben_profit_fragile}} a year per outlet. And rostering to the forecast pays on event days, not on busy days, where the extra hours cost more than the orders won back. These are modelled avoided costs on stated assumptions, not demonstrated savings. About one minute.</p>
+    <p>Takeaway: Most modelled profit is counter labour, and it rests on the minimum-crew rule (S${{r.ben_profit}} falls to S${{r.ben_profit_fragile}} a year per outlet without it). The forecast pays on event days; on busy days only the economic rule avoids a loss.</p>
   </aside>
 </section>
 

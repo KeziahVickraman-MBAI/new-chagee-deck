@@ -247,6 +247,11 @@ def values(d: dict) -> dict:
     v["r.ben_orders"] = Y["ab"]["orders"]
     N_ = RAW["facts"]["sg_outlets"]["value"]
     v["r.ben_profit_sg"], v["r.ben_fragile_sg"] = Y["ab"]["profit"] * N_, S["fragile"]["year"]["ab"]["profit"] * N_
+    if not (0 < Y["a"]["profit"] < Y["b"]["profit"] and Y["a"]["orders"] > Y["b"]["orders"] and Y["a"]["contribution"] > Y["a"]["profit"]):
+        raise SystemExit("build: slide 09 says the forecast keeps more orders but less profit than the machine; rewrite it")
+    v["r.sg_a_orders"], v["r.sg_a_rev"], v["r.sg_a_profit"] = Y["a"]["orders"] * N_, Y["a"]["revenue"] * N_, Y["a"]["profit"] * N_
+    v["r.sg_aE_profit"], v["r.sg_b_profit"] = Y["aE"]["profit"] * N_, Y["b"]["profit"] * N_
+    v["r.a_event_orders"] = ev["a"]["orders"]
     # slide 07 decision strip: keep today's split; the machine-made drink buys wait, not cost
     E_, N_d = d["splits"][day], d["splits"]["none"]
     if not (E_["_cheapest"] == "today" and N_d["_cheapest"] == "all_hand" and E_["heading"]["meets"]
