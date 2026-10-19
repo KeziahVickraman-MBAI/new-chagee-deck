@@ -436,6 +436,8 @@ html,body{margin:0;background:#E7E3DC;color:var(--ink);font-family:var(--sans);-
 .endcmp td.win{color:#2F6B45;font-weight:700;background:#EEF5F0}
 .endcmp tr.sub td{padding-top:6px;font:600 10px/1.2 var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--taupe);border-bottom:0}
 .endcmp .say{margin:auto 0 0;padding-top:6px;font:500 13.5px/1.4 var(--sans);color:var(--ink)}
+.decide{margin:8px 0 0;display:flex;gap:12px;align-items:baseline;background:#EEF5F0;border-left:4px solid #2F6B45;border-radius:6px;padding:6px 12px;font:12.8px/1.4 var(--sans);color:var(--ink)}
+.decide b{flex:none;font:600 10px/1.3 var(--sans);letter-spacing:.14em;text-transform:uppercase;color:#2F6B45}
 .apx{columns:3;column-gap:22px;font:9.6px/1.36 var(--sans);color:var(--ink2)}
 .apx p{margin:0 0 4px;break-inside:avoid}
 .apx b{color:var(--ink)}
@@ -859,8 +861,8 @@ aside.notes{display:none}
   <div class="leafart" aria-hidden="true"></div>
   <div class="inner">
     <p class="kicker">07 · Split the counter · the GM's decision<span class="ctag">Course link · Week 5 and Week 6, equipment and technology · the bucket-brigade simulation, with machines</span></p>
-    <h2 class="head">Which steps stay human? Robots buy a shorter wait; on a normal day, people are still cheaper</h2>
-    <p class="sub">Choose a split for each side, or click any station to hand it to a robot or a person, then run the peak hour.</p>
+    <h2 class="head" style="font-size:33px">Keep today's split: machines on the fixed steps, people on the rest. Robots buy a shorter wait, not a lower cost</h2>
+    <p class="decide"><b>GM decision</b><span>Keep machines on order and tag, tea and milk, shake and seal: the cheapest split within the walk-away limit on an event day (S${{r.dec_today_cost}}), and only S${{r.dec_normal_gap}} a day above all by hand on a normal day. Do not buy the machine-made drink yet: S${{r.dec_mm_extra}} a day more for a {{r.dec_mm_faster|mmss}} shorter wait. Revisit at about {{r.ladder_more}} cups a day.</span></p>
     <div class="body" style="grid-template-columns:1fr 330px">
       <div class="panel" data-kind="compare" data-mode="split">
         <div class="ptop"><span class="ptitle">Peak hour · same customers</span><span class="ctl screenonly cctl"></span></div>
@@ -884,6 +886,8 @@ aside.notes{display:none}
     <p>These are four splits only. A single machine can undercut all by hand, because it lets the roster drop a person off-peak; the machine ladder in the appendix has the prices and payback. About one and a half minutes.</p>
     <p>Course link: the same bucket-brigade replica from Week 5 and Week 6, with machines added on some stations.</p>
     <p>Takeaway: On an event day, {{s.cheapest_label}} is the cheapest split within the walk-away limit, at about S${{r.cheapest_cost}} a day. {{s.heading_label}} needs {{r.heading_staff}} people at fixed posts and costs about S${{r.heading_extra}} more, for a median wait of {{r.heading_wait|mmss}}.</p>
+    <p>How to use it: choose a split for each side, or click any station to hand it to a robot or a person, then run the peak hour or press End to compare.</p>
+    <p>The decision to say out loud: keep today's split. It is the cheapest split within the walk-away limit on an event day and only S${{r.dec_normal_gap}} a day above all by hand on a normal day. The machine-made drink would cut the event-day wait by {{r.dec_mm_faster|mmss}} for S${{r.dec_mm_extra}} a day more; that is a service choice, not a saving. Revisit when volume reaches about {{r.ladder_more}} cups a day.</p>
   </aside>
 </section>
 

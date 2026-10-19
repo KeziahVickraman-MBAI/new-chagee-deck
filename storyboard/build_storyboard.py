@@ -247,6 +247,15 @@ def values(d: dict) -> dict:
     v["r.ben_orders"] = Y["ab"]["orders"]
     N_ = RAW["facts"]["sg_outlets"]["value"]
     v["r.ben_profit_sg"], v["r.ben_fragile_sg"] = Y["ab"]["profit"] * N_, S["fragile"]["year"]["ab"]["profit"] * N_
+    # slide 07 decision strip: keep today's split; the machine-made drink buys wait, not cost
+    E_, N_d = d["splits"][day], d["splits"]["none"]
+    if not (E_["_cheapest"] == "today" and N_d["_cheapest"] == "all_hand" and E_["heading"]["meets"]
+            and E_["heading"]["cost"]["total"] > E_["today"]["cost"]["total"] and E_["heading"]["medianWait"] < E_["today"]["medianWait"]):
+        raise SystemExit("build: slide 07 decision (keep today's split; machine-made drink is faster but dearer) no longer holds; rewrite it")
+    v["r.dec_normal_gap"] = N_d["today"]["cost"]["total"] - N_d["all_hand"]["cost"]["total"]
+    v["r.dec_today_cost"] = E_["today"]["cost"]["total"]
+    v["r.dec_mm_extra"] = E_["heading"]["cost"]["total"] - E_["today"]["cost"]["total"]
+    v["r.dec_mm_faster"] = E_["today"]["medianWait"] - E_["heading"]["medianWait"]
     # the roster trigger: forecast peak cups per person, after the capacity safety margin (plan()'s rule)
     v["r.cups_per_person"] = d["counter"]["perWorkerHour"] / RAW["costs"]["capacity_safety_margin"]["value"]
     return v
