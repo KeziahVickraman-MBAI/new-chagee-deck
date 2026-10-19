@@ -395,7 +395,9 @@
               T(c.x, c.y + 9, k + 1, `font-size="26" font-weight="700" fill="${COL.navy}" text-anchor="middle"`) +
               T(c.x + 30, c.y + 9, `+${Math.round(c.f.netNew)} new cups`, `font-size="27" font-weight="700" fill="${COL.navy}" paint-order="stroke" stroke="#fff" stroke-width="7"`) + `</g>`));
       // existing outlets: hover for name and the model's cups a day today (a click still drops a new pin)
-      GEO.outlets.forEach(([x, y], j) => (s += `<circle cx="${x}" cy="${y - 18}" r="20" fill="transparent"><title>${oname(j)}: about ${Math.round(M.storeCups[j])} cups a day today (model)</title></circle>`));
+      GEO.outlets.forEach(([x, y], j) => (s += `<g><title>${oname(j)}: about ${Math.round(M.storeCups[j])} cups a day today (model)</title>` +
+        `<circle cx="${x}" cy="${y - 14}" r="14" fill="${COL.navy}" stroke="#fff" stroke-width="3"/>` +
+        T(x, y - 9, GEO.numbers[j], `font-size="14" font-weight="700" fill="#fff" text-anchor="middle"`) + `</g>`));
       if (step >= 4) {
         s += `<circle cx="${pin.x}" cy="${pin.y}" r="${walkPx}" fill="rgba(184,50,43,.08)" stroke="${COL.red}" stroke-width="2"/>`;
         f.hit.slice(0, 4).forEach(h => (s += `<line x1="${pin.x}" y1="${pin.y}" x2="${h.x}" y2="${h.y}" stroke="${COL.red}" stroke-width="${Math.max(1.5, Math.min(9, h.cups / 15))}" opacity=".55"/>`));
@@ -405,11 +407,10 @@
       const pf = C.forecastDay(Sim, { ...P, cupsYear: f.cups * P.days }, "none");
       const beside = GEO.outlets.findIndex(([x, y]) => Math.hypot(x - pin.x, y - pin.y) * M.kmpx < 0.3);
       const at = beside >= 0 ? `Your pin, beside ${oname(beside)}` : userPin ? `Your pin, near ${nearHub(pin)}` : `Suggested pin 1, near ${nearHub(pin)}`;
-      fc.innerHTML = `<div class="t">${at}</div><div class="big">${Math.round(f.cups).toLocaleString("en-SG")}<small>cups a day forecast</small></div>
+      fc.innerHTML = `<div class="t">${at}</div><div class="big">${Math.round(f.cups).toLocaleString("en-SG")}<small>cups a day · ${(f.cups / avg).toFixed(1)}× an average outlet</small></div>
         <dl><dt>New to Chagee (no store nearby today)</dt><dd>${Math.round(f.netNew)}</dd>
             <dt>Taken from existing outlets</dt><dd>${Math.round(f.cannibal)}</dd>
-            ${f.hit.slice(0, 2).map(h => `<dt>&nbsp;· ${oname(h.j)}, ${h.km.toFixed(1)} km<br><span class="muted">&nbsp;&nbsp;${Math.round(M.storeCups[h.j])} → ${Math.round(M.storeCups[h.j] - h.cups)} a day</span></dt><dd>−${Math.round(h.cups)}</dd>`).join("")}
-            <dt>Against the average outlet</dt><dd>${(f.cups / avg).toFixed(1)}×</dd></dl>
+            ${f.hit.slice(0, 2).map(h => `<dt>&nbsp;· ${oname(h.j)}, ${h.km.toFixed(1)} km<br><span class="muted">&nbsp;&nbsp;${Math.round(M.storeCups[h.j])} → ${Math.round(M.storeCups[h.j] - h.cups)} a day</span></dt><dd>−${Math.round(h.cups)}</dd>`).join("")}</dl>
         <div class="peak">Peak hour ${hourLabel(pf.peak)}: <b>${Math.round(pf.peakCups)} cups</b> → <b>${pf.peakStaff} ${pf.peakStaff === 1 ? "person" : "people"}</b> on today's counter (slides 06–07).</div>`;
       $$(ctlEl, "[data-v]").forEach(el => { const d = sl.find(x => x[0] === el.dataset.v); el.textContent = d[4](par[d[0]]); });
     }
