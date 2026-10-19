@@ -336,13 +336,13 @@ html,body{margin:0;background:#E7E3DC;color:var(--ink);font-family:var(--sans);-
 .tiers col.c1{width:12%} .tiers col.c2{width:11%} .tiers col.c3{width:21%} .tiers col.c4{width:18%} .tiers col.c5{width:13%} .tiers col.c6{width:8%} .tiers col.c7{width:17%}
 /* ---------- 10 benefit ---------- */
 .bn .daycards{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:6px}
-.bn .dc{background:#fff;border:1px solid var(--line);border-radius:9px;padding:7px 10px}
+.bn .dc{background:#fff;border:1px solid var(--line);border-radius:9px;padding:5px 10px}
 .bn .dc .k{font:600 9.5px/1.2 var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--red)}
 .bn .dc .big{font:500 27px/1 var(--serif);color:var(--ink);margin-top:3px}
 .bn .dc .big small{font:400 11.5px var(--sans);color:var(--ink2);margin-left:3px}
 .bn .dc .l2{font:11.3px/1.35 var(--sans);color:var(--ink2);margin-top:2px}
 .bn .dc .l3{font:10.5px/1.3 var(--sans);color:var(--taupe);margin-top:2px}
-.bn .yr{margin-top:8px;display:grid;grid-template-columns:1fr 250px;gap:12px;align-items:start}
+.bn .yr{margin-top:7px;display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:start}
 .bn table{width:100%;border-collapse:collapse;font:11.2px/1.28 var(--sans)}
 .bn th{font:600 9px/1.2 var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--taupe);text-align:right;padding:0 4px 3px;border-bottom:1px solid var(--line)}
 .bn th:first-child,.bn td:first-child{text-align:left}
@@ -357,6 +357,11 @@ html,body{margin:0;background:#E7E3DC;color:var(--ink);font-family:var(--sans);-
 .bn .box h4{margin:0 0 2px;font:600 11.5px/1.25 var(--sans);color:var(--ink)}
 .bn .box.warn{border-color:#EBC4C1;background:#FFF9F8}
 .bn .torn{width:100%;height:auto;display:block;margin-top:3px}
+.bn .hstrip{margin-top:6px;display:flex;gap:4px 10px;align-items:baseline;flex-wrap:wrap;border:1.5px solid var(--navy);border-radius:9px;padding:4px 12px;font:11px/1.35 var(--sans);color:var(--ink2)}
+.bn .hstrip b{color:var(--ink);font-size:12.5px}
+.bn .hstrip .ai b{color:var(--red)}
+.bn .hstrip .rg{padding-left:10px;border-left:1px solid var(--line)}
+.bn .hstrip small{font-size:10px;color:var(--taupe)}
 .apx{columns:3;column-gap:22px;font:9.6px/1.36 var(--sans);color:var(--ink2)}
 .apx p{margin:0 0 4px;break-inside:avoid}
 .apx b{color:var(--ink)}
@@ -865,34 +870,37 @@ aside.notes{display:none}
   <div class="inner">
     <p class="kicker">10 · The size of the benefit · Singapore only</p>
     <h2 class="head" style="font-size:29px;max-width:1010px">Per outlet, about {{r.ben_event_orders}} orders kept on an event day and {{r.ben_busy_orders}} on a busy day; on an illustrative calendar, S${{r.ben_year_rev}} of revenue a year</h2>
-    <p class="sub" style="font-size:12.5px;margin-top:5px;max-width:1080px">Modelled avoided costs on stated assumptions, not demonstrated savings. Peak hour only; conservative. Prices to our knowledge, based on public sources.</p>
+    <p class="sub" style="font-size:12.5px;margin-top:4px;max-width:1080px">Modelled avoided costs on stated assumptions, not demonstrated savings. Peak hour only; conservative. Prices to our knowledge, based on public sources.</p>
+    <div class="hstrip"></div>
     <div class="body" style="grid-template-columns:1fr 330px;margin-top:8px;gap:14px">
       <div class="panel" style="padding:9px 14px 8px">
         <div class="ptop" style="min-height:18px"><span class="ptitle">One outlet at {{r.ben_cups}} cups a day · both levers, one run</span></div>
         <div class="daycards"></div>
         <div class="yr">
-          <div><table class="ytab"></table><p class="lnote" style="margin-top:4px">Revenue and labour are never added: revenue is orders × price; profit is orders × price × margin, plus labour saved, minus machine cost. <span class="ixnote"></span></p></div>
+          <div><table class="ytab"></table><p class="lnote" style="margin-top:4px">Revenue and labour are never added: revenue is orders × price; profit is orders × price × margin, plus labour saved, minus machine cost.</p></div>
           <div style="display:flex;flex-direction:column;gap:6px">
             <div class="cset screenonly sitectl daysctl"></div>
             <p class="lnote printonly bdays" style="margin:0"></p>
             <table class="ltab"></table>
+            <p class="lnote" style="margin:0;font-size:9.8px"><span class="rules"></span> <span class="ixnote"></span></p>
           </div>
         </div>
       </div>
       <div class="cards" style="gap:7px">
         <div class="box"><h4>Against what</h4>A flat normal-day roster and an all-by-hand counter. We do not know how Chagee sets rosters today (to confirm with Chagee).</div>
-        <div class="box"><h4>Range, profit a year per outlet</h4><span class="rng"></span><svg class="torn" viewBox="0 0 300 112"></svg></div>
+        <div class="box"><h4>All inputs at their worst/best end together</h4><span class="rng"></span><svg class="torn" viewBox="0 0 300 92"></svg></div>
         <div class="box warn"><h4>Fragile: the minimum crew</h4><span class="frag"></span></div>
         <div class="box"><h4>Not sized</h4>Delivery levers (third-party; channel margins not disclosed), membership and CRM, waste (no inventory model in this deck), and the new-store site forecast (shown as cups added only).</div>
       </div>
     </div>
-    <div class="takeaway" style="margin-top:9px;padding:9px 22px"><span class="lab">TAKEAWAY</span><span>Most of the modelled profit is the counter's labour saving, and it rests on the minimum-crew assumption: without it, profit falls from about S${{r.ben_profit}} to S${{r.ben_profit_fragile}} a year per outlet. Rostering to the forecast pays on event days, not on busy days.</span></div>
+    <div class="takeaway" style="margin-top:9px;padding:9px 22px"><span class="lab">TAKEAWAY</span><span>Most modelled profit is counter labour, and it rests on the minimum-crew rule (S${{r.ben_profit}} falls to S${{r.ben_profit_fragile}} a year per outlet without it). The forecast pays on event days; on busy days only the economic rule avoids a loss.</span></div>
   </div>
   <div class="foot"><span>OPIM639 · Group 3 · model figures are illustrative assumptions · peak hour only · Singapore, {{facts.sg_outlets}} outlets</span><span class="rail"></span><span class="pg"></span></div>
   <aside class="notes">
     <p>This answers part c of the brief: how big is the benefit, for Singapore only. Against what: a flat normal-day roster and an all-by-hand counter. We do not know how Chagee rosters today, so that is a question for Chagee.</p>
     <p>Lead with orders. On an event day the model keeps about {{r.ben_event_orders}} orders per outlet in the peak hour that would otherwise walk away, about S${{r.ben_event_rev}} of revenue; on a busy day about {{r.ben_busy_orders}}. Over a year it depends on how many such days there are: our illustrative calendar is {{sb.busy_days_per_year}} busy days, the weekends, and {{sb.event_days_per_year}} event days, the public holidays. That is an input, not a measurement.</p>
-    <p>Profit is the second line, using a margin we assume because Chagee does not disclose one. The labour saving is shown separately and never added to revenue. The two levers are run together, not added, because they share the same labour hours.</p>
+    <p>Profit is the second line, using a margin we assume because Chagee does not disclose one. The labour saving is shown separately and never added to revenue. The two levers are run together, not added, because they share the same labour hours. The strip at the top splits the profit: most is counter automation, the machine on its own; the forecast, the AI part, adds a small share on top.</p>
+    <p>Two crew rules for rostering to the forecast. The walk-away rule adds people until peak-hour walk-aways are within {{sb.walkaway_target|pct}}; at our default volume that is exactly the forecast crew. The economic rule adds a person only when the orders kept are worth more than the extra hours. They differ on busy days by hand, where the economic rule adds no one.</p>
     <p>Be honest about fragility: most of the profit is the counter's labour saving, and it comes from the model's minimum crew, {{r.min_hand}} by hand and {{r.min_mixed}} with machines. Drop that rule and the profit falls to about S${{r.ben_profit_fragile}} a year per outlet. And rostering to the forecast pays on event days, not on busy days, where the extra hours cost more than the orders won back. These are modelled avoided costs on stated assumptions, not demonstrated savings. About one minute.</p>
   </aside>
 </section>

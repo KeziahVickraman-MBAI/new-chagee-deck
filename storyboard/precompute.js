@@ -63,7 +63,7 @@ const ladderAt = { cupsDay: Math.round(Sim.dailyBase(P)), wage: P.wage, unitMont
 const ladder = { at: ladderAt, rungs: L.evaluate(Sim, C, RAW, P, TIERS, ladderAt), volumes: L.volumes(Sim, C, RAW, P, TIERS, ladderAt) };
 
 // slide 10: the benefit, one outlet; simulation runs only (money is worked out from them, here and in the browser)
-const bRobots = TIERS.tiers.find(t => t.id === "single").replaces, bo = { walkBack, seeds };
+const bRobots = TIERS.tiers.find(t => t.id === "single").replaces, bo = { walkBack, seeds, extra: SB.extra_staff_search.value };
 const [vLo, vHi] = RAW.store.cups_per_store_per_year.range;
 const bP = { base: P, volLo: { ...P, cupsYear: vLo }, volHi: { ...P, cupsYear: vHi },
              fragile: { ...P, minStaff: { ...P.minStaff, all_human: P.minStaff.mixed } } };   // fragility: no extra by-hand minimum

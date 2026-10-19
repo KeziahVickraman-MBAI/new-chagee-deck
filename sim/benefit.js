@@ -8,6 +8,9 @@
  *   a  roster to the forecast: the day's forecast crew instead of the flat roster, all by hand;
  *   b  counter split: the machine stations (o.robots) with the flat roster;
  *   ab both at once, in one run (not a + b: they share the same labour hours).
+ * Two crew rules for a and ab: the day's forecast crew, which is the fewest people keeping peak-hour walk-aways within
+ * storyboard.walkaway_target (checked at build); and aE, abE, the economic rule: from the flat crew up to
+ * storyboard.extra_staff_search more, the crew with the largest orders kept x price x margin less extra labour.
  * Walk-aways are the counter replica's peak hour only (the hour slide 09 shows), so orders avoided are a floor.
  *
  *   runs(Sim, Store, C, P, o)       the simulation part, money-free: peak-hour orders lost, labour hours a day and
@@ -33,10 +36,25 @@
         const staff = C.forecastDay(Sim, c.P, rosterDay, c.setup).peakStaff;
         const r = C.compare(Sim, Store, P, { day, robots, staff, mode: "brigade", walkBack: o.walkBack, seeds: o.seeds });
         const cost = C.dayCost(Sim, c.P, c.setup, rosterDay);
-        out.days[day][k] = { staff, lost: r.lost, arrived: r.arrived, labourHours: cost.labourHours, machineUnits: cost.machineUnits };
+        out.days[day][k] = { staff, lost: r.lost, arrived: r.arrived, lostShare: r.lostShare, labourHours: cost.labourHours, machineUnits: cost.machineUnits };
+      }
+      // economic rule: candidate peak crews from the flat crew up (flat roster, crew k on the busy hours), money-free here
+      for (const [k, robots] of [["hand", []], ["machine", o.robots]]) {
+        const c = C.configure(P, robots), flat = C.forecastDay(Sim, c.P, "none", c.setup).peakStaff;
+        out.days[day]["cand_" + k] = Array.from({ length: o.extra + 1 }, (_, i) => {
+          const staff = flat + i, r = C.compare(Sim, Store, P, { day, robots, staff, mode: "brigade", walkBack: o.walkBack, seeds: o.seeds });
+          const cost = C.dayCost(Sim, c.P, c.setup, "none", staff);
+          return { staff, lost: r.lost, arrived: r.arrived, lostShare: r.lostShare, labourHours: cost.labourHours, machineUnits: cost.machineUnits };
+        });
       }
     }
     return out;
+  }
+
+  // economic rule: the crew whose orders kept x price x margin, less its extra labour, is largest (ties: fewer people)
+  function economic(cands, cf, e) {
+    const gain = x => (cf.lost - x.lost) * e.price * e.margin - (x.labourHours - cands[0].labourHours) * e.wage;
+    return cands.reduce((best, x) => (gain(x) > gain(best) + 1e-9 ? x : best));
   }
 
   function econ(RAW, P) {
@@ -46,19 +64,21 @@
   }
 
   const DAYKEY = { none: "normal", moderate: "busy", large: "event" };
+  const CASE_KEYS = ["a", "b", "ab", "aE", "abE"];               // a, ab: the 2% walk-away rule; aE, abE: the economic rule
   function value(R, P, e) {
     const n = { busy: e.days.busy, event: e.days.event }; n.normal = P.days - n.busy - n.event;
     const per = {}, year = {};
-    for (const [day, row] of Object.entries(R.days)) {
-      const cf = row.cf, out = {};
-      for (const k of ["a", "b", "ab"]) {
+    for (const [day, r0] of Object.entries(R.days)) {
+      const cf = r0.cf, out = {};
+      const row = { ...r0, aE: economic(r0.cand_hand, cf, e), abE: economic(r0.cand_machine, cf, e) };
+      for (const k of CASE_KEYS) {
         const x = row[k], orders = cf.lost - x.lost, revenue = orders * e.price, contribution = revenue * e.margin;
         const labour = (cf.labourHours - x.labourHours) * e.wage, machine = x.machineUnits * e.unitMonth * 12 / P.days;
-        out[k] = { orders, revenue, contribution, labour, machine, counterNet: labour - machine, profit: contribution + labour - machine };
+        out[k] = { staff: x.staff, orders, revenue, contribution, labour, machine, counterNet: labour - machine, profit: contribution + labour - machine };
       }
       per[DAYKEY[day]] = out;
     }
-    for (const k of ["a", "b", "ab"]) {
+    for (const k of CASE_KEYS) {
       year[k] = {};
       for (const f of ["orders", "revenue", "contribution", "labour", "machine", "counterNet", "profit"])
         year[k][f] = Object.entries(per).reduce((s, [d, v]) => s + n[d] * v[k][f], 0);
@@ -97,8 +117,13 @@
     // combined against a + b: the orders and revenue overlap; labour can come out above (fewer extra hours with a machine)
     const Y = base.year, ex = f => Y.ab[f] - Y.a[f] - Y.b[f];
     const interaction = { orders: ex("orders"), revenue: ex("revenue"), contribution: ex("contribution"), counterNet: ex("counterNet"), profit: ex("profit") };
-    return { base, low, high, tornado, orders, revenue, contribution, interaction,
-             fragile: value(R.fragile, Ps.fragile, e), today: value(R.today, Ps.base, e) };
+    // the headline split: the machine alone (automation) and what rostering to the forecast adds on top (the AI part)
+    const split = rule => { const ab = rule === "E" ? "abE" : "ab";
+      return { automation: base.year.b.profit, forecast: base.year[ab].profit - base.year.b.profit, total: base.year[ab].profit }; };
+    const fragile = value(R.fragile, Ps.fragile, e);
+    return { base, low, high, tornado, orders, revenue, contribution, interaction, split: { L: split("L"), E: split("E") },
+             minCrew: [fragile.year.ab.profit, base.year.ab.profit],
+             fragile, today: value(R.today, Ps.base, e) };
   }
 
   const api = { runs, value, econ, summary, CASES };

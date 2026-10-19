@@ -666,8 +666,7 @@
       $(sl, ".daycards").innerHTML = [["event", "Event day"], ["busy", "Busy day"], ["normal", "Normal day"]].map(([k, lab]) => {
         const x = b.per[k].ab;
         return `<div class="dc"><div class="k">${lab}</div><div class="big">${x.orders.toFixed(x.orders < 10 ? 1 : 0)}<small>orders kept</small></div>
-          <div class="l2">Revenue ${$m(x.revenue)} <span style="color:${COL.taupe}">(× S$${pm.toFixed(2)} a cup)</span></div>
-          <div class="l2">Profit ${$m(x.profit)}</div><div class="l3">Counter: labour saved − machine ${$m(x.counterNet)}</div></div>`;
+          <div class="l2">Revenue ${$m(x.revenue)} <span style="color:${COL.taupe}">(× S$${pm.toFixed(2)})</span> · profit ${$m(x.profit)}</div><div class="l3">Counter: labour saved − machine ${$m(x.counterNet)}</div></div>`;
       }).join("");
       const rng = (a, f = $m) => `<span class="s">range ${f(a[0])} to ${f(a[1])}</span>`;
       $(sl, ".ytab").innerHTML = `<tr><th>A year</th><th>Per outlet</th><th>${N} outlets, if all looked like this model</th></tr>` +
@@ -675,25 +674,32 @@
         `<tr class="lead"><td>Revenue<span class="s">orders × price</span></td><td>${$m(Y.ab.revenue)}${rng(S.revenue)}</td><td>${$m(Y.ab.revenue * N)}</td></tr>` +
         `<tr><td>Profit<span class="s">margin ${pct(SBk.gross_margin_per_cup.range[0])}–${pct(SBk.gross_margin_per_cup.range[1])}: ${$m(S.contribution[0] - Y.ab.contribution)} to +${$m(S.contribution[1] - Y.ab.contribution)}</span></td><td>${$m(Y.ab.profit)}</td><td>${$m(Y.ab.profit * N)}</td></tr>` +
         `<tr class="sep"><td>Labour saving, counter<span class="s">labour saved − machine cost; shown on its own</span></td><td>${$m(Y.ab.counterNet)}</td><td>${$m(Y.ab.counterNet * N)}</td></tr>`;
-      $(sl, ".ltab").innerHTML = `<tr><th>Lever, a year</th><th>Orders</th><th>Profit</th></tr>` +
-        [["Roster to forecast", Y.a], ["Tea-and-milk machine", Y.b], ["Both, one run", Y.ab]].map(([l, x], i) =>
-          `<tr class="${i === 2 ? "lead" : ""}"><td>${l}</td><td>${$n(x.orders)}</td><td>${$m(x.profit)}</td></tr>`).join("") +
-        `<tr><td>Both, today's split instead<span class="s">its counter: ${$m(S.today.year.b.counterNet / 12)} a month</span></td><td>${$n(S.today.year.ab.orders)}</td><td>${$m(S.today.year.ab.profit)}</td></tr>`;
-      $(sl, ".ixnote").textContent = `"Both" is one run, not the sum of the two levers: they win back many of the same orders, and with the machine the forecast crew needs fewer extra hours (${S.interaction.profit >= 0 ? "+" : ""}${$m(S.interaction.profit)} against the sum).`;
-      $(sl, ".rng").innerHTML = `Low <b>${$m(S.low.year.ab.profit)}</b> · base <b>${$m(Y.ab.profit)}</b> · high <b>${$m(S.high.year.ab.profit)}</b>, every input at the end that lowers or raises it.`;
+      const pair = x => `${$n(x.orders)} · ${$m(x.profit)}`, TY = S.today.year;
+      $(sl, ".ltab").innerHTML = `<tr><th>Orders · profit a year</th><th>Walk-away rule</th><th>Economic rule</th></tr>` +
+        [["Forecast crew", Y.a, Y.aE], ["Machine", Y.b, Y.b], ["Both, one run", Y.ab, Y.abE]].map(([l, x, z], i) =>
+          `<tr class="${i === 2 ? "lead" : ""}"><td>${l}</td><td>${pair(x)}</td><td>${pair(z)}</td></tr>`).join("") +
+        `<tr><td>Both, today's split<span class="s">counter ${$m(TY.b.counterNet / 12)}/month</span></td><td>${pair(TY.ab)}</td><td>${pair(TY.abE)}</td></tr>`;
+      $(sl, ".rules").textContent = `Walk-away rule: fewest people keeping peak-hour walk-aways within ${pct(SB.walkaway_target.value)} (the forecast crew at ${BD.cups} cups a day). Economic rule: add a person only when orders kept × price × margin beat the extra labour.`;
+      const M = x => `S$${(x / 1e6).toFixed(2)}m`, sp = S.split.L;
+      $(sl, ".hstrip").innerHTML = `<span>Profit a year, ${N} outlets: <b>${M(sp.total * N)}</b></span>` +
+        `<span>= counter automation <b>${M(sp.automation * N)}</b> <small>(depends on the minimum-crew rule)</small></span>` +
+        `<span class="ai">+ forecast roster, the AI part <b>${M(sp.forecast * N)}</b></span>` +
+        `<span class="rg">Without / with the minimum-crew rule: <b>${M(S.minCrew[0] * N)} to ${M(S.minCrew[1] * N)}</b></span>`;
+      $(sl, ".ixnote").textContent = `"Both" is one run, not a sum: the levers keep many of the same orders, and with the machine the forecast crew needs fewer extra hours (${S.interaction.profit >= 0 ? "+" : ""}${$m(S.interaction.profit)} against the sum).`;
+      $(sl, ".rng").innerHTML = `Profit a year, one outlet: low <b>${$m(S.low.year.ab.profit)}</b> · base <b>${$m(Y.ab.profit)}</b> · high <b>${$m(S.high.year.ab.profit)}</b>`;
       const T = S.tornado.slice().sort((a, c) => Math.abs(c.hi - c.lo) - Math.abs(a.hi - a.lo));
       const all = T.flatMap(t => [t.lo, t.hi]).concat(Y.ab.profit), lo = Math.min(0, ...all), hi = Math.max(...all);
-      const X = v => 92 + (v - lo) / (hi - lo || 1) * 198, rh = 19;
+      const X = v => 92 + (v - lo) / (hi - lo || 1) * 198, rh = 15;
       $(sl, ".torn").innerHTML = T.map((t, i) => {
         const a = Math.min(t.lo, t.hi), c = Math.max(t.lo, t.hi), y = 4 + i * rh;
         return `<text x="88" y="${y + 11}" font-size="10" text-anchor="end" fill="${COL.ink2}">${t.label}</text>` +
-          `<rect x="${X(a)}" y="${y + 2}" width="${Math.max(1, X(c) - X(a))}" height="12" fill="${COL.navy}" opacity=".75"/>`;
+          `<rect x="${X(a)}" y="${y + 2}" width="${Math.max(1, X(c) - X(a))}" height="10" fill="${COL.navy}" opacity=".75"/>`;
       }).join("") + `<line x1="${X(Y.ab.profit)}" x2="${X(Y.ab.profit)}" y1="2" y2="${4 + T.length * rh}" stroke="${COL.red}" stroke-width="1.5"/>` +
         (lo < 0 ? `<line x1="${X(0)}" x2="${X(0)}" y1="2" y2="${4 + T.length * rh}" stroke="${COL.taupe}" stroke-dasharray="2 2"/>` : "") +
         `<text x="${X(Y.ab.profit)}" y="${12 + T.length * rh}" font-size="9" text-anchor="middle" fill="${COL.red}">base</text>`;
       const mh = P.minStaff.all_human, mm = P.minStaff.mixed, F = S.fragile.year.ab;
-      $(sl, ".frag").innerHTML = `The counter lever comes from the model's minimum crew: ${mh} by hand, ${mm} with machines, off-peak. ` +
-        `With it, profit ${$m(Y.ab.profit)} a year (counter ${$m(Y.ab.counterNet)}); with ${mm} either way, ${$m(F.profit)} (counter ${$m(F.counterNet)}).`;
+      $(sl, ".frag").innerHTML = `The counter lever rests on the model's minimum crew off-peak: ${mh} by hand, ${mm} with machines. ` +
+        `Profit a year per outlet: ${$m(Y.ab.profit)} with it; ${$m(F.profit)} with ${mm} either way.`;
       $(sl, ".bdays").textContent = `Calendar: ${e.days.busy} busy days (weekend days) and ${e.days.event} event days (Singapore public holidays) a year: an illustrative definition, to confirm with Chagee; sliders on screen.`;
       $$(ctl, "[data-v]").forEach(el => (el.textContent = e.days[el.dataset.v]));
     }

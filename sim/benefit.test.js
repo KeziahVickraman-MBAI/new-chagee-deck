@@ -4,7 +4,7 @@ const assert = require("node:assert/strict");
 const Sim = require("./sim.js"), Store = require("./store.js"), C = require("./counter.js"), B = require("./benefit.js");
 const RAW = require("../assumptions.json"), TI = require("../machine_tiers.json");
 const P = Sim.params(RAW), robots = TI.tiers.find(t => t.id === "single").replaces;
-const R = B.runs(Sim, Store, C, P, { robots, walkBack: RAW.illustration.walk_back_speed.value, seeds: 3 });
+const R = B.runs(Sim, Store, C, P, { robots, walkBack: RAW.illustration.walk_back_speed.value, seeds: 3, extra: RAW.storyboard.extra_staff_search.value });
 const e = B.econ(RAW, P), V = B.value(R, P, e);
 
 test("benefit: the counterfactual is all by hand on the flat normal-day crew, every day", () => {
@@ -30,4 +30,14 @@ test("benefit: the yearly figures move with the days-a-year input and nothing el
   const W = B.value(R, P, { ...e, days: { busy: 0, event: 0 } });
   assert.ok(Math.abs(W.year.a.orders - P.days * V.per.normal.a.orders) < 1e-9);
   assert.deepEqual(W.per, V.per);
+});
+
+test("benefit: the economic rule picks the crew with the largest contribution less extra labour, never fewer than the flat crew", () => {
+  for (const [day, row] of Object.entries(R.days)) for (const [k, cand] of [["aE", row.cand_hand], ["abE", row.cand_machine]]) {
+    const g = x => (row.cf.lost - x.lost) * e.price * e.margin - (x.labourHours - cand[0].labourHours) * e.wage;
+    const pick = V.per[{ none: "normal", moderate: "busy", large: "event" }[day]][k];
+    const best = Math.max(...cand.map(g));
+    const chosen = cand.find(x => x.staff === pick.staff);
+    assert.ok(chosen && Math.abs(g(chosen) - best) < 1e-9 && pick.staff >= cand[0].staff, `${day} ${k}`);
+  }
 });

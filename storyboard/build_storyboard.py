@@ -197,6 +197,18 @@ def values(d: dict) -> dict:
             and Y["ab"]["counterNet"] > Y["ab"]["contribution"]):
         raise SystemExit("build: slide 10 takeaway (forecast roster pays on event, not busy days; counter labour is most of the profit; "
                          "fragile without the minimum crew) no longer holds; rewrite it")
+    # the "2% walk-away rule" label: at the default volume the forecast crew is the fewest people within the limit
+    tgt = RAW["storyboard"]["walkaway_target"]["value"]
+    for dname, row in bn["runs"]["base"]["days"].items():
+        for case, cand in (("a", "cand_hand"), ("ab", "cand_machine")):
+            pick = next((x for x in row[cand] if x["lostShare"] <= tgt + 1e-12), None)
+            if not pick or pick["staff"] != row[case]["staff"] or pick["labourHours"] != row[case]["labourHours"]:
+                raise SystemExit(f"build: slide 10 calls the forecast crew the 2% walk-away rule, but not on {dname} ({case}); relabel it")
+    for f in ("orders", "revenue"):
+        if Y["abE"][f] > Y["aE"][f] + Y["b"][f] + tol:
+            raise SystemExit(f"build: benefit combined {f} (economic rule) exceeds a + b")
+    if not (bz["aE"]["staff"] == bn["runs"]["base"]["days"]["moderate"]["cand_hand"][0]["staff"] < bz["a"]["staff"] and bz["aE"]["profit"] >= 0):
+        raise SystemExit("build: slide 10 takeaway says the economic rule adds no one on busy days and avoids a loss; rewrite it")
     v["r.ben_cups"] = bn["cups"]
     v["r.ben_event_orders"], v["r.ben_event_rev"] = ev["ab"]["orders"], ev["ab"]["revenue"]
     v["r.ben_busy_orders"], v["r.ben_busy_rev"] = bz["ab"]["orders"], bz["ab"]["revenue"]
