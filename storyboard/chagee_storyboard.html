@@ -202,7 +202,7 @@ html,body{margin:0;background:#E7E3DC;color:var(--ink);font-family:var(--sans);-
 /* 05 site forecast */
 .msvg{width:100%;height:100%;display:block;cursor:crosshair}
 .msvg .ol{cursor:pointer}
-.sitesearch{flex:1;min-width:150px;max-width:230px;height:28px;border:1px solid #D8D1C3;border-radius:999px;padding:0 12px;font:12.5px var(--sans);color:var(--ink);background:#fff}
+.sitesearch{flex:1;min-width:140px;max-width:215px;height:28px;border:1px solid #D8D1C3;border-radius:999px;padding:0 12px;font:12.5px var(--sans);color:var(--ink);background:#fff}
 .sitesearch:focus{outline:2px solid var(--blue);outline-offset:1px}
 .quote{margin:7px 0 0;display:inline-flex;align-items:baseline;gap:10px;align-self:flex-start;background:#FBEDEC;border-left:4px solid var(--red);border-radius:6px;padding:5px 12px;font:500 14px/1.35 var(--sans);color:var(--ink)}
 .quote b{font:600 10px/1 var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--red)}
@@ -405,6 +405,11 @@ html,body{margin:0;background:#E7E3DC;color:var(--ink);font-family:var(--sans);-
 .vs .wo{background:#ECE8E0;color:var(--ink2)} .vs .wo .lab{color:var(--taupe)}
 .vs .wi{background:var(--navy);color:#fff} .vs .wi .lab{color:var(--gold)}
 .vs b{font-weight:700} .vs .wo b{color:var(--ink)} .vs .wi b{color:#fff}
+.slide.zooming::after{content:"";position:absolute;inset:0;background:var(--paper);z-index:40}
+.panel.zoomed{box-shadow:0 2px 18px rgba(0,0,0,.08)}
+.zb{flex:none;margin-left:4px;padding:0 9px;font-size:15px}
+.zoomed .zb{background:var(--navy);border-color:var(--navy);color:#fff}
+.fc.zfloat{position:absolute;left:34px;top:150px;z-index:60;width:292px;box-shadow:0 4px 20px rgba(0,0,0,.14)}
 .apx{columns:3;column-gap:22px;font:9.6px/1.36 var(--sans);color:var(--ink2)}
 .apx p{margin:0 0 4px;break-inside:avoid}
 .apx b{color:var(--ink)}
@@ -3152,6 +3157,52 @@ aside.notes{display:none}
       out.textContent = `${c} cups → ${k} ${k === 1 ? "person" : "people"}`; };
     inp.oninput = upd; upd();
   })();
+
+  /* ---------------------------------------------------------------- expand an explainer to full screen */
+  // The explainer panel is enlarged in place, over the rest of the slide, so the slide's own styles and every
+  // control keep working; the browser goes full screen too. Esc or the button returns. On slide 05 the pin's
+  // forecast card floats over the map's artwork so a click still shows its result.
+  const ZOOM = { el: null, ownFs: false };
+  function zoomClose() {
+    const z = ZOOM.el; if (!z) return;
+    z.classList.remove("zoomed"); z.closest(".slide").classList.remove("zooming");
+    $$(z.closest(".slide"), ".zfloat").forEach(x => x.classList.remove("zfloat"));
+    ["position", "left", "top", "width", "height", "transform", "transformOrigin", "zIndex"].forEach(k => (z.style[k] = ""));
+    $$(z, ".zb").forEach(b => { b.innerHTML = "⤢"; b.title = "Expand this explainer to full screen (Esc to return)"; });
+    ZOOM.el = null;
+    if (ZOOM.ownFs && document.fullscreenElement) { ZOOM.ownFs = false; document.exitFullscreen().catch(() => {}); }
+  }
+  function zoomOpen(body) {
+    if (ZOOM.el) zoomClose();
+    const w = body.offsetWidth, h = body.offsetHeight, top = 26, pad = 20;
+    const s = Math.min((1280 - 2 * pad) / w, (720 - top - pad) / h);
+    Object.assign(body.style, { position: "absolute", width: `${w}px`, height: `${h}px`, transformOrigin: "0 0", transform: `scale(${s})`,
+      left: `${(1280 - w * s) / 2}px`, top: `${top + (720 - top - pad - h * s) / 2}px`, zIndex: 50 });
+    body.classList.add("zoomed"); body.closest(".slide").classList.add("zooming");
+    if (body.dataset.kind === "site") $(body.closest(".slide"), ".fc")?.classList.add("zfloat");
+    $$(body, ".zb").forEach(b => { b.innerHTML = "✕"; b.title = "Back to the slide (Esc)"; });
+    ZOOM.el = body;
+    if (!document.fullscreenElement && document.documentElement.requestFullscreen) {
+      ZOOM.ownFs = true; document.documentElement.requestFullscreen().catch(() => (ZOOM.ownFs = false));
+    }
+  }
+  $$(document, ".slide .body > .panel").forEach(body => {
+    const top = $(body, ".ptop"); if (!top) return;
+    const b = document.createElement("button");
+    b.className = "btn zb screenonly"; b.innerHTML = "⤢"; b.title = "Expand this explainer to full screen (Esc to return)"; b.setAttribute("aria-label", "Expand to full screen");
+    b.onclick = () => (ZOOM.el === body ? zoomClose() : zoomOpen(body));
+    top.append(b);
+  });
+  document.addEventListener("fullscreenchange", () => { if (!document.fullscreenElement && ZOOM.ownFs) { ZOOM.ownFs = false; zoomClose(); } });
+  addEventListener("keydown", e => {                                 // while expanded: Esc returns, arrows step the explainer
+    if (!ZOOM.el || e.target.closest?.("input,select,textarea")) return;
+    if (e.key === "Escape") zoomClose();
+    else if (e.key === "ArrowRight" || e.key === "ArrowLeft") { const k = e.key === "ArrowRight" ? "next" : "prev"; $(ZOOM.el, `.ctl [data-k="${k}"]`)?.click(); }
+    else if (!["PageDown", "PageUp", " ", "Home", "End"].includes(e.key)) return;
+    e.preventDefault(); e.stopPropagation();
+  }, true);
+  addEventListener("beforeprint", zoomClose);
+  $$(document, "#prev,#next").forEach(b => b.addEventListener("click", zoomClose, true));
 
   /* ---------------------------------------------------------------- print */
   function preparePrint() {

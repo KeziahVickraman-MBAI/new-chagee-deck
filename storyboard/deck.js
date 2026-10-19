@@ -736,6 +736,52 @@
     inp.oninput = upd; upd();
   })();
 
+  /* ---------------------------------------------------------------- expand an explainer to full screen */
+  // The explainer panel is enlarged in place, over the rest of the slide, so the slide's own styles and every
+  // control keep working; the browser goes full screen too. Esc or the button returns. On slide 05 the pin's
+  // forecast card floats over the map's artwork so a click still shows its result.
+  const ZOOM = { el: null, ownFs: false };
+  function zoomClose() {
+    const z = ZOOM.el; if (!z) return;
+    z.classList.remove("zoomed"); z.closest(".slide").classList.remove("zooming");
+    $$(z.closest(".slide"), ".zfloat").forEach(x => x.classList.remove("zfloat"));
+    ["position", "left", "top", "width", "height", "transform", "transformOrigin", "zIndex"].forEach(k => (z.style[k] = ""));
+    $$(z, ".zb").forEach(b => { b.innerHTML = "⤢"; b.title = "Expand this explainer to full screen (Esc to return)"; });
+    ZOOM.el = null;
+    if (ZOOM.ownFs && document.fullscreenElement) { ZOOM.ownFs = false; document.exitFullscreen().catch(() => {}); }
+  }
+  function zoomOpen(body) {
+    if (ZOOM.el) zoomClose();
+    const w = body.offsetWidth, h = body.offsetHeight, top = 26, pad = 20;
+    const s = Math.min((1280 - 2 * pad) / w, (720 - top - pad) / h);
+    Object.assign(body.style, { position: "absolute", width: `${w}px`, height: `${h}px`, transformOrigin: "0 0", transform: `scale(${s})`,
+      left: `${(1280 - w * s) / 2}px`, top: `${top + (720 - top - pad - h * s) / 2}px`, zIndex: 50 });
+    body.classList.add("zoomed"); body.closest(".slide").classList.add("zooming");
+    if (body.dataset.kind === "site") $(body.closest(".slide"), ".fc")?.classList.add("zfloat");
+    $$(body, ".zb").forEach(b => { b.innerHTML = "✕"; b.title = "Back to the slide (Esc)"; });
+    ZOOM.el = body;
+    if (!document.fullscreenElement && document.documentElement.requestFullscreen) {
+      ZOOM.ownFs = true; document.documentElement.requestFullscreen().catch(() => (ZOOM.ownFs = false));
+    }
+  }
+  $$(document, ".slide .body > .panel").forEach(body => {
+    const top = $(body, ".ptop"); if (!top) return;
+    const b = document.createElement("button");
+    b.className = "btn zb screenonly"; b.innerHTML = "⤢"; b.title = "Expand this explainer to full screen (Esc to return)"; b.setAttribute("aria-label", "Expand to full screen");
+    b.onclick = () => (ZOOM.el === body ? zoomClose() : zoomOpen(body));
+    top.append(b);
+  });
+  document.addEventListener("fullscreenchange", () => { if (!document.fullscreenElement && ZOOM.ownFs) { ZOOM.ownFs = false; zoomClose(); } });
+  addEventListener("keydown", e => {                                 // while expanded: Esc returns, arrows step the explainer
+    if (!ZOOM.el || e.target.closest?.("input,select,textarea")) return;
+    if (e.key === "Escape") zoomClose();
+    else if (e.key === "ArrowRight" || e.key === "ArrowLeft") { const k = e.key === "ArrowRight" ? "next" : "prev"; $(ZOOM.el, `.ctl [data-k="${k}"]`)?.click(); }
+    else if (!["PageDown", "PageUp", " ", "Home", "End"].includes(e.key)) return;
+    e.preventDefault(); e.stopPropagation();
+  }, true);
+  addEventListener("beforeprint", zoomClose);
+  $$(document, "#prev,#next").forEach(b => b.addEventListener("click", zoomClose, true));
+
   /* ---------------------------------------------------------------- print */
   function preparePrint() {
     PRINTING = true;
