@@ -10,6 +10,9 @@
  *   dataset(Sim, RAW, GEO)       { rows: [{ f, y }], pins: { A, C, D }: features at slide 08's pins, ranges }
  *   fit(rows, keys, lambda)      { predict(f), beta (standardised), mu, sd, mean }; keys = [] gives the mean only
  *   loo(rows, keys, lambda)      { pred[], mae, r2 } on held-out outlets
+ *   city(Sim, RAW, GEO, Site)    a hypothetical new city (site_ext.new_city) at Singapore's synthetic density
+ *   cityGrid(city, RAW, cap)     every grid point with the inputs a market with no Chagee history has
+ *   pick(grid, predict, k, km)   the k best grid points, at least km apart (greedy)
  *
  * Footfall dots around each outlet's own mall are left out of the features: they exist only where an outlet already is.
  */
@@ -72,7 +75,42 @@
     return { pred, mae, r2: 1 - sse / sst };
   }
 
-  const api = { FEATURES, dataset, fit, loo };
+  // a hypothetical new city (site_ext.new_city), at Singapore's synthetic density so the inputs mean the same thing:
+  // the same dots per unit of town weight and the same even background per km2 as the slide 05 events
+  function city(Sim, RAW, GEO, Site) {
+    const C = RAW.site_ext.new_city.value, SP = RAW.sitepick, k = SP.km_per_px.value;
+    let cells = 0; GEO.land.forEach(r => { for (const c of r) if (c === "1") cells++; });
+    const sgArea = cells * (GEO.cell * k) ** 2, ev = Site.events(Sim, RAW, GEO).filter(e => e.mall === undefined);
+    const sgBg = ev.filter(e => e.hub === undefined).length, sgW = SP.hubs.value.reduce((a, h) => a + h.weight, 0);
+    const perWeight = (ev.length - sgBg) / sgW, bgPerKm2 = sgBg / sgArea;
+    const R = Sim.rng(Sim.hash(RAW.simulation.base_seed.value, C.seed_offset)), sd = SP.hub_spread_km.value;
+    const gauss = () => { let u = 0; while (u === 0) u = R(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * R()); };
+    const inside = (x, y) => x >= 0 && y >= 0 && x <= C.width_km && y <= C.height_km, dots = [];
+    for (let i = 0, n = Math.round(bgPerKm2 * C.width_km * C.height_km); i < n; i++) dots.push({ x: R() * C.width_km, y: R() * C.height_km });
+    C.towns.forEach(t => { for (let i = 0, n = Math.round(perWeight * t.weight); i < n; i++)
+      for (let q = 0; q < 20; q++) { const x = t.x + gauss() * sd, y = t.y + gauss() * sd; if (inside(x, y)) { dots.push({ x, y }); break; } } });
+    return { ...C, dots, perWeight, bgPerKm2 };
+  }
+
+  // every grid point in the city, with the inputs a market with no Chagee history has (and none of the others)
+  function cityGrid(ct, RAW, cap) {
+    const X = RAW.site_ext, rRes = X.residents_radius_km.value, rDel = X.model.value.delivery_km, g = ct.grid_km, out = [];
+    for (let y = g / 2; y < ct.height_km; y += g) for (let x = g / 2; x < ct.width_km; x += g) {
+      let pop = 0, area = 0;
+      ct.dots.forEach(d => { const z = Math.hypot(d.x - x, d.y - y); if (z <= rRes) pop++; if (z <= rDel) area++; });
+      out.push({ x, y, f: { pop, area, hubKm: Math.min(...ct.towns.map(t => Math.hypot(t.x - x, t.y - y))), unmet: 0, own: 0, nearKm: cap } });
+    }
+    return out;
+  }
+
+  // greedy: the highest forecast first, then the next best at least spacing km from every site already picked
+  function pick(grid, predict, k, spacingKm) {
+    const scored = grid.map(c => ({ ...c, cups: predict(c.f) })).sort((a, b) => b.cups - a.cups), out = [];
+    for (const c of scored) { if (out.length >= k) break; if (out.every(o => Math.hypot(o.x - c.x, o.y - c.y) >= spacingKm)) out.push(c); }
+    return { picks: out, scored };
+  }
+
+  const api = { FEATURES, dataset, fit, loo, city, cityGrid, pick };
   if (typeof module !== "undefined" && module.exports) module.exports = api;
   else root.ChageeSiteModel = api;
 })(typeof window !== "undefined" ? window : globalThis);

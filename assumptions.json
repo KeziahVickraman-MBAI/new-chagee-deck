@@ -1478,6 +1478,52 @@
       "range": null,
       "source": "assumption",
       "rationale": "Our assumption: population and town-centre distance exist anywhere; delivery-area demand depends on platform data (to confirm); app searches and the outlet network do not exist before Chagee opens."
+    },
+    "new_city": {
+      "value": {
+        "width_km": 20,
+        "height_km": 12,
+        "grid_km": 1,
+        "seed_offset": 53,
+        "stores_default": 3,
+        "stores_max": 6,
+        "towns": [
+          {
+            "name": "Town A",
+            "x": 5,
+            "y": 4,
+            "weight": 1.4
+          },
+          {
+            "name": "Town B",
+            "x": 13,
+            "y": 3.5,
+            "weight": 1.0
+          },
+          {
+            "name": "Town C",
+            "x": 9,
+            "y": 8.5,
+            "weight": 0.8
+          },
+          {
+            "name": "Town D",
+            "x": 16.5,
+            "y": 9,
+            "weight": 0.7
+          },
+          {
+            "name": "Town E",
+            "x": 3,
+            "y": 9.5,
+            "weight": 0.5
+          }
+        ]
+      },
+      "unit": "a hypothetical city: km, town centres and weights; grid spacing km; stores to place (default and maximum)",
+      "range": null,
+      "source": "assumption",
+      "rationale": "Slide 08b's new-market proxy: a made-up city, not a real place. Its population dots are generated at Singapore's synthetic density (same dots per unit of town weight and same even background per km2 as the slide 05 events), so the model's inputs mean the same thing in both. With real data, a census population grid and real town centres replace it."
     }
   }
 }

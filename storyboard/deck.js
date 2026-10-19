@@ -886,8 +886,6 @@
     const on = new Set(F.map(f => f.key));
     const S = steppers.find(x => x.p.closest("#x1b"))?.S; let step = S ? S.cur : 4;
     const fixedNM = { unmet: 0, own: 0, nearKm: D.cap };            // what a market with no Chagee history looks like
-    const med = k => { const v = D.rows.map(r => r.f[k]).sort((a, b) => a - b); return v[Math.floor(v.length / 2)]; };
-    const site = { pop: med("pop"), hubKm: med("hubKm"), area: med("area"), ...fixedNM };
     const pre = $(sl, ".smpre");
     pre.innerHTML = `<button class="btn" data-p="all">All inputs</button><button class="btn" data-p="nm">New-market inputs</button>`;
     pre.onclick = ev => { const b = ev.target.closest("[data-p]"); if (!b) return; on.clear(); (b.dataset.p === "all" ? F.map(f => f.key) : NM).forEach(k => on.add(k)); draw(); };
@@ -904,23 +902,23 @@
       const bmax = Math.max(1, ...m.beta.map(Math.abs));
       tiles.innerHTML = F.map(f => { const i = keys.indexOf(f.key), b = i >= 0 ? m.beta[i] : 0, w = 50 * Math.abs(b) / bmax;
         return `<div class="t${i < 0 ? " off" : ""}" data-k="${f.key}" title="${f.unit}"><span class="cb">${i < 0 ? "" : "✓"}</span>` +
-          `<span class="nm"><b>${f.label}</b> <span style="color:${COL.taupe}">${UNIT[f.key]}</span><span class="nmk ${f.newMarket}">${NMK[f.newMarket]}</span></span>` +
+          `<span class="nm" title="${UNIT[f.key]}: ${f.unit}"><b>${f.label}</b><span class="nmk ${f.newMarket}">${NMK[f.newMarket]}</span></span>` +
           `<span class="cf" title="${i < 0 ? "off" : `${b >= 0 ? "+" : "−"}${Math.abs(Math.round(b))} cups per standard deviation`}">${i < 0 ? "" : `<i style="${b >= 0 ? `left:50%;width:${w}%;background:${COL.navy}` : `left:${50 - w}%;width:${w}%;background:${COL.red}`}"></i>`}</span></div>`; }).join("") +
         [["Competitors within " + X.competition_radius_m.value + " m"], ["Rent per sq ft"]].map(([l]) =>
-          `<div class="t nodata"><span class="cb" style="border-style:dashed;border-color:${COL.taupe}"></span><span class="nm"><b>${l}</b><span class="nmk" style="color:${COL.taupe}">not in our synthetic data</span></span><span></span></div>`).join("");
+          `<div class="t nodata"><span class="cb" style="border-style:dashed;border-color:${COL.taupe}"></span><span class="nm"><b>${l}</b><span class="nmk" style="color:${COL.taupe}">not in our data</span></span></div>`).join("");
       // chart: each outlet's cups a day against the held-out prediction (before step 3: the labels alone)
-      const W = 560, H = 170, l = 44, r = 10, t = 10, b = 26, ys = D.rows.map(q => q.y), pr = step >= 3 ? L.pred : ys;
+      const W = 280, H = 176, l = 38, r = 6, t = 18, b = 26, ys = D.rows.map(q => q.y), pr = step >= 3 ? L.pred : ys;
       const lo = Math.min(...ys, ...pr) * 0.95, hi = Math.max(...ys, ...pr) * 1.03;
       const Xs = v => l + (v - lo) / (hi - lo) * (W - l - r), Ys = v => H - b - (v - lo) / (hi - lo) * (H - t - b);
       let g = `<line x1="${Xs(lo)}" y1="${Ys(lo)}" x2="${Xs(hi)}" y2="${Ys(hi)}" stroke="${COL.taupe}" stroke-dasharray="4 3"/>`;
       [lo, (lo + hi) / 2, hi].forEach(v => { const vv = Math.round(v / 50) * 50;
-        g += T(Xs(vv), H - b + 13, vv, `font-size="9.5" text-anchor="middle" fill="${COL.taupe}"`) + T(l - 5, Ys(vv) + 3, vv, `font-size="9.5" text-anchor="end" fill="${COL.taupe}"`); });
-      g += T((l + W - r) / 2, H - 2, "each outlet's cups a day (synthetic label)", `font-size="10" text-anchor="middle" fill="${COL.ink2}"`) +
-        T(12, (t + H - b) / 2, step >= 3 ? "predicted, outlet held out" : "the label", `font-size="10" text-anchor="middle" fill="${COL.ink2}" transform="rotate(-90 12 ${(t + H - b) / 2})"`);
+        g += T(Math.min(Xs(vv), W - r), H - b + 13, vv, `font-size="9.5" text-anchor="${Xs(vv) > W - r - 12 ? "end" : "middle"}" fill="${COL.taupe}"`) + T(l - 5, Ys(vv) + 3, vv, `font-size="9.5" text-anchor="end" fill="${COL.taupe}"`); });
+      g += T((l + W - r) / 2, H - 2, "outlet's cups a day (synthetic label)", `font-size="9.5" text-anchor="middle" fill="${COL.ink2}"`) +
+        T(10, (t + H - b) / 2, step >= 3 ? "predicted, held out" : "the label", `font-size="9.5" text-anchor="middle" fill="${COL.ink2}" transform="rotate(-90 12 ${(t + H - b) / 2})"`);
       D.rows.forEach((q, i) => { const x = Xs(q.y), y = Ys(pr[i]);
         if (step >= 3) g += `<line x1="${x.toFixed(1)}" y1="${Ys(q.y).toFixed(1)}" x2="${x.toFixed(1)}" y2="${y.toFixed(1)}" stroke="${COL.red}" stroke-opacity=".35"/>`;
-        g += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3.6" fill="${step >= 3 ? COL.navy : COL.taupe}"/>`; });
-      if (step >= 3) g += T(l + 8, t + 12, `average miss ±${Math.round(L.mae)} cups a day`, `font-size="11" font-weight="700" fill="${COL.navy}"`);
+        g += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="2.8" fill="${step >= 3 ? COL.navy : COL.taupe}"/>`; });
+      if (step >= 3) g += T(l, 10, `Tested on held-out outlets · average miss ±${Math.round(L.mae)}`, `font-size="9.5" font-weight="700" fill="${COL.navy}"`);
       $(sl, ".smsvg").innerHTML = g;
       // accuracy on held-out outlets, against the two presets and the average-outlet guess
       $(sl, ".smacc").innerHTML = `<div class="k">Tested on outlets it has not seen</div><div class="big">±${Math.round(L.mae)}<small>cups a day, average miss</small></div>` +
@@ -928,27 +926,63 @@
         `<table><tr class="${keys.length === F.length ? "cur" : ""}"><td>All inputs (Singapore)</td><td>±${Math.round(all.L.mae)} · R² ${all.L.r2.toFixed(2)}</td></tr>` +
         `<tr class="${near(keys, NM) ? "cur" : ""}"><td>New-market inputs only</td><td>±${Math.round(nm.L.mae)} · R² ${nm.L.r2.toFixed(2)}</td></tr>` +
         `<tr class="${keys.length ? "" : "cur"}"><td>No inputs: guess the average outlet</td><td>±${Math.round(none.L.mae)}</td></tr></table>`;
-      // a site in a new market: sliders for the inputs it has; the others sit at a no-history value
-      const slid = keys.filter(k => k in site && !(k in fixedNM)), stuck = keys.filter(k => k in fixedNM);
-      const f = { ...site }, pred = m.predict(f), mae = L.mae;
-      const fmt = k => k === "hubKm" ? `${site[k].toFixed(1)} km` : `${Math.round(site[k])}`;
-      const card = $(sl, ".smnew");
-      card.innerHTML = `<div class="k">Score a site in a new market</div><div class="big">≈ ${Math.round(pred)}<small>± ${Math.round(mae)} cups a day</small></div>` +
-        `<div class="screenonly">${slid.map(k => { const [a, z] = D.ranges[k], fe = F.find(x => x.key === k);
-          return `<label>${fe.label}<span class="val" data-v="${k}">${fmt(k)}</span><input type="range" data-k="${k}" min="${a}" max="${z}" step="${k === "hubKm" ? 0.05 : 1}" value="${site[k]}"></label>`; }).join("") || `<p style="font:11px var(--sans);color:${COL.taupe};margin:4px 0 0">No input to set: the model guesses the average outlet.</p>`}</div>` +
-        (stuck.length ? `<p class="warn">${stuck.map(k => F.find(x => x.key === k).label).join(", ")}: a new market has none, so the model is outside what it was trained on. Switch ${stuck.length > 1 ? "them" : "it"} off.</p>` : "") +
-        `<p class="printonly" style="font:11px var(--sans);color:${COL.ink2};margin:3px 0 0">At the outlets' median inputs. Sliders on screen.</p>` +
-        `<button class="btn use screenonly" data-act="use">Use on slide 09 →</button>`;
+      city(keys, m, L);
     }
-    $(sl, ".smnew").addEventListener("input", ev => { const k = ev.target.dataset.k; if (!k) return; site[k] = +ev.target.value;
-      clearTimeout(draw.tm); draw.tm = setTimeout(() => { draw(); const i = $(sl, `.smnew input[data-k="${k}"]`); if (i) i.focus(); }, 30); });
-    $(sl, ".smnew").addEventListener("click", ev => { if (!ev.target.closest("[data-act=use]")) return;
-      const keys = F.map(f => f.key).filter(k => on.has(k)), c = run(keys).m.predict(site), got = window.ChageeX?.setCups(c);
-      const b = ev.target.closest("[data-act=use]"); b.textContent = got != null ? `Sent: ${Math.round(got)} cups a day${Math.round(got) !== Math.round(c) ? " (range end)" : ""}` : "Slide 09 not found"; });
+    // the hypothetical new city: forecast at every grid spot (inputs the city has), the k best at least the ring apart
+    const CT = D.city, Ext = window.ChageeSiteExt, e0 = Ext.econ(RAW, P), dp = { Sim, C, P, TIERS: window.STORY.TIERS };
+    const netAt = c => Ext.appraise(dp, e0, 0, c).month.net;
+    const beCups = (() => { let a = 1, z = 3000; for (let i = 0; i < 40; i++) { const mid = (a + z) / 2; if (netAt(mid) > 0) z = mid; else a = mid; } return z; })();
+    let K = CT.stores_default, probe = null, sendTo = null;
+    let used = [];                                                    // the inputs switched on: only they can be out of range
+    const inRange = f => used.every(k => f[k] >= D.ranges[k][0] - 1e-9 && f[k] <= D.ranges[k][1] + 1e-9);
+    function city(keys, m, L) {
+      used = keys;
+      const P0 = SMm.pick(CT.grid, m.predict, K, RING), picks = P0.picks, mae = L.mae, stuck = keys.filter(k => k in fixedNM);
+      sendTo = picks[0];
+      const W = 280, H = 176, pad = 2, top = 13, s = Math.min((W - 2 * pad) / CT.width_km, (H - top - pad) / CT.height_km);
+      const ox = (W - CT.width_km * s) / 2, X = x => ox + x * s, Y = y => top + y * s, g = CT.grid_km * s;
+      const lo = Math.min(...P0.scored.map(c => c.cups)), hi = Math.max(...P0.scored.map(c => c.cups));
+      let h = T(pad, 10, "Hypothetical new city · shaded where the forecast beats break-even", `font-size="9.5" font-weight="600" fill="${COL.ink2}"`) +
+        `<rect x="${X(0)}" y="${Y(0)}" width="${CT.width_km * s}" height="${CT.height_km * s}" fill="#FBF9F5" stroke="${COL.line}"/>`;
+      P0.scored.forEach(c => { if (c.cups <= beCups) return; const u = (c.cups - beCups) / (hi - beCups || 1);
+        h += `<rect x="${(X(c.x) - g / 2).toFixed(1)}" y="${(Y(c.y) - g / 2).toFixed(1)}" width="${g.toFixed(1)}" height="${g.toFixed(1)}" fill="${COL.navy}" fill-opacity="${(0.12 + 0.6 * u).toFixed(3)}"/>`; });
+      CT.dots.forEach(([x, y]) => (h += `<circle cx="${X(x).toFixed(1)}" cy="${Y(y).toFixed(1)}" r=".8" fill="${COL.taupe}" fill-opacity=".55"/>`));
+      CT.towns.forEach(t => (h += T(X(t.x), Y(t.y) - 8, t.name, `font-size="8.5" text-anchor="middle" fill="${COL.ink}" stroke="#FBF9F5" stroke-width="2.4" paint-order="stroke"`)));
+      picks.forEach((c, i) => (h += `<circle cx="${X(c.x)}" cy="${Y(c.y)}" r="${RING * s}" fill="none" stroke="${COL.red}" stroke-dasharray="3 2" stroke-opacity=".7"/>` +
+        `<circle cx="${X(c.x)}" cy="${Y(c.y)}" r="6.5" fill="${COL.red}"/>` + T(X(c.x), Y(c.y) + 3, i + 1, `font-size="8.5" font-weight="700" text-anchor="middle" fill="#fff"`)));
+      if (probe) h += `<circle cx="${X(probe.x)}" cy="${Y(probe.y)}" r="5" fill="none" stroke="${COL.gold}" stroke-width="2"/>`;
+      $(sl, ".smcity").innerHTML = h;
+      $(sl, ".smcity")._map = { X0: ox, top, s };
+      // the card: the picks, their forecast band, and whether they clear break-even at Singapore costs
+      const town = c => CT.towns.reduce((a, t) => (Math.hypot(t.x - c.x, t.y - c.y) < Math.hypot(a.x - c.x, a.y - c.y) ? t : a)).name;
+      const n = x => Math.round(x).toLocaleString("en-SG");
+      const row = (c, i) => { const lo_ = c.cups - mae, be = lo_ > beCups ? `<span class="ok">above break-even even at ${n(lo_)}</span>` : c.cups > beCups ? `<span class="no">break-even only if forecast holds: pilot</span>` : `<span class="no">below break-even: skip</span>`;
+        return `<li><i>${i + 1}</i><span>${town(c)}: <b>≈ ${n(c.cups)}</b> ± ${n(mae)} · ${be}${inRange(c.f) ? "" : ` · <span class="no">beyond what it learned</span>`}</span></li>`; };
+      let pr = "";
+      if (probe) pr = `<div class="probe">Your spot near ${town(probe)}: ≈ ${n(m.predict(probe.f))} ± ${n(mae)} cups a day${inRange(probe.f) ? "" : " (beyond what it learned)"}.</div>`;
+      $(sl, ".smnew").innerHTML = `<div class="k">Where to open in the new city</div>` +
+        `<label class="screenonly" style="display:grid;grid-template-columns:1fr auto;font:11px var(--sans);color:${COL.ink2}">Stores to place<span class="val">${K}</span><input type="range" data-k="K" min="1" max="${CT.stores_max}" step="1" value="${K}" style="grid-column:1/-1;accent-color:${COL.navy}"></label>` +
+        `<ol>${picks.map(row).join("")}</ol>` + pr +
+        (stuck.length ? `<p class="warn">${stuck.map(k => F.find(x => x.key === k).label).join(", ")}: the city has none, so these inputs push the forecast outside what the model learned. Switch ${stuck.length > 1 ? "them" : "it"} off.</p>` : "") +
+        `<p style="font:10.5px/1.35 var(--sans);color:${COL.taupe};margin:3px 0 0">Cups a day, forecast ± average miss. Break-even ≈ ${n(beCups)} at Singapore costs (slide 09), a stand-in. Picks ≥ ${RING} km apart.</p>` +
+        `<button class="btn use screenonly" data-act="use">Send site 1 to slide 09 →</button>`;
+    }
+    $(sl, ".smcity").addEventListener("click", ev => {
+      const svg = ev.currentTarget, mp = svg._map, pt = svg.createSVGPoint(); pt.x = ev.clientX; pt.y = ev.clientY;
+      const q = pt.matrixTransform(svg.getScreenCTM().inverse()), x = (q.x - mp.X0) / mp.s, y = (q.y - mp.top) / mp.s;
+      if (x < 0 || y < 0 || x > CT.width_km || y > CT.height_km) return;
+      const rRes = X.residents_radius_km.value, rDel = X.model.value.delivery_km; let pop = 0, area = 0;
+      CT.dots.forEach(([a, b]) => { const z = Math.hypot(a - x, b - y); if (z <= rRes) pop++; if (z <= rDel) area++; });
+      probe = { x, y, f: { pop, area, hubKm: Math.min(...CT.towns.map(t => Math.hypot(t.x - x, t.y - y))), unmet: 0, own: 0, nearKm: D.cap } }; draw();
+    });
+    $(sl, ".smnew").addEventListener("input", ev => { if (ev.target.dataset.k !== "K") return; K = +ev.target.value; draw(); });
+    $(sl, ".smnew").addEventListener("click", ev => { const b = ev.target.closest("[data-act=use]"); if (!b || !sendTo) return;
+      const keys = F.map(f => f.key).filter(k => on.has(k)), c = run(keys).m.predict(sendTo.f), got = window.ChageeX?.setCups(c);
+      b.textContent = got != null ? `Sent: ${Math.round(got)} cups a day${Math.round(got) !== Math.round(c) ? " (range end)" : ""}` : "Slide 09 not found"; });
     // step 4 is the new market: entering it keeps only the inputs that market has; stepping back restores all inputs
     const preset = keys => { on.clear(); keys.forEach(k => on.add(k)); };
     if (S) S.hooks.push(k => { if (k === 4 && step < 4) preset(NM); else if (k < 4 && step === 4) preset(F.map(f => f.key)); step = k; draw(); });
-    printers.push(() => { preset(NM); Object.assign(site, { pop: med("pop"), hubKm: med("hubKm"), area: med("area"), ...fixedNM }); step = 4; draw(); });
+    printers.push(() => { preset(NM); K = CT.stores_default; probe = null; step = 4; draw(); });
     draw();
   })();
 

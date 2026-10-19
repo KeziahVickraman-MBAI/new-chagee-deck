@@ -91,6 +91,9 @@ benefit.econ = B.econ(RAW, P);                                  // what the buil
 // slide 08b: the supervised model on the synthetic outlets; leave-one-out with every input and with the new-market inputs
 const smD = SMod.dataset(Sim, RAW, GEO, Site), smAll = SMod.FEATURES.map(f => f.key), smNM = RAW.site_ext.new_market_inputs.value;
 const siteModel = { ...smD, all: SMod.loo(smD.rows, smAll, smD.lambda), newMarket: SMod.loo(smD.rows, smNM, smD.lambda), none: SMod.loo(smD.rows, [], smD.lambda) };
+const smCity = SMod.city(Sim, RAW, GEO, Site);
+siteModel.city = { width_km: smCity.width_km, height_km: smCity.height_km, grid_km: smCity.grid_km, towns: smCity.towns, dots: smCity.dots.map(d => [+d.x.toFixed(3), +d.y.toFixed(3)]),
+                   grid: SMod.cityGrid(smCity, RAW, smD.cap), stores_default: smCity.stores_default, stores_max: smCity.stores_max };
 
 const pl = Sim.plan(P, "mixed");
 const data = {

@@ -549,8 +549,9 @@ html,body{margin:0;background:#E7E3DC;color:var(--ink);font-family:var(--sans);-
 .xnote p{margin:0;padding-left:10px;border-left:3px solid var(--red)}
 .xnote p+p{border-left-color:var(--taupe)}
 /* ---------- slide 08b: the supervised model ---------- */
-.smf{display:grid;grid-template-columns:1fr 1fr;gap:4px 8px;margin-top:4px}
-.smf .t{display:grid;grid-template-columns:16px 1fr 58px;gap:2px 7px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:7px;padding:4px 8px;cursor:pointer;font:11.5px/1.2 var(--sans);color:var(--ink)}
+.smf{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px 6px;margin-top:4px}
+.smf .t{display:grid;grid-template-columns:14px 1fr;grid-template-areas:"cb nm" "cf cf";gap:3px 6px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:7px;padding:4px 7px;cursor:pointer;font:10.8px/1.15 var(--sans);color:var(--ink)}
+.smf .cb{grid-area:cb} .smf .nm{grid-area:nm} .smf .cf{grid-area:cf}
 .smf .t.off{background:#F3F0EA;color:var(--taupe)}
 .smf .t.nodata{cursor:default;border-style:dashed;color:var(--taupe);background:transparent}
 .smf .cb{width:13px;height:13px;border:1.5px solid var(--navy);border-radius:3px;display:grid;place-items:center;font:700 10px/1 var(--sans);color:#fff}
@@ -561,7 +562,14 @@ html,body{margin:0;background:#E7E3DC;color:var(--ink);font-family:var(--sans);-
 .smf .cf{position:relative;height:8px;background:var(--ice);border-radius:3px}
 .smf .cf i{position:absolute;top:0;height:100%;border-radius:3px}
 .smf .cf:after{content:"";position:absolute;left:50%;top:-2px;bottom:-2px;width:1px;background:var(--ink2)}
-.smsvg{width:100%;height:100%;display:block;font-family:var(--sans)}
+.smviz{display:grid;grid-template-columns:4fr 5fr;gap:10px}
+.smsvg,.smcity{width:100%;height:100%;display:block;font-family:var(--sans)}
+.smcity{cursor:crosshair}
+.smnew ol{margin:3px 0 0;padding:0;list-style:none;font:11px/1.35 var(--sans);color:var(--ink2)}
+.smnew li{display:grid;grid-template-columns:18px 1fr;gap:0 6px;padding:2px 0;border-top:1px solid var(--line)}
+.smnew li i{font-style:normal;display:grid;place-items:center;width:16px;height:16px;border-radius:50%;background:var(--red);color:#fff;font:700 9.5px/1 var(--sans)}
+.smnew li b{color:var(--ink)} .smnew li .ok{color:#2F6B45;font-weight:600} .smnew li .no{color:var(--red);font-weight:600}
+.smnew .probe{margin-top:4px;font:11px/1.35 var(--sans);color:var(--navy)}
 .smacc .big,.smnew .big{font:700 24px/1.05 var(--sans);color:var(--navy);margin:2px 0}
 .smacc .big small,.smnew .big small{font:500 11px var(--sans);color:var(--ink2);margin-left:4px}
 .smacc table{width:100%;border-collapse:collapse;margin-top:4px;font:11px/1.3 var(--sans);color:var(--ink2)}
@@ -1172,18 +1180,18 @@ aside.notes{display:none}
   <div class="leafart" aria-hidden="true"></div>
   <div class="inner stepper" data-steps="4">
     <p class="kicker">08b · The supervised model behind the scores<span class="ext">Extension: where this scales next. Not included in the S$ benefit.</span></p>
-    <h2 class="head" style="font-size:30px;max-width:1000px">A model trained on Singapore's outlets can score a site where Chagee has no history yet, if it uses inputs that market has</h2>
-    <p class="sub">Supervised learning: switch inputs on or off; the model retrains live and is tested on outlets it has not seen. A proxy for a new market with no data (illustrative, synthetic).</p>
+    <h2 class="head" style="font-size:30px;max-width:1000px">Trained on Singapore's outlets, the model picks where to open in a city where Chagee has no data yet</h2>
+    <p class="sub">Supervised learning: keep only the inputs a new city has, test the model on outlets it has not seen, then let it score every spot in a hypothetical city (illustrative, synthetic).</p>
     <div class="body" style="grid-template-columns:1fr 318px;gap:18px;margin-top:10px">
       <div class="panel smp" data-kind="smodel">
         <div class="ptop"><span class="ptitle">Train on {{x.sm_n}} outlets · toggle the inputs</span><span class="seg smpre screenonly"></span></div>
         <div class="smf" data-s="2"></div>
-        <div class="visual" style="margin-top:4px"><svg class="smsvg" viewBox="0 0 560 170" preserveAspectRatio="xMidYMid meet" aria-label="Each outlet's cups a day against the model's prediction when that outlet is held out"></svg></div>
+        <div class="visual smviz" style="margin-top:6px"><svg class="smsvg" viewBox="0 0 280 176" preserveAspectRatio="xMidYMid meet" aria-label="Each outlet's cups a day against the model's prediction when that outlet is held out"></svg><svg class="smcity" data-s="4" viewBox="0 0 280 176" preserveAspectRatio="xMidYMid meet" aria-label="A hypothetical new city: the model's forecast at every spot and the sites it picks"></svg></div>
         <ol class="caps" style="min-height:36px">
           <li data-s="1"><span class="n">1</span><span>Training data: each Singapore outlet's cups a day is the label (synthetic, from the slide 05 engine).</span></li>
           <li data-s="2"><span class="n">2</span><span>Inputs: attributes at each outlet. Click to switch one off; the bar shows how much it moves the forecast.</span></li>
           <li data-s="3"><span class="n">3</span><span>Test: each outlet is predicted by a model trained on the others. Dots on the line are perfect forecasts.</span></li>
-          <li data-s="4"><span class="n">4</span><span>New market: no app history and no outlets yet. Keep only the inputs it has, then score a site with the sliders.</span></li>
+          <li data-s="4"><span class="n">4</span><span>New city, no Chagee data: only the inputs it has. The model scores every spot and picks the best, at least {{x.ring_km}} km apart. Click the map to test a spot.</span></li>
         </ol>
       </div>
       <div class="cards" style="gap:8px">
@@ -1199,7 +1207,7 @@ aside.notes{display:none}
   <aside class="notes">
     <p>This is the model behind step three of the framework, actually running. It learns cups a day from a site's attributes, trained on Singapore's {{x.sm_n}} outlets. The labels are synthetic, from the slide 05 engine, so read it as the method, not a forecast.</p>
     <p>We test it fairly: each outlet is predicted by a model that never saw it. With every input, it misses by about {{x.sm_all_mae}} cups a day on average. Now the proxy for a new market: there is no Chagee app history and no outlet network yet, so switch those inputs off. With only population and distance to a town centre, the error grows to about {{x.sm_nm_mae}} cups a day, still better than guessing the average outlet, about {{x.sm_none_mae}}.</p>
-    <p>So the model can travel, but only on inputs the new market has, with wider ranges, and it must be rechecked against the first outlets' actuals. That is the continual-learning step on the next slide. About forty seconds.</p>
+    <p>Then the point of it: where to open in a place with no local data. The right-hand map is a hypothetical city, generated at the same density as our Singapore data. With only the inputs that city has, the model scores every spot and picks the best sites at least {{x.ring_km}} km apart, so they do not take sales from each other. Each pick shows its forecast with the error band, and whether it clears break-even at Singapore costs, which stand in until local costs are known. Picks beyond what the model saw in Singapore are flagged. So the model can travel, but only on inputs the new market has, with wide ranges: pilot the top site first and recheck the model against its actuals. That is the continual-learning step on the next slide. About fifty seconds.</p>
   </aside>
 </section>
 
