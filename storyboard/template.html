@@ -521,9 +521,8 @@ aside.notes{display:none}
       <li data-go="c5"><span class="no">05</span><span class="nm">Predict demand<span class="why">App searches, DBSCAN and a new-store pin</span></span></li>
       <li data-go="c6"><span class="no">06</span><span class="nm">Share the counter<span class="why">The bucket brigade, side by side</span></span></li>
       <li data-go="c7"><span class="no">07</span><span class="nm">Split the counter<span class="why">Which steps stay human: the GM's call</span></span></li>
-      <li data-go="cm"><span class="no">08</span><span class="nm">Machine ladder<span class="why">What machines exist, what they cost, when to add them</span></span></li>
-      <li data-go="c8"><span class="no">09</span><span class="nm">The GM's playbook<span class="why">Triggers, pilot and limits</span></span></li>
-      <li data-go="c9"><span class="no">10</span><span class="nm">The size of the benefit<span class="why">Orders kept, revenue, and what it rests on</span></span></li>
+      <li data-go="c8"><span class="no">08</span><span class="nm">The GM's playbook<span class="why">Triggers, pilot and limits</span></span></li>
+      <li data-go="c9"><span class="no">09</span><span class="nm">The size of the benefit<span class="why">Orders kept, revenue, and what it rests on</span></span></li>
     </ol>
   </div>
   <div class="cups">
@@ -864,14 +863,14 @@ aside.notes{display:none}
     <p class="sub">Choose a split for each side, or click any station to hand it to a robot or a person, then run the peak hour.</p>
     <div class="body" style="grid-template-columns:1fr 330px">
       <div class="panel" data-kind="compare" data-mode="split">
-        <div class="ptop"><span class="ptitle">Peak hour · same customers on both sides</span><span class="ctl screenonly cctl"></span></div>
+        <div class="ptop"><span class="ptitle">Peak hour · same customers</span><span class="ctl screenonly cctl"></span></div>
         <div class="cmp"><div class="opt" data-o="0"></div><div class="opt" data-o="1"></div></div>
         <div class="legend">Navy = robot, white = by hand (click to switch) · red circle = a person · faded = walking · red cup = waiting for a person.</div>
       </div>
       <div class="cards" style="gap:10px">
         <div class="cset screenonly" style="flex-direction:row;align-items:center;gap:10px;padding:7px 12px"><span class="lab">Day</span><span class="dslot"></span></div>
         <div><div class="ptitle" style="margin-bottom:4px">All four splits, mean of {{a.seeds}} runs</div><table class="res splits"></table>
-          <p class="flag" style="margin-top:5px">Each split gets the fewest people, from the forecast roster up, and the better sharing rule that keep walk-aways within {{sb.walkaway_target|pct}}. Cost per day: people hours at the wage plus robots at their monthly cost.</p>
+          <p class="flag" style="margin-top:5px">Fewest people and the better sharing rule keeping walk-aways within {{sb.walkaway_target|pct}}; cost = people hours × wage + robots.</p>
           <p class="flag normday" style="margin-top:4px;color:var(--ink2);font-size:10.5px"></p></div>
       </div>
     </div>
@@ -882,46 +881,18 @@ aside.notes{display:none}
     <p>This is the GM's decision: which steps of the counter stay human and which go to robots. Side B, machine-made drink, is our scenario, not a claim about Chagee: machines make the drink while people tag the order and hand it over. Chagee's own equipment cost is not public; its Singapore relaunch used semi-automated equipment, according to Vulcan Post.</p>
     <p>Click any station to switch it. Each side gets its forecast roster; change people with plus and minus. The table on the right is the simulation run for all four splits.</p>
     <p>What it shows, honestly: the table is the event day; the line under it is the normal day, at about {{d.cupsPerDay}} cups. On a normal day all by hand is the cheapest of these four splits and all robots the fastest, so robots buy a shorter wait, not a lower cost; today's split is in fact slower than all by hand that day. On an event day, today's split is cheapest within the limit. The machine-made drink scenario needs a second person at the peak, because one person cannot tag and hand over at opposite ends of the counter.</p>
-    <p>These are four splits only. The next slide shows that a single machine can undercut all by hand, because it lets the roster drop a person off-peak. About one and a half minutes.</p>
+    <p>These are four splits only. A single machine can undercut all by hand, because it lets the roster drop a person off-peak; the machine ladder in the appendix has the prices and payback. About one and a half minutes.</p>
     <p>Course link: the same bucket-brigade replica from Week 5 and Week 6, with machines added on some stations.</p>
     <p>Takeaway: On an event day, {{s.cheapest_label}} is the cheapest split within the walk-away limit, at about S${{r.cheapest_cost}} a day. {{s.heading_label}} needs {{r.heading_staff}} people at fixed posts and costs about S${{r.heading_extra}} more, for a median wait of {{r.heading_wait|mmss}}.</p>
   </aside>
 </section>
 
-<!-- ======================================================= 08 MACHINE LADDER -->
-<section class="slide content" id="cm" data-chapter="Machines" data-title="Machine ladder">
-  <div class="leafart" aria-hidden="true"></div>
-  <div class="inner">
-    <p class="kicker">08 · Machine ladder · physical AI: automation and machines</p>
-    <h2 class="head" style="font-size:31px;max-width:1090px">A machine pays only when it removes a person-shift for less than the shift costs</h2>
-    <p class="sub" style="font-size:12.5px;max-width:1136px;margin-top:5px">To our knowledge, based on public sources; vendor list prices, not cost to implement. Chagee's equipment cost is not public; its Singapore relaunch used semi-automated equipment (Vulcan Post).</p>
-    <div class="body" style="grid-template-columns:1fr 352px;margin-top:9px;gap:14px">
-      <div class="panel" style="padding:9px 14px 8px">
-        <div class="ptop" style="min-height:18px"><span class="ptitle">Net gain a month against all by hand · one outlet</span></div>
-        <svg class="lchart" viewBox="0 0 740 232" aria-label="Net gain a month for each machine option across cups a day"></svg>
-        <div class="cset screenonly sitectl ladctl"></div>
-        <p class="at printonly"></p>
-        <div class="lad2"></div>
-        <p class="lnote" style="margin-top:5px">The model's S${{r.unit_month}} a month is per station unit (our reading: a semi-automated station). Semi-automation and the beverage platform are priced at it because their real prices are not disclosed; robot prices are per setup. Full table and sources in the appendix.</p>
-      </div>
-      <div class="cards ins" style="gap:7px"></div>
-    </div>
-    <div class="vs"><div class="wo"><span class="lab">Without AI<br><small style="letter-spacing:.06em;text-transform:none;font-weight:400">our assumed baseline</small></span><span>All by hand at {{r.ladder_cups}} cups a day: <b>{{r.hand_hours}} person-hours</b> a day, <b>S${{r.hand_month}}</b> a month of labour.</span></div><div class="wi"><span class="lab">With AI<br><small style="letter-spacing:.06em;text-transform:none;font-weight:400">our proposal</small></span><span>One tea-and-milk machine: <b>{{r.single_hours_left}} person-hours</b> a day, <b>+S${{r.single_net}}</b> a month after its unit cost. Robots wait for about {{r.ladder_more}} cups a day.</span></div></div>
-  </div>
-  <div class="foot"><span>OPIM639 · Group 3 · Vendor and press figures; not Chagee data · model figures are illustrative assumptions</span><span class="rail"></span><span class="pg"></span></div>
-  <aside class="notes">
-    <p>This is physical AI: automation and machines at the counter. The predictive AI is the forecast that sets the roster. One rule explains the whole slide: a machine pays only when it removes a person-shift, and costs less than that shift.</p>
-    <p>The chart shows the net gain a month against an all-by-hand counter as volume changes; above the line it pays. One tea-and-milk machine lets the roster drop from {{r.min_hand}} people to {{r.min_mixed}} in {{r.single_hours}} off-peak hours, about one person-shift a day, for one station unit: it pays across most of the range. Today's split saves {{r.today_hours}} person-hours but pays for {{r.today_units}} units, so it ends up a little dearer than all by hand. A robot saves no more labour than today's split until about {{r.ladder_more}} cups a day, so at Oli's lease it only pays at the top of our range.</p>
-    <p>Three things to say out loud. The minimum crew, {{r.min_hand}} by hand and {{r.min_mixed}} with machines, is our model's assumption and drives this result. Every option runs at the model's station speeds, not vendor claims. Payback is simple payback, if the machine lets the roster drop one person-shift, with no installation, maintenance or financing. Chagee's own equipment cost is not public. About one minute.</p>
-    <p>Takeaway: At {{r.ladder_cups}} cups a day: start with one machine (about +S${{r.single_net}} a month); today's {{r.today_units}}-station split costs S${{r.today_more}} a month more than all by hand; robots save no more labour than today's split until about {{r.ladder_more}} cups a day.</p>
-  </aside>
-</section>
 
 <!-- ======================================================= 08 PLAYBOOK -->
 <section class="slide content" id="c8" data-chapter="Decide" data-title="The GM's playbook">
   <div class="leafart" aria-hidden="true"></div>
   <div class="inner">
-    <p class="kicker">09 · The GM's playbook</p>
+    <p class="kicker">08 · The GM's playbook</p>
     <h2 class="head">Choose the split, roster to the forecast, and share the work to suit the split</h2>
     <p class="sub">Three moves for the GM, each with a trigger, then a pilot to test them.</p>
     <div class="body">
@@ -957,7 +928,7 @@ aside.notes{display:none}
 <section class="slide content bn" id="c9" data-chapter="Benefit" data-title="The size of the benefit">
   <div class="leafart" aria-hidden="true"></div>
   <div class="inner">
-    <p class="kicker">10 · The size of the benefit · Singapore only</p>
+    <p class="kicker">09 · The size of the benefit · Singapore only</p>
     <h2 class="head" style="font-size:29px;max-width:1010px">Per outlet, about {{r.ben_event_orders}} orders kept on an event day and {{r.ben_busy_orders}} on a busy day; on an illustrative calendar, S${{r.ben_year_rev}} of revenue a year</h2>
     <p class="sub" style="font-size:12.5px;margin-top:4px;max-width:1080px">Modelled avoided costs on stated assumptions, not demonstrated savings. Peak hour only; conservative. Prices to our knowledge, based on public sources.</p>
     <div class="hstrip"></div>
@@ -1009,6 +980,35 @@ aside.notes{display:none}
   <aside class="notes"><p>Likely questions: is the brigade always better? No; with spare staff fixed stations are as good. Is the forecast real? No, it is an illustration of the chain, built on stated assumptions.</p></aside>
 </section>
 
+<!-- ======================================================= APPENDIX: MACHINE LADDER (backs slide 07) -->
+<section class="slide content" id="cm" data-chapter="Appendix" data-title="Machine ladder">
+  <div class="leafart" aria-hidden="true"></div>
+  <div class="inner">
+    <p class="kicker">Appendix · Machine ladder (backs slide 07) · physical AI: automation and machines</p>
+    <h2 class="head" style="font-size:31px;max-width:1090px">A machine pays only when it removes a person-shift for less than the shift costs</h2>
+    <p class="sub" style="font-size:12.5px;max-width:1136px;margin-top:5px">To our knowledge, based on public sources; vendor list prices, not cost to implement. Chagee's equipment cost is not public; its Singapore relaunch used semi-automated equipment (Vulcan Post).</p>
+    <div class="body" style="grid-template-columns:1fr 352px;margin-top:9px;gap:14px">
+      <div class="panel" style="padding:9px 14px 8px">
+        <div class="ptop" style="min-height:18px"><span class="ptitle">Net gain a month against all by hand · one outlet</span></div>
+        <svg class="lchart" viewBox="0 0 740 232" aria-label="Net gain a month for each machine option across cups a day"></svg>
+        <div class="cset screenonly sitectl ladctl"></div>
+        <p class="at printonly"></p>
+        <div class="lad2"></div>
+        <p class="lnote" style="margin-top:5px">The model's S${{r.unit_month}} a month is per station unit (our reading: a semi-automated station). Semi-automation and the beverage platform are priced at it because their real prices are not disclosed; robot prices are per setup. Full table and sources in the appendix.</p>
+      </div>
+      <div class="cards ins" style="gap:7px"></div>
+    </div>
+    <div class="vs"><div class="wo"><span class="lab">Without AI<br><small style="letter-spacing:.06em;text-transform:none;font-weight:400">our assumed baseline</small></span><span>All by hand at {{r.ladder_cups}} cups a day: <b>{{r.hand_hours}} person-hours</b> a day, <b>S${{r.hand_month}}</b> a month of labour.</span></div><div class="wi"><span class="lab">With AI<br><small style="letter-spacing:.06em;text-transform:none;font-weight:400">our proposal</small></span><span>One tea-and-milk machine: <b>{{r.single_hours_left}} person-hours</b> a day, <b>+S${{r.single_net}}</b> a month after its unit cost. Robots wait for about {{r.ladder_more}} cups a day.</span></div></div>
+  </div>
+  <div class="foot"><span>OPIM639 · Group 3 · Vendor and press figures; not Chagee data · model figures are illustrative assumptions</span><span class="rail"></span><span class="pg"></span></div>
+  <aside class="notes">
+    <p>Backup for slide 07, for questions on which machine to buy. This is physical AI: automation and machines at the counter. The predictive AI is the forecast that sets the roster. One rule explains the whole slide: a machine pays only when it removes a person-shift, and costs less than that shift.</p>
+    <p>The chart shows the net gain a month against an all-by-hand counter as volume changes; above the line it pays. One tea-and-milk machine lets the roster drop from {{r.min_hand}} people to {{r.min_mixed}} in {{r.single_hours}} off-peak hours, about one person-shift a day, for one station unit: it pays across most of the range. Today's split saves {{r.today_hours}} person-hours but pays for {{r.today_units}} units, so it ends up a little dearer than all by hand. A robot saves no more labour than today's split until about {{r.ladder_more}} cups a day, so at Oli's lease it only pays at the top of our range.</p>
+    <p>Three things to say out loud. The minimum crew, {{r.min_hand}} by hand and {{r.min_mixed}} with machines, is our model's assumption and drives this result. Every option runs at the model's station speeds, not vendor claims. Payback is simple payback, if the machine lets the roster drop one person-shift, with no installation, maintenance or financing. Chagee's own equipment cost is not public. About one minute.</p>
+    <p>Takeaway: At {{r.ladder_cups}} cups a day: start with one machine (about +S${{r.single_net}} a month); today's {{r.today_units}}-station split costs S${{r.today_more}} a month more than all by hand; robots save no more labour than today's split until about {{r.ladder_more}} cups a day.</p>
+  </aside>
+</section>
+
 <!-- ======================================================= APPENDIX: SITE FORECAST -->
 <section class="slide content a2" id="a2" data-chapter="Appendix" data-title="How the site forecast works">
   <div class="leafart" aria-hidden="true"></div>
@@ -1055,7 +1055,7 @@ aside.notes{display:none}
 <section class="slide content" id="a3" data-chapter="Appendix" data-title="Machine ladder: tiers and sources">
   <div class="leafart" aria-hidden="true"></div>
   <div class="inner">
-    <p class="kicker">Appendix · Machine ladder, tiers and sources (slide 08)</p>
+    <p class="kicker">Appendix · Machine ladder, tiers and sources</p>
     <h2 class="head" style="font-size:26px">Every rung, every price as published, and where it comes from</h2>
     <p class="sub" style="font-size:12px;margin-top:2px">To our knowledge, based on public sources. Physical AI: automation and machines. A gap is "not disclosed", never a guess.</p>
     <div class="body wide" style="margin-top:8px;display:block">
@@ -1064,7 +1064,7 @@ aside.notes{display:none}
     </div>
   </div>
   <div class="foot"><span>OPIM639 · Group 3 · Vendor and press figures; not Chagee data · model figures are illustrative assumptions</span><span class="rail"></span><span class="pg"></span></div>
-  <aside class="notes"><p>Backup for slide 08. Every price is as the source publishes it; where a source gives no price we say not disclosed. Claims such as Gong cha's productivity figures are listed for context and are not inputs to our model. Soft copy only.</p></aside>
+  <aside class="notes"><p>Backup for the machine ladder. Every price is as the source publishes it; where a source gives no price we say not disclosed. Claims such as Gong cha's productivity figures are listed for context and are not inputs to our model. Soft copy only.</p></aside>
 </section>
 
 <!-- ======================================================= APPENDIX -->

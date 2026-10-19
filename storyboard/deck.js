@@ -303,7 +303,8 @@
           keys.sort((a, b) => N[a].cost.total - N[b].cost.total).map(k => `${PRESETS[k].label} ${money(N[k].cost.total)}${k === N._cheapest ? " (cheapest)" : ""}`).join(" · ") +
           `. Fastest: ${PRESETS[N._fastest].label} (${mmss(N[N._fastest].medianWait)})` +
           (N.today && N.all_hand && N.today.medianWait > N.all_hand.medianWait ? `; ${PRESETS.today.label.toLowerCase()} is slower than ${PRESETS.all_hand.label.toLowerCase()} (${mmss(N.today.medianWait)} vs ${mmss(N.all_hand.medianWait)})` : "") +
-          `. Four splits only; a single machine can undercut all by hand (slide 08).`;
+          `. <b>Which machine?</b> Four splits only: one tea-and-milk machine pays at ${DATA.ladder.at.cupsDay} cups a day (+${money(DATA.ladder.rungs.find(r => r.id === "single").modelMargin)}/month); ` +
+          `robots wait for about ${DATA.ladder.volumes.rungs.find(r => r.id === "barista").moreBands[0][0]} cups (machine ladder, appendix).`;
       }
     }
     // end of the hour: A against B, this run and the mean of the seeded runs
