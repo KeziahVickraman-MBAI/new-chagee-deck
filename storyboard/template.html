@@ -204,6 +204,8 @@ html,body{margin:0;background:#E7E3DC;color:var(--ink);font-family:var(--sans);-
 .msvg .ol{cursor:pointer}
 .sitesearch{flex:1;min-width:150px;max-width:230px;height:28px;border:1px solid #D8D1C3;border-radius:999px;padding:0 12px;font:12.5px var(--sans);color:var(--ink);background:#fff}
 .sitesearch:focus{outline:2px solid var(--blue);outline-offset:1px}
+.expnote{position:absolute;left:6px;bottom:6px;z-index:2;max-width:250px;background:rgba(255,255,255,.92);border:1px solid var(--line);border-left:3px solid var(--red);border-radius:6px;padding:5px 8px;font:10.5px/1.35 var(--sans);color:var(--ink2);pointer-events:none}
+.expnote b{display:block;font:600 9.5px/1.2 var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--red);margin-bottom:1px}
 .maptip{position:absolute;z-index:3;pointer-events:none;display:none;background:var(--ink);color:#fff;border-radius:8px;padding:6px 10px;font:12px/1.35 var(--sans);white-space:nowrap;transform:translate(-50%,calc(-100% - 12px))}
 .maptip b{font-weight:600}
 .maptip small{display:block;color:#C9C3B8;font-size:11px}
@@ -714,7 +716,7 @@ aside.notes{display:none}
           <button class="btn howb screenonly" title="Watch DBSCAN find the clusters, one search at a time">How it works</button>
           <input class="sitesearch screenonly" list="sitelist" placeholder="Find an outlet or town…" aria-label="Find an outlet or town"><datalist id="sitelist"></datalist>
           <span class="ctl screenonly"></span></div>
-        <div class="visual"><div class="maptip"></div><svg class="msvg" viewBox="0 0 1672 640" preserveAspectRatio="xMidYMid meet" aria-label="Map of synthetic app demand, clusters and a new-store pin"></svg></div>
+        <div class="visual"><div class="maptip"></div><div class="expnote"><b>Expansion</b>Chagee is looking to expand rapidly, but does not disclose how many Singapore stores it is going for (team research; to confirm).</div><svg class="msvg" viewBox="0 0 1672 640" preserveAspectRatio="xMidYMid meet" aria-label="Map of synthetic app demand, clusters and a new-store pin"></svg></div>
         <ol class="caps">
           <li data-s="1"><span class="n">1</span><span>Navy pins are Chagee's {{facts.sg_outlets}} outlets today (hover for name and cups a day). Dots are synthetic app sessions: gold near an outlet, red where no store was nearby.</span></li>
           <li data-s="2"><span class="n">2</span><span>DBSCAN, an unsupervised method, groups red searches that sit densely together. Scattered searches stay grey as noise.</span></li>
@@ -751,6 +753,7 @@ aside.notes{display:none}
     <p>If asked how DBSCAN works, press How it works: it replays the algorithm one search at a time on a toy set. The appendix lists every simulated number.</p>
     <p>The three sliders are the only inputs: cluster radius, minimum searches per cluster, and how far people will walk. The data is synthetic; with Chagee's real app logs, the same steps would run unchanged. About one and a half minutes.</p>
     <p>Course link: this builds on Week 3, Analytics and AI. In the Flashion example, demand for a new store was forecast from similar stores. We ask the same question with a different input: app searches around the site.</p>
+    <p>Context for the GM: Chagee is looking to expand rapidly, but it does not disclose how many Singapore stores it is going for. The only store target we have seen is group-level, for overseas stores in 2026, from earnings-call coverage. So the forecast ranks sites; it does not assume a number of openings.</p>
   </aside>
 </section>
 
