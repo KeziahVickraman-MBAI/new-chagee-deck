@@ -27,7 +27,7 @@
         "shake_seal"
       ],
       "replaces_reliability": "our assumption",
-      "replaces_note": "Kiosk = ticket, sealer = shake-seal. Sugar dispensing is part of the model's tea-milk step, so it is not modelled.",
+      "replaces_note": "Kiosk = order and tag, sealer = shake and seal. Sugar dispensing sits inside tea and milk, so it is not modelled.",
       "model_rate_applies": true,
       "examples": [
         {
@@ -162,7 +162,7 @@
             ]
           },
           "claims": [],
-          "cost_note": "Oli's estimate of a competitor's price, as given in the brief: about US$68-88k plus US$2.5-4k a month lease and US$2.5-4k a month software. Whether the lease replaces or adds to the purchase is not stated here, so no verdict is computed for Artly.",
+          "cost_note": "Oli's estimate of a competitor. The figures as given do not say whether the lease replaces or adds to the purchase, so no verdict is computed.",
           "source": "https://olirobotics.com/best-robot-barista",
           "reliability": "vendor page"
         },

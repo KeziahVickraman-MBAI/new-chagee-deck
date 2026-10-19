@@ -168,6 +168,9 @@ def values(d: dict) -> dict:
             or any(abs(R[k]["saved"] - R["today"]["saved"]) > 1e-6 for k in ("arm", "barista")):
         raise SystemExit("build: the ladder says robot rungs save no more labour than today's split until one volume above the default; rewrite it")
     v["r.ladder_more"] = starts[0]
+    v["r.fx"] = RAW["_meta"]["fx_sgd_per_usd"]["value"]
+    rep = RAW["costs"]["machine_cost_per_unit_per_month"]["represents"].replace(" Display text only.", "")
+    v["s.unit_represents"] = rep[0].lower() + rep[1:] if rep.startswith("Our") else rep
     # the roster trigger: forecast peak cups per person, after the capacity safety margin (plan()'s rule)
     v["r.cups_per_person"] = d["counter"]["perWorkerHour"] / RAW["costs"]["capacity_safety_margin"]["value"]
     return v
@@ -237,6 +240,60 @@ def appendix() -> str:
     return "\n".join(out)
 
 
+# ---------------------------------------------------------------------------- appendix: machine tiers (slide 08)
+STEP = {"ticket": "Order and tag", "cup_ice": "Cup and ice", "tea_milk": "Tea and milk", "topping_finish": "Toppings",
+        "shake_seal": "Shake and seal", "handover": "Hand-over"}
+
+
+def tiers_table() -> str:
+    """The full machine ladder from machine_tiers.json: every example, its price as published, claims and source."""
+    T = json.loads((ROOT / "machine_tiers.json").read_text(encoding="utf-8"))
+    fx = RAW["_meta"]["fx_sgd_per_usd"]["value"]
+    esc = lambda s: str(s).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+    cur = lambda c: "US$" if c == "USD" else "S$"
+    amt = lambda x, c: (f"{cur(c)}{x[0]:,}–{x[1]:,}" if isinstance(x, list) else f"{cur(c)}{x:,}")
+    sgd = lambda x, c: "" if c != "USD" else f" (≈ S${round(x[0] * fx):,}–{round(x[1] * fx):,})" if isinstance(x, list) else f" (≈ S${round(x * fx):,})"
+
+    def price(c):
+        k = c["kind"]
+        if k == "not_disclosed":
+            return "<i>Not disclosed</i>" + (f". {esc(c['note'])}" if c.get("note") else "")
+        bits = []
+        if c.get("purchase") is not None:
+            bits.append(f"{amt(c['purchase'], c['currency'])}{sgd(c['purchase'], c['currency'])} to buy")
+        if c.get("lease_month") is not None:
+            bits.append(f"{amt(c['lease_month'], c['currency'])}{sgd(c['lease_month'], c['currency'])} a month lease")
+        if c.get("software_month") is not None:
+            bits.append(f"{amt(c['software_month'], c['currency'])} a month software")
+        return "; ".join(bits)
+
+    TAG = {"company claim": "claim", "vendor page": "vendor", "press": "press", "our assumption": ""}
+    tag = lambda r: f'<span class="tagr {TAG.get(r, "")}">{esc(r)}</span>'
+    rows = ['<tr><th>Rung</th><th>Example</th><th>Automates · steps on machines (our mapping)</th><th>Vendor list price</th>'
+            '<th>Claims (not model inputs)</th><th>Reliability</th><th>Source</th></tr>']
+    base = T["baseline"]
+    mixed = RAW["stations"]["mixed_machine_stations"]["value"]
+    for i, t in enumerate(T["tiers"], 1):
+        if t["id"] == "arm":                                   # the baseline sits where it does on the slide ladder
+            rows.append(f'<tr class="base"><td>–</td><td><b>{esc(base["label"])}</b></td>'
+                        f'<td><b>{", ".join(STEP[s] for s in mixed)}</b>. A scenario of ours (slides 06 and 07), not Chagee\'s disclosed setup</td>'
+                        f'<td>Model: S${RAW["costs"]["machine_cost_per_unit_per_month"]["value"]:,.0f} a month per station unit</td>'
+                        f'<td></td><td>{tag(base["reliability"])}</td><td>assumptions.json</td></tr>')
+        n = len(t["examples"])
+        for k, e in enumerate(t["examples"]):
+            head = (f'<td rowspan="{n}"><span class="num">{i}</span><b>{esc(t["name"])}</b></td>' if k == 0 else "")
+            what = (f'<td rowspan="{n}">{esc(t["automates"])}. <b>{", ".join(STEP[s] for s in t["replaces"])}</b>'
+                    f'{". " + esc(t["replaces_note"]) if t.get("replaces_note") else ""}{". " + esc(t["note"]) if t.get("note") else ""}</td>' if k == 0 else "")
+            cost = price(e["cost"]) + (f'<span class="small">{esc(e["cost_note"])}</span>' if e.get("cost_note") else "")
+            claims = "; ".join(esc(c) for c in e["claims"]) or "–"
+            rows.append(f'<tr>{head}<td>{esc(e["name"])}</td>{what}<td>{cost}</td><td>{claims}</td><td>{tag(e["reliability"])}</td>'
+                        f'<td><a href="{esc(e["source"])}">{esc(e["source"])}</a></td></tr>')
+    c = T["chagee"]
+    rows.append(f'<tr class="chg"><td>–</td><td><b>Chagee Singapore</b></td><td>{esc(c["text"])}</td><td><i>Not public</i></td><td>–</td>'
+                f'<td>{tag(c["reliability"])}</td><td><a href="{esc(c["source"])}">{esc(c["source"])}</a></td></tr>')
+    return "\n".join(rows)
+
+
 FMT = {
     "int": lambda x: f"{round(x):,}",
     "pct": lambda x: f"{round(100 * x)}%",
@@ -279,7 +336,7 @@ def build() -> Path:
     html = fill(tpl, vals)
     imgs = images()
     html = re.sub(r"\{img:(\w+)\}", lambda m: imgs[m.group(1)], html)
-    html = html.replace("<!--APPENDIX-->", appendix())
+    html = html.replace("<!--APPENDIX-->", appendix()).replace("<!--TIERS-->", tiers_table())
     js = "\n".join((ROOT / "sim" / f).read_text(encoding="utf-8") for f in ("sim.js", "store.js", "counter.js", "sitepick.js", "ladder.js"))
     js += "\n" + (HERE / "deck.js").read_text(encoding="utf-8")
     payload = {"RAW": RAW, "DATA": d, "GEO": json.loads((ROOT / "sim" / "sg_geo.json").read_text(encoding="utf-8")),

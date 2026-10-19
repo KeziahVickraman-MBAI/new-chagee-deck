@@ -319,6 +319,18 @@ html,body{margin:0;background:#E7E3DC;color:var(--ink);font-family:var(--sans);-
 .lnote{font:10.5px/1.36 var(--sans);color:var(--ink2);margin:6px 0 0}
 .lnote li{margin:0 0 2px}
 .lnote b{color:var(--ink)}
+.tiers{width:100%;border-collapse:collapse;font:9.9px/1.28 var(--sans);color:var(--ink2);margin-top:4px}
+.tiers th{font:600 9px/1.2 var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--taupe);text-align:left;padding:0 5px 4px;border-bottom:1px solid var(--line)}
+.tiers td{padding:3px 5px;border-bottom:1px solid var(--line);vertical-align:top}
+.tiers td b{color:var(--ink)}
+.tiers td a{color:var(--navy);word-break:break-all;font-size:8.8px}
+.tiers .num{width:16px;height:16px;font-size:9.5px;margin-right:5px;display:inline-grid}
+.tiers .small{display:block;font-size:9.4px;color:var(--taupe);margin-top:1px}
+.tiers tr.base td{background:#F1F4F8;border-top:1.5px dashed var(--navy);border-bottom:1.5px dashed var(--navy)}
+.tiers tr.chg td{background:#FBF8F2}
+.tiers .tagr{display:inline-block;font:600 8.5px/1 var(--sans);letter-spacing:.06em;text-transform:uppercase;padding:3px 5px;border-radius:4px;background:#ECE8E0;color:var(--ink2);white-space:nowrap}
+.tiers .tagr.claim{background:#FBEDEC;color:var(--red)} .tiers .tagr.vendor{background:#E6EEF8;color:var(--navy)} .tiers .tagr.press{background:#FBF5E8;color:#7A6432}
+.tiers col.c1{width:12%} .tiers col.c2{width:11%} .tiers col.c3{width:21%} .tiers col.c4{width:18%} .tiers col.c5{width:13%} .tiers col.c6{width:8%} .tiers col.c7{width:17%}
 .apx{columns:3;column-gap:22px;font:9.6px/1.36 var(--sans);color:var(--ink2)}
 .apx p{margin:0 0 4px;break-inside:avoid}
 .apx b{color:var(--ink)}
@@ -871,6 +883,22 @@ aside.notes{display:none}
     <p>Backup for questions on slide 05. Left: DBSCAN in four moves on a toy set. A search is a core point if enough searches sit within the radius; clusters grow from core to core; border points join; the rest is noise. We do not choose the number of clusters.</p>
     <p>Right: every simulated number, in the order the model uses it. The forecast is only as good as these assumptions; with Chagee's real app logs, the first two rows would be replaced by data and the rest would run as is.</p>
   </aside>
+</section>
+
+<!-- ======================================================= APPENDIX: MACHINE LADDER -->
+<section class="slide content" id="a3" data-chapter="Appendix" data-title="Machine ladder: tiers and sources">
+  <div class="leafart" aria-hidden="true"></div>
+  <div class="inner">
+    <p class="kicker">Appendix · Machine ladder, tiers and sources (slide 08)</p>
+    <h2 class="head" style="font-size:26px">Every rung, every price as published, and where it comes from</h2>
+    <p class="sub" style="font-size:12px;margin-top:2px">To our knowledge, based on public sources. Robotics and automation, not AI. A gap is "not disclosed", never a guess.</p>
+    <div class="body wide" style="margin-top:8px;display:block">
+      <table class="tiers"><colgroup><col class="c1"><col class="c2"><col class="c3"><col class="c4"><col class="c5"><col class="c6"><col class="c7"></colgroup><!--TIERS--></table>
+      <p class="lnote" style="margin-top:7px"><b>Vendor list prices,</b> not cost to implement: installation, training, maintenance, power, space and import are not included; USD converts at S${{r.fx|g}} per US$. <b>Simple payback</b> = list price ÷ labour saved a month, with no maintenance or financing. <b>The model's S${{r.unit_month}} a month</b> is per station unit: {{s.unit_represents}} <b>Vendor speed and throughput claims</b> are listed, never used: every rung runs at the model's station speeds. <b>Steps on machines</b> is our mapping. Artly and Cafe X prices are Oli's estimates of competitors.</p>
+    </div>
+  </div>
+  <div class="foot"><span>OPIM639 · Group 3 · Vendor and press figures; not Chagee data · model figures are illustrative assumptions</span><span class="rail"></span><span class="pg"></span></div>
+  <aside class="notes"><p>Backup for slide 08. Every price is as the source publishes it; where a source gives no price we say not disclosed. Claims such as Gong cha's productivity figures are listed for context and are not inputs to our model. Soft copy only.</p></aside>
 </section>
 
 <!-- ======================================================= APPENDIX -->
