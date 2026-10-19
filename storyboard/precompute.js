@@ -14,6 +14,7 @@ const L = require("../sim/ladder.js");
 const TIERS = require("../machine_tiers.json");
 const B = require("../sim/benefit.js");
 const Dec = require("../sim/decisions.js");
+const Ext = require("../sim/siteext.js");
 
 const RAW = JSON.parse(fs.readFileSync(path.join(__dirname, "..", "assumptions.json"), "utf8"));
 const P = Sim.params(RAW), SB = RAW.storyboard;
@@ -83,10 +84,14 @@ const benefit = { robots: bRobots, cups: Math.round(Sim.dailyBase(P)), volCups: 
 const decisions = Dec.decide({ Sim, Store, C, Site, B, RAW, P, GEO, TIERS },
   { target, extra, walkBack, seeds, shareDay: SB.day_type_default.value });
 
+// slides 08 and 09, the extension: Jin's site-selection framework on the slide 05 engine (illustrative)
+const siteExt = Ext.evaluate({ Sim, C, Site, RAW, P, GEO, TIERS });
+benefit.econ = B.econ(RAW, P);                                  // what the build compares slide 09's inputs against
+
 const pl = Sim.plan(P, "mixed");
 const data = {
   generated: new Date().toISOString(), seeds,
-  grid, splits, site, ladder, benefit, decisions,
+  grid, splits, site, ladder, benefit, decisions, siteExt,
   counter: {
     peakHour: C.peakHour(P), firstHour: 10, cupsPerDay: Sim.dailyBase(P),
     perWorkerHour: pl.perWorker * 60, handSeconds: pl.W,

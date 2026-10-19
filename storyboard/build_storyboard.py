@@ -13,7 +13,7 @@ Numbers
     storyboard section, {{d.path|fmt}} the simulator output (storyboard/build/data.json, made by
     `node storyboard/precompute.js`, re-run when assumptions.json or sim/ is newer).
   * The build fails if the template's visible text holds a digit outside a short allow-list
-    (years, OPIM639, Topic n, chapter numbers 01-09).
+    (years, OPIM639, Topic n, chapter numbers 01-11).
 Printing: one 1280 x 720 page per slide, every step shown. ?notes=1 adds a notes page after each slide.
 """
 
@@ -289,6 +289,42 @@ def values(d: dict) -> dict:
     v["r.dec_share_k"], v["r.dec_br"], v["r.dec_fb"], v["r.dec_fw"] = D["share"]["staff"], D["share"]["brigade"], D["share"]["fixedBest"], D["share"]["fixedWorst"]
     # the roster trigger: forecast peak cups per person, after the capacity safety margin (plan()'s rule)
     v["r.cups_per_person"] = d["counter"]["perWorkerHour"] / RAW["costs"]["capacity_safety_margin"]["value"]
+    # slides 08 and 09, the extension (sim/siteext.js via precompute.js): cups a day, price and margin must be slide 11's
+    X, XE = d["siteExt"], RAW["site_ext"]
+    if not (round(X["cups"]["base"]) == bn["cups"] and [round(X["cups"]["lo"]), round(X["cups"]["hi"])] == bn["volCups"]
+            and X["price"] == bn["econ"]["price"] and X["margin"] == bn["econ"]["margin"]):
+        raise SystemExit("build: slide 09's cups a day, price or margin differ from the benefit slide's inputs (slide 11); they must be the same")
+    rule = lambda r: "skip" if r["net"]["base"] <= 0 else "open" if r["net"]["lo"] > 0 else "pilot"
+    if X["rec"] != rule(X) or not X["payback"] or not X["contrast"] or X["contrast"]["rec"] != rule(X["contrast"]):
+        raise SystemExit("build: slide 09's recommendation, payback or contrast pin no longer follows site_ext.recommendation_rule; rewrite it")
+    if not X["contrast"]["net"]["base"] < X["net"]["base"]:
+        raise SystemExit("build: slide 09 says the pin beside an outlet does worse; rewrite it")
+    money = lambda x: ("−S$" if x < 0 else "S$") + f"{abs(round(x)):,}"
+    v["x.cups"], v["x.cups_lo"], v["x.cups_hi"] = X["cups"]["base"], X["cups"]["lo"], X["cups"]["hi"]
+    v["x.price"], v["x.margin"] = X["price"], X["margin"]
+    for k in ("demand", "delivery", "competition"):
+        v[f"x.score_{k}"], v[f"x.w_{k}"] = X["scores"][k], X["weights"][k]
+    v["x.site_score"], v["x.score_max"] = X["siteScore"], 100   # scores are out of 100 (site_ext.scores unit)
+    v["s.x_cannibal"] = f"−{round(100 * X['share'])}"
+    v["x.moved_share"], v["x.moved_cups"] = X["share"], X["share"] * X["cups"]["base"]
+    v["x.nb_share"], v["x.nb_km"] = X["neighbour"]["share"], X["neighbour"]["km"]
+    m = X["month"]
+    for k in ("contribution", "moved", "delivery", "counter", "rent", "utilities"):
+        v[f"x.m_{k}"] = m[k]
+    v["s.x_net"], v["s.x_net_lo"], v["s.x_net_hi"] = money(X["net"]["base"]), money(X["net"]["lo"]), money(X["net"]["hi"])
+    v["x.payback"], v["x.pay_lo"], v["x.pay_hi"] = X["payback"]["base"], X["payback"]["lo"], X["payback"]["hi"]
+    for k in ("ring_km", "competition_radius_m", "residents_radius_km", "setup_cost", "delivery_share_of_cups", "delivery_commission_share"):
+        v[f"x.{k}"] = XE[k]["value"]
+    v["x.setup_lo"], v["x.setup_hi"] = XE["setup_cost"]["range"]
+    v["s.x_rec"] = X["rec"].capitalize()
+    lo_, base_ = f'{round(X["cups"]["lo"]):,}', f'{round(X["cups"]["base"]):,}'
+    v["s.x_rec_why"] = {"pilot": f"positive at {base_} cups a day, negative at {lo_}, the low end: test it before a full lease",
+                        "open": f"positive even at {lo_} cups a day, the low end of the range",
+                        "skip": f"not positive at {base_} cups a day, the default"}[X["rec"]]
+    v["s.x_look1"], v["s.x_look2"] = XE["lookalike_labels"]["value"]
+    C_ = X["contrast"]
+    v["x.c_share"], v["x.c_nb_share"], v["x.c_nb_km"] = C_["share"], C_["neighbour"]["share"], C_["neighbour"]["km"]
+    v["s.x_c_net"], v["s.x_c_rec"] = money(C_["net"]["base"]), C_["rec"]
     return v
 
 
@@ -320,11 +356,18 @@ USED = [  # (section, key, label) shown in the appendix: every input the storybo
     ("sitepick", "dbscan_min_points", "DBSCAN minimum searches"),
     ("sitepick", "km_per_px", "Map scale"),
     ("service", "target_wait_minutes", "Wait at which a customer walks away"),
-    ("storyboard", "price_per_cup", "Price per cup, in store (slide 09)"),
-    ("storyboard", "gross_margin_per_cup", "Margin per cup, share of price (slide 09)"),
-    ("storyboard", "busy_days_per_year", "Busy days a year (slide 09, illustrative)"),
-    ("storyboard", "event_days_per_year", "Event days a year (slide 09, illustrative)"),
+    ("storyboard", "price_per_cup", "Price per cup, in store (slides 09, 11)"),
+    ("storyboard", "gross_margin_per_cup", "Margin per cup, share of price (slides 09, 11)"),
+    ("storyboard", "busy_days_per_year", "Busy days a year (slide 11, illustrative)"),
+    ("storyboard", "event_days_per_year", "Event days a year (slide 11, illustrative)"),
     ("illustration", "walk_back_speed", "Walking-back speed (Week 5 units)"),
+    ("site_ext", "scores", "Site scores, hand-set (slides 08, 09, illustrative)"),
+    ("site_ext", "score_weights", "Site score weights (slide 09, illustrative)"),
+    ("site_ext", "rent_per_month", "Rent per outlet per month (slide 09, assumption, not Chagee data)"),
+    ("site_ext", "utilities_per_month", "Utilities per outlet per month (slide 09, assumption)"),
+    ("site_ext", "delivery_share_of_cups", "Share of cups via delivery apps (slide 09, assumption)"),
+    ("site_ext", "delivery_commission_share", "Delivery platform commission (slide 09, assumption)"),
+    ("site_ext", "setup_cost", "Set-up cost per new outlet (slide 09, assumption, not Chagee data)"),
 ]
 
 
@@ -346,7 +389,7 @@ def appendix() -> str:
         f = RAW["facts"][k]
         out.append(f"<p><b>{label}: {short(f['value'])}</b>. {esc(f['rationale'])} <i>[{esc(f['source'])}]</i></p>")
     out.append("<h5>Sources</h5>")
-    for k in ("L-sg-directory", "L-koalagains", "L-yfchuhai", "L-sec20f", "L-unsw", "I-chagee-contact", "I-sg-groundfloor", "I-team-app-first", "L-ester1996", "P-honeycombers", "P-eatbook", "I-team-expansion"):
+    for k in ("L-sg-directory", "L-koalagains", "L-yfchuhai", "L-sec20f", "L-unsw", "I-chagee-contact", "I-sg-groundfloor", "I-team-app-first", "L-ester1996", "P-honeycombers", "P-eatbook", "I-team-expansion", "I-team-site-framework"):
         out.append(f"<p><b>{k}</b> {esc(RAW['_sources'][k])}</p>")
     out.append("<h5>Assumptions (assumptions.json, illustrative)</h5>")
     for sec, key, label in USED:
@@ -360,7 +403,7 @@ def appendix() -> str:
     out.append("<p>We make no claim about: <b>Singapore ownership structure</b> (an anonymous Chagee source says outlets run under one company and "
                "one data system, and that the ownership form does not matter here; I-chagee-contact); <b>delivery profit by channel</b>; "
                "<b>Chagee's own equipment cost</b> (not public); <b>gross margin per cup</b> (our assumption); "
-               "<b>Chagee's current rostering</b> beyond what an anonymous Chagee source told us (people are deployed on local expertise by the GM and outlet teams; slide 09's baseline is ours).</p>")
+               "<b>Chagee's current rostering</b> beyond what an anonymous Chagee source told us (people are deployed on local expertise by the GM and outlet teams; slide 11's baseline is ours).</p>")
     return "\n".join(out)
 
 
@@ -428,6 +471,7 @@ FMT = {
     "g": lambda x: f"{x:g}",
     "m2": lambda x: f"{x / 1e6:.2f}m",
     "km": lambda x: f"{x:.1f}",
+    "c2": lambda x: f"{x:.2f}",
 }
 
 
@@ -440,7 +484,7 @@ def fill(text: str, vals: dict) -> str:
     return re.sub(r"\{\{([a-zA-Z_][\w.]*)(?:\|(\w+))?\}\}", rep, text)
 
 
-ALLOWED = re.compile(r"\b(?:19|20)\d\d\b|OPIM\s?639|Topic \d|\bT\d\b|\b0[1-9]\b|\b1\d(?= ·)|Week \d|Group \d|Form 20-F")
+ALLOWED = re.compile(r"\b(?:19|20)\d\d\b|OPIM\s?639|Topic \d|\bT\d\b|\b0[1-9]\b|\b1\d(?= ·)|\bslides? 1\d\b|Week \d|Group \d|Form 20-F")
 
 
 def digit_check(tpl: str) -> None:

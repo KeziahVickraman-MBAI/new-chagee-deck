@@ -51,7 +51,8 @@
     "P-honeycombers": "PRESS - in-store sightings, indicative. Honeycombers (Feb 2026), https://thehoneycombers.com/singapore/china-bubble-tea-brand-singapore/ : Chagee price sightings in Singapore; not a current full menu.",
     "P-eatbook": "PRESS - in-store sightings, indicative. Eatbook (Aug 2024), https://eatbook.sg/?p=168476 : Chagee price sightings in Singapore; not a current full menu, and older than the deck.",
     "I-team-expansion": "INFORMAL - team research (Oct 2026): Chagee is looking to expand rapidly in Singapore; how many stores it is going for is confidential. Singapore only. Confirm before citing.",
-    "I-team-press-outlets": "INFORMAL - team note (Oct 2026): press reports give between 44 and 46 Singapore outlets. Specific articles to be added before citing."
+    "I-team-press-outlets": "INFORMAL - team note (Oct 2026): press reports give between 44 and 46 Singapore outlets. Specific articles to be added before citing.",
+    "I-team-site-framework": "TEAM WORK (Oct 2026): Jin's site-selection framework, two team slides ('Four Scores for Every Location', 'From Pin to Profit Forecast'): four scores per pin, six steps from a pin to a go / no-go on profit net to Chagee. Used for slides 08 and 09 (extension). Its example values and outlet names are not used; ours are illustrative."
   },
   "facts": {
     "_note": "Chagee facts quoted on slides. Not assumptions: each carries its ledger source and appears with that source in the speaker notes.",
@@ -1329,6 +1330,119 @@
       "range": null,
       "source": "assumption",
       "rationale": "Explainer only: a small made-up point set for the 'How it works' walkthrough on slide 05 and the appendix figure, so each DBSCAN step is visible. Not used by any forecast."
+    }
+  },
+  "site_ext": {
+    "_note": "Slides 08 and 09 only (extension: Jin's site-selection framework, I-team-site-framework). Singapore only. Illustrative, synthetic data, not Chagee data. Never feeds the benefit (slide 11), the cost model or any decision check. Cups a day, price and margin are NOT here: they are the benefit slide's inputs (store.cups_per_store_per_year, storyboard.price_per_cup, storyboard.gross_margin_per_cup), and the build fails if slide 09 shows other values.",
+    "scores": {
+      "value": {
+        "demand": 84,
+        "delivery": 78,
+        "competition": 61
+      },
+      "unit": "score out of 100",
+      "range": null,
+      "source": "assumption, not Chagee data; illustrative",
+      "rationale": "Hand-set. The site engine (sim/sitepick.js) has no residents, workers, transit tap-ins, delivery-app orders or competitor locations, so it cannot produce these three scores. In production a supervised model would score them from the attributes. The cannibalisation factor is not here: it is computed by the engine."
+    },
+    "score_weights": {
+      "value": {
+        "demand": 0.5,
+        "delivery": 0.2,
+        "competition": 0.3
+      },
+      "unit": "weight in the site score, sums to 1",
+      "range": null,
+      "source": "assumption, not Chagee data; illustrative",
+      "rationale": "Hand-set weights for the site score out of 100. Cannibalisation is not in the score; it is deducted in the profit."
+    },
+    "ring_km": {
+      "value": 2,
+      "unit": "km",
+      "range": null,
+      "source": "I-team-site-framework",
+      "rationale": "Radius for 'Chagee outlets within' a pin (Jin's attribute). Display and the contrast pin's selection only."
+    },
+    "competition_radius_m": {
+      "value": 500,
+      "unit": "m",
+      "range": null,
+      "source": "I-team-site-framework",
+      "rationale": "Radius for competing bubble-tea and cafe outlets (Jin's attribute). Display only."
+    },
+    "residents_radius_km": {
+      "value": 1,
+      "unit": "km",
+      "range": null,
+      "source": "I-team-site-framework",
+      "rationale": "Radius for residents and workers (Jin's attribute). Display only."
+    },
+    "rent_per_month": {
+      "value": 15000,
+      "unit": "SGD per outlet per month",
+      "range": [
+        8000,
+        25000
+      ],
+      "source": "assumption, not Chagee data; illustrative",
+      "rationale": "Illustrative mall-unit rent. No Chagee or market rent figure in the ledger."
+    },
+    "utilities_per_month": {
+      "value": 2500,
+      "unit": "SGD per outlet per month",
+      "range": [
+        1500,
+        4000
+      ],
+      "source": "assumption, not Chagee data; illustrative",
+      "rationale": "Illustrative electricity, water and service charges. No ledger figure."
+    },
+    "delivery_share_of_cups": {
+      "value": 0.3,
+      "unit": "share of the outlet's cups sold through third-party delivery apps",
+      "range": [
+        0.15,
+        0.45
+      ],
+      "source": "assumption, not Chagee data; illustrative",
+      "rationale": "Illustrative. All Chagee delivery is via third-party apps (I-chagee-contact); the share is not public."
+    },
+    "delivery_commission_share": {
+      "value": 0.3,
+      "unit": "share of a delivery order's price paid to the platform",
+      "range": [
+        0.25,
+        0.35
+      ],
+      "source": "assumption, not Chagee data; illustrative",
+      "rationale": "Illustrative platform commission. No ledger figure; Chagee's terms are not public."
+    },
+    "setup_cost": {
+      "value": 400000,
+      "unit": "SGD per new outlet, one-off (fit-out, equipment, deposits, opening)",
+      "range": [
+        250000,
+        600000
+      ],
+      "source": "assumption, not Chagee data; illustrative",
+      "rationale": "Illustrative. Payback = set-up cost / net monthly profit to Chagee."
+    },
+    "lookalike_labels": {
+      "value": [
+        "Outlet 12",
+        "Outlet 27"
+      ],
+      "unit": "text",
+      "range": null,
+      "source": "assumption",
+      "rationale": "Anonymised display labels for look-alike outlets on slide 09. Not real outlets; the look-alike step is not run here."
+    },
+    "recommendation_rule": {
+      "value": "open if net monthly profit to Chagee is positive at the low end of the cups-a-day range; pilot if positive at the default but not at the low end; skip if not positive at the default",
+      "unit": "text",
+      "range": null,
+      "source": "assumption",
+      "rationale": "Derives slide 09's recommendation from the computed numbers."
     }
   }
 }
