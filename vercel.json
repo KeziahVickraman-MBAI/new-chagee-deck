@@ -1,5 +1,5 @@
 {
   "rewrites": [
-    { "source": "/", "destination": "/deck/chagee_deck.html" }
+    { "source": "/", "destination": "/storyboard/chagee_storyboard.html" }
   ]
 }
