@@ -91,17 +91,17 @@ html,body{margin:0;background:#E7E3DC;color:var(--ink);font-family:var(--sans);-
 
 /* ---------- slide-specific ---------- */
 /* 01 Chagee in Singapore */
-.sg-grid{display:grid;grid-template-columns:1fr 300px;gap:18px;height:100%}
+.sg-grid{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:18px;height:100%}
 .revbar{display:flex;height:44px;border-radius:8px;overflow:hidden;margin-top:8px}
 .revbar div{display:flex;align-items:center;padding:0 12px;color:#fff;font:500 13px var(--sans);white-space:nowrap}
 .revbar .fr{background:var(--navy)} .revbar .co{background:var(--red);justify-content:center;padding:0}
 .revlab{display:flex;justify-content:space-between;margin-top:6px;font:12.5px var(--sans);color:var(--ink2)}
 .sgtag{margin-top:12px;display:flex;justify-content:flex-end;align-items:center;gap:10px;font:13px/1.35 var(--sans);color:var(--ink2)}
 .sgtag .pin{flex:none;width:28px;height:28px;border-radius:50%;background:var(--red);color:#fff;display:grid;place-items:center;font:600 10px var(--sans)}
-.chan{margin-top:14px;display:grid;grid-template-columns:1fr 30px 128px;align-items:center;gap:6px}
+.chan{margin-top:10px;display:grid;grid-template-columns:1fr 22px 108px;align-items:center;gap:6px}
 .chan .list{display:flex;flex-direction:column;gap:6px}
-.chan .row{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);border-radius:8px;padding:6px 10px;white-space:nowrap}
-.chan .row b{font:600 13px var(--sans);color:var(--navy);min-width:82px} .chan .row span{font:12px var(--sans);color:var(--ink2)}
+.chan .row{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);border-radius:8px;padding:4px 8px}
+.chan .row b{flex:none;font:600 12.5px var(--sans);color:var(--navy);min-width:72px} .chan .row span{font:11.5px/1.3 var(--sans);color:var(--ink2)}
 .chan .arrow svg{width:30px;height:100px}
 .chan .counter{background:var(--navy);color:#fff;border-radius:10px;padding:10px 10px;text-align:center;font:600 13px/1.3 var(--sans)}
 .chan .counter small{display:block;font:400 11.5px/1.35 var(--sans);color:#D4DBE8;margin-top:4px}
@@ -572,7 +572,7 @@ aside.notes{display:none}
   <div class="inner">
     <p class="kicker">01 · Chagee in Singapore</p>
     <h2 class="head">In Singapore, outlets run under one company, and every channel ends at one counter</h2>
-    <p class="sub">One company and one data system: the counter, the app data and the call on who works the peak sit together (informal source, to confirm).</p>
+    <p class="sub">One company and one data system: order and app data sit together (informal source, to confirm).</p>
     <div class="body">
       <div class="panel stepper" data-steps="4">
         <div class="ptop"><span class="ptitle">How a Singapore cup is sold · step through</span><span class="ctl screenonly"></span></div>
@@ -580,16 +580,16 @@ aside.notes{display:none}
           <div class="sg-grid">
             <div>
               <div data-s="1">
-                <div class="ptitle" style="margin-top:6px">Group net revenue, FY 2025 <span class="flag">(secondary source)</span></div>
+                <div class="ptitle" style="margin-top:6px">Group net revenue, FY 2025 · group-wide, not Singapore <span class="flag">(secondary source)</span></div>
                 <div class="revbar"><div class="fr" style="width:{{facts.revenue_share_franchise_fy2025|pct}}">Franchise model</div><div class="co" style="width:{{facts.revenue_share_company_owned_fy2025|pct}}"></div></div>
                 <div class="revlab"><span>Franchise <b>{{facts.revenue_share_franchise_fy2025|pct}}</b></span><span>Company-owned <b>{{facts.revenue_share_company_owned_fy2025|pct}}</b>, growing fastest</span></div>
               </div>
               <div class="sgtag" data-s="2" style="justify-content:flex-start"><span class="pin">SG</span><span>Singapore outlets run under one company and one data system (informal source, to confirm with Chagee)</span></div>
               <div class="chan" data-s="4">
                 <div class="list">
-                  <div class="row"><b>In store</b><span>walk-in, counter or kiosk</span></div>
+                  <div class="row"><b>In store</b><span>Walk-in (app order; tourists can order at the counter, to confirm)</span></div>
                   <div class="row"><b>Chagee app</b><span>order ahead, collect</span></div>
-                  <div class="row"><b>Grab</b><span>third-party delivery</span></div>
+                  <div class="row"><b>Delivery</b><span>third-party delivery apps (e.g. Grab); no Chagee-run delivery</span></div>
                 </div>
                 <div class="arrow"><svg viewBox="0 0 30 100"><path d="M1 16 C18 16 16 50 27 50 M1 50 H27 M1 84 C18 84 16 50 27 50" stroke="#C8A96A" stroke-width="2" fill="none"/><path d="M23 45 l6 5 -6 5" stroke="#C8A96A" stroke-width="2" fill="none"/></svg></div>
                 <div class="counter">One counter<small>every channel's cup is made here</small></div>
@@ -603,13 +603,13 @@ aside.notes{display:none}
         </div>
         <ol class="caps">
           <li data-s="1"><span class="n">1</span><span>Group level: most net revenue comes from franchising; company-owned stores are the smaller, faster-growing part. This is the group, not Singapore.</span></li>
-          <li data-s="2"><span class="n">2</span><span>Singapore outlets run under one company and one data system, so a counter design or roster rule could be rolled out across them.</span></li>
+          <li data-s="2"><span class="n">2</span><span>Singapore outlets run under one company and one data system (informal source, to confirm). Our reading: a counter design or roster rule could be rolled out across them.</span></li>
           <li data-s="3"><span class="n">3</span><span>{{facts.sg_outlets}} outlets across the island, mostly ground-floor mall units that shoppers pass every day.</span></li>
-          <li data-s="4"><span class="n">4</span><span>Walk-in, app and Grab orders all queue at the same counter, so the peak hour lands in one place.</span></li>
+          <li data-s="4"><span class="n">4</span><span>Walk-in, app and third-party delivery orders all queue at the same counter, so the peak hour lands in one place.</span></li>
         </ol>
       </div>
       <div class="cards">
-        <div class="card"><h4>One operator, one data system</h4><p>Singapore outlets run under one company and one data system, so a counter design or roster rule could be rolled out across outlets.</p><span class="src">A Chagee contact (informal), to confirm with Chagee</span></div>
+        <div class="card"><h4>One company, one data system</h4><p>Singapore outlets run under one company and one data system. Our reading: a counter design or roster rule could be rolled out across outlets.</p><span class="src">A Chagee contact (informal), to confirm with Chagee</span></div>
         <div class="card"><h4>App-first</h4><p>Most orders come through the app, with few kiosks in store. Orders are recorded; whether searches and customer location are logged and usable is to confirm.</p><span class="src">Team observation, to confirm</span></div>
         <div class="card"><h4>Why Chagee</h4><p>A fast-growing, playful brand with heavy app use: likely rich order data, and room for AI to help the stores.</p></div>
       </div>
@@ -619,9 +619,9 @@ aside.notes{display:none}
   <div class="foot"><span>OPIM639 · Group 3 · explainer figures are illustrative assumptions</span><span class="rail"></span><span class="pg"></span></div>
   <aside class="notes">
     <p>Step through four points. One: at group level most revenue comes from franchising, about {{facts.revenue_share_franchise_fy2025|pct}} in FY 2025; company-owned is about {{facts.revenue_share_company_owned_fy2025|pct}} and growing fastest. That split is from a secondary source.</p>
-    <p>Two: Singapore outlets run under one company and one data system. We have this informally from a Chagee contact, who told us the ownership form, owned, joint venture or franchise, does not matter for this question. We will confirm it with Chagee, and we make no claim about the ownership structure.</p>
-    <p>Three: {{facts.sg_outlets}} outlets, by the store directory in October. Chagee prefers ground-floor mall units.</p>
-    <p>Four: walk-in, app orders for collection, and Grab delivery all end at the same counter. The Chagee app is for ordering ahead and collecting; delivery goes through third-party apps, by the same informal source. That is why we look at the counter. About fifty seconds.</p>
+    <p>Two: Singapore outlets run under one company and one data system. We have this informally from a Chagee contact, who told us the ownership form does not matter here because the data sits in one system. We will confirm it with Chagee. That a counter design or roster rule could be rolled out across outlets is our reading, not something we were told.</p>
+    <p>Three: {{facts.sg_outlets}} outlets, by the store directory in October (press reports vary: {{r.press_lo}}–{{r.press_hi}}). Chagee prefers ground-floor mall units.</p>
+    <p>Four: walk-in, app orders for collection, and third-party delivery orders all end at the same counter. Ordering is app-first: walk-ins order in the app, and the contact mentioned counter ordering only as an exception for tourists, which we will confirm. The Chagee app is for ordering ahead and collecting; all delivery goes through third-party apps such as Grab, by the same informal source, and there is no Chagee-run delivery. That is why we look at the counter. About fifty seconds.</p>
   </aside>
 </section>
 

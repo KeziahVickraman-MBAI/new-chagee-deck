@@ -50,7 +50,8 @@
     "I-chagee-contact": "INFORMAL - a Chagee contact (Oct 2026). Three points only: whether Singapore outlets are owned, a joint venture or franchised does not matter for this work; Singapore outlets run under one company and one data system; all delivery is via third-party apps. Confirm with Chagee before citing.",
     "P-honeycombers": "PRESS - in-store sightings, indicative. Honeycombers (Feb 2026), https://thehoneycombers.com/singapore/china-bubble-tea-brand-singapore/ : Chagee price sightings in Singapore; not a current full menu.",
     "P-eatbook": "PRESS - in-store sightings, indicative. Eatbook (Aug 2024), https://eatbook.sg/?p=168476 : Chagee price sightings in Singapore; not a current full menu, and older than the deck.",
-    "I-team-expansion": "INFORMAL - team research (Oct 2026): Chagee is looking to expand rapidly in Singapore; how many stores it is going for is confidential. Singapore only. Confirm before citing."
+    "I-team-expansion": "INFORMAL - team research (Oct 2026): Chagee is looking to expand rapidly in Singapore; how many stores it is going for is confidential. Singapore only. Confirm before citing.",
+    "I-team-press-outlets": "INFORMAL - team note (Oct 2026): press reports give between 44 and 46 Singapore outlets. Specific articles to be added before citing."
   },
   "facts": {
     "_note": "Chagee facts quoted on slides. Not assumptions: each carries its ledger source and appears with that source in the speaker notes.",
@@ -113,6 +114,16 @@
       "unit": "share of FY2025 net revenue",
       "source": "L-koalagains",
       "rationale": "Secondary source; flagged wherever shown."
+    },
+    "sg_outlets_press_range": {
+      "value": [
+        44,
+        46
+      ],
+      "unit": "outlets in Singapore, as press reports vary",
+      "range": null,
+      "source": "I-team-press-outlets",
+      "rationale": "Speaker notes only. Press counts of Singapore outlets vary between these values; the slide keeps sg_outlets (store directory, October 2026)."
     }
   },
   "predict": {

@@ -135,6 +135,7 @@ def values(d: dict) -> dict:
     st = d["site"]
     v["s.top_hub"] = st["top"]["hub"]
     v["r.next_outlet"] = RAW["facts"]["sg_outlets"]["value"] + 1
+    v["r.press_lo"], v["r.press_hi"] = RAW["facts"]["sg_outlets_press_range"]["value"]
     v["r.top_cups"] = st["top"]["cups"]
     v["r.top_net"] = st["top"]["netNew"]
     v["r.nextdoor_cannibal"] = st["nextDoor"]["cannibal"] / st["nextDoor"]["cups"]
