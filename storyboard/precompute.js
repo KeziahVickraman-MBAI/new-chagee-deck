@@ -12,6 +12,7 @@ const Site = require("../sim/sitepick.js");
 const GEO = require("../sim/sg_geo.json");
 const L = require("../sim/ladder.js");
 const TIERS = require("../machine_tiers.json");
+const B = require("../sim/benefit.js");
 
 const RAW = JSON.parse(fs.readFileSync(path.join(__dirname, "..", "assumptions.json"), "utf8"));
 const P = Sim.params(RAW), SB = RAW.storyboard;
@@ -61,10 +62,22 @@ const site = { top: { x: top.x, y: top.y, hub: hubOf(top), ...top.f }, nextDoor:
 const ladderAt = { cupsDay: Math.round(Sim.dailyBase(P)), wage: P.wage, unitMonth: P.machineMonth };
 const ladder = { at: ladderAt, rungs: L.evaluate(Sim, C, RAW, P, TIERS, ladderAt), volumes: L.volumes(Sim, C, RAW, P, TIERS, ladderAt) };
 
+// slide 10: the benefit, one outlet; simulation runs only (money is worked out from them, here and in the browser)
+const bRobots = TIERS.tiers.find(t => t.id === "single").replaces, bo = { walkBack, seeds };
+const [vLo, vHi] = RAW.store.cups_per_store_per_year.range;
+const bP = { base: P, volLo: { ...P, cupsYear: vLo }, volHi: { ...P, cupsYear: vHi },
+             fragile: { ...P, minStaff: { ...P.minStaff, all_human: P.minStaff.mixed } } };   // fragility: no extra by-hand minimum
+const bR = { base: B.runs(Sim, Store, C, bP.base, { ...bo, robots: bRobots }), volLo: B.runs(Sim, Store, C, bP.volLo, { ...bo, robots: bRobots }),
+             volHi: B.runs(Sim, Store, C, bP.volHi, { ...bo, robots: bRobots }), fragile: B.runs(Sim, Store, C, bP.fragile, { ...bo, robots: bRobots }),
+             today: B.runs(Sim, Store, C, P, { ...bo, robots: [...P.mixedMachine] }) };
+const benefit = { robots: bRobots, cups: Math.round(Sim.dailyBase(P)), volCups: [vLo, vHi].map(x => Math.round(x / P.days)),
+                  runs: bR, P: Object.fromEntries(Object.entries(bP).map(([k, p]) => [k, { cupsYear: p.cupsYear, minStaff: p.minStaff }])),
+                  summary: B.summary(bR, bP, RAW, B.econ(RAW, P)) };
+
 const pl = Sim.plan(P, "mixed");
 const data = {
   generated: new Date().toISOString(), seeds,
-  grid, splits, site, ladder,
+  grid, splits, site, ladder, benefit,
   counter: {
     peakHour: C.peakHour(P), firstHour: 10, cupsPerDay: Sim.dailyBase(P),
     perWorkerHour: pl.perWorker * 60, handSeconds: pl.W,

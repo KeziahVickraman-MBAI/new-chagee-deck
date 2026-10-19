@@ -47,7 +47,9 @@
     "I-team-automation": "INFORMAL - team research (Oct 2026): Chagee's counters are heading towards machines making the drink while people tag the order and hand it over; consistent with I-leeyen's 'push towards app-to-machine automation, sub-one-minute fulfilment'. Source to be added before it is cited on a slide.",
     "I-team-app-first": "INFORMAL - team observation in the ideation doc: Chagee Singapore sells mainly through its app, with minimal order kiosks in outlets. Confirm before citing.",
     "L-ester1996": "Ester, M., Kriegel, H.-P., Sander, J. and Xu, X. (1996). A density-based algorithm for discovering clusters in large spatial databases with noise. Proceedings of the Second International Conference on Knowledge Discovery and Data Mining (KDD-96), 226-231. The DBSCAN algorithm used on slide 05.",
-    "I-chagee-contact": "INFORMAL - a Chagee contact (Oct 2026). Three points only: whether Singapore outlets are owned, a joint venture or franchised does not matter for this work; Singapore outlets run under one company and one data system; all delivery is via third-party apps. Confirm with Chagee before citing."
+    "I-chagee-contact": "INFORMAL - a Chagee contact (Oct 2026). Three points only: whether Singapore outlets are owned, a joint venture or franchised does not matter for this work; Singapore outlets run under one company and one data system; all delivery is via third-party apps. Confirm with Chagee before citing.",
+    "P-honeycombers": "PRESS - Honeycombers (Feb 2026): in-store Chagee price sightings in Singapore. Indicative, not a current full menu. Informal for pricing.",
+    "P-eatbook": "PRESS - Eatbook (Aug 2024): in-store Chagee price sightings in Singapore. Indicative, not a current full menu; older than the deck."
   },
   "facts": {
     "_note": "Chagee facts quoted on slides. Not assumptions: each carries its ledger source and appears with that source in the speaker notes.",
@@ -1006,6 +1008,40 @@
       "range": null,
       "source": "assumption",
       "rationale": "Search depth only."
+    },
+    "price_per_cup": {
+      "value": 5.9,
+      "unit": "SGD per cup, in store",
+      "range": [
+        4.5,
+        6.9
+      ],
+      "source": "P-honeycombers, P-eatbook",
+      "rationale": "Honeycombers (Feb 2026) and Eatbook (Aug 2024) in-store sightings; indicative, not a current full menu. Slide 10 only: revenue of an order not lost."
+    },
+    "gross_margin_per_cup": {
+      "value": 0.6,
+      "unit": "share of price (contribution per avoided order: price minus ingredients and packaging)",
+      "range": [
+        0.5,
+        0.7
+      ],
+      "source": "assumption",
+      "rationale": "Our assumption; Chagee does not disclose; 70% is a team estimate, unsourced. Low 0.50, base 0.60, high 0.70. Slide 10 only."
+    },
+    "busy_days_per_year": {
+      "value": 104,
+      "unit": "busy days a year (day type 'moderate')",
+      "range": null,
+      "source": "assumption",
+      "rationale": "Illustrative definition, to confirm with Chagee: busy days = weekend days (52 x 2). An input on slide 10, not a measured count."
+    },
+    "event_days_per_year": {
+      "value": 11,
+      "unit": "event days a year (day type 'large')",
+      "range": null,
+      "source": "assumption",
+      "rationale": "Illustrative definition, to confirm with Chagee: event days = Singapore public holidays. An input on slide 10, not a measured count."
     }
   },
   "sitepick": {

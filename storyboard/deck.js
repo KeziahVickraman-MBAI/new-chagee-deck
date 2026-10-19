@@ -651,6 +651,58 @@
     draw();
   })();
 
+  /* ---------------------------------------------------------------- 10 benefit (sim/benefit.js) */
+  (function benefit() {
+    const sl = $(document, "#c9"); if (!sl) return;
+    const B = window.ChageeBenefit, BD = DATA.benefit, N = RAW.facts.sg_outlets.value, SBk = RAW.storyboard;
+    const Ps = Object.fromEntries(Object.entries(BD.P).map(([k, p]) => [k, { ...P, ...p }]));
+    const e0 = B.econ(RAW, P), e = { ...e0, days: { ...e0.days } };
+    const $m = x => `${x < 0 ? "−" : ""}S$${Math.abs(Math.round(x)).toLocaleString("en-SG")}`, $n = x => `${x < 0 ? "−" : ""}${Math.abs(Math.round(x)).toLocaleString("en-SG")}`;
+    const ctl = $(sl, ".daysctl"), DAYS_IN = [["busy", "Busy days a year"], ["event", "Event days a year"]];
+    ctl.innerHTML = DAYS_IN.map(([k, l]) => `<label>${l}<span class="val" data-v="${k}">${e.days[k]}</span><input type="range" data-k="${k}" min="0" max="${P.days}" step="1" value="${e.days[k]}"></label>`).join("");
+    function draw() {
+      const S = B.summary(BD.runs, Ps, RAW, e), b = S.base, Y = b.year, pm = SBk.price_per_cup.value;
+      // per day: orders kept and revenue lead; profit second; the counter's labour saving on its own line
+      $(sl, ".daycards").innerHTML = [["event", "Event day"], ["busy", "Busy day"], ["normal", "Normal day"]].map(([k, lab]) => {
+        const x = b.per[k].ab;
+        return `<div class="dc"><div class="k">${lab}</div><div class="big">${x.orders.toFixed(x.orders < 10 ? 1 : 0)}<small>orders kept</small></div>
+          <div class="l2">Revenue ${$m(x.revenue)} <span style="color:${COL.taupe}">(× S$${pm.toFixed(2)} a cup)</span></div>
+          <div class="l2">Profit ${$m(x.profit)}</div><div class="l3">Counter: labour saved − machine ${$m(x.counterNet)}</div></div>`;
+      }).join("");
+      const rng = (a, f = $m) => `<span class="s">range ${f(a[0])} to ${f(a[1])}</span>`;
+      $(sl, ".ytab").innerHTML = `<tr><th>A year</th><th>Per outlet</th><th>${N} outlets, if all looked like this model</th></tr>` +
+        `<tr class="lead"><td>Orders kept<span class="s">peak hour, busy and event days</span></td><td>${$n(Y.ab.orders)}${rng(S.orders, $n)}</td><td>${$n(Y.ab.orders * N)}</td></tr>` +
+        `<tr class="lead"><td>Revenue<span class="s">orders × price</span></td><td>${$m(Y.ab.revenue)}${rng(S.revenue)}</td><td>${$m(Y.ab.revenue * N)}</td></tr>` +
+        `<tr><td>Profit<span class="s">margin ${pct(SBk.gross_margin_per_cup.range[0])}–${pct(SBk.gross_margin_per_cup.range[1])}: ${$m(S.contribution[0] - Y.ab.contribution)} to +${$m(S.contribution[1] - Y.ab.contribution)}</span></td><td>${$m(Y.ab.profit)}</td><td>${$m(Y.ab.profit * N)}</td></tr>` +
+        `<tr class="sep"><td>Labour saving, counter<span class="s">labour saved − machine cost; shown on its own</span></td><td>${$m(Y.ab.counterNet)}</td><td>${$m(Y.ab.counterNet * N)}</td></tr>`;
+      $(sl, ".ltab").innerHTML = `<tr><th>Lever, a year</th><th>Orders</th><th>Profit</th></tr>` +
+        [["Roster to forecast", Y.a], ["Tea-and-milk machine", Y.b], ["Both, one run", Y.ab]].map(([l, x], i) =>
+          `<tr class="${i === 2 ? "lead" : ""}"><td>${l}</td><td>${$n(x.orders)}</td><td>${$m(x.profit)}</td></tr>`).join("") +
+        `<tr><td>Both, today's split instead<span class="s">its counter: ${$m(S.today.year.b.counterNet / 12)} a month</span></td><td>${$n(S.today.year.ab.orders)}</td><td>${$m(S.today.year.ab.profit)}</td></tr>`;
+      $(sl, ".ixnote").textContent = `"Both" is one run, not the sum of the two levers: they win back many of the same orders, and with the machine the forecast crew needs fewer extra hours (${S.interaction.profit >= 0 ? "+" : ""}${$m(S.interaction.profit)} against the sum).`;
+      $(sl, ".rng").innerHTML = `Low <b>${$m(S.low.year.ab.profit)}</b> · base <b>${$m(Y.ab.profit)}</b> · high <b>${$m(S.high.year.ab.profit)}</b>, every input at the end that lowers or raises it.`;
+      const T = S.tornado.slice().sort((a, c) => Math.abs(c.hi - c.lo) - Math.abs(a.hi - a.lo));
+      const all = T.flatMap(t => [t.lo, t.hi]).concat(Y.ab.profit), lo = Math.min(0, ...all), hi = Math.max(...all);
+      const X = v => 92 + (v - lo) / (hi - lo || 1) * 198, rh = 19;
+      $(sl, ".torn").innerHTML = T.map((t, i) => {
+        const a = Math.min(t.lo, t.hi), c = Math.max(t.lo, t.hi), y = 4 + i * rh;
+        return `<text x="88" y="${y + 11}" font-size="10" text-anchor="end" fill="${COL.ink2}">${t.label}</text>` +
+          `<rect x="${X(a)}" y="${y + 2}" width="${Math.max(1, X(c) - X(a))}" height="12" fill="${COL.navy}" opacity=".75"/>`;
+      }).join("") + `<line x1="${X(Y.ab.profit)}" x2="${X(Y.ab.profit)}" y1="2" y2="${4 + T.length * rh}" stroke="${COL.red}" stroke-width="1.5"/>` +
+        (lo < 0 ? `<line x1="${X(0)}" x2="${X(0)}" y1="2" y2="${4 + T.length * rh}" stroke="${COL.taupe}" stroke-dasharray="2 2"/>` : "") +
+        `<text x="${X(Y.ab.profit)}" y="${12 + T.length * rh}" font-size="9" text-anchor="middle" fill="${COL.red}">base</text>`;
+      const mh = P.minStaff.all_human, mm = P.minStaff.mixed, F = S.fragile.year.ab;
+      $(sl, ".frag").innerHTML = `The counter lever comes from the model's minimum crew: ${mh} by hand, ${mm} with machines, off-peak. ` +
+        `With it, profit ${$m(Y.ab.profit)} a year (counter ${$m(Y.ab.counterNet)}); with ${mm} either way, ${$m(F.profit)} (counter ${$m(F.counterNet)}).`;
+      $(sl, ".bdays").textContent = `Calendar: ${e.days.busy} busy days (weekend days) and ${e.days.event} event days (Singapore public holidays) a year: an illustrative definition, to confirm with Chagee; sliders on screen.`;
+      $$(ctl, "[data-v]").forEach(el => (el.textContent = e.days[el.dataset.v]));
+    }
+    ctl.addEventListener("input", ev => { const k = ev.target.dataset.k; if (!k) return;
+      e.days[k] = Math.min(+ev.target.value, P.days - e.days[k === "busy" ? "event" : "busy"]); ev.target.value = e.days[k]; draw(); });
+    printers.push(() => { e.days = { ...e0.days }; $$(ctl, "input").forEach(i => (i.value = e.days[i.dataset.k])); draw(); });
+    draw();
+  })();
+
   /* ---------------------------------------------------------------- 08 playbook */
   (function playbook() {
     const tb = $(document, "#c8 .pb"); if (!tb) return;

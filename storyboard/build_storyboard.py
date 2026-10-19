@@ -184,6 +184,25 @@ def values(d: dict) -> dict:
     v["r.fx"] = RAW["_meta"]["fx_sgd_per_usd"]["value"]
     rep = RAW["costs"]["machine_cost_per_unit_per_month"]["represents"].replace(" Display text only.", "")
     v["s.unit_represents"] = rep[0].lower() + rep[1:] if rep.startswith("Our") else rep
+    # slide 10: the benefit (sim/benefit.js via precompute.js)
+    bn = d["benefit"]; S = bn["summary"]; base = S["base"]; Y = base["year"]; ev, bz = base["per"]["event"], base["per"]["busy"]
+    tol = 1e-6 * max(1.0, abs(Y["a"]["profit"]) + abs(Y["b"]["profit"]))
+    for f in ("orders", "revenue", "contribution"):                  # what the two levers share must not be counted twice
+        if Y["ab"][f] > Y["a"][f] + Y["b"][f] + tol:
+            raise SystemExit(f"build: benefit combined {f} exceeds a + b; check sim/benefit.js")
+    ix = S["interaction"]                                            # profit may exceed a + b only by the labour interaction
+    if ix["profit"] > max(0.0, ix["counterNet"]) + tol:
+        raise SystemExit("build: benefit combined profit exceeds a + b by more than the labour interaction")
+    if not (ev["a"]["profit"] > 0 > bz["a"]["profit"] and S["fragile"]["year"]["ab"]["profit"] < Y["ab"]["profit"]
+            and Y["ab"]["counterNet"] > Y["ab"]["contribution"]):
+        raise SystemExit("build: slide 10 takeaway (forecast roster pays on event, not busy days; counter labour is most of the profit; "
+                         "fragile without the minimum crew) no longer holds; rewrite it")
+    v["r.ben_cups"] = bn["cups"]
+    v["r.ben_event_orders"], v["r.ben_event_rev"] = ev["ab"]["orders"], ev["ab"]["revenue"]
+    v["r.ben_busy_orders"], v["r.ben_busy_rev"] = bz["ab"]["orders"], bz["ab"]["revenue"]
+    v["r.ben_year_rev"] = Y["ab"]["revenue"]
+    v["r.ben_profit"] = Y["ab"]["profit"]
+    v["r.ben_profit_fragile"] = S["fragile"]["year"]["ab"]["profit"]
     # the roster trigger: forecast peak cups per person, after the capacity safety margin (plan()'s rule)
     v["r.cups_per_person"] = d["counter"]["perWorkerHour"] / RAW["costs"]["capacity_safety_margin"]["value"]
     return v
@@ -217,6 +236,10 @@ USED = [  # (section, key, label) shown in the appendix: every input the storybo
     ("sitepick", "dbscan_min_points", "DBSCAN minimum searches"),
     ("sitepick", "km_per_px", "Map scale"),
     ("service", "target_wait_minutes", "Wait at which a customer walks away"),
+    ("storyboard", "price_per_cup", "Price per cup, in store (slide 10)"),
+    ("storyboard", "gross_margin_per_cup", "Margin per cup, share of price (slide 10)"),
+    ("storyboard", "busy_days_per_year", "Busy days a year (slide 10, illustrative)"),
+    ("storyboard", "event_days_per_year", "Event days a year (slide 10, illustrative)"),
     ("illustration", "walk_back_speed", "Walking-back speed (Week 5 units)"),
 ]
 
@@ -239,7 +262,7 @@ def appendix() -> str:
         f = RAW["facts"][k]
         out.append(f"<p><b>{label}: {short(f['value'])}</b>. {esc(f['rationale'])} <i>[{esc(f['source'])}]</i></p>")
     out.append("<h5>Sources</h5>")
-    for k in ("L-sg-directory", "L-koalagains", "L-yfchuhai", "L-sec20f", "L-unsw", "I-chagee-contact", "I-sg-groundfloor", "I-team-app-first", "L-ester1996"):
+    for k in ("L-sg-directory", "L-koalagains", "L-yfchuhai", "L-sec20f", "L-unsw", "I-chagee-contact", "I-sg-groundfloor", "I-team-app-first", "L-ester1996", "P-honeycombers", "P-eatbook"):
         out.append(f"<p><b>{k}</b> {esc(RAW['_sources'][k])}</p>")
     out.append("<h5>Assumptions (assumptions.json, illustrative)</h5>")
     for sec, key, label in USED:
@@ -252,7 +275,8 @@ def appendix() -> str:
                "fixed line is as good or slightly faster. Machine breakdowns, breaks and order mix are not modelled.</p>")
     out.append("<p>We make no claim about: <b>Singapore ownership structure</b> (a Chagee contact says outlets run under one company and "
                "one data system, and that the ownership form does not matter here; I-chagee-contact); <b>delivery profit by channel</b>; "
-               "<b>Chagee's own equipment cost</b> (not public).</p>")
+               "<b>Chagee's own equipment cost</b> (not public); <b>gross margin per cup</b> (our assumption); "
+               "<b>Chagee's current rostering</b> (unknown; slide 10's counterfactual is ours).</p>")
     return "\n".join(out)
 
 
@@ -330,13 +354,14 @@ def fill(text: str, vals: dict) -> str:
     return re.sub(r"\{\{([a-zA-Z_][\w.]*)(?:\|(\w+))?\}\}", rep, text)
 
 
-ALLOWED = re.compile(r"\b(?:19|20)\d\d\b|OPIM\s?639|Topic \d|\bT\d\b|\b0[1-9]\b|Week \d|Group \d|Form 20-F")
+ALLOWED = re.compile(r"\b(?:19|20)\d\d\b|OPIM\s?639|Topic \d|\bT\d\b|\b0[1-9]\b|\b1\d(?= ·)|Week \d|Group \d|Form 20-F")
 
 
 def digit_check(tpl: str) -> None:
     body = tpl.split("<body", 1)[1]
     body = re.sub(r"<script[\s\S]*?</script>|<style[\s\S]*?</style>|<!--[\s\S]*?-->", " ", body)
     body = re.sub(r'<span class="(?:n|num)">\d</span>', " ", body)              # step numbers
+    body = re.sub(r'<span class="no">\d\d</span>', " ", body)                   # agenda chapter numbers
     body = re.sub(r"\{\{[^}]*\}\}|\{img:[\w]+\}|<[^>]*>", " ", body)        # placeholders, tags (with attributes)
     bad = [m for m in re.finditer(r"\d", ALLOWED.sub(" ", body))]
     if bad:
@@ -353,7 +378,7 @@ def build() -> Path:
     imgs = images()
     html = re.sub(r"\{img:(\w+)\}", lambda m: imgs[m.group(1)], html)
     html = html.replace("<!--APPENDIX-->", appendix()).replace("<!--TIERS-->", tiers_table())
-    js = "\n".join((ROOT / "sim" / f).read_text(encoding="utf-8") for f in ("sim.js", "store.js", "counter.js", "sitepick.js", "ladder.js"))
+    js = "\n".join((ROOT / "sim" / f).read_text(encoding="utf-8") for f in ("sim.js", "store.js", "counter.js", "sitepick.js", "ladder.js", "benefit.js"))
     js += "\n" + (HERE / "deck.js").read_text(encoding="utf-8")
     payload = {"RAW": RAW, "DATA": d, "GEO": json.loads((ROOT / "sim" / "sg_geo.json").read_text(encoding="utf-8")),
                "MAP": imgs["sg_map_crop"],
