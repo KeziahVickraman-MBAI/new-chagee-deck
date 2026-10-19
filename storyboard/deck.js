@@ -836,7 +836,7 @@
     inp.oninput = upd; upd();
   })();
 
-  /* ---------------------------------------------------------------- 01b network effects */
+  /* ---------------------------------------------------------------- 04b network effects */
   // Click a loop or a card to pair them. The congestion card follows the shared day type (the counter grid,
   // DATA.grid); the cannibalisation card switches between slide 05's two sites (DATA.site).
   (function networkFx() {
