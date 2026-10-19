@@ -477,6 +477,27 @@ html,body{margin:0;background:#E7E3DC;color:var(--ink);font-family:var(--sans);-
 .tbc.sm{margin-left:6px;padding:1px 7px;font-size:9.5px;vertical-align:3px}
 /* ---------- slides 08 and 09: extension, site selection (Jin's framework) ---------- */
 .ext{display:inline-block;margin-left:14px;vertical-align:1px;background:#EEF1F7;color:var(--navy);border:1.5px solid var(--blue);border-radius:999px;padding:3px 11px;font:600 11px/1.2 var(--sans);letter-spacing:.02em;text-transform:none}
+/* ---------- slide 01b: network effects ---------- */
+.nsvg{width:100%;height:100%;display:block;font-family:var(--sans)}
+.nsvg .fx{cursor:pointer}
+.nsvg .fx.hl rect,.nsvg .fx.hl path{stroke-width:3.5}
+.nfx.pick .nsvg .fx:not(.hl){opacity:.28}
+.nfc .bc{cursor:pointer;transition:box-shadow .2s}
+.nfc .bc.hl{box-shadow:0 0 0 2px var(--gold)}
+.nfc .bc p{font-size:11.6px}
+.nfc .bc h4{font-size:13.5px;margin:1px 0 2px}
+.nfc .bc{padding:6px 11px}
+.nfnot .k{margin-bottom:2px}
+.nfnot{border-left-color:var(--taupe)!important;background:#FAF8F4}
+.nfw{margin-top:5px}
+.nfw .seg .btn{height:22px;font-size:10.5px;padding:0 8px}
+.nfbars,.nfstack{margin-top:5px;display:grid;gap:3px;font:10.5px/1.2 var(--sans);color:var(--ink2)}
+.nfbars .r{display:grid;grid-template-columns:118px 1fr 40px;gap:6px;align-items:center}
+.nfbars .b{height:9px;background:var(--ice);border-radius:3px;overflow:hidden}
+.nfbars .b i{display:block;height:100%}
+.nfbars .v{text-align:right;font-weight:700;color:var(--ink)}
+.nfstack .sb{display:flex;height:12px;border-radius:3px;overflow:hidden;background:var(--ice)}
+.nfstack .sb i{display:block;height:100%}
 .ext.sm{margin-left:6px;padding:1px 7px;font-size:9.5px;vertical-align:3px}
 .xmap svg{width:100%;height:100%;display:block}
 .xmap .lg{display:flex;gap:16px;flex-wrap:wrap;margin-top:6px;font:11px var(--sans);color:var(--ink2)}
@@ -609,7 +630,7 @@ aside.notes{display:none}
   <div class="inner">
     <h2>Agenda</h2>
     <ol>
-      <li data-go="c1"><span class="no">01</span><span class="nm">Chagee in Singapore<span class="why">How it earns and sells</span></span></li>
+      <li data-go="c1"><span class="no">01</span><span class="nm">Chagee in Singapore<span class="why">How it earns and sells · 01b network effects: what to grow, what to cap</span></span></li>
       <li data-go="c2"><span class="no">02</span><span class="nm">From farm to cup<span class="why">Where the supply chain is stable, and where it is not</span></span></li>
       <li data-go="c3"><span class="no">03</span><span class="nm">The data trail<span class="why">What every cup already records</span></span></li>
       <li data-go="c4"><span class="no">04</span><span class="nm">Our scope<span class="why">Two areas, two kinds of AI, one decision-maker</span></span></li>
@@ -690,6 +711,102 @@ aside.notes{display:none}
     <p>Two: Singapore outlets run under one company and one data system. We have this from a Chagee source who asked not to be named; please do not identify them. They told us the ownership form does not matter here because the data sits in one system. That a counter design or roster rule could be rolled out across outlets is our reading, not something we were told.</p>
     <p>Three: {{facts.sg_outlets}} outlets, by the store directory in October (press reports vary: {{r.press_lo}}–{{r.press_hi}}). Chagee prefers ground-floor mall units.</p>
     <p>Four: walk-in, app orders for collection, and third-party delivery orders all end at the same counter. Ordering is app-first: walk-ins order in the app, and the source mentioned counter ordering only as an exception for tourists, which we will confirm. The Chagee app is for ordering ahead and collecting; all delivery goes through third-party apps such as Grab, by the same Chagee source, and there is no Chagee-run delivery. That is why we look at the counter. About fifty seconds.</p>
+  </aside>
+</section>
+
+<!-- ======================================================= 01b NETWORK EFFECTS -->
+<section class="slide content" id="c1b" data-chapter="Context" data-title="Network effects">
+  <div class="leafart" aria-hidden="true"></div>
+  <div class="inner stepper" data-steps="6">
+    <p class="kicker">01b · Network effects<span class="ctag">Course link · cross-side vs same-side network effects (eBay)</span></p>
+    <h2 class="head" style="font-size:30px;max-width:1000px">Chagee is not a two-sided platform; its network effects sit on one side, and our AI works on three of them</h2>
+    <p class="sub">Our reading: Chagee sells its own tea, so there is no seller side to match. One data loop to grow, two crowding effects to cap.</p>
+    <div class="body" style="grid-template-columns:1fr 330px;gap:18px;margin-top:10px">
+      <div class="panel nfx" data-kind="netfx">
+        <div class="ptop"><span class="ptitle">Where Chagee sits on the diagram · click a loop</span></div>
+        <div class="visual" style="margin-top:0">
+          <svg class="nsvg" viewBox="0 0 780 372" preserveAspectRatio="xMidYMid meet" aria-label="Customers and outlets, the loops between and around them">
+            <defs>
+              <marker id="nfG" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#2F6B45"/></marker>
+              <marker id="nfN" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#24406B"/></marker>
+              <marker id="nfR" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#B8322B"/></marker>
+            </defs>
+            <g data-s="1">
+              <line x1="268" y1="182" x2="508" y2="182" stroke="#24406B" stroke-width="2.5" marker-end="url(#nfN)"/>
+              <text x="388" y="171" text-anchor="middle" font-size="12.5" fill="#24406B">every channel's cup, made at one counter</text>
+              <text x="388" y="200" text-anchor="middle" font-size="11.5" font-style="italic" fill="#9A9387">pipeline sale, not a network effect</text>
+              <circle cx="200" cy="182" r="64" fill="#B8322B"/>
+              <text x="200" y="178" text-anchor="middle" font-size="16" font-weight="700" fill="#fff" letter-spacing=".04em">CUSTOMERS</text>
+              <text x="200" y="198" text-anchor="middle" font-size="11.5" fill="#fff">app · walk-in · delivery</text>
+              <circle cx="580" cy="182" r="64" fill="#24406B"/>
+              <text x="580" y="178" text-anchor="middle" font-size="16" font-weight="700" fill="#fff" letter-spacing=".04em">{{facts.sg_outlets}} OUTLETS</text>
+              <text x="580" y="198" text-anchor="middle" font-size="11.5" fill="#fff">one data system</text>
+            </g>
+            <g class="fx" data-fx="grow" data-s="2">
+              <path d="M232 126 C 300 40, 480 40, 548 126" fill="none" stroke="#2F6B45" stroke-width="3" marker-end="url(#nfG)"/>
+              <rect x="258" y="8" width="268" height="54" rx="8" fill="#F1F6F2" stroke="#2F6B45"/>
+              <text x="272" y="27" font-size="11" font-weight="700" fill="#2F6B45" letter-spacing=".1em">① DATA LOOP + (like Netflix)</text>
+              <text x="272" y="44" font-size="11.5" fill="#262626">More app users → more searches and orders</text>
+              <text x="272" y="58" font-size="11.5" fill="#262626">→ better forecast and site pick</text>
+            </g>
+            <g class="fx" data-fx="buzz" data-s="3">
+              <path d="M146 148 C 70 110, 64 250, 144 220" fill="none" stroke="#2F6B45" stroke-width="2.4" stroke-dasharray="6 4" marker-end="url(#nfG)"/>
+              <text x="14" y="94" font-size="11" font-weight="700" fill="#2F6B45" letter-spacing=".1em">+ BUZZ</text>
+              <text x="14" y="110" font-size="11.5" fill="#262626">queues and posts</text>
+              <text x="14" y="124" font-size="11.5" fill="#262626">draw more drinkers</text>
+            </g>
+            <g class="fx" data-fx="congest" data-s="4">
+              <path d="M178 244 C 170 268, 172 272, 170 282" fill="none" stroke="#B8322B" stroke-width="2" stroke-dasharray="3 3"/>
+              <rect x="14" y="282" width="320" height="52" rx="8" fill="#FBEDEC" stroke="#B8322B"/>
+              <text x="28" y="301" font-size="11" font-weight="700" fill="#B8322B" letter-spacing=".1em">② CONGESTION − same side</text>
+              <text x="28" y="318" font-size="11.5" fill="#262626">At the peak, each extra customer lengthens</text>
+              <text x="28" y="332" font-size="11.5" fill="#262626">everyone's wait → walk-aways <tspan fill="#B8322B">slides 06–07</tspan></text>
+            </g>
+            <g class="fx" data-fx="cannibal" data-s="5">
+              <path d="M634 148 C 712 110, 718 250, 636 220" fill="none" stroke="#24406B" stroke-width="2.4" marker-end="url(#nfN)"/>
+              <rect x="430" y="282" width="336" height="52" rx="8" fill="#EEF1F7" stroke="#24406B"/>
+              <text x="444" y="301" font-size="11" font-weight="700" fill="#24406B" letter-spacing=".1em">③ CANNIBALISATION − same side</text>
+              <text x="752" y="301" text-anchor="end" font-size="10.5" fill="#24406B">slides 05, 08</text>
+              <text x="444" y="318" font-size="11.5" fill="#262626">A new outlet takes cups from nearby outlets</text>
+              <text x="444" y="332" font-size="11.5" fill="#262626">("more sellers, more competition")</text>
+            </g>
+            <g class="fx" data-fx="cross" data-s="6">
+              <rect x="190" y="344" width="400" height="24" rx="6" fill="#F6F3ED" stroke="#9A9387" stroke-dasharray="4 3"/>
+              <text x="390" y="360" text-anchor="middle" font-size="11" fill="#4A4A4A">Cross-side, on others' platforms: delivery riders ↔ orders; mall neighbours</text>
+            </g>
+          </svg>
+        </div>
+        <ol class="caps" style="min-height:38px">
+          <li data-s="1"><span class="n">1</span><span>Customers buy from Chagee's outlets through every channel: a pipeline sale, not a match between two sides.</span></li>
+          <li data-s="2"><span class="n">2</span><span>The one network effect we grow: more app use gives more search and order data, so the forecast and site pick get sharper.</span></li>
+          <li data-s="3"><span class="n">3</span><span>Buzz is the same-side plus: a visible queue and posts draw more drinkers. We do not model it.</span></li>
+          <li data-s="4"><span class="n">4</span><span>Congestion is the same-side minus: at the peak, each extra customer adds to everyone's wait. Pick a day type on the right.</span></li>
+          <li data-s="5"><span class="n">5</span><span>Cannibalisation is the outlets' same-side minus: a new outlet takes cups from its neighbours. Switch the site on the right.</span></li>
+          <li data-s="6"><span class="n">6</span><span>Cross-side effects live on others' platforms: delivery apps and malls. Not our lever.</span></li>
+        </ol>
+      </div>
+      <div class="cards nfc" style="gap:7px">
+        <div class="bc phys" data-fx="grow" data-s="2"><div class="k">① Grow · predictive AI</div><h4>Feed the data loop</h4>
+          <p>App searches pick the next site: <b>+{{r.top_net}}</b> cups a day against <b>+{{r.nd_net}}</b> beside an outlet (synthetic). More users, sharper picks.</p></div>
+        <div class="bc warn" data-fx="congest" data-s="4"><div class="k">② Cap · forecast + counter</div><h4>Absorb the peak crowd</h4>
+          <p class="nfcopy printonly">Forecast crew plus a bucket brigade: event-day walk-aways <b>{{r.lost_normal_roster|pct}}</b> → <b>{{r.lost_brigade|pct1}}</b>.</p>
+          <div class="nfw screenonly"><span class="nfday"></span><div class="nfbars"></div></div></div>
+        <div class="bc" data-fx="cannibal" data-s="5"><div class="k">③ Cap · site scoring</div><h4>Count cups added, not sold</h4>
+          <p class="nfcopy2 printonly">Of {{r.top_cups}} cups at the new site, <b>{{r.top_moved}}</b> move from nearby outlets. The score subtracts them.</p>
+          <div class="nfw screenonly"><span class="seg nfsite"></span><div class="nfstack"></div></div></div>
+        <div class="bc nfnot" data-fx="cross" data-s="6"><div class="k">Not our lever</div>
+          <p>Delivery apps and malls own the cross-side effects; their riders still count in our peak.</p></div>
+      </div>
+    </div>
+    <div class="revctl screenonly" style="top:8px"><span class="lab">Step through</span><span class="ctl"></span></div>
+    <div class="takeaway" data-s="6" style="margin-top:9px;padding:9px 20px"><span class="lab">Takeaway</span><span>More customers help Chagee only if the map and the counter can absorb them: predictive AI grows the data loop; the forecast, counter design and site score cap congestion and cannibalisation.</span></div>
+  </div>
+  <div class="foot"><span>OPIM639 · Group 3 · explainer figures are illustrative assumptions · synthetic data</span><span class="rail"></span><span class="pg"></span></div>
+  <aside class="notes">
+    <p>A quick lens from the course before the operations. On eBay, buyers and sellers attract each other: a cross-side network effect. Chagee is not that, in our reading: it sells its own tea, so there is no seller side to match. Customers to outlets is a pipeline sale.</p>
+    <p>What it does have sits on one side. One effect to grow: the data loop, like Netflix. More app users give more searches and orders, so the forecast and the site pick get sharper. A same-side plus, buzz: queues and posts draw more drinkers; we do not model it.</p>
+    <p>And two crowding effects to cap. Congestion: at the peak, every extra customer lengthens everyone's wait; with a normal-day roster on an event day, about {{r.lost_normal_roster|pct}} of peak-hour orders walk away, and the forecast crew with a bucket brigade brings it to about {{r.lost_brigade|pct1}}. Cannibalisation: a new outlet takes cups from its neighbours; of {{r.top_cups}} cups at the app-search site, {{r.top_moved}} move from nearby outlets, against far more beside an existing outlet.</p>
+    <p>Cross-side effects exist, but on others' platforms: delivery apps and malls. Not our lever. About forty-five seconds.</p>
   </aside>
 </section>
 

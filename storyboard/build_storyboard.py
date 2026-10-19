@@ -484,7 +484,7 @@ def fill(text: str, vals: dict) -> str:
     return re.sub(r"\{\{([a-zA-Z_][\w.]*)(?:\|(\w+))?\}\}", rep, text)
 
 
-ALLOWED = re.compile(r"\b(?:19|20)\d\d\b|OPIM\s?639|Topic \d|\bT\d\b|\b0[1-9]\b|\b1\d(?= ·)|\bslides? 1\d\b|Week \d|Group \d|Form 20-F")
+ALLOWED = re.compile(r"\b(?:19|20)\d\d\b|OPIM\s?639|Topic \d|\bT\d\b|\b0[1-9]b?\b|\b1\d(?= ·)|\bslides? 1\d\b|Week \d|Group \d|Form 20-F")
 
 
 def digit_check(tpl: str) -> None:

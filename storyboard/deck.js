@@ -836,6 +836,44 @@
     inp.oninput = upd; upd();
   })();
 
+  /* ---------------------------------------------------------------- 01b network effects */
+  // Click a loop or a card to pair them. The congestion card follows the shared day type (the counter grid,
+  // DATA.grid); the cannibalisation card switches between slide 05's two sites (DATA.site).
+  (function networkFx() {
+    const sl = $(document, "#c1b"); if (!sl) return;
+    const panel = $(sl, ".nfx"); let sel = null;
+    const mark = () => { $$(sl, "[data-fx]").forEach(el => el.classList.toggle("hl", el.dataset.fx === sel)); panel.classList.toggle("pick", !!sel); };
+    $$(sl, "[data-fx]").forEach(el => el.addEventListener("click", ev => {
+      if (ev.target.closest(".nfw")) return;                                   // the cards' own controls
+      sel = sel === el.dataset.fx ? null : el.dataset.fx; mark();
+    }));
+    // congestion: normal-day roster against the forecast crew, both with a bucket brigade, peak hour
+    const G = DATA.grid, normal = G.none.forecast.peakStaff, bars = $(sl, ".nfbars"), copy = $(sl, ".nfcopy");
+    $(sl, ".nfday").append(daySeg(setDay));
+    const congest = d => {
+      const F = G[d].forecast.peakStaff, a = G[d].staff[String(normal)].brigade.lostShare, b = G[d].staff[String(F)].brigade.lostShare, mx = Math.max(a, b, 0.01);
+      const row = (lab, v, col) => `<div class="r"><span>${lab}</span><span class="b"><i style="width:${(100 * v / mx).toFixed(1)}%;background:${col}"></i></span><span class="v">${pct(v, v < 0.1 ? 1 : 0)}</span></div>`;
+      bars.innerHTML = row(`Normal-day roster (${normal})`, a, COL.red) + row(`Forecast crew (${F}) + brigade`, b, "#2F6B45");
+      copy.innerHTML = `Forecast crew plus a bucket brigade: ${DAY_LABEL[d].toLowerCase()} walk-aways <b>${pct(a, a < 0.1 ? 1 : 0)}</b> → <b>${pct(b, 1)}</b> of peak-hour orders.`;
+    };
+    BUS.fns.push(congest); congest(BUS.day);
+    // cannibalisation: the app-search site against a store beside the outlet nearest it (slide 05)
+    const ST = DATA.site, SITES = { top: ["App-search site", ST.top], beside: ["Beside an outlet", ST.besideTop] };
+    const seg = $(sl, ".nfsite"), stack = $(sl, ".nfstack"), copy2 = $(sl, ".nfcopy2");
+    let site = "top";
+    seg.innerHTML = Object.entries(SITES).map(([k, [l]]) => `<button class="btn" data-k="${k}">${l}</button>`).join("");
+    const cannibal = () => {
+      const f = SITES[site][1], mx = Math.max(ST.top.cups, ST.besideTop.cups), moved = Math.round(f.cups) - Math.round(f.netNew);
+      $$(seg, "button").forEach(b => b.classList.toggle("on", b.dataset.k === site));
+      stack.innerHTML = `<div class="sb" style="width:${(100 * f.cups / mx).toFixed(1)}%"><i style="width:${(100 * f.netNew / f.cups).toFixed(1)}%;background:${COL.navy}"></i><i style="flex:1;background:${COL.red}"></i></div>` +
+        `<div><b style="color:${COL.navy}">+${Math.round(f.netNew)}</b> added for Chagee · <b style="color:${COL.red}">${moved}</b> moved from nearby outlets</div>`;
+      copy2.innerHTML = `Of ${Math.round(f.cups)} cups at ${site === "top" ? "the new site" : "a store beside an outlet"}, <b>${moved}</b> (${pct(moved / f.cups)}) move from nearby outlets. The score subtracts them.`;
+    };
+    seg.onclick = ev => { const b = ev.target.closest("[data-k]"); if (b) { site = b.dataset.k; cannibal(); } };
+    cannibal();
+    printers.push(() => { sel = null; mark(); site = "top"; cannibal(); });
+  })();
+
   /* ---------------------------------------------------------------- 08 / 09 extension: site selection (sim/siteext.js) */
   // One shared state: the pin (precomputed from the slide 05 engine), the hand-set scores and slide 09's inputs.
   // Slide 08 steps pin -> attributes -> scores -> cannibalisation -> site score; slide 09 recomputes net profit live.
