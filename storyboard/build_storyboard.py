@@ -181,6 +181,7 @@ def values(d: dict) -> dict:
     v["r.today_hours"] = today["hoursDay"]
     v["r.today_units"] = today["units"]
     v["r.today_more"] = -today["modelMargin"]
+    v["r.single_net"] = R["single"]["modelMargin"]
     v["r.fx"] = RAW["_meta"]["fx_sgd_per_usd"]["value"]
     rep = RAW["costs"]["machine_cost_per_unit_per_month"]["represents"].replace(" Display text only.", "")
     v["s.unit_represents"] = rep[0].lower() + rep[1:] if rep.startswith("Our") else rep

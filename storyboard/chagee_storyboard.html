@@ -371,6 +371,33 @@ html,body{margin:0;background:#E7E3DC;color:var(--ink);font-family:var(--sans);-
 .bn .hstrip .rg{padding-left:10px;border-left:1px solid var(--line)}
 .bn .hstrip small{font-size:10px;color:var(--taupe)}
 .ctag{display:inline-block;margin-left:14px;vertical-align:1px;background:var(--navy);color:#fff;border-radius:999px;padding:4px 11px;font:600 11.5px/1.2 var(--sans);letter-spacing:.02em;text-transform:none}
+/* ---------- 08 machine ladder, decision view ---------- */
+.lchart{width:100%;height:auto;display:block;margin-top:4px;background:#fff;border:1px solid var(--line);border-radius:9px}
+#cm .at{margin:6px 0 0;font:11.5px/1.35 var(--sans);color:var(--ink2)}
+#cm .ladctl{flex-direction:row;gap:14px;padding:5px 10px;margin-top:6px}
+#cm .ladctl label{flex:1;display:grid;grid-template-columns:auto 1fr;gap:0 6px;font-size:11px;align-items:center}
+#cm .ladctl label input{grid-column:1 / -1}
+#cm .ladctl .val{text-align:right}
+.lad2{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:6px}
+.lad2 .r{background:#fff;border:1px solid var(--line);border-radius:8px;padding:5px 7px;font:10.5px/1.3 var(--sans);color:var(--ink2)}
+.lad2 .r .nm{font:600 11.5px/1.2 var(--sans);color:var(--ink)}
+.lad2 .r .nm i{font-style:normal;display:inline-grid;place-items:center;width:15px;height:15px;border-radius:50%;background:var(--red);color:#fff;font-size:9px;margin-right:4px;vertical-align:1px}
+.lad2 .r .pr{color:var(--ink);margin-top:2px}
+.lad2 .r .pr.nd{color:var(--taupe);font-style:italic}
+.lad2 .r .st{display:flex;gap:2px;margin-top:4px}
+.lad2 .r .st span{flex:1;height:5px;border-radius:2px;background:#E4DED2}
+.lad2 .r .st span.m{background:var(--navy)}
+.lad2 .tagr{display:inline-block;margin-top:3px;font:600 8.5px/1 var(--sans);letter-spacing:.06em;text-transform:uppercase;padding:2px 4px;border-radius:3px;background:#ECE8E0;color:var(--ink2)}
+.lad2 .tagr.claim{background:#FBEDEC;color:var(--red)} .lad2 .tagr.vendor{background:#E6EEF8;color:var(--navy)} .lad2 .tagr.press{background:#FBF5E8;color:#7A6432}
+.ins .ic{background:#fff;border:1px solid var(--line);border-left:4px solid var(--navy);border-radius:9px;padding:7px 11px}
+.ins .ic.good{border-left-color:#2F6B45} .ins .ic.bad{border-left-color:var(--red)} .ins .ic.wait{border-left-color:#B8860B}
+.ins .ic .k{font:600 9.5px/1.2 var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--taupe)}
+.ins .ic h4{margin:2px 0 1px;font:600 13.5px/1.25 var(--sans);color:var(--ink)}
+.ins .ic .big{font:500 24px/1.05 var(--serif);color:var(--ink)}
+.ins .ic .big small{font:400 11px var(--sans);color:var(--ink2);margin-left:3px}
+.ins .ic p{margin:2px 0 0;font:11px/1.36 var(--sans);color:var(--ink2)}
+.ins .asm{background:#FFF9F8;border:1px solid #EBC4C1;border-radius:9px;padding:6px 10px;font:10.6px/1.38 var(--sans);color:var(--ink2)}
+.ins .asm b{color:var(--ink)}
 .apx{columns:3;column-gap:22px;font:9.6px/1.36 var(--sans);color:var(--ink2)}
 .apx p{margin:0 0 4px;break-inside:avoid}
 .apx b{color:var(--ink)}
@@ -825,29 +852,26 @@ aside.notes{display:none}
   <div class="leafart" aria-hidden="true"></div>
   <div class="inner">
     <p class="kicker">08 · Machine ladder · physical AI: automation and machines</p>
-    <h2 class="head" style="font-size:33px">What machines exist, what they cost, and when to add them</h2>
-    <p class="sub" style="font-size:13.5px;max-width:1000px">To our knowledge, based on public sources; vendor list prices, not the cost to implement. Chagee's own equipment cost is not public; its Singapore relaunch used semi-automated equipment (Vulcan Post).</p>
-    <div class="body" style="grid-template-columns:1fr 378px;margin-top:10px;gap:14px">
-      <div class="panel" style="padding:10px 14px 9px">
-        <div class="ptop" style="min-height:20px"><span class="ptitle">The ladder · navy = steps on machines</span></div>
-        <div class="lad"></div>
-        <p class="lnote">Green = beats all by hand, across our per-outlet range of 278 to 833 cups a day; red line = your outlet. The model's S$1,909 a month is per station unit (our reading: a semi-automated station); robot prices are per setup. Semi-automation and the beverage platform are priced at that S$1,909 because their real prices are not disclosed.</p>
-      </div>
-      <div class="cards yo">
+    <h2 class="head" style="font-size:31px;max-width:1090px">A machine pays only when it removes a person-shift for less than the shift costs</h2>
+    <p class="sub" style="font-size:12.5px;max-width:1136px;margin-top:5px">To our knowledge, based on public sources; vendor list prices, not cost to implement. Chagee's equipment cost is not public; its Singapore relaunch used semi-automated equipment (Vulcan Post).</p>
+    <div class="body" style="grid-template-columns:1fr 352px;margin-top:9px;gap:14px">
+      <div class="panel" style="padding:9px 14px 8px">
+        <div class="ptop" style="min-height:18px"><span class="ptitle">Net gain a month against all by hand · one outlet</span></div>
+        <svg class="lchart" viewBox="0 0 740 232" aria-label="Net gain a month for each machine option across cups a day"></svg>
         <div class="cset screenonly sitectl ladctl"></div>
         <p class="at printonly"></p>
-        <table></table>
-        <p class="lnote"><b>Why a single machine pays:</b> it saves 8 person-hours a day (S$3,614 a month), because in 8 off-peak hours the roster drops from 2 people to 1. Today's split saves 12 hours a day but pays for 3 station units. <b>Model assumption:</b> the minimum crew is 2 by hand and 1 with machines, and it drives this result; robot rungs save no more than today's split until about 757 cups a day. Station speeds are the model's, not vendor claims. Simple payback = list price ÷ labour saved a month; no installation, maintenance or financing.</p>
+        <div class="lad2"></div>
+        <p class="lnote" style="margin-top:5px">The model's S$1,909 a month is per station unit (our reading: a semi-automated station). Semi-automation and the beverage platform are priced at it because their real prices are not disclosed; robot prices are per setup. Full table and sources in the appendix.</p>
       </div>
+      <div class="cards ins" style="gap:7px"></div>
     </div>
-    <div class="takeaway" style="margin-top:10px;padding:10px 22px"><span class="lab">TAKEAWAY</span><span>A single machine that lets the roster drop one person for 8 off-peak hours pays at 556 cups a day under the model; today's 3-station split does not (S$305 a month more than all by hand). Rosters step in whole people, so this flips with volume and wage.</span></div>
+    <div class="takeaway" style="margin-top:9px;padding:9px 22px"><span class="lab">TAKEAWAY</span><span>At 556 cups a day: start with one machine (about +S$1,706 a month); today's 3-station split costs S$305 a month more than all by hand; robots save no more labour than today's split until about 757 cups a day.</span></div>
   </div>
   <div class="foot"><span>OPIM639 · Group 3 · Vendor and press figures; not Chagee data · model figures are illustrative assumptions</span><span class="rail"></span><span class="pg"></span></div>
   <aside class="notes">
-    <p>This is physical AI: automation and machines at the counter. The predictive AI is the forecast that sets the roster. The ladder runs from semi-automation, kiosks and sealers, up to a robot barista. Navy chips are the counter steps each rung puts on machines. The dashed row is our own scenario, today's split from slide 07, so the ladder does not start from an all-human counter.</p>
-    <p>Prices are vendor list prices from public sources, not the cost to implement. Gong cha and Richtech do not publish prices, so we show the cost a setup would need to stay under to break even. The robot barista is coffee-first; no tea drinks are listed for Oli.</p>
-    <p>On the right, set your outlet's cups a day, the wage and the machine rate. Why a single machine pays and today's split does not: one machine lets the roster drop from 2 people to 1 in 8 off-peak hours, about one person-shift a day, at the cost of one station unit. Today's split saves 12 person-hours but pays for 3 units, so it ends up a little dearer than all by hand. That minimum crew, 2 by hand and 1 with machines, is our model's assumption, and rosters step in whole people, so the answer flips with volume and wage.</p>
-    <p>Payback is simple payback, if the machine lets the roster drop one person-shift; it leaves out installation, maintenance and financing. Semi-automation and the beverage platform have no published price, so they are priced at the model's per-unit rate. Chagee's own equipment cost is not public. About one minute.</p>
+    <p>This is physical AI: automation and machines at the counter. The predictive AI is the forecast that sets the roster. One rule explains the whole slide: a machine pays only when it removes a person-shift, and costs less than that shift.</p>
+    <p>The chart shows the net gain a month against an all-by-hand counter as volume changes; above the line it pays. One tea-and-milk machine lets the roster drop from 2 people to 1 in 8 off-peak hours, about one person-shift a day, for one station unit: it pays across most of the range. Today's split saves 12 person-hours but pays for 3 units, so it ends up a little dearer than all by hand. A robot saves no more labour than today's split until about 757 cups a day, so at Oli's lease it only pays at the top of our range.</p>
+    <p>Three things to say out loud. The minimum crew, 2 by hand and 1 with machines, is our model's assumption and drives this result. Every option runs at the model's station speeds, not vendor claims. Payback is simple payback, if the machine lets the roster drop one person-shift, with no installation, maintenance or financing. Chagee's own equipment cost is not public. About one minute.</p>
   </aside>
 </section>
 
@@ -2956,74 +2980,82 @@ aside.notes{display:none}
   });
 
   /* ---------------------------------------------------------------- 08 machine ladder (sim/ladder.js, machine_tiers.json) */
+  // Decision view: net gain a month against all by hand, across cups a day, for each option; three insight cards.
   (function ladder() {
     const sl = $(document, "#cm"); if (!sl) return;
-    const L = window.ChageeLadder, TI = window.STORY.TIERS, fx = RAW._meta.fx_sgd_per_usd.value;
-    const lad = $(sl, ".lad"), tb = $(sl, ".yo table"), ctl = $(sl, ".ladctl"), atP = $(sl, ".yo .at");
-    const SHORT = { ticket: "Tag", cup_ice: "Cup", tea_milk: "Tea", topping_finish: "Top", shake_seal: "Seal", handover: "Hand" };
-    const RUNG = { semi: "Semi-automation", platform: "Beverage platform", single: "Milk-tea machine", today: "Today's split", arm: "Robot arm", barista: "Robot barista" };
-    const EX = { semi: "Gong Cha Singapore", platform: "Gong cha Super Wu, Feb 2026", single: "Amacha, one small shop", today: "Our scenario (slides 06 and 07), not Chagee's disclosed setup",
-                 arm: "Richtech ADAM, makes boba", barista: "Oli; coffee-first, no tea listed" };
-    const money = (x, cur = "S$") => `${cur}${Math.round(x).toLocaleString("en-SG")}`;
-    const TAG = { "company claim": "claim", "vendor page": "vendor", press: "press", "our assumption": "" };
-    const tier = id => TI.tiers.find(t => t.id === id);
-    const ORDER = ["semi", "platform", "single", "today", "arm", "barista"];
-    const D0 = DATA.ladder.at, cr = RAW.costs;
-    const IN = [["cupsDay", "Cups a day", DATA.ladder.volumes.lo, DATA.ladder.volumes.hi, 1, v => `${v}`],
+    const L = window.ChageeLadder, TI = window.STORY.TIERS, cr = RAW.costs, VR0 = DATA.ladder.volumes;
+    const svg = $(sl, ".lchart"), ins = $(sl, ".ins"), ctl = $(sl, ".ladctl"), atP = $(sl, ".at"), lad = $(sl, ".lad2");
+    const money = (x, sign = false) => `${x < 0 ? "−" : sign ? "+" : ""}S$${Math.abs(Math.round(x)).toLocaleString("en-SG")}`;
+    const D0 = DATA.ladder.at, o = { ...D0 };
+    const IN = [["cupsDay", "Cups a day", VR0.lo, VR0.hi, 1, v => `${v}`],
                 ["wage", "Wage an hour", ...cr.labour_cost_per_hour.range, 0.01, v => `S$${v.toFixed(2)}`],
-                ["unitMonth", "Machine, per unit", ...cr.machine_cost_per_unit_per_month.range, 1, v => money(v)]];
-    const o = { ...D0 };
+                ["unitMonth", "Machine, per unit a month", ...cr.machine_cost_per_unit_per_month.range, 1, v => money(v)]];
     ctl.innerHTML = IN.map(([k, lab, lo, hi, st, f]) =>
       `<label>${lab}<span class="val" data-v="${k}">${f(o[k])}</span><input type="range" data-k="${k}" min="${lo}" max="${hi}" step="${st}" value="${o[k]}"></label>`).join("");
-    const priceText = (ex) => {
-      const c = ex.cost;
-      if (c.kind === "not_disclosed") return `<span class="pr nd">Not disclosed${c.note ? ", rental only" : ""}</span>`;
-      const cur = c.currency === "USD" ? "US$" : "S$";
-      if (c.kind === "purchase") return `<span class="pr">${money(c.purchase, cur)} to buy</span>`;
-      return `<span class="pr">${money(c.lease_month, cur)}/mo lease, ${money(c.purchase, cur)} buy</span>`;
-    };
-    let VOL = DATA.ladder.volumes, volKey = "";
-    function draw() {
-      const ev = L.evaluate(Sim, C, RAW, P, TI, o), E = Object.fromEntries(ev.map(r => [r.id, r]));
-      const key = `${o.wage}|${o.unitMonth}`;
-      if (key !== volKey) { VOL = (o.wage === D0.wage && o.unitMonth === D0.unitMonth) ? DATA.ladder.volumes : L.volumes(Sim, C, RAW, P, TI, o); volKey = key; }
-      const VR = Object.fromEntries(VOL.rungs.map(r => [r.id, r])), span = VOL.hi - VOL.lo;
-      const pos = x => `${(100 * (x - VOL.lo)) / span}%`;
-      let n = 0;
-      lad.innerHTML = `<div class="hd"><span></span><span>Rung · example</span><span>Vendor list price · source</span><span>Steps on machines</span><span>Beats hand, cups/day</span></div>` +
-        ORDER.map(id => {
-          const r = E[id], v = VR[id], base = id === "today", t = base ? null : tier(id);
-          const shown = base ? [] : t.examples.filter(e => e.cost.kind !== "estimate");
-          const ex = EX[id];
-          const rel = base ? TI.baseline.reliability : shown[0].reliability;
-          const price = base ? `<span class="pr">Model: ${money(o.unitMonth)}/mo per station unit</span>` : shown.map(priceText).join("");
-          const strip = v.basis === "none"
-            ? `<div class="strip none"><b style="left:${pos(o.cupsDay)}"></b></div><div class="sl">No price to test</div>`
-            : `<div class="strip">${v.beatsBands.map(([a, b]) => `<i style="left:${pos(a - 0.5)};width:${(100 * (b - a + 1)) / span}%"></i>`).join("")}<b style="left:${pos(o.cupsDay)}"></b></div>
-               <div class="sl">${v.beatsBands.length ? v.beatsBands.map(([a, b]) => (a === b ? `${a}` : `${a}–${b}`)).join(", ") : "Not in this range"}${v.basis === "lease" ? " at lease" : ""}</div>`;
-          return `<div class="rung${base ? " base" : ""}"><span class="badge">${base ? "" : ++n}</span>
-            <div><div class="nm">${RUNG[id]}</div><div class="ex">${ex}</div></div>
-            <div>${price}<span class="tagr ${TAG[rel] ?? ""}">${rel}</span></div>
-            <div class="steps">${P.stations.map(st => `<span class="${r.robots.includes(st) ? "m" : ""}">${SHORT[st]}</span>`).join("")}</div>
-            <div>${strip}</div></div>`;
-        }).join("");
-      const rateLine = r => `Model: ${r.units} × ${money(o.unitMonth)}, ${r.modelMargin >= 0 ? `beats by ${money(r.modelMargin)}` : `${money(-r.modelMargin)} more`}`;
-      tb.innerHTML = `<tr><th>A month</th><th class="sv">Saved</th><th>Against all by hand</th></tr>` + ORDER.map(id => {
-        const r = E[id];
-        let main, small = "";
-        if (id === "today") { main = `<span class="v ${r.modelMargin >= 0 ? "good" : "bad"}">${r.modelMargin >= 0 ? `Beats by ${money(r.modelMargin)}` : `${money(-r.modelMargin)} more`}</span>`; small = `Model: ${r.units} × ${money(o.unitMonth)}`; }
-        else if (r.lease) { const m = r.leaseMargin;
-          main = `<span class="v ${m >= 0 ? "good" : "bad"}">${r.lease.name} lease ${money(r.lease.lease)}: ${m >= 0 ? `beats by ${money(m)}` : `${money(-m)} more`}</span>`;
-          small = r.payback.map(p => `Buy ${money(p.priceRaw, p.currency === "USD" ? "US$" : "S$")}: simple payback ${p.months.toFixed(1)} months`).join("; "); }
-        else if (r.payback.length) { const p = r.payback[0], m = r.modelMargin;     // payback stays small: it assumes the roster drops a person-shift
-          main = `<span class="v ${m >= 0 ? "good" : "bad"}">${m >= 0 ? `Beats by ${money(m)}` : `${money(-m)} more`}</span>`;
-          small = `Model: ${r.units} × ${money(o.unitMonth)}. Simple payback, if the machine lets the roster drop one person-shift: ${p.months.toFixed(1)} months on ${money(p.priceRaw)}`; }
-        else { main = `<span class="v mid">Break-even: setup under ${money(r.breakEvenSetup)}/mo</span>`; small = r.modelRate ? rateLine(r) : "No public price"; }
-        return `<tr><td>${RUNG[id]}</td><td class="sv">${money(r.saved)}</td><td>${main}<span class="small${small.length > 60 ? " wrap" : ""}">${small}</span></td></tr>`;
-      }).join("");
-      atP.textContent = `Your outlet: ${o.cupsDay} cups a day, wage S$${o.wage.toFixed(2)} an hour, ${money(o.unitMonth)} a month per station unit (the model's defaults; sliders on screen).`;
+    // the ladder, compact: every rung, its example, price as published and source tag; bars = steps on machines
+    const TAG = { "company claim": "claim", "vendor page": "vendor", press: "press", "our assumption": "" };
+    const EX = { semi: "Gong Cha Singapore", platform: "Gong cha Super Wu", single: "Amacha, one shop", arm: "Richtech ADAM", barista: "Oli; coffee-first" };
+    const NM = { semi: "Semi-automation", platform: "Beverage platform", single: "Milk-tea machine", arm: "Robot arm", barista: "Robot barista" };
+    const price = c => c.kind === "not_disclosed" ? `<div class="pr nd">Not disclosed${c.note ? ", rental only" : ""}</div>`
+      : c.kind === "purchase" ? `<div class="pr">S$${c.purchase.toLocaleString("en-SG")} to buy</div>`
+      : `<div class="pr">US$${c.lease_month.toLocaleString("en-SG")}/mo lease</div>`;
+    lad.innerHTML = TI.tiers.map((t, i) => { const e = t.examples[0];
+      return `<div class="r"><div class="nm"><i>${i + 1}</i>${NM[t.id]}</div><div>${EX[t.id]}</div>${price(e.cost)}` +
+        `<span class="tagr ${TAG[e.reliability] ?? ""}">${e.reliability}</span><div class="st">${P.stations.map(st => `<span class="${t.replaces.includes(st) ? "m" : ""}"></span>`).join("")}</div></div>`; }).join("");
+    // the chart's options: net = labour saved - cost; cost at the model's rate per unit, or Oli's lease per setup
+    const SER = [["single", "One machine (tea and milk)", "#2F6B45", "model"], ["semi", "Semi-automation (kiosk and sealer)", "#B8860B", "model"],
+                 ["today", "Today's split (3 stations)", COL.navy, "model"], ["barista", "Robot barista at Oli's lease", COL.red, "lease"]];
+    let key = "", series = null;
+    function compute() {
+      const k = `${o.wage}|${o.unitMonth}`; if (k === key) return; key = k;
+      const vols = []; for (let v = VR0.lo; v <= VR0.hi; v += 3) vols.push(v);
+      series = { vols, lines: SER.map(([id]) => vols.map(v => { const r = L.evaluate(Sim, C, RAW, P, TI, { ...o, cupsDay: v }).find(x => x.id === id);
+        return id === "barista" ? r.leaseMargin : r.modelMargin; })) };
+    }
+    function chart() {
+      const W = 740, H = 232, l = 62, r = 196, t = 14, b = 30, { vols, lines } = series;
+      const all = lines.flat().concat(0), lo = Math.min(...all), hi = Math.max(...all);
+      const X = v => l + (v - vols[0]) / (vols[vols.length - 1] - vols[0]) * (W - l - r), Y = y => t + (hi - y) / (hi - lo || 1) * (H - t - b);
+      let s = `<rect x="${l}" y="${t}" width="${W - l - r}" height="${Y(0) - t}" fill="#EEF5F0"/>` +
+        `<text x="${l + 6}" y="${t + 13}" font-size="11" fill="#2F6B45" font-weight="600">Pays (above the line)</text>` +
+        `<text x="${l + 6}" y="${H - b - 6}" font-size="11" fill="${COL.red}" font-weight="600">Costs more than all by hand</text>`;
+      const step = Math.max(1000, Math.ceil((hi - lo) / 4 / 1000) * 1000);
+      for (let y = Math.ceil(lo / step) * step; y <= hi; y += step)
+        s += `<line x1="${l}" x2="${W - r}" y1="${Y(y)}" y2="${Y(y)}" stroke="${y === 0 ? COL.ink2 : COL.line}" stroke-width="${y === 0 ? 1.5 : 1}"/>` + T(l - 6, Y(y) + 4, money(y), `font-size="10" text-anchor="end" fill="${COL.taupe}"`);
+      [vols[0], 400, 556, 700, vols[vols.length - 1]].filter((v, i, a) => a.indexOf(v) === i && v >= vols[0] && v <= vols[vols.length - 1]).forEach(v =>
+        (s += T(X(v), H - b + 15, v, `font-size="10" text-anchor="middle" fill="${COL.taupe}"`)));
+      s += T((l + W - r) / 2, H - 3, "cups a day at your outlet", `font-size="10" text-anchor="middle" fill="${COL.taupe}"`);
+      const ends = [];
+      lines.forEach((ys, i) => {
+        const [, lab, col] = SER[i];
+        s += `<path d="${ys.map((y, k) => `${k ? "L" : "M"}${X(vols[k]).toFixed(1)} ${Y(y).toFixed(1)}`).join("")}" fill="none" stroke="${col}" stroke-width="${i === 0 ? 3 : 2}"${SER[i][0] === "today" ? ' stroke-dasharray="6 4"' : ""}/>`;
+        ends.push({ y: Y(ys[ys.length - 1]), lab, col });
+      });
+      ends.sort((a, c) => a.y - c.y).forEach((e, i, arr) => { if (i && e.y - arr[i - 1].y < 14) e.y = arr[i - 1].y + 14; });
+      ends.forEach(e => (s += T(W - r + 8, e.y + 4, e.lab, `font-size="11" fill="${e.col}" font-weight="600"`)));
+      s += `<line x1="${X(o.cupsDay)}" x2="${X(o.cupsDay)}" y1="${t}" y2="${H - b}" stroke="${COL.red}" stroke-width="1.5"/>` +
+        T(X(o.cupsDay) + 4, t + 26, "your outlet", `font-size="10" fill="${COL.red}"`);
+      svg.innerHTML = s;
+    }
+    function cards() {
+      const E = Object.fromEntries(L.evaluate(Sim, C, RAW, P, TI, o).map(r => [r.id, r]));
+      const one = E.single, td = E.today, rb = E.barista, V = L.volumes(Sim, C, RAW, P, TI, o), more = V.rungs.find(x => x.id === "barista").moreBands[0];
+      const pb = one.payback[0], mh = P.minStaff.all_human, mm = P.minStaff.mixed;
+      ins.innerHTML =
+        `<div class="ic ${one.modelMargin >= 0 ? "good" : "bad"}"><div class="k">Start here</div><h4>One machine on the tea and milk</h4>` +
+        `<div class="big">${money(one.modelMargin, true)}<small>a month vs all by hand</small></div>` +
+        `<p>Saves ${one.hoursDay} person-hours a day (${money(one.saved)} a month) for one ${money(o.unitMonth)} unit. Simple payback, if it lets the roster drop one person-shift: ${pb.months.toFixed(1)} months on ${pb.name.split(" (")[0]}'s S$${pb.priceRaw.toLocaleString("en-SG")}.</p></div>` +
+        `<div class="ic ${td.modelMargin >= 0 ? "good" : "bad"}"><div class="k">Watch</div><h4>Today's ${td.units}-station split</h4>` +
+        `<div class="big">${money(td.modelMargin, true)}<small>a month vs all by hand</small></div>` +
+        `<p>Saves ${td.hoursDay} person-hours a day (${money(td.saved)}) but pays for ${td.units} units (${money(td.modelCost)}).</p></div>` +
+        `<div class="ic wait"><div class="k">Wait for volume</div><h4>Robots: arm or barista</h4>` +
+        `<div class="big">${more ? `${more[0]}+` : "–"}<small>cups a day before they beat today's split on labour</small></div>` +
+        `<p>At ${o.cupsDay} cups, Oli's lease (${money(rb.lease.lease)}) is ${rb.leaseMargin >= 0 ? `${money(rb.leaseMargin)} better` : `${money(-rb.leaseMargin)} a month worse`}; a robot setup would need to cost under ${money(rb.breakEvenSetup)} a month. The arm's price is not disclosed.</p></div>` +
+        `<div class="asm"><b>Model assumption that drives all three:</b> minimum crew ${mh} by hand, ${mm} with machines, off-peak. Station speeds are the model's, not vendor claims. Rosters step in whole people, so results flip with volume and wage.</div>`;
+      atP.textContent = `Shown at ${o.cupsDay} cups a day, wage S$${o.wage.toFixed(2)} an hour, ${money(o.unitMonth)} a month per machine unit (sliders on screen).`;
       $$(ctl, "[data-v]").forEach(el => { const d = IN.find(x => x[0] === el.dataset.v); el.textContent = d[5](o[d[0]]); });
     }
+    function draw() { compute(); chart(); cards(); }
     ctl.addEventListener("input", e => { const k = e.target.dataset.k; if (!k) return; o[k] = +e.target.value;
       $$(ctl, "[data-v]").forEach(el => { const d = IN.find(x => x[0] === el.dataset.v); el.textContent = d[5](o[d[0]]); });
       clearTimeout(ctl.tm); ctl.tm = setTimeout(draw, 60); });

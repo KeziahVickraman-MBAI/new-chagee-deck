@@ -576,74 +576,82 @@
   });
 
   /* ---------------------------------------------------------------- 08 machine ladder (sim/ladder.js, machine_tiers.json) */
+  // Decision view: net gain a month against all by hand, across cups a day, for each option; three insight cards.
   (function ladder() {
     const sl = $(document, "#cm"); if (!sl) return;
-    const L = window.ChageeLadder, TI = window.STORY.TIERS, fx = RAW._meta.fx_sgd_per_usd.value;
-    const lad = $(sl, ".lad"), tb = $(sl, ".yo table"), ctl = $(sl, ".ladctl"), atP = $(sl, ".yo .at");
-    const SHORT = { ticket: "Tag", cup_ice: "Cup", tea_milk: "Tea", topping_finish: "Top", shake_seal: "Seal", handover: "Hand" };
-    const RUNG = { semi: "Semi-automation", platform: "Beverage platform", single: "Milk-tea machine", today: "Today's split", arm: "Robot arm", barista: "Robot barista" };
-    const EX = { semi: "Gong Cha Singapore", platform: "Gong cha Super Wu, Feb 2026", single: "Amacha, one small shop", today: "Our scenario (slides 06 and 07), not Chagee's disclosed setup",
-                 arm: "Richtech ADAM, makes boba", barista: "Oli; coffee-first, no tea listed" };
-    const money = (x, cur = "S$") => `${cur}${Math.round(x).toLocaleString("en-SG")}`;
-    const TAG = { "company claim": "claim", "vendor page": "vendor", press: "press", "our assumption": "" };
-    const tier = id => TI.tiers.find(t => t.id === id);
-    const ORDER = ["semi", "platform", "single", "today", "arm", "barista"];
-    const D0 = DATA.ladder.at, cr = RAW.costs;
-    const IN = [["cupsDay", "Cups a day", DATA.ladder.volumes.lo, DATA.ladder.volumes.hi, 1, v => `${v}`],
+    const L = window.ChageeLadder, TI = window.STORY.TIERS, cr = RAW.costs, VR0 = DATA.ladder.volumes;
+    const svg = $(sl, ".lchart"), ins = $(sl, ".ins"), ctl = $(sl, ".ladctl"), atP = $(sl, ".at"), lad = $(sl, ".lad2");
+    const money = (x, sign = false) => `${x < 0 ? "−" : sign ? "+" : ""}S$${Math.abs(Math.round(x)).toLocaleString("en-SG")}`;
+    const D0 = DATA.ladder.at, o = { ...D0 };
+    const IN = [["cupsDay", "Cups a day", VR0.lo, VR0.hi, 1, v => `${v}`],
                 ["wage", "Wage an hour", ...cr.labour_cost_per_hour.range, 0.01, v => `S$${v.toFixed(2)}`],
-                ["unitMonth", "Machine, per unit", ...cr.machine_cost_per_unit_per_month.range, 1, v => money(v)]];
-    const o = { ...D0 };
+                ["unitMonth", "Machine, per unit a month", ...cr.machine_cost_per_unit_per_month.range, 1, v => money(v)]];
     ctl.innerHTML = IN.map(([k, lab, lo, hi, st, f]) =>
       `<label>${lab}<span class="val" data-v="${k}">${f(o[k])}</span><input type="range" data-k="${k}" min="${lo}" max="${hi}" step="${st}" value="${o[k]}"></label>`).join("");
-    const priceText = (ex) => {
-      const c = ex.cost;
-      if (c.kind === "not_disclosed") return `<span class="pr nd">Not disclosed${c.note ? ", rental only" : ""}</span>`;
-      const cur = c.currency === "USD" ? "US$" : "S$";
-      if (c.kind === "purchase") return `<span class="pr">${money(c.purchase, cur)} to buy</span>`;
-      return `<span class="pr">${money(c.lease_month, cur)}/mo lease, ${money(c.purchase, cur)} buy</span>`;
-    };
-    let VOL = DATA.ladder.volumes, volKey = "";
-    function draw() {
-      const ev = L.evaluate(Sim, C, RAW, P, TI, o), E = Object.fromEntries(ev.map(r => [r.id, r]));
-      const key = `${o.wage}|${o.unitMonth}`;
-      if (key !== volKey) { VOL = (o.wage === D0.wage && o.unitMonth === D0.unitMonth) ? DATA.ladder.volumes : L.volumes(Sim, C, RAW, P, TI, o); volKey = key; }
-      const VR = Object.fromEntries(VOL.rungs.map(r => [r.id, r])), span = VOL.hi - VOL.lo;
-      const pos = x => `${(100 * (x - VOL.lo)) / span}%`;
-      let n = 0;
-      lad.innerHTML = `<div class="hd"><span></span><span>Rung · example</span><span>Vendor list price · source</span><span>Steps on machines</span><span>Beats hand, cups/day</span></div>` +
-        ORDER.map(id => {
-          const r = E[id], v = VR[id], base = id === "today", t = base ? null : tier(id);
-          const shown = base ? [] : t.examples.filter(e => e.cost.kind !== "estimate");
-          const ex = EX[id];
-          const rel = base ? TI.baseline.reliability : shown[0].reliability;
-          const price = base ? `<span class="pr">Model: ${money(o.unitMonth)}/mo per station unit</span>` : shown.map(priceText).join("");
-          const strip = v.basis === "none"
-            ? `<div class="strip none"><b style="left:${pos(o.cupsDay)}"></b></div><div class="sl">No price to test</div>`
-            : `<div class="strip">${v.beatsBands.map(([a, b]) => `<i style="left:${pos(a - 0.5)};width:${(100 * (b - a + 1)) / span}%"></i>`).join("")}<b style="left:${pos(o.cupsDay)}"></b></div>
-               <div class="sl">${v.beatsBands.length ? v.beatsBands.map(([a, b]) => (a === b ? `${a}` : `${a}–${b}`)).join(", ") : "Not in this range"}${v.basis === "lease" ? " at lease" : ""}</div>`;
-          return `<div class="rung${base ? " base" : ""}"><span class="badge">${base ? "" : ++n}</span>
-            <div><div class="nm">${RUNG[id]}</div><div class="ex">${ex}</div></div>
-            <div>${price}<span class="tagr ${TAG[rel] ?? ""}">${rel}</span></div>
-            <div class="steps">${P.stations.map(st => `<span class="${r.robots.includes(st) ? "m" : ""}">${SHORT[st]}</span>`).join("")}</div>
-            <div>${strip}</div></div>`;
-        }).join("");
-      const rateLine = r => `Model: ${r.units} × ${money(o.unitMonth)}, ${r.modelMargin >= 0 ? `beats by ${money(r.modelMargin)}` : `${money(-r.modelMargin)} more`}`;
-      tb.innerHTML = `<tr><th>A month</th><th class="sv">Saved</th><th>Against all by hand</th></tr>` + ORDER.map(id => {
-        const r = E[id];
-        let main, small = "";
-        if (id === "today") { main = `<span class="v ${r.modelMargin >= 0 ? "good" : "bad"}">${r.modelMargin >= 0 ? `Beats by ${money(r.modelMargin)}` : `${money(-r.modelMargin)} more`}</span>`; small = `Model: ${r.units} × ${money(o.unitMonth)}`; }
-        else if (r.lease) { const m = r.leaseMargin;
-          main = `<span class="v ${m >= 0 ? "good" : "bad"}">${r.lease.name} lease ${money(r.lease.lease)}: ${m >= 0 ? `beats by ${money(m)}` : `${money(-m)} more`}</span>`;
-          small = r.payback.map(p => `Buy ${money(p.priceRaw, p.currency === "USD" ? "US$" : "S$")}: simple payback ${p.months.toFixed(1)} months`).join("; "); }
-        else if (r.payback.length) { const p = r.payback[0], m = r.modelMargin;     // payback stays small: it assumes the roster drops a person-shift
-          main = `<span class="v ${m >= 0 ? "good" : "bad"}">${m >= 0 ? `Beats by ${money(m)}` : `${money(-m)} more`}</span>`;
-          small = `Model: ${r.units} × ${money(o.unitMonth)}. Simple payback, if the machine lets the roster drop one person-shift: ${p.months.toFixed(1)} months on ${money(p.priceRaw)}`; }
-        else { main = `<span class="v mid">Break-even: setup under ${money(r.breakEvenSetup)}/mo</span>`; small = r.modelRate ? rateLine(r) : "No public price"; }
-        return `<tr><td>${RUNG[id]}</td><td class="sv">${money(r.saved)}</td><td>${main}<span class="small${small.length > 60 ? " wrap" : ""}">${small}</span></td></tr>`;
-      }).join("");
-      atP.textContent = `Your outlet: ${o.cupsDay} cups a day, wage S$${o.wage.toFixed(2)} an hour, ${money(o.unitMonth)} a month per station unit (the model's defaults; sliders on screen).`;
+    // the ladder, compact: every rung, its example, price as published and source tag; bars = steps on machines
+    const TAG = { "company claim": "claim", "vendor page": "vendor", press: "press", "our assumption": "" };
+    const EX = { semi: "Gong Cha Singapore", platform: "Gong cha Super Wu", single: "Amacha, one shop", arm: "Richtech ADAM", barista: "Oli; coffee-first" };
+    const NM = { semi: "Semi-automation", platform: "Beverage platform", single: "Milk-tea machine", arm: "Robot arm", barista: "Robot barista" };
+    const price = c => c.kind === "not_disclosed" ? `<div class="pr nd">Not disclosed${c.note ? ", rental only" : ""}</div>`
+      : c.kind === "purchase" ? `<div class="pr">S$${c.purchase.toLocaleString("en-SG")} to buy</div>`
+      : `<div class="pr">US$${c.lease_month.toLocaleString("en-SG")}/mo lease</div>`;
+    lad.innerHTML = TI.tiers.map((t, i) => { const e = t.examples[0];
+      return `<div class="r"><div class="nm"><i>${i + 1}</i>${NM[t.id]}</div><div>${EX[t.id]}</div>${price(e.cost)}` +
+        `<span class="tagr ${TAG[e.reliability] ?? ""}">${e.reliability}</span><div class="st">${P.stations.map(st => `<span class="${t.replaces.includes(st) ? "m" : ""}"></span>`).join("")}</div></div>`; }).join("");
+    // the chart's options: net = labour saved - cost; cost at the model's rate per unit, or Oli's lease per setup
+    const SER = [["single", "One machine (tea and milk)", "#2F6B45", "model"], ["semi", "Semi-automation (kiosk and sealer)", "#B8860B", "model"],
+                 ["today", "Today's split (3 stations)", COL.navy, "model"], ["barista", "Robot barista at Oli's lease", COL.red, "lease"]];
+    let key = "", series = null;
+    function compute() {
+      const k = `${o.wage}|${o.unitMonth}`; if (k === key) return; key = k;
+      const vols = []; for (let v = VR0.lo; v <= VR0.hi; v += 3) vols.push(v);
+      series = { vols, lines: SER.map(([id]) => vols.map(v => { const r = L.evaluate(Sim, C, RAW, P, TI, { ...o, cupsDay: v }).find(x => x.id === id);
+        return id === "barista" ? r.leaseMargin : r.modelMargin; })) };
+    }
+    function chart() {
+      const W = 740, H = 232, l = 62, r = 196, t = 14, b = 30, { vols, lines } = series;
+      const all = lines.flat().concat(0), lo = Math.min(...all), hi = Math.max(...all);
+      const X = v => l + (v - vols[0]) / (vols[vols.length - 1] - vols[0]) * (W - l - r), Y = y => t + (hi - y) / (hi - lo || 1) * (H - t - b);
+      let s = `<rect x="${l}" y="${t}" width="${W - l - r}" height="${Y(0) - t}" fill="#EEF5F0"/>` +
+        `<text x="${l + 6}" y="${t + 13}" font-size="11" fill="#2F6B45" font-weight="600">Pays (above the line)</text>` +
+        `<text x="${l + 6}" y="${H - b - 6}" font-size="11" fill="${COL.red}" font-weight="600">Costs more than all by hand</text>`;
+      const step = Math.max(1000, Math.ceil((hi - lo) / 4 / 1000) * 1000);
+      for (let y = Math.ceil(lo / step) * step; y <= hi; y += step)
+        s += `<line x1="${l}" x2="${W - r}" y1="${Y(y)}" y2="${Y(y)}" stroke="${y === 0 ? COL.ink2 : COL.line}" stroke-width="${y === 0 ? 1.5 : 1}"/>` + T(l - 6, Y(y) + 4, money(y), `font-size="10" text-anchor="end" fill="${COL.taupe}"`);
+      [vols[0], 400, 556, 700, vols[vols.length - 1]].filter((v, i, a) => a.indexOf(v) === i && v >= vols[0] && v <= vols[vols.length - 1]).forEach(v =>
+        (s += T(X(v), H - b + 15, v, `font-size="10" text-anchor="middle" fill="${COL.taupe}"`)));
+      s += T((l + W - r) / 2, H - 3, "cups a day at your outlet", `font-size="10" text-anchor="middle" fill="${COL.taupe}"`);
+      const ends = [];
+      lines.forEach((ys, i) => {
+        const [, lab, col] = SER[i];
+        s += `<path d="${ys.map((y, k) => `${k ? "L" : "M"}${X(vols[k]).toFixed(1)} ${Y(y).toFixed(1)}`).join("")}" fill="none" stroke="${col}" stroke-width="${i === 0 ? 3 : 2}"${SER[i][0] === "today" ? ' stroke-dasharray="6 4"' : ""}/>`;
+        ends.push({ y: Y(ys[ys.length - 1]), lab, col });
+      });
+      ends.sort((a, c) => a.y - c.y).forEach((e, i, arr) => { if (i && e.y - arr[i - 1].y < 14) e.y = arr[i - 1].y + 14; });
+      ends.forEach(e => (s += T(W - r + 8, e.y + 4, e.lab, `font-size="11" fill="${e.col}" font-weight="600"`)));
+      s += `<line x1="${X(o.cupsDay)}" x2="${X(o.cupsDay)}" y1="${t}" y2="${H - b}" stroke="${COL.red}" stroke-width="1.5"/>` +
+        T(X(o.cupsDay) + 4, t + 26, "your outlet", `font-size="10" fill="${COL.red}"`);
+      svg.innerHTML = s;
+    }
+    function cards() {
+      const E = Object.fromEntries(L.evaluate(Sim, C, RAW, P, TI, o).map(r => [r.id, r]));
+      const one = E.single, td = E.today, rb = E.barista, V = L.volumes(Sim, C, RAW, P, TI, o), more = V.rungs.find(x => x.id === "barista").moreBands[0];
+      const pb = one.payback[0], mh = P.minStaff.all_human, mm = P.minStaff.mixed;
+      ins.innerHTML =
+        `<div class="ic ${one.modelMargin >= 0 ? "good" : "bad"}"><div class="k">Start here</div><h4>One machine on the tea and milk</h4>` +
+        `<div class="big">${money(one.modelMargin, true)}<small>a month vs all by hand</small></div>` +
+        `<p>Saves ${one.hoursDay} person-hours a day (${money(one.saved)} a month) for one ${money(o.unitMonth)} unit. Simple payback, if it lets the roster drop one person-shift: ${pb.months.toFixed(1)} months on ${pb.name.split(" (")[0]}'s S$${pb.priceRaw.toLocaleString("en-SG")}.</p></div>` +
+        `<div class="ic ${td.modelMargin >= 0 ? "good" : "bad"}"><div class="k">Watch</div><h4>Today's ${td.units}-station split</h4>` +
+        `<div class="big">${money(td.modelMargin, true)}<small>a month vs all by hand</small></div>` +
+        `<p>Saves ${td.hoursDay} person-hours a day (${money(td.saved)}) but pays for ${td.units} units (${money(td.modelCost)}).</p></div>` +
+        `<div class="ic wait"><div class="k">Wait for volume</div><h4>Robots: arm or barista</h4>` +
+        `<div class="big">${more ? `${more[0]}+` : "–"}<small>cups a day before they beat today's split on labour</small></div>` +
+        `<p>At ${o.cupsDay} cups, Oli's lease (${money(rb.lease.lease)}) is ${rb.leaseMargin >= 0 ? `${money(rb.leaseMargin)} better` : `${money(-rb.leaseMargin)} a month worse`}; a robot setup would need to cost under ${money(rb.breakEvenSetup)} a month. The arm's price is not disclosed.</p></div>` +
+        `<div class="asm"><b>Model assumption that drives all three:</b> minimum crew ${mh} by hand, ${mm} with machines, off-peak. Station speeds are the model's, not vendor claims. Rosters step in whole people, so results flip with volume and wage.</div>`;
+      atP.textContent = `Shown at ${o.cupsDay} cups a day, wage S$${o.wage.toFixed(2)} an hour, ${money(o.unitMonth)} a month per machine unit (sliders on screen).`;
       $$(ctl, "[data-v]").forEach(el => { const d = IN.find(x => x[0] === el.dataset.v); el.textContent = d[5](o[d[0]]); });
     }
+    function draw() { compute(); chart(); cards(); }
     ctl.addEventListener("input", e => { const k = e.target.dataset.k; if (!k) return; o[k] = +e.target.value;
       $$(ctl, "[data-v]").forEach(el => { const d = IN.find(x => x[0] === el.dataset.v); el.textContent = d[5](o[d[0]]); });
       clearTimeout(ctl.tm); ctl.tm = setTimeout(draw, 60); });
