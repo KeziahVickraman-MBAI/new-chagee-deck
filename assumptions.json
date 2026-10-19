@@ -45,7 +45,8 @@
     "I-sg-owned": "INFORMAL - team check recorded as a comment in the ideation doc: Singapore is company-owned and run by Chagee corporate, usual for new-entry and smaller markets. The underlying source is not named; confirm before presenting.",
     "I-sg-groundfloor": "INFORMAL - quote in the team's ideation doc (Chagee Singapore's Lee: 'Whenever you see a Chagee, it's always on the first floor'; kiosk-style outlets in basements and MRT stations at entry in 2019). The article is not named in the doc; confirm the source before quoting.",
     "I-team-automation": "INFORMAL - team research (Oct 2026): Chagee's counters are heading towards machines making the drink while people tag the order and hand it over; consistent with I-leeyen's 'push towards app-to-machine automation, sub-one-minute fulfilment'. Source to be added before it is cited on a slide.",
-    "I-team-app-first": "INFORMAL - team observation in the ideation doc: Chagee Singapore sells mainly through its app, with minimal order kiosks in outlets. Confirm before citing."
+    "I-team-app-first": "INFORMAL - team observation in the ideation doc: Chagee Singapore sells mainly through its app, with minimal order kiosks in outlets. Confirm before citing.",
+    "L-ester1996": "Ester, M., Kriegel, H.-P., Sander, J. and Xu, X. (1996). A density-based algorithm for discovering clusters in large spatial databases with noise. Proceedings of the Second International Conference on Knowledge Discovery and Data Mining (KDD-96), 226-231. The DBSCAN algorithm used on slide 05."
   },
   "facts": {
     "_note": "Chagee facts quoted on slides. Not assumptions: each carries its ledger source and appears with that source in the speaker notes.",
@@ -1241,6 +1242,40 @@
       "range": null,
       "source": "assumption",
       "rationale": "The GM's read of a pin: at or above strong_new_share it is a strong site (it mostly adds cups); below weak_new_share it mostly moves cups from existing outlets; in between, mixed. Illustrative cut-offs."
+    },
+    "toy_demo": {
+      "value": {
+        "width": 600,
+        "height": 330,
+        "blobs": [
+          {
+            "x": 175,
+            "y": 175,
+            "n": 17,
+            "sd": 36
+          },
+          {
+            "x": 440,
+            "y": 120,
+            "n": 11,
+            "sd": 28
+          },
+          {
+            "x": 450,
+            "y": 255,
+            "n": 5,
+            "sd": 40
+          }
+        ],
+        "noise": 9,
+        "eps": 46,
+        "min_points": 4,
+        "seed_offset": 47
+      },
+      "unit": "toy points in a 600 x 330 box",
+      "range": null,
+      "source": "assumption",
+      "rationale": "Explainer only: a small made-up point set for the 'How it works' walkthrough on slide 05 and the appendix figure, so each DBSCAN step is visible. Not used by any forecast."
     }
   }
 }

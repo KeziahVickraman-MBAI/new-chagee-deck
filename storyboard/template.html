@@ -255,6 +255,32 @@ html,body{margin:0;background:#E7E3DC;color:var(--ink);font-family:var(--sans);-
 .phases b{display:block;font:600 11px var(--sans);color:var(--navy)}
 
 /* appendix */
+.howb{flex:none}
+.howto{position:absolute;inset:0;z-index:6;background:var(--cream);border-radius:12px;padding:14px 18px;display:none;grid-template-columns:1fr 268px;grid-template-rows:auto 1fr;gap:8px 18px}
+.howto.open{display:grid}
+.howto .ptop{grid-column:1 / -1}
+.toysvg{width:100%;height:100%;display:block;background:#fff;border:1px solid var(--line);border-radius:10px}
+.howside{display:flex;flex-direction:column;gap:9px;min-height:0}
+.howside .stepno{font:600 10.5px/1.2 var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--red)}
+.howside .say{font:14px/1.45 var(--sans);color:var(--ink2);min-height:118px}
+.howside .say b{color:var(--ink)}
+.howside .ctl{gap:5px}
+.howside .bar{height:4px;background:var(--line);border-radius:2px;overflow:hidden}
+.howside .bar i{display:block;height:100%;background:var(--red);width:0}
+.toykey{display:grid;grid-template-columns:auto 1fr;gap:5px 8px;align-items:center;font:12px/1.3 var(--sans);color:var(--ink2);margin-top:auto}
+.toykey svg{width:16px;height:16px}
+.howside .tiny{font:11.5px/1.4 var(--sans);color:var(--taupe)}
+.howside .tiny a{color:var(--navy);cursor:pointer;text-decoration:underline}
+.a2 .body{grid-template-columns:1fr 1.18fr;gap:18px}
+.a2 .toysvg{height:280px;flex:none;margin-top:6px}
+.moves4{list-style:none;margin:8px 0 0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:6px 14px}
+.moves4 li{display:flex;gap:8px;font:12.3px/1.38 var(--sans);color:var(--ink2)}
+.moves4 b{color:var(--ink)}
+.simtab{width:100%;border-collapse:collapse;font:11.8px/1.32 var(--sans);margin-top:6px}
+.simtab td{padding:4.5px 5px;border-bottom:1px solid var(--line);vertical-align:top;color:var(--ink2)}
+.simtab td:first-child{font-weight:600;color:var(--ink);white-space:nowrap}
+.simtab td:last-child{text-align:right;color:var(--navy);font-weight:600;white-space:nowrap}
+.simtab .num{width:17px;height:17px;font-size:10px;margin-right:6px}
 .apx{columns:2;column-gap:28px;font:11.3px/1.42 var(--sans);color:var(--ink2)}
 .apx p{margin:0 0 7px;break-inside:avoid}
 .apx b{color:var(--ink)}
@@ -586,6 +612,7 @@ aside.notes{display:none}
     <div class="body" style="grid-template-columns:1fr 300px">
       <div class="panel stepper" data-steps="5" data-kind="site">
         <div class="ptop"><span class="ptitle">New-store forecast</span>
+          <button class="btn howb screenonly" title="Watch DBSCAN find the clusters, one search at a time">How it works</button>
           <input class="sitesearch screenonly" list="sitelist" placeholder="Find an outlet or town…" aria-label="Find an outlet or town"><datalist id="sitelist"></datalist>
           <span class="ctl screenonly"></span></div>
         <div class="visual"><div class="maptip"></div><svg class="msvg" viewBox="0 0 1672 640" preserveAspectRatio="xMidYMid meet" aria-label="Map of synthetic app demand, clusters and a new-store pin"></svg></div>
@@ -596,6 +623,17 @@ aside.notes{display:none}
           <li data-s="4"><span class="n">4</span><span>Click the map to test a new store, or search an outlet or town. Hover a navy pin to see which outlet it is; red lines show which outlets would lose cups.</span></li>
           <li data-s="5"><span class="n">5</span><span>The forecast's peak hour sets the opening roster for today's counter, which slides 06 and 07 then run.</span></li>
         </ol>
+        <div class="howto screenonly" role="dialog" aria-label="How DBSCAN finds the sites">
+          <div class="ptop"><span class="ptitle">How it works · DBSCAN on a toy set of searches</span><button class="btn" data-h="close" aria-label="Close">✕ Back to the map</button></div>
+          <svg class="toysvg" preserveAspectRatio="xMidYMid meet" aria-label="DBSCAN walkthrough"></svg>
+          <div class="howside">
+            <div class="stepno"></div><div class="bar"><i></i></div>
+            <div class="say"></div>
+            <div class="ctl"><button class="btn" data-h="prev" aria-label="Previous step">◀</button><button class="btn primary" data-h="play">▶ Play</button><button class="btn" data-h="next" aria-label="Next step">▶</button><button class="btn" data-h="end">Result</button></div>
+            <div class="toykey"></div>
+            <p class="tiny">Toy points, not the map. The real run uses the sliders' radius and minimum. <a data-h="apx">Every number behind the forecast: appendix</a></p>
+          </div>
+        </div>
       </div>
       <div class="cards" style="gap:10px">
         <div class="cset screenonly sitectl"></div>
@@ -610,6 +648,7 @@ aside.notes{display:none}
     <p>Chagee Singapore runs on its app, with few kiosks, so every search is a demand signal, including searches where no store is close. That makes the app the forecasting input for a new store, before it has any sales.</p>
     <p>Step one: synthetic app sessions on our map. Gold are within walking distance of an outlet; red found no store nearby. Step two: DBSCAN, unsupervised machine learning, groups red searches that are dense; scattered ones are noise. Step three: cluster centres are candidate sites.</p>
     <p>Step four: click the map to test a site. The card leads with the gain for Chagee, which is the store's sales minus the cups it takes from nearby outlets, and gives a verdict: strong, mixed, or mostly moving cups. Try a pin next to Tampines West CC: it sells, but most of it moves from the two Tampines outlets nearby. Step five: the forecast's peak hour gives the opening roster for the counter on the next slides.</p>
+    <p>If asked how DBSCAN works, press How it works: it replays the algorithm one search at a time on a toy set. The appendix lists every simulated number.</p>
     <p>The three sliders are the only inputs: cluster radius, minimum searches per cluster, and how far people will walk. The data is synthetic; with Chagee's real app logs, the same steps would run unchanged. About one and a half minutes.</p>
   </aside>
 </section>
@@ -721,6 +760,48 @@ aside.notes{display:none}
   </div>
   <img class="cup" src="{img:cup_red}" alt="" style="left:auto;right:120px;transform:none;bottom:70px;width:110px">
   <aside class="notes"><p>Likely questions: is the brigade always better? No; with spare staff fixed stations are as good. Is the forecast real? No, it is an illustration of the chain, built on stated assumptions.</p></aside>
+</section>
+
+<!-- ======================================================= APPENDIX: SITE FORECAST -->
+<section class="slide content a2" id="a2" data-chapter="Appendix" data-title="How the site forecast works">
+  <div class="leafart" aria-hidden="true"></div>
+  <div class="inner">
+    <p class="kicker">Appendix · How the site forecast works (slide 05)</p>
+    <h2 class="head" style="font-size:30px">DBSCAN finds where searches bunch up; a proximity model turns a pin into cups</h2>
+    <div class="body" style="margin-top:12px">
+      <div class="panel">
+        <div class="ptop"><span class="ptitle">DBSCAN in four moves · toy example</span></div>
+        <svg class="toysvg" data-static="1" preserveAspectRatio="xMidYMid meet" aria-label="DBSCAN result on a toy point set"></svg>
+        <ol class="moves4">
+          <li><span class="num">1</span><span><b>Radius ε.</b> Two searches are neighbours if they are within ε of each other (the cluster-radius slider).</span></li>
+          <li><span class="num">2</span><span><b>Core.</b> A search with at least the minimum number of searches within ε (counting itself) is a core point.</span></li>
+          <li><span class="num">3</span><span><b>Grow.</b> A cluster spreads from core to core. Searches it reaches that are not core join as border points.</span></li>
+          <li><span class="num">4</span><span><b>Noise.</b> Searches no cluster reaches. Unlike k-means, nobody picks the number of clusters, and odd shapes are fine.</span></li>
+        </ol>
+        <p class="flag" style="margin-top:6px">Unsupervised: no labels or past openings are needed. Ester, Kriegel, Sander and Xu (1996). On slide 05 it runs only on searches with no outlet within walking distance; each cluster's centre is a candidate site.</p>
+      </div>
+      <div class="panel">
+        <div class="ptop"><span class="ptitle">The simulated numbers, in order · at the slider defaults</span></div>
+        <table class="simtab">
+          <tr><td><span class="num">1</span>App searches</td><td>Synthetic dots on land: {{sp.background_share|pct}} spread evenly, {{sp.mall_share|pct}} around the outlets' malls, the rest around {{r.hubs}} towns</td><td>{{sp.events}} dots</td></tr>
+          <tr><td><span class="num">2</span>No store nearby</td><td>The nearest outlet is further than the walking distance</td><td>{{sp.walk_km|g}} km · {{r.unmet_share|pct}} of dots</td></tr>
+          <tr><td><span class="num">3</span>DBSCAN</td><td>Clusters the no-store-nearby dots</td><td>ε {{sp.dbscan_eps_km|g}} km · min {{sp.dbscan_min_points}} · {{r.clusters}} clusters</td></tr>
+          <tr><td><span class="num">4</span>Pull of a store</td><td>Fades with distance d: exp(−½ (d/L)²), with the length L set by the walking distance</td><td>L = {{r.decay_km|g}} km</td></tr>
+          <tr><td><span class="num">5</span>Who buys where</td><td>A dot buys at a store in proportion to its pull, against the pull of not buying (a store next door = one)</td><td>not buying {{sp.outside_option|g}}</td></tr>
+          <tr><td><span class="num">6</span>Calibration</td><td>Each dot's weight is set so the average outlet sells the deck's cups a day (cups a year ÷ open days)</td><td>{{r.avg_cups}} cups a day</td></tr>
+          <tr><td><span class="num">7</span>Score a pin</td><td>Cups for Chagee = what the new store sells − what it moves from nearby outlets</td><td>top: {{r.top_cups}} − {{r.top_moved}} = +{{r.top_net}}</td></tr>
+          <tr><td><span class="num">8</span>Verdict</td><td>Share of the new store's cups that are new to Chagee</td><td>strong ≥ {{r.strong|pct}} · weak &lt; {{r.weak|pct}}</td></tr>
+          <tr><td><span class="num">9</span>Opening roster</td><td>Peak-hour cups ÷ cups one person handles, with the safety margin</td><td>one per {{r.cups_per_person}} cups</td></tr>
+        </table>
+        <p class="flag" style="margin-top:6px">All synthetic: the dots, towns and weights are assumptions on the team's map (not to scale), not Chagee app logs or population data. With real app logs, steps one and two change; the rest runs unchanged.</p>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>OPIM639 · Group 3 · explainer figures are illustrative assumptions · synthetic app data</span><span class="rail"></span><span class="pg"></span></div>
+  <aside class="notes">
+    <p>Backup for questions on slide 05. Left: DBSCAN in four moves on a toy set. A search is a core point if enough searches sit within the radius; clusters grow from core to core; border points join; the rest is noise. We do not choose the number of clusters.</p>
+    <p>Right: every simulated number, in the order the model uses it. The forecast is only as good as these assumptions; with Chagee's real app logs, the first two rows would be replaced by data and the rest would run as is.</p>
+  </aside>
 </section>
 
 <!-- ======================================================= APPENDIX -->

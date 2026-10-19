@@ -136,6 +136,21 @@ def values(d: dict) -> dict:
     v["r.top_cups"] = st["top"]["cups"]
     v["r.top_net"] = st["top"]["netNew"]
     v["r.nextdoor_cannibal"] = st["nextDoor"]["cannibal"] / st["nextDoor"]["cups"]
+    # appendix: the site forecast's inputs and results at the slider defaults
+    SP = RAW["sitepick"]
+    for k, o in SP.items():
+        if isinstance(o, dict) and isinstance(o.get("value"), (int, float)) and not isinstance(o["value"], bool):
+            v[f"sp.{k}"] = o["value"]
+    v["r.hubs"] = len(SP["hubs"]["value"])
+    v["r.unmet_share"] = st["unmetShare"]
+    v["r.clusters"] = st["clusters"]
+    v["r.decay_km"] = SP["walk_km"]["value"] * SP["decay_share"]["value"]
+    v["r.avg_cups"] = RAW["store"]["cups_per_store_per_year"]["value"] / RAW["store"]["open_days_per_year"]["value"]
+    v["r.top_moved"] = st["top"]["cannibal"]
+    v["r.strong"] = SP["verdict"]["value"]["strong_new_share"]
+    v["r.weak"] = SP["verdict"]["value"]["weak_new_share"]
+    if round(st["top"]["cups"]) - round(st["top"]["cannibal"]) != round(st["top"]["netNew"]):
+        v["r.top_moved"] = round(st["top"]["cups"]) - round(st["top"]["netNew"])     # so the printed sum adds up
     # the roster trigger: forecast peak cups per person, after the capacity safety margin (plan()'s rule)
     v["r.cups_per_person"] = d["counter"]["perWorkerHour"] / RAW["costs"]["capacity_safety_margin"]["value"]
     return v
@@ -191,7 +206,7 @@ def appendix() -> str:
         f = RAW["facts"][k]
         out.append(f"<p><b>{label}: {short(f['value'])}</b>. {esc(f['rationale'])} <i>[{esc(f['source'])}]</i></p>")
     out.append("<h5>Sources</h5>")
-    for k in ("L-sg-directory", "L-koalagains", "L-yfchuhai", "L-sec20f", "L-unsw", "I-sg-owned", "I-sg-groundfloor", "I-team-automation", "I-team-app-first"):
+    for k in ("L-sg-directory", "L-koalagains", "L-yfchuhai", "L-sec20f", "L-unsw", "I-sg-owned", "I-sg-groundfloor", "I-team-automation", "I-team-app-first", "L-ester1996"):
         out.append(f"<p><b>{k}</b> {esc(RAW['_sources'][k])}</p>")
     out.append("<h5>Assumptions (assumptions.json, illustrative)</h5>")
     for sec, key, label in USED:
@@ -212,6 +227,7 @@ FMT = {
     "x": lambda x: f"×{x:g}",
     "mmss": lambda x: f"{int(x // 60)}:{int(round(x % 60)):02d}",
     "min": lambda x: f"{x:g} min",
+    "g": lambda x: f"{x:g}",
 }
 
 

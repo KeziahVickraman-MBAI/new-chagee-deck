@@ -481,6 +481,92 @@
   });
 
 
+  /* ---------------------------------------------------------------- DBSCAN walkthrough (slide 05) and the appendix figure */
+  const TOY = window.ChageeSite.toy(Sim, RAW), TCL = ["#8E5BA8", "#D07A2D", "#2E8B7A", "#B8860B", "#C0457A"];
+  const TN = TOY.trace.length, NOISE = "#B9B2A6";
+  function toyDraw(svg, f, annot) {
+    const t = TOY, kind = [], lab = [];
+    t.trace.slice(0, Math.min(f, TN)).forEach(e => { kind[e.i] = e.kind; lab[e.i] = e.c; });
+    const ev = f >= 1 && f <= TN ? t.trace[f - 1] : null;
+    svg.setAttribute("viewBox", `0 0 ${t.width} ${t.height}`);
+    const ring = (p, r, a) => `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="${r}" ${a}/>`;
+    let s = "";
+    if (ev) {
+      const p = t.pts[ev.i];
+      s += ring(p, t.eps, `fill="rgba(36,64,107,.07)" stroke="${COL.navy}" stroke-width="1.5" stroke-dasharray="5 4"`);
+      (ev.nb || []).filter(j => j !== ev.i).forEach(j => (s += `<line x1="${p.x}" y1="${p.y}" x2="${t.pts[j].x}" y2="${t.pts[j].y}" stroke="${COL.navy}" stroke-width="1.2" opacity=".45"/>`));
+    }
+    t.pts.forEach((p, i) => {
+      const k = kind[i], c = TCL[lab[i] % TCL.length];
+      s += !k ? ring(p, 5, `fill="#fff" stroke="${NOISE}" stroke-width="1.5"`)
+         : k === "noise" ? ring(p, 5, `fill="${NOISE}"`)
+         : k === "core" ? ring(p, 7, `fill="${c}"`)
+         : ring(p, 5.5, `fill="#fff" stroke="${c}" stroke-width="2.5"`);
+    });
+    if (ev) s += ring(t.pts[ev.i], 11, `fill="none" stroke="${COL.ink}" stroke-width="2"`);
+    if (f > TN) t.centres.forEach(c => (s += ring(c, 15, `fill="#fff" stroke="${COL.navy}" stroke-width="3"`) +
+      T(c.x, c.y + 6, c.c + 1, `font-size="17" font-weight="700" fill="${COL.navy}" text-anchor="middle"`)));
+    if (annot) {                                                       // the appendix figure names one of each kind
+      const pick = k => t.trace.find(e => e.kind === k && (k !== "noise" || t.labels[e.i] === -1));
+      const dc = e => Math.min(...t.centres.map(c => Math.hypot(t.pts[e.i].x - c.x, t.pts[e.i].y - c.y)));
+      const core = t.pts[t.trace.filter(e => e.kind === "core").reduce((a, b) => (dc(b) > dc(a) ? b : a)).i];   // clear of the centre marks
+      s += ring(core, t.eps, `fill="none" stroke="${COL.navy}" stroke-width="1.5" stroke-dasharray="5 4"`) +
+           `<line x1="${core.x}" y1="${core.y}" x2="${core.x + t.eps}" y2="${core.y}" stroke="${COL.navy}" stroke-width="1.5"/>` +
+           T(core.x + t.eps / 2, core.y - 5, "ε", `font-size="16" font-style="italic" fill="${COL.navy}" text-anchor="middle"`);
+      [["core", core], ["border", t.trace.filter(e => e.kind === "border").map(e => t.pts[e.i]).reduce((a, b) => (Math.hypot(b.x - core.x, b.y - core.y) > Math.hypot(a.x - core.x, a.y - core.y) ? b : a))], ["noise", t.pts[pick("noise").i]]].forEach(([w, p]) => { s += T(p.x + 10, p.y + 18, w, `font-size="13" fill="${COL.ink}" font-weight="600"`);
+      });
+    }
+    svg.innerHTML = s;
+  }
+  const toyKey = `<svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="5" fill="#fff" stroke="${NOISE}" stroke-width="1.5"/></svg><span>Not visited yet</span>` +
+    `<svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="6.5" fill="${TCL[0]}"/></svg><span>Core: enough searches within ε</span>` +
+    `<svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="5" fill="#fff" stroke="${TCL[0]}" stroke-width="2.5"/></svg><span>Border: joins a cluster, does not spread it</span>` +
+    `<svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="5" fill="${NOISE}"/></svg><span>Noise: no cluster reaches it</span>`;
+  $$(document, '.toysvg[data-static]').forEach(svg => toyDraw(svg, TN + 1, true));
+  $$(document, "#c5 .howto").forEach(box => {
+    const svg = $(box, ".toysvg"), say = $(box, ".say"), no = $(box, ".stepno"), bar = $(box, ".bar i"), play = $(box, '[data-h="play"]');
+    const mp = TOY.min_points, nNoise = TOY.labels.filter(l => l === -1).length;
+    $(box, ".toykey").innerHTML = toyKey;
+    let f = 0, tm = null;
+    const text = () => {
+      if (f === 0) return `<b>${TOY.pts.length} app searches</b> with no outlet within walking distance. DBSCAN visits them one at a time with two settings: a radius ε (the dashed circle) and a minimum of <b>${mp}</b> searches inside it, counting itself.`;
+      if (f > TN) return `<b>${TOY.centres.length} clusters</b> and ${nNoise} noise points; nobody chose the number of clusters. Each cluster's centre (numbered) is a candidate site. On the map, each is then scored: cups it sells minus cups it moves from nearby outlets.`;
+      const e = TOY.trace[f - 1], c = e.c + 1, n = e.nb ? e.nb.length : 0;
+      if (e.kind === "noise") return `Only <b>${n}</b> within ε, fewer than ${mp}: <b>noise</b> for now. A cluster may still reach it later.`;
+      if (e.kind === "core" && e.seed) return `<b>${n}</b> within ε, at least ${mp}: a <b>core point</b>. Cluster ${c} starts here.`;
+      if (e.kind === "core") return `Reached by cluster ${c}, and <b>${n}</b> within ε: another <b>core point</b>, so its neighbours join cluster ${c} and are checked next.`;
+      return e.nb ? `Reached by cluster ${c}, but only <b>${n}</b> within ε: a <b>border point</b>. It joins but does not spread the cluster.`
+                  : `Marked noise earlier, but cluster ${c} reaches it: it becomes a <b>border point</b>.`;
+    };
+    const go = k => {
+      f = Math.max(0, Math.min(TN + 1, k)); toyDraw(svg, f);
+      no.textContent = f === 0 ? "Start" : f > TN ? "Result" : `Step ${f} of ${TN}`;
+      bar.style.width = `${(100 * f) / (TN + 1)}%`; say.innerHTML = text();
+    };
+    const stop = () => { clearInterval(tm); tm = null; play.textContent = "▶ Play"; };
+    const start = () => { if (f > TN) go(0); play.textContent = "❚❚ Pause";
+      tm = setInterval(() => { go(f + 1); if (f > TN) stop(); }, reduce ? 1200 : 650); };
+    const close = () => { stop(); box.classList.remove("open"); };
+    $(box.closest(".panel"), ".howb").onclick = () => { box.classList.add("open"); go(0); };
+    box.addEventListener("click", e => {
+      const h = e.target.closest("[data-h]")?.dataset.h; if (!h) return;
+      if (h === "close") close();
+      else if (h === "play") tm ? stop() : start();
+      else if (h === "prev") { stop(); go(f - 1); }
+      else if (h === "next") { stop(); go(f + 1); }
+      else if (h === "end") { stop(); go(TN + 1); }
+      else if (h === "apx") { close(); show(slides.indexOf(document.getElementById("a2"))); }
+    });
+    addEventListener("keydown", e => {                                 // while open, arrows step the walkthrough
+      if (!box.classList.contains("open") || !box.closest(".slide").classList.contains("active")) return;
+      if (e.key === "Escape") close();
+      else if (e.key === "ArrowRight") { stop(); go(f + 1); }
+      else if (e.key === "ArrowLeft") { stop(); go(f - 1); }
+      else return;
+      e.preventDefault(); e.stopPropagation();
+    }, true);
+  });
+
   /* ---------------------------------------------------------------- 08 playbook */
   (function playbook() {
     const tb = $(document, "#c8 .pb"); if (!tb) return;

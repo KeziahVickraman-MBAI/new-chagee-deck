@@ -84,3 +84,12 @@ test("site: an existing outlet's figures match the model's calibrated sales", ()
     assert.ok(o.nearShare > 0 && o.nearShare <= 1 && o.neighbour.j !== j && o.unmetNearby >= 0);
   }
 });
+
+test("site: the walkthrough's trace replays to the same labels, and the toy shows every kind of point", () => {
+  const t = T.toy(require("./sim.js"), RAW), lab = new Array(t.pts.length).fill(undefined);
+  t.trace.forEach(e => (lab[e.i] = e.kind === "noise" ? -1 : e.c));
+  assert.deepEqual(lab, t.labels);
+  const kinds = new Set(t.trace.map(e => e.kind));
+  assert.ok(kinds.has("core") && kinds.has("border") && t.labels.includes(-1), [...kinds].join());
+  assert.ok(t.centres.length >= 2, `${t.centres.length} clusters`);
+});

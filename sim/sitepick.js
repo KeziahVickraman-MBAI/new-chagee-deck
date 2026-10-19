@@ -4,7 +4,9 @@
  * Geometry is sim/sg_geo.json (the team's map, image pixels); every number is in assumptions.json "sitepick".
  *
  *   events(Sim, RAW, geo)        synthetic app-intent dots on land: around the hubs, plus an even spread.
- *   dbscan(pts, eps, minPts)     density clusters: labels per point (-1 = noise), from Ester et al. (1996).
+ *   dbscan(pts, eps, minPts, tr) density clusters: labels per point (-1 = noise), from Ester et al. (1996);
+ *                                tr (optional) collects each step for the walkthrough.
+ *   toy(Sim, RAW)                the walkthrough's small made-up point set and its DBSCAN trace.
  *   model(Sim, RAW, geo, o)      the market today: each dot's pull from every outlet, which dots are
  *                                "no store nearby" (nearest outlet beyond walk_km), the dot weight that
  *                                makes the average outlet sell store cups/day, DBSCAN clusters of the
@@ -52,26 +54,47 @@
     return out;
   }
 
-  function dbscan(pts, eps, minPts) {
+  // trace (optional array) records each step for the walkthrough: { i, nb, kind: "core" | "border" | "noise", c, seed }
+  function dbscan(pts, eps, minPts, trace) {
     const n = pts.length, labels = new Array(n).fill(undefined), e2 = eps * eps;
     const near = i => { const r = []; for (let j = 0; j < n; j++) { const dx = pts[i].x - pts[j].x, dy = pts[i].y - pts[j].y; if (dx * dx + dy * dy <= e2) r.push(j); } return r; };
+    const log = trace ? e => trace.push(e) : () => {};
     let c = -1;
     for (let i = 0; i < n; i++) {
       if (labels[i] !== undefined) continue;
       const nb = near(i);
-      if (nb.length < minPts) { labels[i] = -1; continue; }
+      if (nb.length < minPts) { labels[i] = -1; log({ i, nb, kind: "noise" }); continue; }
       labels[i] = ++c;
+      log({ i, nb, kind: "core", c, seed: true });
       const queue = nb.filter(j => j !== i);
       while (queue.length) {
         const j = queue.shift();
-        if (labels[j] === -1) labels[j] = c;                          // border point
+        if (labels[j] === -1) { labels[j] = c; log({ i: j, nb: null, kind: "border", c }); }   // border point
         if (labels[j] !== undefined) continue;
         labels[j] = c;
         const nj = near(j);
+        log({ i: j, nb: nj, kind: nj.length >= minPts ? "core" : "border", c });
         if (nj.length >= minPts) queue.push(...nj);
       }
     }
     return labels;
+  }
+
+  // the walkthrough's made-up point set (sitepick.toy_demo): a few blobs plus scattered points, and its DBSCAN trace
+  function toy(Sim, RAW) {
+    const t = RAW.sitepick.toy_demo.value, R = Sim.rng(Sim.hash(RAW.simulation.base_seed.value, t.seed_offset));
+    const gauss = () => { let u = 0; while (u === 0) u = R(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * R()); };
+    const pad = 16, clip = (v, hi) => Math.max(pad, Math.min(hi - pad, v)), pts = [];
+    t.blobs.forEach(b => { for (let k = 0; k < b.n; k++) pts.push({ x: clip(b.x + gauss() * b.sd, t.width), y: clip(b.y + gauss() * b.sd, t.height) }); });
+    for (let k = 0; k < t.noise; k++) pts.push({ x: pad + R() * (t.width - 2 * pad), y: pad + R() * (t.height - 2 * pad) });
+    for (let k = pts.length - 1; k > 0; k--) { const j = Math.floor(R() * (k + 1)); [pts[k], pts[j]] = [pts[j], pts[k]]; }   // visit order
+    const trace = [], labels = dbscan(pts, t.eps, t.min_points, trace);
+    const k = Math.max(-1, ...labels);
+    const centres = Array.from({ length: k + 1 }, (_, c) => {
+      const m = pts.filter((p, i) => labels[i] === c);
+      return { c, n: m.length, x: m.reduce((a, p) => a + p.x, 0) / m.length, y: m.reduce((a, p) => a + p.y, 0) / m.length };
+    });
+    return { ...t, pts, trace, labels, centres };
   }
 
   function model(Sim, RAW, geo, o = {}) {
@@ -142,7 +165,7 @@
     return { cups: all * scale, nearShare: all ? near / all : 0, neighbour: nb, unmetNearby: unmet * scale };
   }
 
-  const api = { events, dbscan, model, forecast, outlet };
+  const api = { events, dbscan, toy, model, forecast, outlet };
   if (typeof module !== "undefined" && module.exports) module.exports = api;
   else root.ChageeSite = api;
 })(typeof window !== "undefined" ? window : globalThis);
