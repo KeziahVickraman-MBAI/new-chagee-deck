@@ -398,6 +398,13 @@ html,body{margin:0;background:#E7E3DC;color:var(--ink);font-family:var(--sans);-
 .ins .ic p{margin:2px 0 0;font:11px/1.36 var(--sans);color:var(--ink2)}
 .ins .asm{background:#FFF9F8;border:1px solid #EBC4C1;border-radius:9px;padding:6px 10px;font:10.6px/1.38 var(--sans);color:var(--ink2)}
 .ins .asm b{color:var(--ink)}
+/* ---------- Without AI / With AI band (end of each explainer) ---------- */
+.vs{margin-top:10px;display:grid;grid-template-columns:1fr 1fr;border-radius:10px;overflow:hidden;font:13.2px/1.38 var(--sans)}
+.vs>div{padding:8px 18px;display:flex;gap:14px;align-items:center}
+.vs .lab{flex:none;width:86px;font:600 10px/1.25 var(--sans);letter-spacing:.16em;text-transform:uppercase}
+.vs .wo{background:#ECE8E0;color:var(--ink2)} .vs .wo .lab{color:var(--taupe)}
+.vs .wi{background:var(--navy);color:#fff} .vs .wi .lab{color:var(--gold)}
+.vs b{font-weight:700} .vs .wo b{color:var(--ink)} .vs .wi b{color:#fff}
 .apx{columns:3;column-gap:22px;font:9.6px/1.36 var(--sans);color:var(--ink2)}
 .apx p{margin:0 0 4px;break-inside:avoid}
 .apx b{color:var(--ink)}
@@ -769,7 +776,7 @@ aside.notes{display:none}
         <p class="flag printonly">Synthetic app data on the team's map; outlet positions approximate (the central inset is enlarged). Not a trained model: the point is the method.</p>
       </div>
     </div>
-    <div class="takeaway"><span class="lab">TAKEAWAY</span><span>Judge a site by what it adds to Chagee, not what it sells. The top cluster, near {{s.top_hub}}, adds about {{r.top_net}} cups a day; a store beside an existing outlet would sell plenty, but about {{r.nextdoor_cannibal|pct}} of it is moved from that outlet.</span></div>
+    <div class="vs"><div class="wo"><span class="lab">Without AI<br><small style="letter-spacing:.06em;text-transform:none;font-weight:400">our assumed baseline</small></span><span>Pick the site that sells most: beside an existing outlet it sells <b>{{r.nd_cups}}</b> cups a day, but {{r.nextdoor_cannibal|pct}} are moved from that outlet, so <b>+{{r.nd_net}}</b> for Chagee.</span></div><div class="wi"><span class="lab">With AI<br><small style="letter-spacing:.06em;text-transform:none;font-weight:400">our proposal</small></span><span>Predictive AI on app searches (DBSCAN) points near {{s.top_hub}}: it sells {{r.top_cups}} cups a day, <b>+{{r.top_net}}</b> for Chagee.</span></div></div>
   </div>
   <div class="foot"><span>OPIM639 · Group 3 · explainer figures are illustrative assumptions · synthetic app data</span><span class="rail"></span><span class="pg"></span></div>
   <aside class="notes">
@@ -780,6 +787,7 @@ aside.notes{display:none}
     <p>The three sliders are the only inputs: cluster radius, minimum searches per cluster, and how far people will walk. The data is synthetic; with Chagee's real app logs, the same steps would run unchanged. About one and a half minutes.</p>
     <p>Course link, Week 3, Analytics and AI: in the Flashion example, demand for a new store was forecast from similar stores. We ask the same question with a different input: app searches around the site.</p>
     <p>Context for the GM: Chagee is looking to expand rapidly in Singapore, and how many stores it is going for is confidential. So the forecast ranks sites; it does not assume a number of openings.</p>
+    <p>Takeaway: Judge a site by what it adds to Chagee, not what it sells. The top cluster, near {{s.top_hub}}, adds about {{r.top_net}} cups a day; a store beside an existing outlet would sell plenty, but about {{r.nextdoor_cannibal|pct}} of it is moved from that outlet.</p>
   </aside>
 </section>
 
@@ -803,7 +811,7 @@ aside.notes{display:none}
         <div class="card printonly"><h4>Why lean is where it counts</h4><p>Work flows to whoever is free, so the line balances itself (Topic 5). Fixed stations are only as good as the guess of who is fast.</p></div>
       </div>
     </div>
-    <div class="takeaway"><span class="lab">TAKEAWAY</span><span>At the forecast's roster on an event day, the brigade loses about {{r.lost_brigade|pct1}} of orders; fixed stations lose {{r.lost_fixed_best|pct1}} to {{r.lost_fixed_worst|pct}}, depending on who is on toppings.</span></div>
+    <div class="vs"><div class="wo"><span class="lab">Without AI<br><small style="letter-spacing:.06em;text-transform:none;font-weight:400">our assumed baseline</small></span><span>A normal-day roster ({{r.normal_staff}} at the peak) on an event day: <b>{{r.lost_normal_roster|pct}}</b> of peak-hour orders walk away.</span></div><div class="wi"><span class="lab">With AI<br><small style="letter-spacing:.06em;text-transform:none;font-weight:400">our proposal</small></span><span>The forecast sets the crew ({{r.rec}}) and a bucket brigade shares it: <b>{{r.lost_brigade|pct1}}</b> walk away, without knowing who is fastest.</span></div></div>
   </div>
   <div class="foot"><span>OPIM639 · Group 3 · explainer figures are illustrative assumptions · mechanism in seconds, Week 5 bucket-brigade rules</span><span class="rail"></span><span class="pg"></span></div>
   <aside class="notes">
@@ -812,6 +820,7 @@ aside.notes{display:none}
     <p>Press play on an event day. Then set the right side to "slowest on toppings": the queue builds at toppings and customers walk away. The brigade never needed to know who was fast.</p>
     <p>Be honest about the other case: add people and fixed stations catch up, or are a little faster. About one minute.</p>
     <p>Course link: the bucket-brigade simulation from Week 5 and Week 6, equipment and technology, inspired this counter replica. Same idea, a different use case.</p>
+    <p>Takeaway: At the forecast's roster on an event day, the brigade loses about {{r.lost_brigade|pct1}} of orders; fixed stations lose {{r.lost_fixed_best|pct1}} to {{r.lost_fixed_worst|pct}}, depending on who is on toppings.</p>
   </aside>
 </section>
 
@@ -835,7 +844,7 @@ aside.notes{display:none}
           <p class="flag normday" style="margin-top:4px;color:var(--ink2);font-size:10.5px"></p></div>
       </div>
     </div>
-    <div class="takeaway"><span class="lab">TAKEAWAY</span><span class="gmtake">On an event day, {{s.cheapest_label}} is the cheapest split within the walk-away limit, at about S${{r.cheapest_cost}} a day. {{s.heading_label}} needs {{r.heading_staff}} people at fixed posts and costs about S${{r.heading_extra}} more, for a median wait of {{r.heading_wait|mmss}}.</span></div>
+    <div class="vs"><div class="wo"><span class="lab">Without AI<br><small style="letter-spacing:.06em;text-transform:none;font-weight:400">our assumed baseline</small></span><span>All by hand on an event day: <b>{{r.hand_staff}} people</b>, median wait {{r.hand_wait|mmss}}, <b>S${{r.hand_cost}}</b> a day.</span></div><div class="wi"><span class="lab">With AI<br><small style="letter-spacing:.06em;text-transform:none;font-weight:400">our proposal</small></span><span>Machines on the fixed steps ({{s.cheapest_label}}): <b>{{r.cheapest_staff}} people</b>, <b>S${{r.cheapest_cost}}</b> a day, but {{s.cheapest_slower}} wait ({{r.cheapest_wait|mmss}}); {{s.fastest_label}} wait {{r.fast_wait|mmss}} for S${{r.fast_cost}}.</span></div></div>
   </div>
   <div class="foot"><span>OPIM639 · Group 3 · explainer figures are illustrative assumptions · robot speeds and costs are assumptions, not Chagee data</span><span class="rail"></span><span class="pg"></span></div>
   <aside class="notes">
@@ -844,6 +853,7 @@ aside.notes{display:none}
     <p>What it shows, honestly: the table is the event day; the line under it is the normal day, at about {{d.cupsPerDay}} cups. On a normal day all by hand is the cheapest of these four splits and all robots the fastest, so robots buy a shorter wait, not a lower cost; today's split is in fact slower than all by hand that day. On an event day, today's split is cheapest within the limit. The machine-made drink scenario needs a second person at the peak, because one person cannot tag and hand over at opposite ends of the counter.</p>
     <p>These are four splits only. The next slide shows that a single machine can undercut all by hand, because it lets the roster drop a person off-peak. About one and a half minutes.</p>
     <p>Course link: the same bucket-brigade replica from Week 5 and Week 6, with machines added on some stations.</p>
+    <p>Takeaway: On an event day, {{s.cheapest_label}} is the cheapest split within the walk-away limit, at about S${{r.cheapest_cost}} a day. {{s.heading_label}} needs {{r.heading_staff}} people at fixed posts and costs about S${{r.heading_extra}} more, for a median wait of {{r.heading_wait|mmss}}.</p>
   </aside>
 </section>
 
@@ -865,13 +875,14 @@ aside.notes{display:none}
       </div>
       <div class="cards ins" style="gap:7px"></div>
     </div>
-    <div class="takeaway" style="margin-top:9px;padding:9px 22px"><span class="lab">TAKEAWAY</span><span>At {{r.ladder_cups}} cups a day: start with one machine (about +S${{r.single_net}} a month); today's {{r.today_units}}-station split costs S${{r.today_more}} a month more than all by hand; robots save no more labour than today's split until about {{r.ladder_more}} cups a day.</span></div>
+    <div class="vs"><div class="wo"><span class="lab">Without AI<br><small style="letter-spacing:.06em;text-transform:none;font-weight:400">our assumed baseline</small></span><span>All by hand at {{r.ladder_cups}} cups a day: <b>{{r.hand_hours}} person-hours</b> a day, <b>S${{r.hand_month}}</b> a month of labour.</span></div><div class="wi"><span class="lab">With AI<br><small style="letter-spacing:.06em;text-transform:none;font-weight:400">our proposal</small></span><span>One tea-and-milk machine: <b>{{r.single_hours_left}} person-hours</b> a day, <b>+S${{r.single_net}}</b> a month after its unit cost. Robots wait for about {{r.ladder_more}} cups a day.</span></div></div>
   </div>
   <div class="foot"><span>OPIM639 · Group 3 · Vendor and press figures; not Chagee data · model figures are illustrative assumptions</span><span class="rail"></span><span class="pg"></span></div>
   <aside class="notes">
     <p>This is physical AI: automation and machines at the counter. The predictive AI is the forecast that sets the roster. One rule explains the whole slide: a machine pays only when it removes a person-shift, and costs less than that shift.</p>
     <p>The chart shows the net gain a month against an all-by-hand counter as volume changes; above the line it pays. One tea-and-milk machine lets the roster drop from {{r.min_hand}} people to {{r.min_mixed}} in {{r.single_hours}} off-peak hours, about one person-shift a day, for one station unit: it pays across most of the range. Today's split saves {{r.today_hours}} person-hours but pays for {{r.today_units}} units, so it ends up a little dearer than all by hand. A robot saves no more labour than today's split until about {{r.ladder_more}} cups a day, so at Oli's lease it only pays at the top of our range.</p>
     <p>Three things to say out loud. The minimum crew, {{r.min_hand}} by hand and {{r.min_mixed}} with machines, is our model's assumption and drives this result. Every option runs at the model's station speeds, not vendor claims. Payback is simple payback, if the machine lets the roster drop one person-shift, with no installation, maintenance or financing. Chagee's own equipment cost is not public. About one minute.</p>
+    <p>Takeaway: At {{r.ladder_cups}} cups a day: start with one machine (about +S${{r.single_net}} a month); today's {{r.today_units}}-station split costs S${{r.today_more}} a month more than all by hand; robots save no more labour than today's split until about {{r.ladder_more}} cups a day.</p>
   </aside>
 </section>
 
@@ -901,12 +912,13 @@ aside.notes{display:none}
         <div class="card"><h4>To confirm with Chagee</h4><p>How rosters are set today, robot costs per station, and whether outlets log wait times and walk-aways.</p></div>
       </div>
     </div>
-    <div class="takeaway"><span class="lab">TAKEAWAY</span><span>Predictive AI sets how many people; the split sets what robots do; the sharing rule sets who does what. Next, test it in {{sb.pilot_outlets}} outlets.</span></div>
+    <div class="vs"><div class="wo"><span class="lab">Without AI<br><small style="letter-spacing:.06em;text-transform:none;font-weight:400">our assumed baseline</small></span><span>One roster for every day: <b>{{r.pb_busy_lost|pct}}</b> of peak-hour orders walk away on a busy day, <b>{{r.pb_event_lost|pct}}</b> on an event day.</span></div><div class="wi"><span class="lab">With AI<br><small style="letter-spacing:.06em;text-transform:none;font-weight:400">our proposal</small></span><span>Roster to the forecast ({{r.pb_busy_staff}} on busy, {{r.pb_event_staff}} on event days): <b>{{r.pb_busy_lost_fc|pct1}}</b> and <b>{{r.pb_event_lost_fc|pct1}}</b> walk away.</span></div></div>
   </div>
   <div class="foot"><span>OPIM639 · Group 3 · explainer figures are illustrative assumptions</span><span class="rail"></span><span class="pg"></span></div>
   <aside class="notes">
     <p>Three moves for the GM: choose the split, roster to the forecast, and share the work to suit the split. Then a pilot in {{sb.pilot_outlets}} outlets: shadow, roster, roll out, judged on cups per labour hour, wait time and walk-aways.</p>
     <p>Close on the limits: these are our assumptions, not Chagee data. New-store openings, the next part of our work, will use the same simulator before a store opens. About one minute, then questions.</p>
+    <p>Takeaway: Predictive AI sets how many people; the split sets what robots do; the sharing rule sets who does what. Next, test it in {{sb.pilot_outlets}} outlets.</p>
   </aside>
 </section>
 
@@ -939,7 +951,7 @@ aside.notes{display:none}
         <div class="box"><h4>Not sized</h4>Delivery levers (third-party; channel margins not disclosed), membership and CRM, waste (no inventory model in this deck), and the new-store site forecast (shown as cups added only).</div>
       </div>
     </div>
-    <div class="takeaway" style="margin-top:9px;padding:9px 22px"><span class="lab">TAKEAWAY</span><span>Most modelled profit is counter labour, and it rests on the minimum-crew rule (S${{r.ben_profit}} falls to S${{r.ben_profit_fragile}} a year per outlet without it). The forecast pays on event days; on busy days only the economic rule avoids a loss.</span></div>
+    <div class="vs"><div class="wo"><span class="lab">Without AI<br><small style="letter-spacing:.06em;text-transform:none;font-weight:400">our assumed baseline</small></span><span>Flat normal-day roster, all by hand: about <b>{{r.cf_lost_year}}</b> peak-hour orders a year walk away per outlet.</span></div><div class="wi"><span class="lab">With AI<br><small style="letter-spacing:.06em;text-transform:none;font-weight:400">our proposal</small></span><span>Both levers, one run: <b>{{r.ben_orders}}</b> kept a year per outlet, profit <b>S${{r.ben_profit_sg|m2}}</b> across {{facts.sg_outlets}} outlets (S${{r.ben_fragile_sg|m2}} without the minimum-crew rule).</span></div></div>
   </div>
   <div class="foot"><span>OPIM639 · Group 3 · model figures are illustrative assumptions · peak hour only · Singapore, {{facts.sg_outlets}} outlets</span><span class="rail"></span><span class="pg"></span></div>
   <aside class="notes">
@@ -948,6 +960,7 @@ aside.notes{display:none}
     <p>Profit is the second line, using a margin we assume because Chagee does not disclose one. The labour saving is shown separately and never added to revenue. The two levers are run together, not added, because they share the same labour hours. The strip at the top splits the profit: most is counter automation, physical AI, the machine on its own; the forecast, predictive AI, adds a small share on top.</p>
     <p>Two crew rules for rostering to the forecast. The walk-away rule adds people until peak-hour walk-aways are within {{sb.walkaway_target|pct}}; at our default volume that is exactly the forecast crew. The economic rule adds a person only when the orders kept are worth more than the extra hours. They differ on busy days by hand, where the economic rule adds no one.</p>
     <p>Be honest about fragility: most of the profit is the counter's labour saving, and it comes from the model's minimum crew, {{r.min_hand}} by hand and {{r.min_mixed}} with machines. Drop that rule and the profit falls to about S${{r.ben_profit_fragile}} a year per outlet. And rostering to the forecast pays on event days, not on busy days, where the extra hours cost more than the orders won back. These are modelled avoided costs on stated assumptions, not demonstrated savings. About one minute.</p>
+    <p>Takeaway: Most modelled profit is counter labour, and it rests on the minimum-crew rule (S${{r.ben_profit}} falls to S${{r.ben_profit_fragile}} a year per outlet without it). The forecast pays on event days; on busy days only the economic rule avoids a loss.</p>
   </aside>
 </section>
 

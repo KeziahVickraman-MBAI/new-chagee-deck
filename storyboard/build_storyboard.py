@@ -216,6 +216,35 @@ def values(d: dict) -> dict:
     v["r.ben_year_rev"] = Y["ab"]["revenue"]
     v["r.ben_profit"] = Y["ab"]["profit"]
     v["r.ben_profit_fragile"] = S["fragile"]["year"]["ab"]["profit"]
+    # the Without AI / With AI band at the end of each explainer (slides 05-10); every figure computed
+    nd = st["nextDoor"]
+    v["r.nd_cups"], v["r.nd_net"] = nd["cups"], nd["netNew"]
+    if not st["top"]["netNew"] > nd["netNew"]:
+        raise SystemExit("build: slide 05 band says the app-search site adds more than a store beside an outlet; rewrite it")
+    L_ = d["splits"][day]; hand, ch = L_["all_hand"], L_[L_["_cheapest"]]
+    if not (hand["meets"] and L_["_cheapest"] != "all_hand" and ch["cost"]["total"] < hand["cost"]["total"]):
+        raise SystemExit("build: slide 07 band assumes a machine split is cheaper than all by hand on an event day; rewrite it")
+    v["r.hand_staff"], v["r.hand_wait"], v["r.hand_cost"] = hand["staff"], hand["medianWait"], hand["cost"]["total"]
+    v["r.cheapest_staff"], v["r.cheapest_wait"] = ch["staff"], ch["medianWait"]
+    v["s.cheapest_slower"] = "a longer" if ch["medianWait"] > hand["medianWait"] else "a shorter"
+    v["r.fast_wait"], v["r.fast_cost"] = L_[L_["_fastest"]]["medianWait"], L_[L_["_fastest"]]["cost"]["total"]
+    fl = disp.get(L_["_fastest"], L_[L_["_fastest"]]["label"]); v["s.fastest_label"] = fl[0].lower() + fl[1:]
+    rb = bn["runs"]["base"]["days"]
+    v["r.hand_hours"] = rb["none"]["cf"]["labourHours"]
+    v["r.hand_month"] = rb["none"]["cf"]["labourHours"] * RAW["costs"]["labour_cost_per_hour"]["value"] * RAW["store"]["open_days_per_year"]["value"] / 12
+    v["r.single_hours_left"] = v["r.hand_hours"] - v["r.single_hours"]
+    for key, dname in (("busy", "moderate"), ("event", "large")):
+        F = G[dname]["forecast"]["peakStaff"]
+        a0, a1 = G[dname]["staff"][str(normal)]["brigade"]["lostShare"], G[dname]["staff"][str(F)]["brigade"]["lostShare"]
+        if not a1 < a0:
+            raise SystemExit(f"build: slide 09 band says the forecast roster loses fewer orders on a {key} day; rewrite it")
+        v[f"r.pb_{key}_lost"], v[f"r.pb_{key}_lost_fc"], v[f"r.pb_{key}_staff"] = a0, a1, F
+    SBv = RAW["storyboard"]
+    v["r.cf_lost_year"] = (SBv["busy_days_per_year"]["value"] * rb["moderate"]["cf"]["lost"] + SBv["event_days_per_year"]["value"] * rb["large"]["cf"]["lost"]
+                           + (RAW["store"]["open_days_per_year"]["value"] - SBv["busy_days_per_year"]["value"] - SBv["event_days_per_year"]["value"]) * rb["none"]["cf"]["lost"])
+    v["r.ben_orders"] = Y["ab"]["orders"]
+    N_ = RAW["facts"]["sg_outlets"]["value"]
+    v["r.ben_profit_sg"], v["r.ben_fragile_sg"] = Y["ab"]["profit"] * N_, S["fragile"]["year"]["ab"]["profit"] * N_
     # the roster trigger: forecast peak cups per person, after the capacity safety margin (plan()'s rule)
     v["r.cups_per_person"] = d["counter"]["perWorkerHour"] / RAW["costs"]["capacity_safety_margin"]["value"]
     return v
@@ -355,6 +384,7 @@ FMT = {
     "mmss": lambda x: f"{int(x // 60)}:{int(round(x % 60)):02d}",
     "min": lambda x: f"{x:g} min",
     "g": lambda x: f"{x:g}",
+    "m2": lambda x: f"{x / 1e6:.2f}m",
 }
 
 

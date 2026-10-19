@@ -86,7 +86,7 @@
   document.addEventListener("fullscreenchange", () => setTimeout(fit, 50));
 
   /* editing: click any slide text in edit mode; saved in this browser; Download bakes the edits into a copy */
-  const EDIT_SEL = ".kicker,.head,.sub,.card h4,.card p,.takeaway span:not(.lab),.caps li span:not(.n),.ptitle,.move .k,.move p," +
+  const EDIT_SEL = ".kicker,.head,.sub,.card h4,.card p,.takeaway span:not(.lab),.vs span:not(.lab),.caps li span:not(.n),.ptitle,.move .k,.move p," +
     ".area h5,.area .d,.area .why,.aibox p,.node h5,.node .what,.persona dd,.slide.agenda .nm,.slide.cover h1,.slide.cover .tl,.slide.cover .meta,aside.notes p";
   const STORE = "opim639-storyboard-edits";
   slides.forEach((sl, i) => $$(sl, EDIT_SEL).forEach((el, k) => { if (!el.closest(".ctl,.cset,.opt")) el.dataset.ek = `${i}.${k}`; }));
