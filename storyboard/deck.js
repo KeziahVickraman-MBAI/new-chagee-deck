@@ -412,6 +412,7 @@
       M = Site.model(Sim, RAW, GEO, { ...par, events: EV });
       if (!userPin) pin = M.candidates[0] ? { x: M.candidates[0].x, y: M.candidates[0].y } : { x: 990, y: 300 };
       draw();
+      if (cmpv?.classList.contains("open")) openCmp();
     }
     function draw() {
       const f = Site.forecast(M, pin), walkPx = M.walkKm / M.kmpx;
@@ -483,8 +484,42 @@
       pin = { x: q.x, y: q.y }; userPin = true; sel = null; search.value = "";
       goStep4();
     });
+    // Without AI / With AI on the map, side by side: the site that sells most (a store beside the median outlet,
+    // as in the band) against the top app-search site. Live from the same model, so it matches the band at the defaults.
+    const cmpv = document.createElement("div"); cmpv.className = "cmpv"; $(p, ".visual").append(cmpv);
+    const wi = $(p.closest(".slide"), ".vs .wi");
+    if (wi) { const b = document.createElement("button"); b.className = "btn vsb screenonly"; b.innerHTML = "◧ See it on the map";
+      b.title = "Show both sites side by side on the map"; b.onclick = () => (cmpv.classList.contains("open") ? cmpv.classList.remove("open") : openCmp()); wi.append(b); }
+    function sideSvg(pp, f, accent) {
+      const W = 500, H = 300, x0 = Math.max(0, Math.min(1672 - W, pp.x - W / 2)), y0 = Math.max(0, Math.min(640 - H, pp.y - H / 2));
+      const inV = (x, y) => x > x0 - 30 && x < x0 + W + 30 && y > y0 - 30 && y < y0 + H + 30, walkPx = M.walkKm / M.kmpx;
+      let s = `<image href="${window.STORY.MAP}" x="0" y="0" width="1672" height="640" opacity=".5"/>`;
+      M.ev.forEach((e, i) => { if (inV(e.x, e.y)) s += `<circle cx="${e.x.toFixed(0)}" cy="${e.y.toFixed(0)}" r="3.2" fill="${M.unmet[i] ? COL.red : COL.gold}" opacity="${M.unmet[i] ? 0.75 : 0.45}"/>`; });
+      s += `<circle cx="${pp.x}" cy="${pp.y}" r="${walkPx}" fill="${accent}" fill-opacity=".07" stroke="${accent}" stroke-width="2" stroke-dasharray="7 5"/>`;
+      f.hit.slice(0, 3).forEach(h => (s += `<line x1="${pp.x}" y1="${pp.y}" x2="${h.x}" y2="${h.y - 14}" stroke="${COL.red}" stroke-width="${Math.max(2.5, Math.min(12, h.cups / 10))}" opacity=".55"/>`));
+      GEO.outlets.forEach(([x, y], j) => { if (!inV(x, y)) return;
+        s += `<circle cx="${x}" cy="${y - 14}" r="14" fill="${COL.navy}" stroke="#fff" stroke-width="3"/>` + T(x, y - 9, GEO.numbers[j], `font-size="14" font-weight="700" fill="#fff" text-anchor="middle"`); });
+      f.hit.slice(0, 2).forEach(h => (s += `<g><rect x="${h.x + 16}" y="${h.y - 44}" width="66" height="26" rx="6" fill="#fff" stroke="${COL.red}" stroke-width="2"/>` +
+        T(h.x + 49, h.y - 25, `−${Math.round(h.cups)}`, `font-size="18" font-weight="700" fill="${COL.red}" text-anchor="middle"`) + `</g>`));
+      s += `<path d="M${pp.x} ${pp.y} l-15 -34 a16 16 0 1 1 30 0 z" fill="${accent}" stroke="#fff" stroke-width="3"/><circle cx="${pp.x}" cy="${pp.y - 41}" r="6" fill="#fff"/>`;
+      return `<svg viewBox="${x0} ${y0} ${W} ${H}" preserveAspectRatio="xMidYMid slice">${s}</svg>`;
+    }
+    function openCmp() {
+      const order = M.storeCups.map((c, j) => [c, j]).sort((a, b) => a[0] - b[0]), j = order[Math.floor(order.length / 2)][1];
+      const nd = { x: GEO.outlets[j][0] + 3, y: GEO.outlets[j][1] }, top = M.candidates[0];
+      const hub = HUBS.reduce((a, h) => (Math.hypot(h.x - top.x, h.y - top.y) < Math.hypot(a.x - top.x, a.y - top.y) ? h : a)).name;
+      const fN = Site.forecast(M, nd), fT = Site.forecast(M, top);
+      const col = (cls, lab, title, pp, f, accent) => `<div class="cv ${cls}"><div class="ch"><b>${lab}</b>${title}</div>${sideSvg(pp, f, accent)}` +
+        `<div class="cn"><span>Sells <b>${Math.round(f.cups)}</b></span><span>Moved from outlets <b class="mv">−${Math.round(f.cannibal)}</b></span>` +
+        `<span class="net">For Chagee <b>+${Math.round(f.netNew)}</b></span></div></div>`;
+      cmpv.innerHTML = col("wo", "Without AI · our assumed baseline", `Pick the site that sells most: beside ${oname(j)}`, nd, fN, COL.ink2) +
+        col("wi", "With AI · our proposal", `App-search cluster (DBSCAN) near ${hub}`, top, fT, COL.navy) +
+        `<button class="btn cx" title="Back to the map">✕</button><p class="cmpn">Cups a day, at the current inputs. Red lines and labels: cups moved from existing outlets.</p>`;
+      $(cmpv, ".cx").onclick = () => cmpv.classList.remove("open");
+      cmpv.classList.add("open");
+    }
     S.hooks.push(k => { step = k; if (M) draw(); });
-    printers.push(() => { userPin = false; sel = null; search.value = ""; sl.forEach(([k, , key]) => (par[k] = SP[key].value)); $$(ctlEl, "input").forEach(i => (i.value = par[i.dataset.k])); rebuild(); });
+    printers.push(() => { cmpv.classList.remove("open"); userPin = false; sel = null; search.value = ""; sl.forEach(([k, , key]) => (par[k] = SP[key].value)); $$(ctlEl, "input").forEach(i => (i.value = par[i.dataset.k])); rebuild(); });
     rebuild();
   });
 
