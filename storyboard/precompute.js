@@ -13,6 +13,7 @@ const GEO = require("../sim/sg_geo.json");
 const L = require("../sim/ladder.js");
 const TIERS = require("../machine_tiers.json");
 const B = require("../sim/benefit.js");
+const Dec = require("../sim/decisions.js");
 
 const RAW = JSON.parse(fs.readFileSync(path.join(__dirname, "..", "assumptions.json"), "utf8"));
 const P = Sim.params(RAW), SB = RAW.storyboard;
@@ -78,10 +79,14 @@ const benefit = { robots: bRobots, cups: Math.round(Sim.dailyBase(P)), volCups: 
                   runs: bR, P: Object.fromEntries(Object.entries(bP).map(([k, p]) => [k, { cupsYear: p.cupsYear, minStaff: p.minStaff }])),
                   summary: B.summary(bR, bP, RAW, B.econ(RAW, P)) };
 
+// slide 08: the GM's four decisions (storyboard/check_decisions.js recomputes them on every build)
+const decisions = Dec.decide({ Sim, Store, C, Site, B, RAW, P, GEO, TIERS },
+  { target, extra, walkBack, seeds, shareDay: SB.day_type_default.value });
+
 const pl = Sim.plan(P, "mixed");
 const data = {
   generated: new Date().toISOString(), seeds,
-  grid, splits, site, ladder, benefit,
+  grid, splits, site, ladder, benefit, decisions,
   counter: {
     peakHour: C.peakHour(P), firstHour: 10, cupsPerDay: Sim.dailyBase(P),
     perWorkerHour: pl.perWorker * 60, handSeconds: pl.W,

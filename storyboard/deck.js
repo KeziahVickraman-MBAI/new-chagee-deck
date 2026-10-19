@@ -186,6 +186,10 @@
   const SHARE = [["brigade", "Bucket brigade"], ["fixed_best", "Fixed, fastest on toppings"], ["fixed_worst", "Fixed, slowest on toppings"]];
   const PRESETS = C.presets(RAW, P), [SMIN, SMAX] = SB.staff_choices.value, SEEDS = DATA.seeds;
   Object.entries(SB.split_presets.display_labels || {}).forEach(([k, l]) => PRESETS[k] && (PRESETS[k].label = l));   // display names only
+  PRESETS.today.label = "Today's split (our scenario)";                 // never Chagee's setup; display only
+  PRESETS.single = { label: "One machine (tea and milk)", robots: [...window.STORY.TIERS.tiers.find(t => t.id === "single").replaces] };
+  const SPLITROW = (day, k) => k === "single" ? { ...DATA.decisions.automate.perDay[day].single, label: PRESETS.single.label, setup: "mixed", meets: true,
+    cost: { total: DATA.decisions.automate.perDay[day].single.cost } } : DATA.splits[day][k];
   const sameSet = (a, b) => a.length === b.length && a.every(x => b.includes(x));
   const money = x => `S$${Math.round(x).toLocaleString("en-SG")}`;
   const printers = [];
@@ -203,7 +207,7 @@
     const forecastStaff = o => { const c = conf(o); return C.recommendStaff(Sim, c.P, BUS.day, c.setup); };
     // on the GM slide a preset split starts with the crew the split table found; otherwise the forecast roster
     const startStaff = o => {
-      if (mode === "split") { const k = presetOf(o), row = k && DATA.splits[BUS.day][k];
+      if (mode === "split") { const k = presetOf(o), row = k && SPLITROW(BUS.day, k);
         if (row && row.meets) { o.share = row.mode === "fixed" ? "fixed_best" : "brigade"; return row.staff; } }
       return forecastStaff(o);
     };
@@ -291,20 +295,16 @@
         tb.innerHTML = `<tr><th>${DAY_LABEL[BUS.day]}, ${k} ${k === 1 ? "person" : "people"}</th><th>Walked away</th><th>Median wait</th></tr>` +
           SHARE.map(([x, nm]) => `<tr class="${x === best ? "best" : ""}"><td>${nm}</td><td>${pct(row[x].lostShare, 1)}</td><td>${mmss(row[x].medianWait)}</td></tr>`).join("");
       } else {
-        const D = DATA.splits[BUS.day];
+        const D = DATA.splits[BUS.day], best = DATA.decisions.automate.perDay[BUS.day].cheapest;
         tb.innerHTML = `<tr><th>${DAY_LABEL[BUS.day]}</th><th>People</th><th>Walked away</th><th>Wait</th><th>Cost/day</th></tr>` +
-          Object.keys(PRESETS).map(k => { const r = D[k];
-            return `<tr class="${k === D._cheapest ? "best pick" : ""}"><td>${PRESETS[k].label}</td><td>${r.setup === "all_machine" ? "–" : r.meets ? `${r.staff}${r.mode === "fixed" ? " fixed" : ""}` : "over limit"}</td>` +
+          Object.keys(PRESETS).map(k => { const r = SPLITROW(BUS.day, k);
+            return `<tr class="${k === best ? "best pick" : ""}"><td>${PRESETS[k].label}</td><td>${r.setup === "all_machine" ? "–" : r.meets ? `${r.staff}${r.mode === "fixed" ? " fixed" : ""}` : "over limit"}</td>` +
                    `<td>${r.meets ? pct(r.lostShare, 1) : "–"}</td><td>${r.meets ? mmss(r.medianWait) : "–"}</td><td>${money(r.cost.total)}</td></tr>`; }).join("") +
           `<tr><td colspan="5" style="text-align:left;color:${COL.taupe};font-size:11px">✓ cheapest within the limit · fastest: ${D[D._fastest] ? PRESETS[D._fastest].label : "–"}</td></tr>`;
         // the normal day as well, so the headline's "on a normal day, people are still cheaper" is on the page
-        const N = DATA.splits.none, nd = $(side, ".normday"), keys = Object.keys(PRESETS).filter(k => N[k].meets);
+        const nd = $(side, ".normday"), NB = DATA.decisions.automate.perDay.none.cheapest, ks = Object.keys(PRESETS).filter(k => SPLITROW("none", k).meets);
         if (nd) nd.innerHTML = BUS.day === "none" ? "" : `<b>${DAY_LABEL.none}, cost a day:</b> ` +
-          keys.sort((a, b) => N[a].cost.total - N[b].cost.total).map(k => `${PRESETS[k].label} ${money(N[k].cost.total)}${k === N._cheapest ? " (cheapest)" : ""}`).join(" · ") +
-          `. Fastest: ${PRESETS[N._fastest].label} (${mmss(N[N._fastest].medianWait)})` +
-          (N.today && N.all_hand && N.today.medianWait > N.all_hand.medianWait ? `; ${PRESETS.today.label.toLowerCase()} is slower than ${PRESETS.all_hand.label.toLowerCase()} (${mmss(N.today.medianWait)} vs ${mmss(N.all_hand.medianWait)})` : "") +
-          `. <b>Which machine?</b> Four splits only: one tea-and-milk machine pays at ${DATA.ladder.at.cupsDay} cups a day (+${money(DATA.ladder.rungs.find(r => r.id === "single").modelMargin)}/month); ` +
-          `robots wait for about ${DATA.ladder.volumes.rungs.find(r => r.id === "barista").moreBands[0][0]} cups (machine ladder, appendix).`;
+          ks.sort((a, b) => SPLITROW("none", a).cost.total - SPLITROW("none", b).cost.total).map(k => `${PRESETS[k].label} ${money(SPLITROW("none", k).cost.total)}${k === NB ? " (cheapest)" : ""}`).join(" · ") + `.`;
       }
     }
     // end of the hour: A against B, this run and the mean of the seeded runs

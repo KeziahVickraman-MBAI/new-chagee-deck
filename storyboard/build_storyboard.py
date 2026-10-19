@@ -37,6 +37,7 @@ TEMPLATE = HERE / "template.html"
 PPTX = ROOT / "chagee-inspired-template-tealeaves.pptx"
 DOCX = ROOT / "OPIM 639_ Ideation Process (1).docx"
 RAW = json.loads((ROOT / "assumptions.json").read_text(encoding="utf-8"))
+TIERS_ = json.loads((ROOT / "machine_tiers.json").read_text(encoding="utf-8"))
 
 # template images used, by name -> path inside the .pptx
 PPTX_IMAGES = {
@@ -252,15 +253,29 @@ def values(d: dict) -> dict:
     v["r.sg_a_orders"], v["r.sg_a_rev"], v["r.sg_a_profit"] = Y["a"]["orders"] * N_, Y["a"]["revenue"] * N_, Y["a"]["profit"] * N_
     v["r.sg_aE_profit"], v["r.sg_b_profit"] = Y["aE"]["profit"] * N_, Y["b"]["profit"] * N_
     v["r.a_event_orders"] = ev["a"]["orders"]
-    # slide 07 decision strip: keep today's split; the machine-made drink buys wait, not cost
-    E_, N_d = d["splits"][day], d["splits"]["none"]
-    if not (E_["_cheapest"] == "today" and N_d["_cheapest"] == "all_hand" and E_["heading"]["meets"]
-            and E_["heading"]["cost"]["total"] > E_["today"]["cost"]["total"] and E_["heading"]["medianWait"] < E_["today"]["medianWait"]):
-        raise SystemExit("build: slide 07 decision (keep today's split; machine-made drink is faster but dearer) no longer holds; rewrite it")
-    v["r.dec_normal_gap"] = N_d["today"]["cost"]["total"] - N_d["all_hand"]["cost"]["total"]
-    v["r.dec_today_cost"] = E_["today"]["cost"]["total"]
-    v["r.dec_mm_extra"] = E_["heading"]["cost"]["total"] - E_["today"]["cost"]["total"]
-    v["r.dec_mm_faster"] = E_["today"]["medianWait"] - E_["heading"]["medianWait"]
+    # slide 07 and the playbook: the GM's decisions (sim/decisions.js; storyboard/check_decisions.js checks them)
+    D = d["decisions"]; A = D["automate"]; pdays = A["perDay"].values()
+    v["r.dec_single_lo"], v["r.dec_single_hi"] = min(x["single"]["cost"] for x in pdays), max(x["single"]["cost"] for x in pdays)
+    v["r.dec_today_lo"], v["r.dec_today_hi"] = min(x["today"]["cost"] for x in pdays), max(x["today"]["cost"] for x in pdays)
+    ev_ = A["perDay"][day]
+    v["r.dec_ev_single_staff"], v["r.dec_ev_single_cost"], v["r.dec_ev_single_wait"] = ev_["single"]["staff"], ev_["single"]["cost"], ev_["single"]["medianWait"]
+    v["r.dec_ev_today_cost"], v["r.dec_ev_today_wait"] = ev_["today"]["cost"], ev_["today"]["medianWait"]
+    v["r.dec_be"] = A["breakEvenMax"]
+    v["r.unit_year"] = A["assumed"] * 12
+    amacha = next(e for t in TIERS_["tiers"] if t["id"] == "single" for e in t["examples"] if e["cost"]["kind"] == "purchase")
+    v["r.amacha_price"] = amacha["cost"]["purchase"]
+    if not v["r.unit_year"] > 2 * v["r.amacha_price"]:
+        raise SystemExit("build: slide 07/08 say the assumed machine cost a year is more than twice Amacha's price; rewrite it")
+    v["r.dec_top"], v["r.dec_beside"] = D["where"]["topNet"], D["where"]["besideNet"]
+    v["r.dec_flat"], v["r.dec_busy"], v["r.dec_event"] = D["roster"]["flat"], D["roster"]["busy"], D["roster"]["event"]
+    cm_ = d["benefit"]["runs"]["base"]["days"]
+    pick = lambda day_, k: next(x for x in cm_[day_]["cand_machine"] if x["staff"] == k)
+    v["r.pb_ev_flat_lost"] = pick("large", D["roster"]["flat"])["lostShare"]
+    v["r.pb_ev_econ_lost"] = pick("large", D["roster"]["event"])["lostShare"]
+    v["r.pb_busy_flat_lost"] = pick("moderate", D["roster"]["flat"])["lostShare"]
+    if not v["r.pb_ev_econ_lost"] < v["r.pb_ev_flat_lost"]:
+        raise SystemExit("build: playbook band says the economic rule loses fewer event-day orders; rewrite it")
+    v["r.dec_share_k"], v["r.dec_br"], v["r.dec_fb"], v["r.dec_fw"] = D["share"]["staff"], D["share"]["brigade"], D["share"]["fixedBest"], D["share"]["fixedWorst"]
     # the roster trigger: forecast peak cups per person, after the capacity safety margin (plan()'s rule)
     v["r.cups_per_person"] = d["counter"]["perWorkerHour"] / RAW["costs"]["capacity_safety_margin"]["value"]
     return v
@@ -431,6 +446,8 @@ def digit_check(tpl: str) -> None:
 
 def build() -> Path:
     d = ensure_data()
+    # the GM's decisions, recomputed from sim/ on every build (not read from data.json)
+    subprocess.run(["node", str(HERE / "check_decisions.js"), str(DATA)], check=True, cwd=ROOT)
     tpl = TEMPLATE.read_text(encoding="utf-8")
     digit_check(tpl)
     vals = values(d)
