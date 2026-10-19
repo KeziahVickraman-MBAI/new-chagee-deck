@@ -186,7 +186,7 @@ def values(d: dict) -> dict:
     v["r.fx"] = RAW["_meta"]["fx_sgd_per_usd"]["value"]
     rep = RAW["costs"]["machine_cost_per_unit_per_month"]["represents"].replace(" Display text only.", "")
     v["s.unit_represents"] = rep[0].lower() + rep[1:] if rep.startswith("Our") else rep
-    # slide 10: the benefit (sim/benefit.js via precompute.js)
+    # slide 09 and its appendix: the benefit (sim/benefit.js via precompute.js)
     bn = d["benefit"]; S = bn["summary"]; base = S["base"]; Y = base["year"]; ev, bz = base["per"]["event"], base["per"]["busy"]
     tol = 1e-6 * max(1.0, abs(Y["a"]["profit"]) + abs(Y["b"]["profit"]))
     for f in ("orders", "revenue", "contribution"):                  # what the two levers share must not be counted twice
@@ -195,9 +195,9 @@ def values(d: dict) -> dict:
     ix = S["interaction"]                                            # profit may exceed a + b only by the labour interaction
     if ix["profit"] > max(0.0, ix["counterNet"]) + tol:
         raise SystemExit("build: benefit combined profit exceeds a + b by more than the labour interaction")
-    if not (ev["a"]["profit"] > 0 > bz["a"]["profit"] and S["fragile"]["year"]["ab"]["profit"] < Y["ab"]["profit"]
-            and Y["ab"]["counterNet"] > Y["ab"]["contribution"]):
-        raise SystemExit("build: slide 10 takeaway (forecast roster pays on event, not busy days; counter labour is most of the profit; "
+    if not (ev["a"]["profit"] > 0 > bz["a"]["profit"] and S["fragile"]["year"]["abE"]["profit"] < Y["abE"]["profit"]
+            and Y["abE"]["counterNet"] > Y["abE"]["contribution"]):
+        raise SystemExit("build: benefit appendix takeaway (forecast roster pays on event, not busy days; counter labour is most of the profit; "
                          "fragile without the minimum crew) no longer holds; rewrite it")
     # the "2% walk-away rule" label: at the default volume the forecast crew is the fewest people within the limit
     tgt = RAW["storyboard"]["walkaway_target"]["value"]
@@ -205,18 +205,19 @@ def values(d: dict) -> dict:
         for case, cand in (("a", "cand_hand"), ("ab", "cand_machine")):
             pick = next((x for x in row[cand] if x["lostShare"] <= tgt + 1e-12), None)
             if not pick or pick["staff"] != row[case]["staff"] or pick["labourHours"] != row[case]["labourHours"]:
-                raise SystemExit(f"build: slide 10 calls the forecast crew the 2% walk-away rule, but not on {dname} ({case}); relabel it")
+                raise SystemExit(f"build: benefit appendix calls the forecast crew the 2% walk-away rule, but not on {dname} ({case}); relabel it")
     for f in ("orders", "revenue"):
         if Y["abE"][f] > Y["aE"][f] + Y["b"][f] + tol:
             raise SystemExit(f"build: benefit combined {f} (economic rule) exceeds a + b")
     if not (bz["aE"]["staff"] == bn["runs"]["base"]["days"]["moderate"]["cand_hand"][0]["staff"] < bz["a"]["staff"] and bz["aE"]["profit"] >= 0):
-        raise SystemExit("build: slide 10 takeaway says the economic rule adds no one on busy days and avoids a loss; rewrite it")
+        raise SystemExit("build: benefit appendix takeaway says the economic rule adds no one on busy days and avoids a loss; rewrite it")
     v["r.ben_cups"] = bn["cups"]
-    v["r.ben_event_orders"], v["r.ben_event_rev"] = ev["ab"]["orders"], ev["ab"]["revenue"]
-    v["r.ben_busy_orders"], v["r.ben_busy_rev"] = bz["ab"]["orders"], bz["ab"]["revenue"]
-    v["r.ben_year_rev"] = Y["ab"]["revenue"]
-    v["r.ben_profit"] = Y["ab"]["profit"]
-    v["r.ben_profit_fragile"] = S["fragile"]["year"]["ab"]["profit"]
+    # headline figures: the economic rule (abE), the rule the playbook recommends
+    v["r.ben_event_orders"], v["r.ben_event_rev"] = ev["abE"]["orders"], ev["abE"]["revenue"]
+    v["r.ben_busy_orders"], v["r.ben_busy_rev"] = bz["abE"]["orders"], bz["abE"]["revenue"]
+    v["r.ben_year_rev"] = Y["abE"]["revenue"]
+    v["r.ben_profit"] = Y["abE"]["profit"]
+    v["r.ben_profit_fragile"] = S["fragile"]["year"]["abE"]["profit"]
     # the Without AI / With AI band at the end of each explainer (slides 05-10); every figure computed
     nd = st["besideTop"]
     GEO_ = json.loads((ROOT / "sim" / "sg_geo.json").read_text())
@@ -245,14 +246,23 @@ def values(d: dict) -> dict:
     SBv = RAW["storyboard"]
     v["r.cf_lost_year"] = (SBv["busy_days_per_year"]["value"] * rb["moderate"]["cf"]["lost"] + SBv["event_days_per_year"]["value"] * rb["large"]["cf"]["lost"]
                            + (RAW["store"]["open_days_per_year"]["value"] - SBv["busy_days_per_year"]["value"] - SBv["event_days_per_year"]["value"]) * rb["none"]["cf"]["lost"])
-    v["r.ben_orders"] = Y["ab"]["orders"]
+    v["r.ben_orders"] = Y["abE"]["orders"]
     N_ = RAW["facts"]["sg_outlets"]["value"]
-    v["r.ben_profit_sg"], v["r.ben_fragile_sg"] = Y["ab"]["profit"] * N_, S["fragile"]["year"]["ab"]["profit"] * N_
-    if not (0 < Y["a"]["profit"] < Y["b"]["profit"] and Y["a"]["orders"] > Y["b"]["orders"] and Y["a"]["contribution"] > Y["a"]["profit"]):
-        raise SystemExit("build: slide 09 says the forecast keeps more orders but less profit than the machine; rewrite it")
-    v["r.sg_a_orders"], v["r.sg_a_rev"], v["r.sg_a_profit"] = Y["a"]["orders"] * N_, Y["a"]["revenue"] * N_, Y["a"]["profit"] * N_
-    v["r.sg_aE_profit"], v["r.sg_b_profit"] = Y["aE"]["profit"] * N_, Y["b"]["profit"] * N_
-    v["r.a_event_orders"] = ev["a"]["orders"]
+    v["r.ben_profit_sg"], v["r.ben_fragile_sg"] = Y["abE"]["profit"] * N_, S["fragile"]["year"]["abE"]["profit"] * N_
+    # slide 09: the machine is most of it; on top of it, the economic rule adds a person on event days only
+    add_o, add_p = Y["abE"]["orders"] - Y["b"]["orders"], Y["abE"]["profit"] - Y["b"]["profit"]
+    if not (0 < Y["aE"]["profit"] < Y["b"]["profit"] and add_o > 0 and add_p > 0 and ev["abE"]["orders"] > ev["b"]["orders"]
+            and ev["abE"]["staff"] > ev["b"]["staff"] and bz["abE"]["staff"] == bz["b"]["staff"] and S["pilot"]["profit"] > 0):
+        raise SystemExit("build: slide 09 (machine is most of the benefit; the economic rule adds event-day orders; the pilot arm beats today's split) no longer holds; rewrite it")
+    v["r.fc_add_event"] = ev["abE"]["orders"] - ev["b"]["orders"]
+    v["r.fc_add_year"], v["r.fc_add_sg"] = add_o, add_p * N_
+    v["r.sg_aE_orders"], v["r.sg_aE_profit"], v["r.sg_b_profit"] = Y["aE"]["orders"] * N_, Y["aE"]["profit"] * N_, Y["b"]["profit"] * N_
+    v["r.ev_b_staff"], v["r.ev_abE_staff"] = ev["b"]["staff"], ev["abE"]["staff"]
+    v["r.pilot_profit"], v["r.pilot_sg"] = S["pilot"]["profit"], S["pilot"]["profit"] * N_
+    v["r.today_e_profit"] = S["today"]["year"]["abE"]["profit"]
+    if not v["r.today_e_profit"] < 0:
+        raise SystemExit("build: slide 09 says today's split is below the all-hand baseline; rewrite it")
+    v["r.today_below_sg"] = -v["r.today_e_profit"] * N_
     # slide 07 and the playbook: the GM's decisions (sim/decisions.js; storyboard/check_decisions.js checks them)
     D = d["decisions"]; A = D["automate"]; pdays = A["perDay"].values()
     v["r.dec_single_lo"], v["r.dec_single_hi"] = min(x["single"]["cost"] for x in pdays), max(x["single"]["cost"] for x in pdays)
@@ -264,8 +274,6 @@ def values(d: dict) -> dict:
     v["r.unit_year"] = A["assumed"] * 12
     amacha = next(e for t in TIERS_["tiers"] if t["id"] == "single" for e in t["examples"] if e["cost"]["kind"] == "purchase")
     v["r.amacha_price"] = amacha["cost"]["purchase"]
-    if not v["r.unit_year"] > 2 * v["r.amacha_price"]:
-        raise SystemExit("build: slide 07/08 say the assumed machine cost a year is more than twice Amacha's price; rewrite it")
     v["r.dec_top"], v["r.dec_beside"] = D["where"]["topNet"], D["where"]["besideNet"]
     v["r.dec_flat"], v["r.dec_busy"], v["r.dec_event"] = D["roster"]["flat"], D["roster"]["busy"], D["roster"]["event"]
     cm_ = d["benefit"]["runs"]["base"]["days"]
@@ -275,6 +283,8 @@ def values(d: dict) -> dict:
     v["r.pb_busy_flat_lost"] = pick("moderate", D["roster"]["flat"])["lostShare"]
     if not v["r.pb_ev_econ_lost"] < v["r.pb_ev_flat_lost"]:
         raise SystemExit("build: playbook band says the economic rule loses fewer event-day orders; rewrite it")
+    v["r.dec_units_single"], v["r.dec_units_today"] = R["single"]["units"], R["today"]["units"]
+    v["r.dec_wb"], v["r.dec_wf"] = D["share"]["waitBrigade"], D["share"]["waitFixedBest"]
     v["r.dec_share_k"], v["r.dec_br"], v["r.dec_fb"], v["r.dec_fw"] = D["share"]["staff"], D["share"]["brigade"], D["share"]["fixedBest"], D["share"]["fixedWorst"]
     # the roster trigger: forecast peak cups per person, after the capacity safety margin (plan()'s rule)
     v["r.cups_per_person"] = d["counter"]["perWorkerHour"] / RAW["costs"]["capacity_safety_margin"]["value"]
@@ -309,10 +319,10 @@ USED = [  # (section, key, label) shown in the appendix: every input the storybo
     ("sitepick", "dbscan_min_points", "DBSCAN minimum searches"),
     ("sitepick", "km_per_px", "Map scale"),
     ("service", "target_wait_minutes", "Wait at which a customer walks away"),
-    ("storyboard", "price_per_cup", "Price per cup, in store (slide 10)"),
-    ("storyboard", "gross_margin_per_cup", "Margin per cup, share of price (slide 10)"),
-    ("storyboard", "busy_days_per_year", "Busy days a year (slide 10, illustrative)"),
-    ("storyboard", "event_days_per_year", "Event days a year (slide 10, illustrative)"),
+    ("storyboard", "price_per_cup", "Price per cup, in store (slide 09)"),
+    ("storyboard", "gross_margin_per_cup", "Margin per cup, share of price (slide 09)"),
+    ("storyboard", "busy_days_per_year", "Busy days a year (slide 09, illustrative)"),
+    ("storyboard", "event_days_per_year", "Event days a year (slide 09, illustrative)"),
     ("illustration", "walk_back_speed", "Walking-back speed (Week 5 units)"),
 ]
 
@@ -349,7 +359,7 @@ def appendix() -> str:
     out.append("<p>We make no claim about: <b>Singapore ownership structure</b> (a Chagee contact says outlets run under one company and "
                "one data system, and that the ownership form does not matter here; I-chagee-contact); <b>delivery profit by channel</b>; "
                "<b>Chagee's own equipment cost</b> (not public); <b>gross margin per cup</b> (our assumption); "
-               "<b>Chagee's current rostering</b> (unknown; slide 10's counterfactual is ours).</p>")
+               "<b>Chagee's current rostering</b> (unknown; slide 09's baseline is ours).</p>")
     return "\n".join(out)
 
 

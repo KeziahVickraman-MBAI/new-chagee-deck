@@ -18,7 +18,7 @@ const D = decide(deps, o), fail = [];
 if (!D.where.holds) fail.push("1 where to open: the app-search site no longer adds more cups than a store beside the nearest outlet");
 if (!D.automate.holds) fail.push("2 what to automate: one tea-and-milk machine is no longer the cheapest on every day type, or its break-even machine cost is not below the assumed cost");
 if (!D.roster.holds) fail.push("3 how many people: the economic rule no longer adds a person on event days only");
-if (!D.share.holds) fail.push("4 how to share: the brigade no longer loses fewer orders than fixed posts at the event-day forecast crew");
+if (!D.share.holds) fail.push("4 how to share: in the recommended setup (one machine, economic-rule event crew) the brigade no longer does at least as well as fixed posts");
 const file = process.argv[2];
 if (file && fs.existsSync(file)) {
   const S = JSON.parse(fs.readFileSync(file, "utf8")).decisions, near = (a, b) => Math.abs(a - b) < 1e-6;

@@ -88,9 +88,10 @@
 
   // everything slide 10 shows, from precomputed runs (so the browser can redo it when the days-a-year input moves):
   // R = { base, volLo, volHi, fragile, today } runs; Ps = matching params; e = econ. RAW gives the input ranges.
+  // headline figures use the economic rule (aE, abE), the rule the playbook recommends
   function summary(R, Ps, RAW, e) {
     const S = RAW.storyboard, cr = RAW.costs;
-    const base = value(R.base, Ps.base, e), pyr = v => v.year.ab.profit;
+    const base = value(R.base, Ps.base, e), pyr = v => v.year.abE.profit;
     const ins = [                                                     // one-at-a-time low/high, for the chart and the range
       ["wage", "Wage", cr.labour_cost_per_hour.range, x => ({ R: R.base, P: Ps.base, e: { ...e, wage: x } })],
       ["unitMonth", "Machine cost", cr.machine_cost_per_unit_per_month.range, x => ({ R: R.base, P: Ps.base, e: { ...e, unitMonth: x } })],
@@ -111,19 +112,23 @@
     // orders vary with volume only, revenue with volume and price: their own ranges, not the profit extremes'
     const vols = [[R.volLo, Ps.volLo], [R.base, Ps.base], [R.volHi, Ps.volHi]];
     const span = xs => [Math.min(...xs), Math.max(...xs)];
-    const orders = span(vols.map(([r, p]) => value(r, p, e).year.ab.orders));
-    const revenue = span(vols.flatMap(([r, p]) => S.price_per_cup.range.map(x => value(r, p, { ...e, price: x }).year.ab.revenue)));
-    const contribution = S.gross_margin_per_cup.range.map(m => value(R.base, Ps.base, { ...e, margin: m }).year.ab.contribution);
+    const orders = span(vols.map(([r, p]) => value(r, p, e).year.abE.orders));
+    const revenue = span(vols.flatMap(([r, p]) => S.price_per_cup.range.map(x => value(r, p, { ...e, price: x }).year.abE.revenue)));
+    const contribution = S.gross_margin_per_cup.range.map(m => value(R.base, Ps.base, { ...e, margin: m }).year.abE.contribution);
     // combined against a + b: the orders and revenue overlap; labour can come out above (fewer extra hours with a machine)
-    const Y = base.year, ex = f => Y.ab[f] - Y.a[f] - Y.b[f];
+    const Y = base.year, ex = f => Y.abE[f] - Y.aE[f] - Y.b[f];
     const interaction = { orders: ex("orders"), revenue: ex("revenue"), contribution: ex("contribution"), counterNet: ex("counterNet"), profit: ex("profit") };
     // the headline split: the machine alone (automation) and what rostering to the forecast adds on top (the AI part)
     const split = rule => { const ab = rule === "E" ? "abE" : "ab";
       return { automation: base.year.b.profit, forecast: base.year[ab].profit - base.year.b.profit, total: base.year[ab].profit }; };
+    // the pilot comparison: one machine against today's split (our scenario), both rostered by the economic rule and both
+    // measured against the same illustrative all-hand baseline, so the difference does not depend on that baseline
+    const today = value(R.today, Ps.base, e), pilot = { profit: base.year.abE.profit - today.year.abE.profit,
+      orders: base.year.abE.orders - today.year.abE.orders, counterNet: base.year.abE.counterNet - today.year.abE.counterNet };
     const fragile = value(R.fragile, Ps.fragile, e);
     return { base, low, high, tornado, orders, revenue, contribution, interaction, split: { L: split("L"), E: split("E") },
-             minCrew: [fragile.year.ab.profit, base.year.ab.profit],
-             fragile, today: value(R.today, Ps.base, e) };
+             minCrew: [fragile.year.abE.profit, base.year.abE.profit], rule: "economic",
+             fragile, today, pilot };
   }
 
   const api = { runs, value, econ, summary, CASES };

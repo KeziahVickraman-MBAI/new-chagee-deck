@@ -8,6 +8,7 @@
  *                                                keeping peak-hour walk-aways within storyboard.walkaway_target, as
  *                                                slide 07's table; plus costAt(m): the day's cost at machine cost m.
  *   decide(deps, o)                              { where, automate, roster, share }, each with its figures and `holds`.
+ *                                                share is measured in the recommended setup: one machine, the economic-rule crew.
  *
  * automate: one tea-and-milk machine against the four slide 07 splits on every day type, and the machine cost per
  * unit a month at which it and today's split (our scenario) cost the same (sim.breakEvenFn, the breakEven core,
@@ -67,10 +68,13 @@ function decide({ Sim, Store, C, Site, B, RAW, P, GEO, TIERS }, o) {
   const roster = { flat, busy: V.per.busy.abE.staff, event: V.per.event.abE.staff, eventOrders: V.per.event.abE.orders,
     holds: V.per.busy.abE.staff === flat && V.per.event.abE.staff > flat };
 
-  // 4. how to share: at the forecast crew on an event day, the brigade loses fewer orders than fixed posts
-  const ev = o.shareDay, k = C.forecastDay(Sim, P, ev).peakStaff, cmp = mode => C.compare(Sim, Store, P, { day: ev, staff: k, walkBack: o.walkBack, seeds: o.seeds, ...mode });
+  // 4. how to share: in the recommended setup (one machine, the event-day crew the economic rule picks), the brigade
+  //    against fixed posts with the best and the worst assignment
+  const ev = o.shareDay, k = roster.event, cmp = mode => C.compare(Sim, Store, P, { day: ev, robots: single, staff: k, walkBack: o.walkBack, seeds: o.seeds, ...mode });
   const bri = cmp({}), fb = cmp({ mode: "fixed", assign: "best" }), fw = cmp({ mode: "fixed", assign: "worst" });
-  const share = { staff: k, brigade: bri.lostShare, fixedBest: fb.lostShare, fixedWorst: fw.lostShare, holds: bri.lostShare < fb.lostShare && bri.lostShare < fw.lostShare };
+  const share = { day: ev, staff: k, config: "single", brigade: bri.lostShare, fixedBest: fb.lostShare, fixedWorst: fw.lostShare,
+    waitBrigade: bri.medianWait, waitFixedBest: fb.medianWait,
+    holds: bri.lostShare <= fb.lostShare && bri.lostShare < fw.lostShare && bri.medianWait <= fb.medianWait };
 
   return { where, automate, roster, share };
 }

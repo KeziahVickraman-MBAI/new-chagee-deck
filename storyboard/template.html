@@ -442,13 +442,13 @@ html,body{margin:0;background:#E7E3DC;color:var(--ink);font-family:var(--sans);-
 .revctl .lab{font:600 10px/1 var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--taupe)}
 .revctl .btn{height:24px;padding:0 9px;font-size:11px}
 /* ---------- 09 benefit, simple ---------- */
-.bars{display:flex;flex-direction:column;gap:14px;margin-top:14px}
+.bars{display:flex;flex-direction:column;gap:7px;margin-top:6px}
 .bars .row{display:grid;grid-template-columns:270px 1fr;gap:14px;align-items:center}
-.bars .nm{font:600 14px/1.25 var(--sans);color:var(--ink)}
-.bars .nm small{display:block;font:400 11.5px/1.3 var(--sans);color:var(--taupe);margin-top:2px}
-.bars .tr{position:relative;height:34px;background:#fff;border:1px solid var(--line);border-radius:6px}
+.bars .nm{font:600 13px/1.2 var(--sans);color:var(--ink)}
+.bars .nm small{display:block;font:400 10.5px/1.25 var(--sans);color:var(--taupe);margin-top:2px}
+.bars .tr{position:relative;height:26px;background:#fff;border:1px solid var(--line);border-radius:6px}
 .bars .b{position:absolute;left:0;top:0;bottom:0;border-radius:5px}
-.bars .v{position:absolute;top:50%;transform:translateY(-50%);font:500 22px/1 var(--serif);color:var(--ink);white-space:nowrap}
+.bars .v{position:absolute;top:50%;transform:translateY(-50%);font:500 19px/1 var(--serif);color:var(--ink);white-space:nowrap}
 .bars .row.tot .nm{font-size:15px}
 .bc{background:#fff;border:1px solid var(--line);border-left:4px solid var(--navy);border-radius:9px;padding:8px 12px}
 .bc.phys{border-left-color:#2F6B45} .bc.warn{border-left-color:var(--red);background:#FFF9F8}
@@ -463,6 +463,8 @@ html,body{margin:0;background:#E7E3DC;color:var(--ink);font-family:var(--sans);-
 .dlist td:first-child b{font-size:13px} .dlist small{display:block;color:var(--taupe);font-size:10.5px;margin:2px 0 0 25px}
 .dlist .num{width:19px;height:19px;font-size:10px;margin-right:6px;display:inline-grid}
 .dlist i{display:block;color:var(--red);font-style:normal;font-size:11px;margin-top:2px}
+.bars .grp{font:600 9.5px/1.2 var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--taupe);margin:4px 0 -2px}
+.bars .row.pil .b{opacity:.85}
 .apx{columns:3;column-gap:22px;font:9.6px/1.36 var(--sans);color:var(--ink2)}
 .apx p{margin:0 0 4px;break-inside:avoid}
 .apx b{color:var(--ink)}
@@ -608,8 +610,8 @@ aside.notes{display:none}
       </div>
       <div class="cards">
         <div class="card"><h4>One operator, one data system</h4><p>Singapore outlets run under one company and one data system, so a counter design or roster rule could be rolled out across outlets.</p><span class="src">A Chagee contact (informal), to confirm with Chagee</span></div>
-        <div class="card"><h4>App-first</h4><p>Most orders come through the app, with few kiosks in store. Every order and search is logged: the raw material for a forecast.</p><span class="src">Team observation, to confirm</span></div>
-        <div class="card"><h4>Why Chagee</h4><p>A fast-growing, playful brand with heavy app use: plenty of data, and room for AI to help the stores.</p></div>
+        <div class="card"><h4>App-first</h4><p>Most orders come through the app, with few kiosks in store. Orders are recorded; whether searches and customer location are logged and usable is to confirm.</p><span class="src">Team observation, to confirm</span></div>
+        <div class="card"><h4>Why Chagee</h4><p>A fast-growing, playful brand with heavy app use: likely rich order data, and room for AI to help the stores.</p></div>
       </div>
     </div>
     <div class="takeaway"><span class="lab">TAKEAWAY</span><span>Whatever the channel, every order ends at one counter. The peak hour is where an outlet wins or loses.</span></div>
@@ -644,10 +646,10 @@ aside.notes{display:none}
               <div class="dlab">Data created</div><div class="data"><span class="chip gold">Stock vs par, expiry</span></div></div>
             <div class="node" data-s="3"><div class="ic"><svg viewBox="0 0 32 32"><path d="M5 12 H27 L25 6 H7 Z"/><path d="M6 12 V27 H26 V12 M13 27 V19 H19 V27"/></svg></div>
               <h5>Outlet counter</h5><div class="what">Machines brew each cup from a scanned recipe; people do ice, toppings and hand-over</div>
-              <div class="dlab">Data created</div><div class="data"><span class="chip red">Cups by hour</span><span class="chip red">Wait times</span></div></div>
+              <div class="dlab">Data created</div><div class="data"><span class="chip red">Cups by hour</span><span class="chip red">Wait times (to confirm)</span></div></div>
             <div class="node" data-s="4"><div class="ic"><svg viewBox="0 0 32 32"><circle cx="8" cy="23" r="4"/><circle cx="25" cy="23" r="4"/><path d="M8 23 H16 L20 13 H25 L25 23 M13 13 H20"/></svg></div>
               <h5>Last mile</h5><div class="what">Self-collect from the app, or delivery via third-party apps such as Grab; riders wait at the same counter</div>
-              <div class="dlab">Data created</div><div class="data"><span class="chip gold">Orders by channel</span><span class="chip gold">Rider wait</span></div></div>
+              <div class="dlab">Data created</div><div class="data"><span class="chip gold">Orders by channel</span><span class="chip gold">Rider wait (to confirm)</span></div></div>
             <div class="node" data-s="5"><div class="ic"><svg viewBox="0 0 32 32"><circle cx="16" cy="10" r="5"/><path d="M6 28 C6 20 11 17 16 17 C21 17 26 20 26 28"/></svg></div>
               <h5>Customer</h5><div class="what">Orders in the app, collects at the counter, comes back (or not)</div>
               <div class="dlab">Data created</div><div class="data"><span class="chip gold">App orders, drop-offs</span></div></div>
@@ -658,7 +660,7 @@ aside.notes{display:none}
           <li data-s="2"><span class="n">2</span><span>Central and regional warehouses, with restocking already planned from forecasts and tracked in real time.</span></li>
           <li data-s="3"><span class="n">3</span><span>At the counter, robots brew the fixed steps and people do the variable ones. Demand swings here hour by hour.</span></li>
           <li data-s="4"><span class="n">4</span><span>App self-collect and third-party delivery riders (Grab) all pick up at the same counter, adding to the queue.</span></li>
-          <li data-s="5"><span class="n">5</span><span>Every hand-off leaves a timestamp. The red chips are the data the counter decision needs.</span></li>
+          <li data-s="5"><span class="n">5</span><span>Each hand-off could leave a timestamp; which ones Chagee records is to confirm. The red chips are the data the counter decision needs.</span></li>
         </ol>
       </div>
       <div class="cards">
@@ -667,12 +669,12 @@ aside.notes{display:none}
         <div class="card"><h4>So we stop at the counter</h4><p>The open question is not the shipment. It is how many people the counter needs this hour, and how they work.</p></div>
       </div>
     </div>
-    <div class="takeaway"><span class="lab">TAKEAWAY</span><span>Chagee already plans its stock. The open problem is matching people to the hourly peak.</span></div>
+    <div class="takeaway"><span class="lab">TAKEAWAY</span><span>Chagee already plans its stock (public sources). How it rosters to the hourly peak is not public; that is the question we model.</span></div>
   </div>
   <div class="foot"><span>OPIM639 · Group 3 · explainer figures are illustrative assumptions</span><span class="rail"></span><span class="pg"></span></div>
   <aside class="notes">
     <p>Press play and the cup travels farm to customer. Sourcing is standard; only fresh milk and fruit are local (YF Chuhai). Chagee runs central and regional warehouses (Form 20-F) and already plans restocking from forecasts.</p>
-    <p>The volatile part is the counter, the red chips. Under time pressure, summarise this slide in one sentence: supply is planned, the counter is not. About forty seconds.</p>
+    <p>The volatile part is the counter, the red chips. We do not know how Chagee forecasts or rosters the counter today; we model one way to do it. Under time pressure, one sentence: supply is planned publicly; how the counter is planned is not public. About forty seconds.</p>
   </aside>
 </section>
 
@@ -681,7 +683,7 @@ aside.notes{display:none}
   <div class="leafart" aria-hidden="true"></div>
   <div class="inner">
     <p class="kicker">03 · The data trail</p>
-    <h2 class="head">Every cup is already a timestamped record: the inputs for a forecast exist today</h2>
+    <h2 class="head">Orders are already recorded; the other inputs a forecast needs are candidates to confirm</h2>
     <p class="sub">Four data sources and six decisions they could feed. We follow the four that start in the app and end at the counter.</p>
     <div class="body">
       <div class="panel stepper" data-steps="7" data-kind="matrix">
@@ -700,30 +702,30 @@ aside.notes{display:none}
             <div class="rowg" data-row="5"><div class="rl">Site selection</div><div class="c">Sales density per outlet</div><div class="c core">"No store nearby", home and work</div><div class="c core">Distance and fee by postcode</div><div class="c">Mall footfall, competitors</div></div>
             <div class="rowg" data-row="6"><div class="rl">Menu and promos</div><div class="c">Drink share, customisation</div><div class="c core">Trial and repeat, voucher uplift</div><div class="c">Delivery basket mix</div><div class="c">Collab calendar</div></div>
           </div>
-          <div class="mxnote">White chips mark the core input; grey text refines it. Red rows: our scope.</div>
+          <div class="mxnote">White chips mark the core input; grey text refines it. Red rows: our scope. Wait times, footfall, searches ("no store nearby") and home and work location are candidates to confirm, not known fields.</div>
         </div>
         <ol class="caps">
           <li data-s="1"><span class="n">1</span><span>Demand forecasts: cups per hour from the store and platform orders, refined by the calendar and weather.</span></li>
-          <li data-s="2"><span class="n">2</span><span>Staffing and prep: wait times and machine logs show where labour hours fall short of cups per hour.</span></li>
+          <li data-s="2"><span class="n">2</span><span>Staffing and prep: wait times and machine logs, if recorded, would show where labour hours fall short of cups per hour.</span></li>
           <li data-s="3"><span class="n">3</span><span>Replenishment: the drink mix and ingredient use, expiry and par levels.</span></li>
-          <li data-s="4"><span class="n">4</span><span>Queue and capacity: wait time against footfall shows customers who looked and left.</span></li>
-          <li data-s="5"><span class="n">5</span><span>Site selection: only the app links a cup to where a person lives and works.</span></li>
+          <li data-s="4"><span class="n">4</span><span>Queue and capacity: wait time against footfall, if both are recorded, would show customers who looked and left.</span></li>
+          <li data-s="5"><span class="n">5</span><span>Site selection: the app could link demand to where people live and work, if location is logged with consent (to confirm).</span></li>
           <li data-s="6"><span class="n">6</span><span>Menu and promos: trial, repeat and voucher uplift from members.</span></li>
           <li data-s="7"><span class="n">7</span><span>Our scope: app data feeds the demand forecast and site selection, and the forecast feeds staffing and queue capacity.</span></li>
         </ol>
       </div>
       <div class="cards">
-        <div class="card"><h4>No new sensors needed</h4><p>Point-of-sale, app and machine logs already exist. The work is joining them by outlet and hour.</p></div>
+        <div class="card"><h4>Known and to confirm</h4><p>Known: orders by channel and time (point of sale, app, Grab). To confirm: searches, customer location, wait times and walk-aways; some may need new logging.</p></div>
         <div class="card"><h4>The app is the link</h4><p>Only the app ties a cup to a person. That needs consent and care under Singapore's data protection law (PDPA).</p></div>
         <div class="card"><h4>What we take forward</h4><p>Demand forecast, then staffing, then queue capacity: one chain that ends with the GM's counter and roster.</p></div>
       </div>
     </div>
-    <div class="takeaway"><span class="lab">TAKEAWAY</span><span>The data for an hourly forecast is already collected. What is missing is turning it into a roster.</span></div>
+    <div class="takeaway"><span class="lab">TAKEAWAY</span><span>Orders by hour are recorded; searches, location, waits and walk-aways need confirming. How Chagee forecasts and rosters today is not public; we show one way.</span></div>
   </div>
   <div class="foot"><span>OPIM639 · Group 3 · explainer figures are illustrative assumptions</span><span class="rail"></span><span class="pg"></span></div>
   <aside class="notes">
     <p>Each step lights up one decision and the data that feeds it. Skip to the last step under time pressure: our scope is the three counter rows: forecast, staffing, queue.</p>
-    <p>This list is our reading of what Chagee's systems record, based on public material and our industry conversation, not a Chagee data dictionary. About fifty seconds.</p>
+    <p>This list is our reading of what Chagee's systems could record. Orders by channel and time are known; searches, customer location, wait times and walk-aways are candidates to confirm, based on public material and our industry conversation, not a Chagee data dictionary. About fifty seconds.</p>
   </aside>
 </section>
 
@@ -748,7 +750,7 @@ aside.notes{display:none}
               <div class="topics"><span class="topic">Topic 3 · forecasting</span></div></div>
             <div class="area chosen" data-s="3"><span class="tag in">Our focus · operations</span><h5>In-store operations</h5>
               <div class="d">Forecast the peak, set the roster, share the counter.</div>
-              <div class="why">Data exists, the decision is daily.</div>
+              <div class="why">Order data exists; the decision is daily.</div>
               <div class="topics"><span class="topic">Topic 3 · forecasting</span><span class="topic">Topic 5 · bucket brigades</span></div></div>
           </div>
           <div class="aiwrap" data-s="4">
@@ -813,7 +815,7 @@ aside.notes{display:none}
           <li data-s="2"><span class="n">2</span><span>DBSCAN, an unsupervised method, groups red searches that sit densely together. Scattered searches stay grey as noise.</span></li>
           <li data-s="3"><span class="n">3</span><span>Each cluster's centre is a candidate site, ranked by cups for Chagee: what the store sells minus what it takes from nearby outlets.</span></li>
           <li data-s="4"><span class="n">4</span><span>Click the map to test a new store, or search an outlet or town. Hover a navy pin to see which outlet it is; red lines show which outlets would lose cups.</span></li>
-          <li data-s="5"><span class="n">5</span><span>The forecast's peak hour sets the opening roster for today's counter, which slides 06 and 07 then run.</span></li>
+          <li data-s="5"><span class="n">5</span><span>The forecast's peak hour sets the opening roster for today's split (our scenario), which slides 06 and 07 then run.</span></li>
         </ol>
         <div class="howto screenonly" role="dialog" aria-label="How DBSCAN finds the sites">
           <div class="ptop"><span class="ptitle">How it works · DBSCAN on a toy set of searches</span><button class="btn" data-h="close" aria-label="Close">✕ Back to the map</button></div>
@@ -833,11 +835,11 @@ aside.notes{display:none}
         <p class="flag printonly">Synthetic app data on the team's map; outlet positions approximate (the central inset is enlarged). Not a trained model: the point is the method.</p>
       </div>
     </div>
-    <div class="vs"><div class="wo"><span class="lab">Without AI<br><small style="letter-spacing:.06em;text-transform:none;font-weight:400">our assumed baseline</small></span><span>Open outlet {{r.next_outlet}} beside {{s.bt_outlet}}: it sells <b>{{r.nd_cups}}</b> cups a day, but {{r.nd_moved|pct}} are moved from outlets nearby, so <b>+{{r.nd_net}}</b> for Chagee.</span></div><div class="wi"><span class="lab">With AI<br><small style="letter-spacing:.06em;text-transform:none;font-weight:400">our proposal</small></span><span>Predictive AI on app searches (DBSCAN) puts the same outlet {{r.bt_km|km}} km away, near {{s.top_hub}}: it sells {{r.top_cups}}, <b>+{{r.top_net}}</b> for Chagee.</span></div></div>
+    <div class="vs"><div class="wo"><span class="lab">Without AI<br><small style="letter-spacing:.06em;text-transform:none;font-weight:400">our assumed baseline</small></span><span>Open outlet {{r.next_outlet}} beside {{s.bt_outlet}}: it sells <b>{{r.nd_cups}}</b> cups a day, but {{r.nd_moved|pct}} are moved from outlets nearby, so <b>+{{r.nd_net}}</b> for Chagee.</span></div><div class="wi"><span class="lab">With AI<br><small style="letter-spacing:.06em;text-transform:none;font-weight:400">our proposal</small></span><span>DBSCAN clusters the synthetic app searches; our assumed demand model scores the same outlet {{r.bt_km|km}} km away, near {{s.top_hub}}: it sells {{r.top_cups}}, <b>+{{r.top_net}}</b> for Chagee.</span></div></div>
   </div>
   <div class="foot"><span>OPIM639 · Group 3 · explainer figures are illustrative assumptions · synthetic app data</span><span class="rail"></span><span class="pg"></span></div>
   <aside class="notes">
-    <p>Chagee Singapore runs on its app, with few kiosks, so every search is a demand signal, including searches where no store is close. That makes the app the forecasting input for a new store, before it has any sales.</p>
+    <p>Chagee Singapore runs on its app, with few kiosks. If Chagee logs searches and their location, which we have to confirm, every search is a demand signal, including searches where no store is close. Here the searches are synthetic. That makes the app the forecasting input for a new store, before it has any sales.</p>
     <p>Step one: synthetic app sessions on our map. Gold are within walking distance of an outlet; red found no store nearby. Step two: DBSCAN, unsupervised machine learning, groups red searches that are dense; scattered ones are noise. Step three: cluster centres are candidate sites.</p>
     <p>Step four: click the map to test a site. The card leads with the gain for Chagee, which is the store's sales minus the cups it takes from nearby outlets, and gives a verdict: strong, mixed, or mostly moving cups. Try a pin next to Tampines West CC: it sells, but most of it moves from the two Tampines outlets nearby. Step five: the forecast's peak hour gives the opening roster for the counter on the next slides.</p>
     <p>If asked how DBSCAN works, press How it works: it replays the algorithm one search at a time on a toy set. The appendix lists every simulated number.</p>
@@ -854,7 +856,7 @@ aside.notes{display:none}
   <div class="inner">
     <p class="kicker">06 · Share the counter<span class="ctag">Course link · Week 5 and Week 6, equipment and technology · the bucket-brigade simulation</span></p>
     <h2 class="head">With a lean roster, a bucket brigade keeps cups moving without knowing who is fastest</h2>
-    <p class="sub">Today's counter, two ways of sharing the hand steps, side by side. Pick what each side runs.</p>
+    <p class="sub">Today's split (our scenario), two ways of sharing the hand steps, side by side. Pick what each side runs.</p>
     <div class="body" style="grid-template-columns:1fr 286px">
       <div class="panel" data-kind="compare" data-mode="share">
         <div class="ptop"><span class="ptitle">Peak hour · same customers on both sides</span><span class="ctl screenonly cctl"></span></div>
@@ -868,11 +870,11 @@ aside.notes{display:none}
         <div class="card printonly"><h4>Why lean is where it counts</h4><p>Work flows to whoever is free, so the line balances itself (Topic 5). Fixed stations are only as good as the guess of who is fast.</p></div>
       </div>
     </div>
-    <div class="vs"><div class="wo"><span class="lab">Without AI<br><small style="letter-spacing:.06em;text-transform:none;font-weight:400">our assumed baseline</small></span><span>A normal-day roster ({{r.normal_staff}} at the peak) on an event day: <b>{{r.lost_normal_roster|pct}}</b> of peak-hour orders walk away.</span></div><div class="wi"><span class="lab">With AI<br><small style="letter-spacing:.06em;text-transform:none;font-weight:400">our proposal</small></span><span>The forecast sets the crew ({{r.rec}}) and a bucket brigade shares it: <b>{{r.lost_brigade|pct1}}</b> walk away, without knowing who is fastest.</span></div></div>
+    <div class="vs"><div class="wo"><span class="lab">Assumed baseline<br><small style="letter-spacing:.06em;text-transform:none;font-weight:400">illustrative</small></span><span>A normal-day roster ({{r.normal_staff}} at the peak) on an event day: <b>{{r.lost_normal_roster|pct}}</b> of peak-hour orders walk away.</span></div><div class="wi"><span class="lab">Proposed scenario<br><small style="letter-spacing:.06em;text-transform:none;font-weight:400">in our model</small></span><span>The forecast sets the crew ({{r.rec}}) and a bucket brigade shares it: <b>{{r.lost_brigade|pct1}}</b> walk away, without knowing who is fastest.</span></div></div>
   </div>
   <div class="foot"><span>OPIM639 · Group 3 · explainer figures are illustrative assumptions · mechanism in seconds, Week 5 bucket-brigade rules</span><span class="rail"></span><span class="pg"></span></div>
   <aside class="notes">
-    <p>Same counter, same customers, two sharing rules side by side. Robots, the navy boxes, take the order, brew tea and milk, and shake and seal. People do cup and ice, toppings and hand-over.</p>
+    <p>Same counter, same customers, two sharing rules side by side. The counter is today's split, our scenario, not Chagee's disclosed setup. Robots, the navy boxes, take the order, brew tea and milk, and shake and seal. People do cup and ice, toppings and hand-over.</p>
     <p>Left, a bucket brigade: each person carries a cup forward; the last hands it over, walks back and takes over a colleague's cup. Right, fixed stations: each person owns a station.</p>
     <p>Press play on an event day. Then set the right side to "slowest on toppings": the queue builds at toppings and customers walk away. The brigade never needed to know who was fast.</p>
     <p>Be honest about the other case: add people and fixed stations catch up, or are a little faster. About one minute.</p>
@@ -900,18 +902,16 @@ aside.notes{display:none}
       </div>
     </div>
     <div class="revctl screenonly"><span class="lab">Step through</span><span class="ctl"></span></div>
-    <div class="vs" data-s="4"><div class="wo"><span class="lab">Without AI<br><small style="letter-spacing:.06em;text-transform:none;font-weight:400">our assumed baseline</small></span><span>All by hand on an event day: <b>{{r.hand_staff}} people</b>, median wait {{r.hand_wait|mmss}}, <b>S${{r.hand_cost}}</b> a day.</span></div><div class="wi"><span class="lab">With AI<br><small style="letter-spacing:.06em;text-transform:none;font-weight:400">our proposal</small></span><span>In our model, one tea-and-milk machine on an event day: <b>{{r.dec_ev_single_staff}} people</b>, <b>S${{r.dec_ev_single_cost}}</b> a day, wait {{r.dec_ev_single_wait|mmss}}; today's split (our scenario) S${{r.dec_ev_today_cost}}, wait {{r.dec_ev_today_wait|mmss}}.</span></div></div>
-    <p class="decide" data-s="5"><b>GM decision</b><span>Pilot one tea-and-milk machine against today's split (our scenario): S${{r.dec_single_lo}}–{{r.dec_single_hi}} a day against S${{r.dec_today_lo}}–{{r.dec_today_hi}}. It wins only while a machine unit costs more than about S${{r.dec_be}} a month; we assume S${{r.unit_month}} (about S${{r.unit_year}} a year, more than twice Amacha's S${{r.amacha_price}} one-off price), so the answer depends on this input.</span></p>
+    <div class="vs" data-s="4"><div class="wo"><span class="lab">Assumed baseline<br><small style="letter-spacing:.06em;text-transform:none;font-weight:400">illustrative</small></span><span>All by hand on an event day: <b>{{r.hand_staff}} people</b>, median wait {{r.hand_wait|mmss}}, <b>S${{r.hand_cost}}</b> a day.</span></div><div class="wi"><span class="lab">Proposed scenario<br><small style="letter-spacing:.06em;text-transform:none;font-weight:400">in our model</small></span><span>In our model, one tea-and-milk machine on an event day: <b>{{r.dec_ev_single_staff}} people</b>, <b>S${{r.dec_ev_single_cost}}</b> a day, wait {{r.dec_ev_single_wait|mmss}}; today's split (our scenario) S${{r.dec_ev_today_cost}}, wait {{r.dec_ev_today_wait|mmss}}.</span></div></div>
+    <p class="decide" data-s="5"><b>GM decision</b><span>Pilot one tea-and-milk machine against today's split (our scenario): in our model S${{r.dec_single_lo}}–{{r.dec_single_hi}} a day against S${{r.dec_today_lo}}–{{r.dec_today_hi}}. That holds only while a machine unit costs more than about S${{r.dec_be}} a month (same rate for its {{r.dec_units_single}} unit and the split's {{r.dec_units_today}}; wage, volume and crews held fixed). We assume S${{r.unit_month}}; Chagee's real cost is unknown.</span></p>
   </div>
   <div class="foot"><span>OPIM639 · Group 3 · explainer figures are illustrative assumptions · robot speeds and costs are assumptions, not Chagee data</span><span class="rail"></span><span class="pg"></span></div>
   <aside class="notes">
-    <p>This is the GM's decision: which steps of the counter stay human and which go to robots. Side B, machine-made drink, is our scenario, not a claim about Chagee: machines make the drink while people tag the order and hand it over. Chagee's own equipment cost is not public; its Singapore relaunch used semi-automated equipment, according to Vulcan Post.</p>
-    <p>Click any station to switch it. Each side gets its forecast roster; change people with plus and minus. The table on the right is the simulation run for all four splits.</p>
-    <p>What it shows, honestly: the table is the event day; the line under it is the normal day, at about {{d.cupsPerDay}} cups. On a normal day all by hand is the cheapest of these four splits and all robots the fastest, so robots buy a shorter wait, not a lower cost; today's split is in fact slower than all by hand that day. On an event day, today's split is cheapest within the limit. The machine-made drink scenario needs a second person at the peak, because one person cannot tag and hand over at opposite ends of the counter.</p>
-    <p>The table now has a fifth row, one tea-and-milk machine, from the machine ladder in the appendix: it lets the roster drop a person off-peak. About one and a half minutes.</p>
+    <p>This is the GM's decision: which counter steps go to machines. Side A is today's split, our scenario, not Chagee's disclosed setup: machines on order and tag, tea and milk, shake and seal. Side B, machine-made drink, is also our scenario. Chagee's own equipment cost is not public; its Singapore relaunch used semi-automated equipment, according to Vulcan Post.</p>
+    <p>How to use it: choose a split for each side, or click any station to hand it to a robot or a person, then run the peak hour or press End to compare. Each side starts with the fewest people, from the forecast roster up, that keep walk-aways within {{sb.walkaway_target|pct}}.</p>
+    <p>The table compares five options on the chosen day, mean of {{a.seeds}} runs: today's split, the machine-made drink, all by hand, all robots, and one tea-and-milk machine from the machine ladder in the appendix. In our model, one tea-and-milk machine is the cheapest of the five on every day type, because it lets the roster drop a person off-peak at the cost of one machine unit. All robots is the fastest and the dearest: among these options robots buy a shorter wait, not a lower cost.</p>
+    <p>Qualify it out loud: these results rest on our assumptions, the machine cost of S${{r.unit_month}} a month per unit, the wage, the station speeds, the demand curve and a minimum crew of {{r.min_hand}} by hand and {{r.min_mixed}} with machines. One machine beats today's split only while a machine unit costs more than about S${{r.dec_be}} a month, with the wage, volume and crews held fixed. Chagee's real machine cost is unknown, so the decision is to pilot one machine against today's split, not to switch. About one and a half minutes.</p>
     <p>Course link: the same bucket-brigade replica from Week 5 and Week 6, with machines added on some stations.</p>
-    <p>How to use it: choose a split for each side, or click any station to hand it to a robot or a person, then run the peak hour or press End to compare.</p>
-    <p>The decision to say out loud: in our model, one tea-and-milk machine is the cheapest on every day type, so pilot it against today's split, which is our scenario, not Chagee's disclosed setup. Be clear that it depends on the machine cost: it wins only while a unit costs more than about S${{r.dec_be}} a month. We assume S${{r.unit_month}}, about S${{r.unit_year}} a year, which is more than twice the S${{r.amacha_price}} one-off price one small shop paid for its machine. If Chagee's real cost is closer to that, today's split could win. Among the four original splits, robots buy a shorter wait, not a lower cost.</p>
   </aside>
 </section>
 
@@ -926,21 +926,21 @@ aside.notes{display:none}
       <div class="panel" style="padding:10px 14px">
         <table class="dlist">
           <tr><th></th><th>Decision</th><th>Why, from the model</th><th>Revisit when</th></tr>
-          <tr><td><span class="num">1</span><b>Where to open</b><small>slide 05 · predictive AI</small></td>
+          <tr><td><span class="num">1</span><b>Where to open</b><small>slide 05 · DBSCAN + assumed demand model</small></td>
             <td>Open where app searches cluster, not beside an existing outlet.</td>
             <td><b>+{{r.dec_top}}</b> against <b>+{{r.dec_beside}}</b> cups a day for the same new outlet. <i>Synthetic app-search data: this shows the method, not a finding about real outlets.</i></td>
-            <td>Rerun on Chagee's app logs before any lease.</td></tr>
+            <td>Rerun on Chagee's app logs, if searches and location are recorded, before any lease.</td></tr>
           <tr><td><span class="num">2</span><b>What to automate</b><small>slide 07 · physical AI</small></td>
             <td>In our model, one tea-and-milk machine is the cheapest on every day type; pilot it against today's split (our scenario).</td>
-            <td><b>S${{r.dec_single_lo}}–{{r.dec_single_hi}}</b> a day against S${{r.dec_today_lo}}–{{r.dec_today_hi}}. Wins only above about <b>S${{r.dec_be}}</b> a month per machine unit; we assume S${{r.unit_month}} (about S${{r.unit_year}} a year, more than twice Amacha's S${{r.amacha_price}} one-off price), so the answer depends on this input.</td>
-            <td>Chagee's real machine cost; robots at about {{r.ladder_more}} cups a day.</td></tr>
-          <tr><td><span class="num">3</span><b>How many people</b><small>slides 06, 09 · predictive AI</small></td>
+            <td><b>S${{r.dec_single_lo}}–{{r.dec_single_hi}}</b> a day against S${{r.dec_today_lo}}–{{r.dec_today_hi}}. The two cost the same at about <b>S${{r.dec_be}} a month per machine unit</b> ({{r.dec_units_single}} unit against {{r.dec_units_today}}), with wage, volume, station speeds and crews held fixed; we assume S${{r.unit_month}}. <i>Amacha's S${{r.amacha_price}} is a one-off price; without machine life, upkeep and financing we cannot turn it into a monthly cost.</i></td>
+            <td>When Chagee's real machine cost is known.</td></tr>
+          <tr><td><span class="num">3</span><b>How many people</b><small>slides 06, 09 · forecast + economic rule</small></td>
             <td>Economic rule: add a person on event days, not on busy days.</td>
-            <td>Peak crew {{r.dec_flat}} → <b>{{r.dec_event}}</b> on event days; {{r.dec_busy}} on busy days, where an extra person costs more than the orders it keeps.</td>
+            <td>With the one machine: peak crew {{r.dec_flat}} → <b>{{r.dec_event}}</b> on event days; {{r.dec_busy}} on busy days, where an extra person costs more than the orders it keeps.</td>
             <td>When the forecast peak moves.</td></tr>
           <tr><td><span class="num">4</span><b>How to share</b><small>slide 06 · operations</small></td>
-            <td>Share the hand steps as a bucket brigade with a lean crew.</td>
-            <td><b>{{r.dec_br|pct1}}</b> walk away against {{r.dec_fb|pct1}}–{{r.dec_fw|pct}} with fixed posts (event day, {{r.dec_share_k}} people).</td>
+            <td>Test a bucket brigade against fixed posts for the hand steps.</td>
+            <td>In the recommended setup (one machine, {{r.dec_share_k}} people, event day): <b>{{r.dec_br|pct1}}</b> walk away with a brigade, {{r.dec_fb|pct1}} with well-assigned fixed posts, {{r.dec_fw|pct}} with badly assigned ones; median wait {{r.dec_wb|mmss}} against {{r.dec_wf|mmss}}.</td>
             <td>Fixed posts once there is spare staff.</td></tr>
         </table>
       </div>
@@ -952,13 +952,13 @@ aside.notes{display:none}
         <div class="card"><h4>To confirm with Chagee</h4><p>How rosters are set today, the real machine cost per unit, and whether outlets log wait times and walk-aways.</p></div>
       </div>
     </div>
-    <div class="vs"><div class="wo"><span class="lab">Without AI<br><small style="letter-spacing:.06em;text-transform:none;font-weight:400">our assumed baseline</small></span><span>One machine and a flat crew of {{r.dec_flat}} every day: <b>{{r.pb_ev_flat_lost|pct}}</b> of event-day peak orders walk away.</span></div><div class="wi"><span class="lab">With AI<br><small style="letter-spacing:.06em;text-transform:none;font-weight:400">our proposal</small></span><span>The forecast and the economic rule add a person on event days only ({{r.dec_flat}} → {{r.dec_event}}): <b>{{r.pb_ev_econ_lost|pct1}}</b> walk away; busy days stay at {{r.dec_busy}} ({{r.pb_busy_flat_lost|pct1}}).</span></div></div>
+    <div class="vs"><div class="wo"><span class="lab">Assumed baseline<br><small style="letter-spacing:.06em;text-transform:none;font-weight:400">illustrative</small></span><span>One machine and a flat crew of {{r.dec_flat}} every day: <b>{{r.pb_ev_flat_lost|pct}}</b> of event-day peak orders walk away.</span></div><div class="wi"><span class="lab">Proposed scenario<br><small style="letter-spacing:.06em;text-transform:none;font-weight:400">in our model</small></span><span>The forecast and the economic rule add a person on event days only ({{r.dec_flat}} → {{r.dec_event}}): <b>{{r.pb_ev_econ_lost|pct1}}</b> walk away; busy days stay at {{r.dec_busy}} ({{r.pb_busy_flat_lost|pct1}}).</span></div></div>
   </div>
   <div class="foot"><span>OPIM639 · Group 3 · explainer figures are illustrative assumptions</span><span class="rail"></span><span class="pg"></span></div>
   <aside class="notes">
-    <p>Four decisions, one per simulation. One, where to open: use app-search clusters, not the site beside an existing outlet. The figures use synthetic app-search data, so this shows the method; with Chagee's app logs, rerun it before any lease.</p>
-    <p>Two, what to automate: in our model one tea-and-milk machine is the cheapest on every day type, so pilot it against today's split, which is our scenario, not Chagee's disclosed setup. It depends on the machine cost: it wins only above about S${{r.dec_be}} a month per unit, and our S${{r.unit_month}} is more than twice a year what one small shop paid once for its machine.</p>
-    <p>Three, how many people: the economic rule, add a person on event days but not busy days. Four, how to share: a bucket brigade while the crew is lean. Then a pilot in {{sb.pilot_outlets}} outlets: shadow the forecast, roster to it, and run one machine against today's split, judged on cups per labour hour, wait time and walk-aways. About one minute.</p>
+    <p>Four decisions, one per simulation, all in our model and on our assumptions. One, where to open: DBSCAN clusters app searches and our assumed demand model scores the sites. The searches are synthetic, so this shows the method; rerun it on Chagee's app logs, if searches and location are recorded, before any lease.</p>
+    <p>Two, what to automate: in our model one tea-and-milk machine is the cheapest on every day type, so pilot it against today's split, which is our scenario, not Chagee's disclosed setup. The two cost the same at about S${{r.dec_be}} a month per machine unit, comparing one unit against three, with the wage, volume and crews held fixed. We assume S${{r.unit_month}}. We cannot turn the one-off price one small shop paid into a monthly cost without machine life, upkeep and financing, so Chagee's real cost decides this.</p>
+    <p>Three, how many people: the economic rule adds a person on event days but not on busy days. Four, how to share: test a bucket brigade against fixed posts; in the recommended setup the brigade does a little better than well-assigned fixed posts and much better than badly assigned ones. Then a pilot in {{sb.pilot_outlets}} outlets: shadow the forecast, roster by the economic rule, and run one machine against today's split, judged on cups per labour hour, wait time and walk-aways. About one minute.</p>
   </aside>
 </section>
 
@@ -968,30 +968,30 @@ aside.notes{display:none}
   <div class="leafart" aria-hidden="true"></div>
   <div class="inner">
     <p class="kicker">09 · The size of the benefit · Singapore only</p>
-    <h2 class="head">Across Singapore's {{facts.sg_outlets}} outlets, about S${{r.ben_profit_sg|m2}} a year: the machine saves labour, the forecast keeps orders</h2>
-    <p class="sub">Modelled avoided costs on stated assumptions, not demonstrated savings. Against a flat normal-day roster and an all-by-hand counter; we do not know how Chagee rosters today.</p>
+    <h2 class="head">In our model, about S${{r.ben_profit_sg|m2}} a year across {{facts.sg_outlets}} outlets against an illustrative baseline, almost all from one machine's labour saving</h2>
+    <p class="sub">Modelled avoided costs on stated assumptions, not demonstrated savings and not savings against Chagee's actual operations, which we do not know. The pilot compares one machine with today's split (our scenario).</p>
     <div class="body" style="grid-template-columns:1fr 400px">
       <div class="panel">
-        <div class="ptop"><span class="ptitle">Profit a year, all {{facts.sg_outlets}} outlets</span></div>
+        <div class="ptop"><span class="ptitle">Profit a year, all {{facts.sg_outlets}} outlets · economic rule throughout</span></div>
         <div class="bars"></div>
-        <p class="lnote" style="margin-top:auto">Profit = orders kept × price × margin, plus labour saved, minus machine cost. Calendar: {{sb.busy_days_per_year}} busy days (weekends) and {{sb.event_days_per_year}} event days (public holidays) a year, an illustrative definition. Peak hour only, so orders kept are a floor. Every figure, range and rule: appendix.</p>
+        <p class="lnote" style="margin-top:auto">Profit = orders kept × price × margin, plus labour saved, minus machine cost. Calendar: {{sb.busy_days_per_year}} busy days (weekends) and {{sb.event_days_per_year}} event days (public holidays) a year, an illustrative definition. Baseline: all by hand, the normal-day crew every day. Peak hour only, so orders kept are a floor. Every figure, range and both crew rules: appendix.</p>
       </div>
       <div class="cards" style="gap:9px">
-        <div class="bc ai"><div class="k">Predictive AI · roster to the forecast</div><h4>Keeps orders, but staff cost most of the margin</h4>
-          <p>About <b>{{r.sg_a_orders}}</b> peak-hour orders a year kept across Singapore, mostly on event days ({{r.a_event_orders}} per outlet that day). That is S${{r.sg_a_rev|m2}} of revenue but only S${{r.sg_a_profit|m2}} of profit, or S${{r.sg_aE_profit|m2}} if a person is added only when it pays.</p></div>
-        <div class="bc phys"><div class="k">Physical AI · one tea-and-milk machine</div><h4>Saves labour: the big number</h4>
+        <div class="bc phys"><div class="k">Physical AI · one tea-and-milk machine</div><h4>Most of the benefit: labour</h4>
           <p>Lets the roster drop from {{r.min_hand}} people to {{r.min_mixed}} in the off-peak hours: <b>S${{r.sg_b_profit|m2}}</b> a year after the machine's cost.</p></div>
+        <div class="bc ai"><div class="k">Forecast + economic rule</div><h4>Adds event-day orders on top of the machine</h4>
+          <p>Adds a person on event days only ({{r.ev_b_staff}} → {{r.ev_abE_staff}}), keeping about {{r.fc_add_event}} more orders per outlet that day: {{r.fc_add_year}} a year, <b>S${{r.fc_add_sg|m2}}</b> across Singapore. On its own, all by hand: S${{r.sg_aE_profit|m2}}.</p></div>
         <div class="bc warn"><div class="k">Read with care</div><h4>The big number rests on one assumption</h4>
-          <p>The minimum crew, {{r.min_hand}} by hand and {{r.min_mixed}} with machines, is ours. Without it, S${{r.ben_profit_sg|m2}} falls to <b>S${{r.ben_fragile_sg|m2}}</b>.</p></div>
+          <p>The minimum crew, {{r.min_hand}} by hand and {{r.min_mixed}} with machines, is ours. Without it, S${{r.ben_profit_sg|m2}} falls to <b>S${{r.ben_fragile_sg|m2}}</b>. The pilot arm beats today's split by S${{r.pilot_sg|m2}}: more than the headline, because today's split is itself S${{r.today_below_sg|m2}} below the baseline.</p></div>
       </div>
     </div>
-    <div class="vs"><div class="wo"><span class="lab">Without AI<br><small style="letter-spacing:.06em;text-transform:none;font-weight:400">our assumed baseline</small></span><span>Flat normal-day roster, all by hand: about <b>{{r.cf_lost_year}}</b> peak-hour orders a year walk away per outlet.</span></div><div class="wi"><span class="lab">With AI<br><small style="letter-spacing:.06em;text-transform:none;font-weight:400">our proposal</small></span><span>Both levers, one run: <b>{{r.ben_orders}}</b> kept a year per outlet, profit <b>S${{r.ben_profit_sg|m2}}</b> across {{facts.sg_outlets}} outlets (S${{r.ben_fragile_sg|m2}} without the minimum-crew rule).</span></div></div>
+    <div class="vs"><div class="wo"><span class="lab">Assumed baseline<br><small style="letter-spacing:.06em;text-transform:none;font-weight:400">illustrative</small></span><span>Flat normal-day roster, all by hand: about <b>{{r.cf_lost_year}}</b> peak-hour orders a year walk away per outlet.</span></div><div class="wi"><span class="lab">Proposed scenario<br><small style="letter-spacing:.06em;text-transform:none;font-weight:400">in our model</small></span><span>Both levers, one run: <b>{{r.ben_orders}}</b> kept a year per outlet, profit <b>S${{r.ben_profit_sg|m2}}</b> across {{facts.sg_outlets}} outlets (S${{r.ben_fragile_sg|m2}} without the minimum-crew rule).</span></div></div>
   </div>
   <div class="foot"><span>OPIM639 · Group 3 · model figures are illustrative assumptions · peak hour only · Singapore, {{facts.sg_outlets}} outlets</span><span class="rail"></span><span class="pg"></span></div>
   <aside class="notes">
-    <p>One number and where it comes from. Across Singapore's {{facts.sg_outlets}} outlets the model gives about S${{r.ben_profit_sg|m2}} a year, against a flat normal-day roster and an all-by-hand counter. These are modelled avoided costs on our assumptions, not demonstrated savings.</p>
-    <p>Read the bars top to bottom. The forecast on its own keeps orders, about {{r.sg_a_orders}} a year, mostly on event days, but the extra staff it rosters cost most of the margin. The machine on its own is the big number, because it lets the roster drop a person off-peak. Both together is the headline.</p>
-    <p>Say the caveat out loud: the machine's saving comes from our minimum-crew assumption. Without it, the total falls to about S${{r.ben_fragile_sg|m2}}. The detail, ranges and both crew rules are in the appendix. About one minute.</p>
+    <p>One number and where it comes from, all in our model. Against an illustrative baseline, an all-by-hand counter with the normal-day crew every day, the proposed scenario gives about S${{r.ben_profit_sg|m2}} a year across {{facts.sg_outlets}} outlets. That baseline is ours, not Chagee's operations, so these are not savings Chagee would see; they are modelled avoided costs on stated assumptions. Every figure uses the economic rule, the rule the playbook recommends.</p>
+    <p>Read the bars. Almost all of it is the one tea-and-milk machine, which lets the roster drop a person off-peak. Rostering to the forecast by the economic rule adds a person on event days only and keeps about {{r.fc_add_event}} more orders per outlet that day, S${{r.fc_add_sg|m2}} a year across Singapore. The last bar is the pilot comparison: the proposed scenario against today's split, our scenario, both on the economic rule, a difference of S${{r.pilot_sg|m2}}.</p>
+    <p>Say the caveat out loud: the machine's saving comes from our minimum-crew assumption; without it, the total falls to about S${{r.ben_fragile_sg|m2}}. Ranges and both crew rules are in the appendix. About one minute.</p>
   </aside>
 </section>
 
@@ -1027,12 +1027,12 @@ aside.notes{display:none}
       </div>
       <div class="cards ins" style="gap:7px"></div>
     </div>
-    <div class="vs"><div class="wo"><span class="lab">Without AI<br><small style="letter-spacing:.06em;text-transform:none;font-weight:400">our assumed baseline</small></span><span>All by hand at {{r.ladder_cups}} cups a day: <b>{{r.hand_hours}} person-hours</b> a day, <b>S${{r.hand_month}}</b> a month of labour.</span></div><div class="wi"><span class="lab">With AI<br><small style="letter-spacing:.06em;text-transform:none;font-weight:400">our proposal</small></span><span>One tea-and-milk machine: <b>{{r.single_hours_left}} person-hours</b> a day, <b>+S${{r.single_net}}</b> a month after its unit cost. Robots wait for about {{r.ladder_more}} cups a day.</span></div></div>
+    <div class="vs"><div class="wo"><span class="lab">Without AI<br><small style="letter-spacing:.06em;text-transform:none;font-weight:400">our assumed baseline</small></span><span>All by hand at {{r.ladder_cups}} cups a day: <b>{{r.hand_hours}} person-hours</b> a day, <b>S${{r.hand_month}}</b> a month of labour.</span></div><div class="wi"><span class="lab">With AI<br><small style="letter-spacing:.06em;text-transform:none;font-weight:400">our proposal</small></span><span>One tea-and-milk machine: <b>{{r.single_hours_left}} person-hours</b> a day, <b>+S${{r.single_net}}</b> a month after its unit cost. A robot setup (four stations on machines) starts to save more labour than today's split at about {{r.ladder_more}} cups a day; labour only, not a cost break-even.</span></div></div>
   </div>
   <div class="foot"><span>OPIM639 · Group 3 · Vendor and press figures; not Chagee data · model figures are illustrative assumptions</span><span class="rail"></span><span class="pg"></span></div>
   <aside class="notes">
     <p>Backup for slide 07, for questions on which machine to buy. This is physical AI: automation and machines at the counter. The predictive AI is the forecast that sets the roster. One rule explains the whole slide: a machine pays only when it removes a person-shift, and costs less than that shift.</p>
-    <p>The chart shows the net gain a month against an all-by-hand counter as volume changes; above the line it pays. One tea-and-milk machine lets the roster drop from {{r.min_hand}} people to {{r.min_mixed}} in {{r.single_hours}} off-peak hours, about one person-shift a day, for one station unit: it pays across most of the range. Today's split saves {{r.today_hours}} person-hours but pays for {{r.today_units}} units, so it ends up a little dearer than all by hand. A robot saves no more labour than today's split until about {{r.ladder_more}} cups a day, so at Oli's lease it only pays at the top of our range.</p>
+    <p>The chart shows the net gain a month against an all-by-hand counter as volume changes; above the line it pays. One tea-and-milk machine lets the roster drop from {{r.min_hand}} people to {{r.min_mixed}} in {{r.single_hours}} off-peak hours, about one person-shift a day, for one station unit: it pays across most of the range. Today's split saves {{r.today_hours}} person-hours but pays for {{r.today_units}} units, so it ends up a little dearer than all by hand. A robot setup, four stations on machines, saves no more labour than today's split until about {{r.ladder_more}} cups a day. That is where extra labour saving begins, not a cost break-even; at Oli's lease it only pays at the top of our range.</p>
     <p>Three things to say out loud. The minimum crew, {{r.min_hand}} by hand and {{r.min_mixed}} with machines, is our model's assumption and drives this result. Every option runs at the model's station speeds, not vendor claims. Payback is simple payback, if the machine lets the roster drop one person-shift, with no installation, maintenance or financing. Chagee's own equipment cost is not public. About one minute.</p>
     <p>Takeaway: At {{r.ladder_cups}} cups a day: start with one machine (about +S${{r.single_net}} a month); today's {{r.today_units}}-station split costs S${{r.today_more}} a month more than all by hand; robots save no more labour than today's split until about {{r.ladder_more}} cups a day.</p>
   </aside>
@@ -1044,7 +1044,7 @@ aside.notes{display:none}
   <div class="inner">
     <p class="kicker">Appendix · The benefit in detail (backs slide 09) · Singapore only</p>
     <h2 class="head" style="font-size:29px;max-width:1010px">Per outlet, about {{r.ben_event_orders}} orders kept on an event day and {{r.ben_busy_orders}} on a busy day; on an illustrative calendar, S${{r.ben_year_rev}} of revenue a year</h2>
-    <p class="sub" style="font-size:12.5px;margin-top:4px;max-width:1080px">Modelled avoided costs on stated assumptions, not demonstrated savings. Peak hour only; conservative. Prices to our knowledge, based on public sources.</p>
+    <p class="sub" style="font-size:12.5px;margin-top:4px;max-width:1080px">Modelled avoided costs on stated assumptions, not demonstrated savings, against an illustrative baseline, not Chagee's operations. Economic rule for the headline figures. Peak hour only; conservative. Prices to our knowledge, based on public sources.</p>
     <div class="hstrip"></div>
     <div class="body" style="grid-template-columns:1fr 330px;margin-top:8px;gap:14px">
       <div class="panel" style="padding:9px 14px 8px">
@@ -1067,7 +1067,7 @@ aside.notes{display:none}
         <div class="box"><h4>Not sized</h4>Delivery levers (third-party; channel margins not disclosed), membership and CRM, waste (no inventory model in this deck), and the new-store site forecast (shown as cups added only).</div>
       </div>
     </div>
-    <div class="vs"><div class="wo"><span class="lab">Without AI<br><small style="letter-spacing:.06em;text-transform:none;font-weight:400">our assumed baseline</small></span><span>Flat normal-day roster, all by hand: about <b>{{r.cf_lost_year}}</b> peak-hour orders a year walk away per outlet.</span></div><div class="wi"><span class="lab">With AI<br><small style="letter-spacing:.06em;text-transform:none;font-weight:400">our proposal</small></span><span>Both levers, one run: <b>{{r.ben_orders}}</b> kept a year per outlet, profit <b>S${{r.ben_profit_sg|m2}}</b> across {{facts.sg_outlets}} outlets (S${{r.ben_fragile_sg|m2}} without the minimum-crew rule).</span></div></div>
+    <div class="vs"><div class="wo"><span class="lab">Assumed baseline<br><small style="letter-spacing:.06em;text-transform:none;font-weight:400">illustrative</small></span><span>Flat normal-day roster, all by hand: about <b>{{r.cf_lost_year}}</b> peak-hour orders a year walk away per outlet.</span></div><div class="wi"><span class="lab">Proposed scenario<br><small style="letter-spacing:.06em;text-transform:none;font-weight:400">in our model</small></span><span>Both levers, one run: <b>{{r.ben_orders}}</b> kept a year per outlet, profit <b>S${{r.ben_profit_sg|m2}}</b> across {{facts.sg_outlets}} outlets (S${{r.ben_fragile_sg|m2}} without the minimum-crew rule).</span></div></div>
   </div>
   <div class="foot"><span>OPIM639 · Group 3 · model figures are illustrative assumptions · peak hour only · Singapore, {{facts.sg_outlets}} outlets</span><span class="rail"></span><span class="pg"></span></div>
   <aside class="notes">
