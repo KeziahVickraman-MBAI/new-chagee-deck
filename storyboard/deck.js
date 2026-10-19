@@ -370,7 +370,33 @@
       `<label>${lab}<span class="val" data-v="${k}">${f(par[k])}</span><input type="range" data-k="${k}" min="${SP[key].range[0]}" max="${SP[key].range[1]}" step="${step}" value="${par[k]}"></label>`).join("");
     svg.innerHTML = `<image href="${window.STORY.MAP}" x="0" y="0" width="1672" height="640"/><g></g>`;
     const mapImg = $(svg, "image"), layer = $(svg, "g");
-    let M = null, pin = null, userPin = false, step = S.N;
+    let M = null, pin = null, userPin = false, step = S.N, sel = null;
+    const tip = $(p, ".maptip"), search = $(p, ".sitesearch");
+    const HUBS = SP.hubs.value;
+    $(p, "#sitelist").innerHTML = GEO.outlets.map((o, j) => `<option value="${GEO.numbers[j]} · ${GEO.names[j]}">`).join("") +
+      HUBS.map(h => `<option value="${h.name} (town)">`).join("");
+    const goStep4 = () => { if (S.cur < 4) S.go(4, true); else draw(); };
+    search.addEventListener("change", () => {
+      const v = search.value.trim().toLowerCase(); if (!v) return;
+      const j = GEO.outlets.findIndex((o, k) => `${GEO.numbers[k]} · ${GEO.names[k]}`.toLowerCase() === v || GEO.names[k].toLowerCase() === v || String(GEO.numbers[k]) === v);
+      const jj = j >= 0 ? j : GEO.names.findIndex(n => n.toLowerCase().includes(v));
+      const h = HUBS.find(h => `${h.name} (town)`.toLowerCase() === v || h.name.toLowerCase() === v);
+      if (h && j < 0) { sel = null; pin = { x: h.x, y: h.y }; userPin = true; goStep4(); }
+      else if (jj >= 0) { sel = jj; goStep4(); }
+      search.blur();
+    });
+    svg.addEventListener("mousemove", e => {
+      const g = e.target.closest?.(".ol"); if (!g) { tip.style.display = "none"; return; }
+      const j = +g.dataset.j, box = $(p, ".visual").getBoundingClientRect(), r = g.getBoundingClientRect(), k = box.width / $(p, ".visual").offsetWidth;
+      tip.innerHTML = `<b>${oname(j)}</b> · about ${Math.round(M.storeCups[j])} cups a day today<small>click to see this outlet</small>`;
+      tip.style.left = `${(r.left + r.width / 2 - box.left) / k}px`; tip.style.top = `${(r.top - box.top) / k}px`; tip.style.display = "block";
+    });
+    svg.addEventListener("mouseleave", () => (tip.style.display = "none"));
+    fc.addEventListener("click", e => {
+      if (e.target.closest("[data-act=testnew]") && sel != null) {
+        const [x, y] = GEO.outlets[sel]; pin = { x: x + 6, y }; userPin = true; sel = null; search.value = ""; goStep4();
+      }
+    });
     const oname = j => `${GEO.numbers[j]} · ${GEO.names[j]}`;
     const CL = [COL.red, "#8E5BA8", "#D07A2D", "#2E8B7A", "#B8860B", "#C0457A", "#5470A8"];
     const avg = RAW.store.cups_per_store_per_year.value / RAW.store.open_days_per_year.value;
@@ -390,7 +416,10 @@
       });
       if (step >= 2) M.clusters.forEach(c => (s += `<circle cx="${c.x}" cy="${c.y}" r="${Math.max(14, c.r)}" fill="none" stroke="${CL[c.id % CL.length]}" stroke-width="2" stroke-dasharray="6 5"/>`));
       // existing outlets: hover for name and the model's cups a day today (a click still drops a new pin)
-      GEO.outlets.forEach(([x, y], j) => (s += `<g><title>${oname(j)}: about ${Math.round(M.storeCups[j])} cups a day today (model)</title>` +
+      if (sel != null) { const [x, y] = GEO.outlets[sel];
+        s += `<circle cx="${x}" cy="${y - 14}" r="${walkPx}" fill="rgba(36,64,107,.08)" stroke="${COL.navy}" stroke-width="2" stroke-dasharray="8 6"/>` +
+             `<circle cx="${x}" cy="${y - 14}" r="24" fill="none" stroke="${COL.red}" stroke-width="5"/>`; }
+      GEO.outlets.forEach(([x, y], j) => (s += `<g class="ol" data-j="${j}">` +
         `<circle cx="${x}" cy="${y - 14}" r="14" fill="${COL.navy}" stroke="#fff" stroke-width="3"/>` +
         T(x, y - 9, GEO.numbers[j], `font-size="14" font-weight="700" fill="#fff" text-anchor="middle"`) + `</g>`));
       if (step >= 3) {                                                     // suggested sites, labels placed so they do not overlap
@@ -407,7 +436,7 @@
                T(c.x + dx + W / 2, c.y + dy + 24, `+${Math.round(c.f.netNew)} cups for Chagee`, `font-size="20" font-weight="700" fill="${COL.navy}" text-anchor="middle"`) + `</g>`;
         });
       }
-      if (step >= 4) {
+      if (step >= 4 && sel == null) {
         s += `<circle cx="${pin.x}" cy="${pin.y}" r="${walkPx}" fill="rgba(184,50,43,.08)" stroke="${COL.red}" stroke-width="2"/>`;
         f.hit.slice(0, 4).forEach(h => (s += `<line x1="${pin.x}" y1="${pin.y}" x2="${h.x}" y2="${h.y - 14}" stroke="${COL.red}" stroke-width="${Math.max(2, Math.min(10, h.cups / 12))}" opacity=".6"/>`));
         s += `<path d="M${pin.x} ${pin.y} l-13 -30 a14 14 0 1 1 26 0 z" fill="${COL.red}" stroke="#fff" stroke-width="2.5"/><circle cx="${pin.x}" cy="${pin.y - 36}" r="5" fill="#fff"/>`;
@@ -418,6 +447,16 @@
       const share = f.cups > 0 ? f.netNew / f.cups : 0, V = SP.verdict.value;
       const [vcls, vtxt] = share >= V.strong_new_share ? ["good", "Strong site: mostly new cups"] : share < V.weak_new_share ? ["bad", "Weak site: mostly moves cups"] : ["mid", "Mixed: adds some, moves some"];
       const who = userPin ? "Your pin" : "Suggested site 1";
+      if (sel != null) {                                                 // an existing outlet, found by search or click
+        const o = Site.outlet(M, sel);
+        fc.innerHTML = `<div class="t">Existing outlet · ${oname(sel)}</div>
+          <div class="big">${Math.round(o.cups)}<small>cups a day today (model) · ${(o.cups / avg).toFixed(1)}× an average outlet</small></div>
+          <dl><dt>From customers within ${M.walkKm.toFixed(1)} km</dt><dd>${pct(o.nearShare)}</dd>
+              <dt>Nearest other outlet: ${oname(o.neighbour.j)}</dt><dd>${o.neighbour.km.toFixed(1)} km</dd>
+              <dt>Unserved app demand within ${(2 * M.walkKm).toFixed(1)} km</dt><dd>${Math.round(o.unmetNearby)} a day</dd></dl>
+          <button class="btn primary screenonly" data-act="testnew">Test a new store beside it</button>`;
+        return;
+      }
       fc.innerHTML = `<div class="t">${who} · ${near.km < 0.05 ? "on" : near.km.toFixed(1) + " km from"} ${oname(near.j)}</div>
         <span class="verdict ${vcls}">${vtxt}</span>
         <div class="big">+${Math.round(f.netNew).toLocaleString("en-SG")}<small>cups a day for Chagee</small></div>
@@ -431,11 +470,13 @@
     svg.addEventListener("click", e => {
       const pt = svg.createSVGPoint(); pt.x = e.clientX; pt.y = e.clientY;
       const q = pt.matrixTransform(svg.getScreenCTM().inverse());
-      pin = { x: q.x, y: q.y }; userPin = true;
-      if (S.cur < 4) S.go(4, true); else draw();
+      const g = e.target.closest?.(".ol");                               // a navy pin: show that existing outlet
+      if (g) { sel = +g.dataset.j; search.value = oname(sel); tip.style.display = "none"; goStep4(); return; }
+      pin = { x: q.x, y: q.y }; userPin = true; sel = null; search.value = "";
+      goStep4();
     });
     S.hooks.push(k => { step = k; if (M) draw(); });
-    printers.push(() => { userPin = false; sl.forEach(([k, , key]) => (par[k] = SP[key].value)); $$(ctlEl, "input").forEach(i => (i.value = par[i.dataset.k])); rebuild(); });
+    printers.push(() => { userPin = false; sel = null; search.value = ""; sl.forEach(([k, , key]) => (par[k] = SP[key].value)); $$(ctlEl, "input").forEach(i => (i.value = par[i.dataset.k])); rebuild(); });
     rebuild();
   });
 

@@ -195,6 +195,13 @@ html,body{margin:0;background:#E7E3DC;color:var(--ink);font-family:var(--sans);-
 .cset .seg .btn{padding:0 9px;font-size:11.5px}
 /* 05 site forecast */
 .msvg{width:100%;height:100%;display:block;cursor:crosshair}
+.msvg .ol{cursor:pointer}
+.sitesearch{flex:1;min-width:150px;max-width:230px;height:28px;border:1px solid #D8D1C3;border-radius:999px;padding:0 12px;font:12.5px var(--sans);color:var(--ink);background:#fff}
+.sitesearch:focus{outline:2px solid var(--blue);outline-offset:1px}
+.maptip{position:absolute;z-index:3;pointer-events:none;display:none;background:var(--ink);color:#fff;border-radius:8px;padding:6px 10px;font:12px/1.35 var(--sans);white-space:nowrap;transform:translate(-50%,calc(-100% - 12px))}
+.maptip b{font-weight:600}
+.maptip small{display:block;color:#C9C3B8;font-size:11px}
+.fc .btn{margin-top:8px}
 .fc{background:#fff;border:1px solid var(--line);border-radius:12px;padding:9px 14px}
 .fc .t{font:600 10.5px/1.2 var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--red)}
 .fc .big{font:500 34px/1 var(--serif);color:var(--ink);margin:6px 0 2px}
@@ -578,13 +585,15 @@ aside.notes{display:none}
     <p class="sub">Not what a new store sells, but what it adds once you subtract the cups it takes from nearby outlets.</p>
     <div class="body" style="grid-template-columns:1fr 300px">
       <div class="panel stepper" data-steps="5" data-kind="site">
-        <div class="ptop"><span class="ptitle">App demand to a new-store forecast</span><span class="ctl screenonly"></span></div>
-        <div class="visual"><svg class="msvg" viewBox="0 0 1672 640" preserveAspectRatio="xMidYMid meet" aria-label="Map of synthetic app demand, clusters and a new-store pin"></svg></div>
+        <div class="ptop"><span class="ptitle">New-store forecast</span>
+          <input class="sitesearch screenonly" list="sitelist" placeholder="Find an outlet or town…" aria-label="Find an outlet or town"><datalist id="sitelist"></datalist>
+          <span class="ctl screenonly"></span></div>
+        <div class="visual"><div class="maptip"></div><svg class="msvg" viewBox="0 0 1672 640" preserveAspectRatio="xMidYMid meet" aria-label="Map of synthetic app demand, clusters and a new-store pin"></svg></div>
         <ol class="caps">
           <li data-s="1"><span class="n">1</span><span>Navy pins are Chagee's {{facts.sg_outlets}} outlets today (hover for name and cups a day). Dots are synthetic app sessions: gold near an outlet, red where no store was nearby.</span></li>
           <li data-s="2"><span class="n">2</span><span>DBSCAN, an unsupervised method, groups red searches that sit densely together. Scattered searches stay grey as noise.</span></li>
           <li data-s="3"><span class="n">3</span><span>Each cluster's centre is a candidate site, ranked by cups for Chagee: what the store sells minus what it takes from nearby outlets.</span></li>
-          <li data-s="4"><span class="n">4</span><span>Click anywhere to test a site. The card gives the gain for Chagee and a verdict; red lines show which outlets would lose cups.</span></li>
+          <li data-s="4"><span class="n">4</span><span>Click the map to test a new store, or search an outlet or town. Hover a navy pin to see which outlet it is; red lines show which outlets would lose cups.</span></li>
           <li data-s="5"><span class="n">5</span><span>The forecast's peak hour sets the opening roster for today's counter, which slides 06 and 07 then run.</span></li>
         </ol>
       </div>

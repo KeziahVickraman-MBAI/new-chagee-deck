@@ -76,3 +76,11 @@ test("site: a store opened beside an outlet takes the most from that outlet", ()
   });
   assert.equal(geo.numbers.length, 44); assert.equal(geo.names[geo.numbers.indexOf(44)], "The Star Vista");
 });
+
+test("site: an existing outlet's figures match the model's calibrated sales", () => {
+  for (const j of [0, 23, 40]) {
+    const o = T.outlet(M, j);
+    assert.ok(Math.abs(o.cups - M.storeCups[j]) < 1e-6);
+    assert.ok(o.nearShare > 0 && o.nearShare <= 1 && o.neighbour.j !== j && o.unmetNearby >= 0);
+  }
+});

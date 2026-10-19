@@ -10,6 +10,8 @@
  *                                makes the average outlet sell store cups/day, DBSCAN clusters of the
  *                                no-store-nearby dots, and suggested pins at the cluster centres.
  *                                o: { walkKm, epsKm, minPts } override the slider defaults.
+ *   outlet(M, j)                 an existing outlet today: cups/day, share from within walking distance,
+ *                                nearest neighbour, unserved demand around it.
  *   forecast(M, pin)             a new outlet at pin (map pixels): its cups/day, how many come from
  *                                demand no outlet serves today (net new) and how many from existing
  *                                outlets (cannibalised, with the outlets it takes most from).
@@ -126,7 +128,21 @@
     return { cups: cups * scale, netNew: netNew * scale, cannibal: (cups - netNew) * scale, fromUnmet: fromUnmet * scale, hit };
   }
 
-  const api = { events, dbscan, model, forecast };
+  // an existing outlet today: its cups/day, the share from customers within walking distance,
+  // its nearest neighbouring outlet, and the unmet ("no store nearby") demand within twice the walking distance
+  function outlet(M, j) {
+    const { ev, stores, sum, a0, scale, pull } = M, [ox, oy] = stores[j], walkPx = M.walkKm / M.kmpx;
+    let near = 0, all = 0, unmet = 0;
+    ev.forEach((e, i) => {
+      const d = Math.hypot(e.x - ox, e.y - oy), c = pull(d) / (a0 + sum[i]);
+      all += c; if (d <= walkPx) near += c;
+      if (M.unmet[i] && d <= 2 * walkPx) unmet += (1 - sum[i] / (a0 + sum[i]));
+    });
+    const nb = stores.map(([x, y], k) => ({ j: k, km: Math.hypot(x - ox, y - oy) * M.kmpx })).filter(o => o.j !== j).sort((a, b) => a.km - b.km)[0];
+    return { cups: all * scale, nearShare: all ? near / all : 0, neighbour: nb, unmetNearby: unmet * scale };
+  }
+
+  const api = { events, dbscan, model, forecast, outlet };
   if (typeof module !== "undefined" && module.exports) module.exports = api;
   else root.ChageeSite = api;
 })(typeof window !== "undefined" ? window : globalThis);
