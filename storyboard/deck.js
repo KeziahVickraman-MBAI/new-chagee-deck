@@ -185,6 +185,7 @@
   const NAME = { ticket: "Order and tag", cup_ice: "Cup and ice", tea_milk: "Tea and milk", topping_finish: "Toppings", shake_seal: "Shake and seal", handover: "Hand-over" };
   const SHARE = [["brigade", "Bucket brigade"], ["fixed_best", "Fixed, fastest on toppings"], ["fixed_worst", "Fixed, slowest on toppings"]];
   const PRESETS = C.presets(RAW, P), [SMIN, SMAX] = SB.staff_choices.value, SEEDS = DATA.seeds;
+  Object.entries(SB.split_presets.display_labels || {}).forEach(([k, l]) => PRESETS[k] && (PRESETS[k].label = l));   // display names only
   const sameSet = (a, b) => a.length === b.length && a.every(x => b.includes(x));
   const money = x => `S$${Math.round(x).toLocaleString("en-SG")}`;
   const printers = [];
@@ -292,9 +293,16 @@
         const D = DATA.splits[BUS.day];
         tb.innerHTML = `<tr><th>${DAY_LABEL[BUS.day]}</th><th>People</th><th>Walked away</th><th>Wait</th><th>Cost/day</th></tr>` +
           Object.keys(PRESETS).map(k => { const r = D[k];
-            return `<tr class="${k === D._cheapest ? "best pick" : ""}"><td>${r.label}</td><td>${r.setup === "all_machine" ? "–" : r.meets ? `${r.staff}${r.mode === "fixed" ? " fixed" : ""}` : "over limit"}</td>` +
+            return `<tr class="${k === D._cheapest ? "best pick" : ""}"><td>${PRESETS[k].label}</td><td>${r.setup === "all_machine" ? "–" : r.meets ? `${r.staff}${r.mode === "fixed" ? " fixed" : ""}` : "over limit"}</td>` +
                    `<td>${r.meets ? pct(r.lostShare, 1) : "–"}</td><td>${r.meets ? mmss(r.medianWait) : "–"}</td><td>${money(r.cost.total)}</td></tr>`; }).join("") +
-          `<tr><td colspan="5" style="text-align:left;color:${COL.taupe};font-size:11px">✓ cheapest within the limit · fastest: ${D[D._fastest] ? D[D._fastest].label : "–"}</td></tr>`;
+          `<tr><td colspan="5" style="text-align:left;color:${COL.taupe};font-size:11px">✓ cheapest within the limit · fastest: ${D[D._fastest] ? PRESETS[D._fastest].label : "–"}</td></tr>`;
+        // the normal day as well, so the headline's "on a normal day, people are still cheaper" is on the page
+        const N = DATA.splits.none, nd = $(side, ".normday"), keys = Object.keys(PRESETS).filter(k => N[k].meets);
+        if (nd) nd.innerHTML = BUS.day === "none" ? "" : `<b>${DAY_LABEL.none}, cost a day:</b> ` +
+          keys.sort((a, b) => N[a].cost.total - N[b].cost.total).map(k => `${PRESETS[k].label} ${money(N[k].cost.total)}${k === N._cheapest ? " (cheapest)" : ""}`).join(" · ") +
+          `. Fastest: ${PRESETS[N._fastest].label} (${mmss(N[N._fastest].medianWait)})` +
+          (N.today && N.all_hand && N.today.medianWait > N.all_hand.medianWait ? `; ${PRESETS.today.label.toLowerCase()} is slower than ${PRESETS.all_hand.label.toLowerCase()} (${mmss(N.today.medianWait)} vs ${mmss(N.all_hand.medianWait)})` : "") +
+          `. Four splits only; a single machine can undercut all by hand (slide 08).`;
       }
     }
     function sync() {
@@ -581,9 +589,9 @@
     const tier = id => TI.tiers.find(t => t.id === id);
     const ORDER = ["semi", "platform", "single", "today", "arm", "barista"];
     const D0 = DATA.ladder.at, cr = RAW.costs;
-    const IN = [["cupsDay", "Cups a day at your outlet", DATA.ladder.volumes.lo, DATA.ladder.volumes.hi, 1, v => `${v}`],
-                ["wage", "Wage, S$ an hour, fully loaded", ...cr.labour_cost_per_hour.range, 0.01, v => `S$${v.toFixed(2)}`],
-                ["unitMonth", "Model machine rate, per station unit a month", ...cr.machine_cost_per_unit_per_month.range, 1, v => money(v)]];
+    const IN = [["cupsDay", "Cups a day", DATA.ladder.volumes.lo, DATA.ladder.volumes.hi, 1, v => `${v}`],
+                ["wage", "Wage an hour", ...cr.labour_cost_per_hour.range, 0.01, v => `S$${v.toFixed(2)}`],
+                ["unitMonth", "Machine, per unit", ...cr.machine_cost_per_unit_per_month.range, 1, v => money(v)]];
     const o = { ...D0 };
     ctl.innerHTML = IN.map(([k, lab, lo, hi, st, f]) =>
       `<label>${lab}<span class="val" data-v="${k}">${f(o[k])}</span><input type="range" data-k="${k}" min="${lo}" max="${hi}" step="${st}" value="${o[k]}"></label>`).join("");
@@ -620,17 +628,18 @@
             <div>${strip}</div></div>`;
         }).join("");
       const rateLine = r => `Model: ${r.units} × ${money(o.unitMonth)}, ${r.modelMargin >= 0 ? `beats by ${money(r.modelMargin)}` : `${money(-r.modelMargin)} more`}`;
-      tb.innerHTML = `<tr><th>A month</th><th class="sv">Labour saved</th><th>Against all by hand</th></tr>` + ORDER.map(id => {
+      tb.innerHTML = `<tr><th>A month</th><th class="sv">Saved</th><th>Against all by hand</th></tr>` + ORDER.map(id => {
         const r = E[id];
         let main, small = "";
         if (id === "today") { main = `<span class="v ${r.modelMargin >= 0 ? "good" : "bad"}">${r.modelMargin >= 0 ? `Beats by ${money(r.modelMargin)}` : `${money(-r.modelMargin)} more`}</span>`; small = `Model: ${r.units} × ${money(o.unitMonth)}`; }
         else if (r.lease) { const m = r.leaseMargin;
           main = `<span class="v ${m >= 0 ? "good" : "bad"}">${r.lease.name} lease ${money(r.lease.lease)}: ${m >= 0 ? `beats by ${money(m)}` : `${money(-m)} more`}</span>`;
-          small = r.payback.map(p => `Buy ${money(p.priceRaw, p.currency === "USD" ? "US$" : "S$")}: payback ${p.months.toFixed(1)} months`).join("; "); }
-        else if (r.payback.length) { const p = r.payback[0];
-          main = `<span class="v mid">Payback ${p.months.toFixed(1)} months on ${money(p.priceRaw)}</span>`; small = r.modelRate ? rateLine(r) : ""; }
+          small = r.payback.map(p => `Buy ${money(p.priceRaw, p.currency === "USD" ? "US$" : "S$")}: simple payback ${p.months.toFixed(1)} months`).join("; "); }
+        else if (r.payback.length) { const p = r.payback[0], m = r.modelMargin;     // payback stays small: it assumes the roster drops a person-shift
+          main = `<span class="v ${m >= 0 ? "good" : "bad"}">${m >= 0 ? `Beats by ${money(m)}` : `${money(-m)} more`}</span>`;
+          small = `Model: ${r.units} × ${money(o.unitMonth)}. Simple payback, if the machine lets the roster drop one person-shift: ${p.months.toFixed(1)} months on ${money(p.priceRaw)}`; }
         else { main = `<span class="v mid">Break-even: setup under ${money(r.breakEvenSetup)}/mo</span>`; small = r.modelRate ? rateLine(r) : "No public price"; }
-        return `<tr><td>${RUNG[id]}</td><td class="sv">${money(r.saved)}</td><td>${main}<span class="small">${small}</span></td></tr>`;
+        return `<tr><td>${RUNG[id]}</td><td class="sv">${money(r.saved)}</td><td>${main}<span class="small${small.length > 60 ? " wrap" : ""}">${small}</span></td></tr>`;
       }).join("");
       atP.textContent = `Your outlet: ${o.cupsDay} cups a day, wage S$${o.wage.toFixed(2)} an hour, ${money(o.unitMonth)} a month per station unit (the model's defaults; sliders on screen).`;
       $$(ctl, "[data-v]").forEach(el => { const d = IN.find(x => x[0] === el.dataset.v); el.textContent = d[5](o[d[0]]); });

@@ -46,3 +46,8 @@ test("ladder: volume bands match a direct check at their edges", () => {
     });
   }
 });
+
+test("ladder: labour saved a month = person-hours a day saved x wage x days / 12", () => {
+  for (const r of L.evaluate(Sim, C, RAW, P, TI, at))
+    assert.ok(Math.abs(r.saved - r.hoursDay * at.wage * P.days / 12) < 1e-6, r.id);
+});

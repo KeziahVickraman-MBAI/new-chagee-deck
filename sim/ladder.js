@@ -7,7 +7,8 @@
  *   rungs(RAW, P, TIERS)                    today's split (the baseline marker) plus each tier, with the
  *                                           stations it puts on machines and its per-setup prices in SGD.
  *   saved(Sim, C, P, robots, o)             labour saved a month against all-human, o = { cupsDay, wage, day };
- *                                           also the machine units the model sizes for that volume.
+ *                                           also the machine units the model sizes for that volume, and why:
+ *                                           person-hours a day saved, open hours with a smaller roster.
  *   evaluate(Sim, C, RAW, P, TIERS, o)      every rung at one outlet, o = { cupsDay, wage, unitMonth }:
  *                                           labour saved, the model's machine cost (units x unitMonth),
  *                                           a lease's margin, simple payback on a purchase.
@@ -38,9 +39,13 @@
     const c = C.configure({ ...P, cupsYear: o.cupsDay * P.days, wage: o.wage ?? P.wage }, robots);
     return C.dayCost(Sim, c.P, c.setup, o.day ?? "none");
   }
+  // also why: person-hours a day saved, and in how many open hours the roster is lower (and by at most how many people)
   function saved(Sim, C, P, robots, o) {
     const hand = dayLabour(Sim, C, P, [], o), m = dayLabour(Sim, C, P, robots, o);
-    return { month: (hand.labour - m.labour) * monthly(P), units: m.machineUnits };
+    const roster = r => { const c = C.configure({ ...P, cupsYear: o.cupsDay * P.days }, r); return C.forecastDay(Sim, c.P, o.day ?? "none", c.setup).staff; };
+    const h = roster([]), k = roster(robots), drop = h.map((n, i) => n - k[i]);
+    return { month: (hand.labour - m.labour) * monthly(P), units: m.machineUnits, hoursDay: hand.labourHours - m.labourHours,
+             hoursLower: drop.filter(x => x > 0).length, lowerIdx: drop.map((x, i) => (x > 0 ? i : -1)).filter(i => i >= 0), maxDrop: Math.max(0, ...drop) };
   }
 
   // the rung's cost basis: a published lease per setup; else, for semi-automated rungs, the model's rate per
@@ -56,7 +61,7 @@
     return rungs(RAW, P, TIERS).map(r => {
       const s = saved(Sim, C, P, r.robots, o), b = basis(r, s.units, unitMonth);
       const lease = r.prices.find(p => p.lease != null) || null;
-      return { ...r, saved: s.month, basisMonth: b.month, units: s.units, modelCost: s.units * unitMonth,
+      return { ...r, saved: s.month, basisMonth: b.month, hoursDay: s.hoursDay, hoursLower: s.hoursLower, lowerIdx: s.lowerIdx, maxDrop: s.maxDrop, units: s.units, modelCost: s.units * unitMonth,
         modelMargin: s.month - s.units * unitMonth, basis: b.kind,
         lease, leaseMargin: lease ? s.month - lease.lease : null,
         breakEvenSetup: s.month,                                          // cost a whole setup may have a month and still break even

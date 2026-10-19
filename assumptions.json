@@ -42,11 +42,12 @@
     "L-yfchuhai": "YF Chuhai, https://www.yfchuhai.com/article/9751.html: Chagee's leaf supply chain is in China; it sources only two ingredients locally, fresh milk and fruit. Taken from the team's ideation doc (OPIM 639_ Ideation Process), not re-checked for this deck.",
     "L-sec20f": "Chagee Holdings Form 20-F for FY2025, SEC EDGAR, https://www.sec.gov/Archives/edgar/data/2013649/000110465926050766/cha-20251231x20f.htm: separate centralized and regional warehouses to lower storage and logistics costs. Taken from the team's ideation doc (OPIM 639_ Ideation Process), not re-checked for this deck.",
     "L-sg-directory": "Chagee Singapore store directory, mapped by the team (44 locations, checked 15 Oct 2026); Mothership, Sep 2026, https://mothership.sg/2026/09/chagee-more-heartland-stores-singapore-eugene-lee/ gives the same count. Taken from the team's ideation doc (OPIM 639_ Ideation Process), not re-checked for this deck.",
-    "I-sg-owned": "INFORMAL - team check recorded as a comment in the ideation doc: Singapore is company-owned and run by Chagee corporate, usual for new-entry and smaller markets. The underlying source is not named; confirm before presenting.",
+    "I-sg-owned": "SUPERSEDED (Oct 2026) by I-chagee-contact; not used on any slide. Was: INFORMAL - team check recorded as a comment in the ideation doc: Singapore is company-owned and run by Chagee corporate, usual for new-entry and smaller markets. The underlying source is not named; confirm before presenting.",
     "I-sg-groundfloor": "INFORMAL - quote in the team's ideation doc (Chagee Singapore's Lee: 'Whenever you see a Chagee, it's always on the first floor'; kiosk-style outlets in basements and MRT stations at entry in 2019). The article is not named in the doc; confirm the source before quoting.",
     "I-team-automation": "INFORMAL - team research (Oct 2026): Chagee's counters are heading towards machines making the drink while people tag the order and hand it over; consistent with I-leeyen's 'push towards app-to-machine automation, sub-one-minute fulfilment'. Source to be added before it is cited on a slide.",
     "I-team-app-first": "INFORMAL - team observation in the ideation doc: Chagee Singapore sells mainly through its app, with minimal order kiosks in outlets. Confirm before citing.",
-    "L-ester1996": "Ester, M., Kriegel, H.-P., Sander, J. and Xu, X. (1996). A density-based algorithm for discovering clusters in large spatial databases with noise. Proceedings of the Second International Conference on Knowledge Discovery and Data Mining (KDD-96), 226-231. The DBSCAN algorithm used on slide 05."
+    "L-ester1996": "Ester, M., Kriegel, H.-P., Sander, J. and Xu, X. (1996). A density-based algorithm for discovering clusters in large spatial databases with noise. Proceedings of the Second International Conference on Knowledge Discovery and Data Mining (KDD-96), 226-231. The DBSCAN algorithm used on slide 05.",
+    "I-chagee-contact": "INFORMAL - a Chagee contact (Oct 2026). Three points only: whether Singapore outlets are owned, a joint venture or franchised does not matter for this work; Singapore outlets run under one company and one data system; all delivery is via third-party apps. Confirm with Chagee before citing."
   },
   "facts": {
     "_note": "Chagee facts quoted on slides. Not assumptions: each carries its ledger source and appears with that source in the speaker notes.",
@@ -108,7 +109,7 @@
       "value": 0.12,
       "unit": "share of FY2025 net revenue",
       "source": "L-koalagains",
-      "rationale": "Secondary source; flagged wherever shown. Singapore sits in this group (I-sg-owned)."
+      "rationale": "Secondary source; flagged wherever shown."
     }
   },
   "predict": {
@@ -970,6 +971,9 @@
           "label": "All robots",
           "robots": "all"
         }
+      },
+      "display_labels": {
+        "heading": "Machine-made drink (scenario)"
       },
       "unit": "robot stations per split ('today' = stations.mixed_machine_stations, 'all' = every station)",
       "range": null,

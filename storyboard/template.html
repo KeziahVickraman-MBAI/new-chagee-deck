@@ -306,7 +306,9 @@ html,body{margin:0;background:#E7E3DC;color:var(--ink);font-family:var(--sans);-
 .lad .rung.base .badge{background:transparent;color:var(--navy);border:1.5px solid var(--navy)}
 .yo{display:flex;flex-direction:column;gap:7px}
 .yo .sitectl{padding:6px 12px;gap:0}
-.yo .sitectl label{font-size:11.5px}
+.yo .sitectl label{font-size:11px;grid-template-columns:118px 1fr 52px;align-items:center;gap:0 8px}
+.yo .sitectl label input{grid-column:2;grid-row:1}
+.yo .sitectl label .val{grid-column:3;text-align:right}
 .yo table{width:100%;border-collapse:collapse;font:11.3px/1.25 var(--sans)}
 .yo th{font:600 9.5px/1.2 var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--taupe);text-align:left;padding:0 3px 3px;border-bottom:1px solid var(--line)}
 .yo th.sv{text-align:right}
@@ -315,6 +317,7 @@ html,body{margin:0;background:#E7E3DC;color:var(--ink);font-family:var(--sans);-
 .yo td.sv{text-align:right;white-space:nowrap;width:17%;color:var(--ink)}
 .yo .v{font-weight:600} .yo .v.good{color:#2F6B45} .yo .v.bad{color:var(--red)} .yo .v.mid{color:#7A6432}
 .yo .small{display:block;font-size:10.5px;color:var(--taupe);font-weight:400;white-space:nowrap}
+.yo .small.wrap{white-space:normal}
 .yo .at{font:12px/1.35 var(--sans);color:var(--ink2)}
 .lnote{font:10.5px/1.36 var(--sans);color:var(--ink2);margin:6px 0 0}
 .lnote li{margin:0 0 2px}
@@ -437,8 +440,8 @@ aside.notes{display:none}
   <div class="leafart" aria-hidden="true"></div>
   <div class="inner">
     <p class="kicker">01 · Chagee in Singapore</p>
-    <h2 class="head">In Singapore, Chagee runs its own outlets, and every channel ends at one counter</h2>
-    <p class="sub">The same team owns the counter, the app data and the call on who works the peak.</p>
+    <h2 class="head">In Singapore, outlets run under one company, and every channel ends at one counter</h2>
+    <p class="sub">One company and one data system: the counter, the app data and the call on who works the peak sit together (informal source, to confirm).</p>
     <div class="body">
       <div class="panel stepper" data-steps="4">
         <div class="ptop"><span class="ptitle">How a Singapore cup is sold · step through</span><span class="ctl screenonly"></span></div>
@@ -450,11 +453,11 @@ aside.notes{display:none}
                 <div class="revbar"><div class="fr" style="width:{{facts.revenue_share_franchise_fy2025|pct}}">Franchise model</div><div class="co" style="width:{{facts.revenue_share_company_owned_fy2025|pct}}"></div></div>
                 <div class="revlab"><span>Franchise <b>{{facts.revenue_share_franchise_fy2025|pct}}</b></span><span>Company-owned <b>{{facts.revenue_share_company_owned_fy2025|pct}}</b>, growing fastest</span></div>
               </div>
-              <div class="sgtag" data-s="2"><span>Singapore is company-owned: run by Chagee corporate, as is usual for new-entry markets</span><span class="pin">SG</span></div>
+              <div class="sgtag" data-s="2" style="justify-content:flex-start"><span class="pin">SG</span><span>Singapore outlets run under one company and one data system (informal source, to confirm with Chagee)</span></div>
               <div class="chan" data-s="4">
                 <div class="list">
                   <div class="row"><b>In store</b><span>walk-in, counter or kiosk</span></div>
-                  <div class="row"><b>Chagee app</b><span>order ahead, collect or delivery</span></div>
+                  <div class="row"><b>Chagee app</b><span>order ahead, collect</span></div>
                   <div class="row"><b>Grab</b><span>third-party delivery</span></div>
                 </div>
                 <div class="arrow"><svg viewBox="0 0 30 100"><path d="M1 16 C18 16 16 50 27 50 M1 50 H27 M1 84 C18 84 16 50 27 50" stroke="#C8A96A" stroke-width="2" fill="none"/><path d="M23 45 l6 5 -6 5" stroke="#C8A96A" stroke-width="2" fill="none"/></svg></div>
@@ -463,19 +466,19 @@ aside.notes{display:none}
             </div>
             <div class="mapbox" data-s="3">
               <img src="{img:sg_map}" alt="Map of Chagee outlets in Singapore">
-              <div class="cap"><b>{{facts.sg_outlets}}</b>outlets, ground-floor mall units by policy; kiosks in basements and MRT stations at entry in 2019</div>
+              <div class="cap"><b>{{facts.sg_outlets}}</b>outlets, ground-floor mall units by preference; kiosks in basements and MRT stations at entry in 2019</div>
             </div>
           </div>
         </div>
         <ol class="caps">
-          <li data-s="1"><span class="n">1</span><span>Group level: most net revenue comes from franchising; company-owned stores are the smaller, faster-growing part.</span></li>
-          <li data-s="2"><span class="n">2</span><span>Singapore sits in the company-owned part, so one team can change how every outlet is staffed.</span></li>
+          <li data-s="1"><span class="n">1</span><span>Group level: most net revenue comes from franchising; company-owned stores are the smaller, faster-growing part. This is the group, not Singapore.</span></li>
+          <li data-s="2"><span class="n">2</span><span>Singapore outlets run under one company and one data system, so a counter design or roster rule could be rolled out across them.</span></li>
           <li data-s="3"><span class="n">3</span><span>{{facts.sg_outlets}} outlets across the island, mostly ground-floor mall units that shoppers pass every day.</span></li>
           <li data-s="4"><span class="n">4</span><span>Walk-in, app and Grab orders all queue at the same counter, so the peak hour lands in one place.</span></li>
         </ol>
       </div>
       <div class="cards">
-        <div class="card"><h4>Company-run</h4><p>Outlets are run by Chagee itself, so the GM can roll out a new counter design and roster rule centrally.</p><span class="src">Team check, to confirm with Chagee</span></div>
+        <div class="card"><h4>One operator, one data system</h4><p>Singapore outlets run under one company and one data system, so a counter design or roster rule could be rolled out across outlets.</p><span class="src">A Chagee contact (informal), to confirm with Chagee</span></div>
         <div class="card"><h4>App-first</h4><p>Most orders come through the app, with few kiosks in store. Every order and search is logged: the raw material for a forecast.</p><span class="src">Team observation, to confirm</span></div>
         <div class="card"><h4>Why Chagee</h4><p>A fast-growing, playful brand with heavy app use: plenty of data, and room for AI to help the stores.</p></div>
       </div>
@@ -485,9 +488,9 @@ aside.notes{display:none}
   <div class="foot"><span>OPIM639 · Group 3 · explainer figures are illustrative assumptions</span><span class="rail"></span><span class="pg"></span></div>
   <aside class="notes">
     <p>Step through four points. One: at group level most revenue comes from franchising, about {{facts.revenue_share_franchise_fy2025|pct}} in FY 2025; company-owned is about {{facts.revenue_share_company_owned_fy2025|pct}} and growing fastest. That split is from a secondary source.</p>
-    <p>Two: Singapore is company-owned, run by Chagee corporate. We have this from a team check; we will confirm it with Chagee.</p>
+    <p>Two: Singapore outlets run under one company and one data system. We have this informally from a Chagee contact, who told us the ownership form, owned, joint venture or franchise, does not matter for this question. We will confirm it with Chagee, and we make no claim about the ownership structure.</p>
     <p>Three: {{facts.sg_outlets}} outlets, by the store directory in October. Chagee prefers ground-floor mall units.</p>
-    <p>Four: walk-in, app and Grab all end at the same counter. That is why we look at the counter. About fifty seconds.</p>
+    <p>Four: walk-in, app orders for collection, and Grab delivery all end at the same counter. The Chagee app is for ordering ahead and collecting; delivery goes through third-party apps, by the same informal source. That is why we look at the counter. About fifty seconds.</p>
   </aside>
 </section>
 
@@ -514,7 +517,7 @@ aside.notes{display:none}
               <h5>Outlet counter</h5><div class="what">Machines brew each cup from a scanned recipe; people do ice, toppings and hand-over</div>
               <div class="dlab">Data created</div><div class="data"><span class="chip red">Cups by hour</span><span class="chip red">Wait times</span></div></div>
             <div class="node" data-s="4"><div class="ic"><svg viewBox="0 0 32 32"><circle cx="8" cy="23" r="4"/><circle cx="25" cy="23" r="4"/><path d="M8 23 H16 L20 13 H25 L25 23 M13 13 H20"/></svg></div>
-              <h5>Last mile</h5><div class="what">Self-collect, Chagee app delivery or Grab; riders wait at the same counter</div>
+              <h5>Last mile</h5><div class="what">Self-collect from the app, or delivery via third-party apps such as Grab; riders wait at the same counter</div>
               <div class="dlab">Data created</div><div class="data"><span class="chip gold">Orders by channel</span><span class="chip gold">Rider wait</span></div></div>
             <div class="node" data-s="5"><div class="ic"><svg viewBox="0 0 32 32"><circle cx="16" cy="10" r="5"/><path d="M6 28 C6 20 11 17 16 17 C21 17 26 20 26 28"/></svg></div>
               <h5>Customer</h5><div class="what">Orders in the app, collects at the counter, comes back (or not)</div>
@@ -525,7 +528,7 @@ aside.notes{display:none}
           <li data-s="1"><span class="n">1</span><span>Sourcing is standard across markets. Singapore buys only fresh milk and fruit locally.</span></li>
           <li data-s="2"><span class="n">2</span><span>Central and regional warehouses, with restocking already planned from forecasts and tracked in real time.</span></li>
           <li data-s="3"><span class="n">3</span><span>At the counter, robots brew the fixed steps and people do the variable ones. Demand swings here hour by hour.</span></li>
-          <li data-s="4"><span class="n">4</span><span>Self-collect, Chagee delivery and Grab all pick up at the same counter, adding to the queue.</span></li>
+          <li data-s="4"><span class="n">4</span><span>App self-collect and third-party delivery riders (Grab) all pick up at the same counter, adding to the queue.</span></li>
           <li data-s="5"><span class="n">5</span><span>Every hand-off leaves a timestamp. The red chips are the data the counter decision needs.</span></li>
         </ol>
       </div>
@@ -615,7 +618,7 @@ aside.notes{display:none}
               <div class="why">Rent, fit-out and payback stay future work.</div></div>
             <div class="area chosen" data-s="3"><span class="tag in">Our focus</span><h5>In-store operations</h5>
               <div class="d">Forecast the peak, set the roster, share the counter.</div>
-              <div class="why">Data exists, the decision is daily; Topic 3 forecasting, Topic 6 bucket brigades.</div></div>
+              <div class="why">Data exists, the decision is daily; Topic 3 forecasting, Topic 5 bucket brigades.</div></div>
           </div>
           <div class="aiwrap" data-s="4">
             <div class="aibox ai"><div class="k">AI · predictive</div><p>Forecast cups per hour from history, calendar and app orders.</p></div>
@@ -648,7 +651,7 @@ aside.notes{display:none}
   <div class="foot"><span>OPIM639 · Group 3 · explainer figures are illustrative assumptions</span><span class="rail"></span><span class="pg"></span></div>
   <aside class="notes">
     <p>Our ideation produced three areas. We park online retailing as future work, forecast new stores from app data, and focus on the in-store peak.</p>
-    <p>We are careful about what counts as AI: only the forecast. The machines are robotics and automation. Bucket brigade and cross-training are operations tools, but they decide whether a lean roster actually works.</p>
+    <p>We are careful about what counts as AI: only the forecast. The machines are robotics and automation. Bucket brigade and cross-training are operations tools from Topic 5, order fulfilment, but they decide whether a lean roster actually works.</p>
     <p>The decision-maker is the GM; outlet teams run the roster day to day. We do not yet know how Chagee sets rosters today; that is a question for our industry contact. About fifty seconds.</p>
   </aside>
 </section>
@@ -718,10 +721,10 @@ aside.notes{display:none}
         <div class="legend">Red circle = a person (number = speed) · gold ring = held back · faded = walking · ▲ = hand-over · navy = robot · red cup = waiting for a person</div>
       </div>
       <div class="cards" style="gap:12px">
-        <div class="cset screenonly"><span class="lab">Day</span><span class="dslot"></span></div>
+        <div class="cset screenonly" style="flex-direction:row;align-items:center;gap:10px;padding:7px 12px"><span class="lab">Day</span><span class="dslot"></span></div>
         <div><div class="ptitle" style="margin-bottom:4px">All three rules, mean of {{a.seeds}} runs</div><table class="res"></table>
           <p class="flag" style="margin-top:5px">At the people on side A. A customer leaves if the wait would pass {{a.target_wait|min}}. With spare people, a well-assigned fixed line is as good or a little faster.</p></div>
-        <div class="card printonly"><h4>Why lean is where it counts</h4><p>Work flows to whoever is free, so the line balances itself (Topic 6). Fixed stations are only as good as the guess of who is fast.</p></div>
+        <div class="card printonly"><h4>Why lean is where it counts</h4><p>Work flows to whoever is free, so the line balances itself (Topic 5). Fixed stations are only as good as the guess of who is fast.</p></div>
       </div>
     </div>
     <div class="takeaway"><span class="lab">TAKEAWAY</span><span>At the forecast's roster on an event day, the brigade loses about {{r.lost_brigade|pct1}} of orders; fixed stations lose {{r.lost_fixed_best|pct1}} to {{r.lost_fixed_worst|pct}}, depending on who is on toppings.</span></div>
@@ -749,18 +752,20 @@ aside.notes{display:none}
         <div class="legend">Navy = robot, white = by hand (click to switch) · red circle = a person · faded = walking · red cup = waiting for a person.</div>
       </div>
       <div class="cards" style="gap:10px">
-        <div class="cset screenonly"><span class="lab">Day</span><span class="dslot"></span></div>
+        <div class="cset screenonly" style="flex-direction:row;align-items:center;gap:10px;padding:7px 12px"><span class="lab">Day</span><span class="dslot"></span></div>
         <div><div class="ptitle" style="margin-bottom:4px">All four splits, mean of {{a.seeds}} runs</div><table class="res splits"></table>
-          <p class="flag" style="margin-top:5px">Each split gets the fewest people, from the forecast roster up, and the better sharing rule that keep walk-aways within {{sb.walkaway_target|pct}}. Cost per day: people hours at the wage plus robots at their monthly cost.</p></div>
+          <p class="flag" style="margin-top:5px">Each split gets the fewest people, from the forecast roster up, and the better sharing rule that keep walk-aways within {{sb.walkaway_target|pct}}. Cost per day: people hours at the wage plus robots at their monthly cost.</p>
+          <p class="flag normday" style="margin-top:4px;color:var(--ink2);font-size:10.5px"></p></div>
       </div>
     </div>
     <div class="takeaway"><span class="lab">TAKEAWAY</span><span class="gmtake">On an event day, {{s.cheapest_label}} is the cheapest split within the walk-away limit, at about S${{r.cheapest_cost}} a day. {{s.heading_label}} needs {{r.heading_staff}} people at fixed posts and costs about S${{r.heading_extra}} more, for a median wait of {{r.heading_wait|mmss}}.</span></div>
   </div>
   <div class="foot"><span>OPIM639 · Group 3 · explainer figures are illustrative assumptions · robot speeds and costs are assumptions, not Chagee data</span><span class="rail"></span><span class="pg"></span></div>
   <aside class="notes">
-    <p>This is the GM's decision: which steps of the counter stay human and which go to robots. Side B is a scenario, not a claim about Chagee: machines make the drink while people tag the order and hand it over. Chagee's own equipment cost is not public; its Singapore relaunch used semi-automated equipment, according to Vulcan Post.</p>
+    <p>This is the GM's decision: which steps of the counter stay human and which go to robots. Side B, machine-made drink, is our scenario, not a claim about Chagee: machines make the drink while people tag the order and hand it over. Chagee's own equipment cost is not public; its Singapore relaunch used semi-automated equipment, according to Vulcan Post.</p>
     <p>Click any station to switch it. Each side gets its forecast roster; change people with plus and minus. The table on the right is the simulation run for all four splits.</p>
-    <p>What it shows, honestly: on a normal day, all by hand is cheapest; robots buy a shorter wait, not a lower cost, at about {{d.cupsPerDay}} cups a day. On an event day, today's split is cheapest within the limit. Machines making the drink needs a second person at the peak, because one person cannot tag and hand over at opposite ends of the counter. About one and a half minutes.</p>
+    <p>What it shows, honestly: the table is the event day; the line under it is the normal day, at about {{d.cupsPerDay}} cups. On a normal day all by hand is the cheapest of these four splits and all robots the fastest, so robots buy a shorter wait, not a lower cost; today's split is in fact slower than all by hand that day. On an event day, today's split is cheapest within the limit. The machine-made drink scenario needs a second person at the peak, because one person cannot tag and hand over at opposite ends of the counter.</p>
+    <p>These are four splits only. The next slide shows that a single machine can undercut all by hand, because it lets the roster drop a person off-peak. About one and a half minutes.</p>
   </aside>
 </section>
 
@@ -775,22 +780,23 @@ aside.notes{display:none}
       <div class="panel" style="padding:10px 14px 9px">
         <div class="ptop" style="min-height:20px"><span class="ptitle">The ladder · navy = steps on machines</span></div>
         <div class="lad"></div>
-        <p class="lnote">Green = beats all by hand, across our per-outlet range of {{r.vol_lo}} to {{r.vol_hi}} cups a day; red line = your outlet. Rosters step in whole people, so wins come and go. The model's S${{r.unit_month}} a month is per station unit (our reading: a semi-automated station); robot prices are per setup.</p>
+        <p class="lnote">Green = beats all by hand, across our per-outlet range of {{r.vol_lo}} to {{r.vol_hi}} cups a day; red line = your outlet. The model's S${{r.unit_month}} a month is per station unit (our reading: a semi-automated station); robot prices are per setup. Semi-automation and the beverage platform are priced at that S${{r.unit_month}} because their real prices are not disclosed.</p>
       </div>
       <div class="cards yo">
         <div class="cset screenonly sitectl ladctl"></div>
         <p class="at printonly"></p>
         <table></table>
-        <p class="lnote"><b>Model rule, an assumption:</b> at least {{r.min_mixed}} person on the counter all day with machines, {{r.min_hand}} by hand; so robot rungs save no more labour than today's split until about {{r.ladder_more}} cups a day. Station speeds are the model's, not vendor claims. Simple payback = list price ÷ labour saved a month; excludes installation, training, maintenance, power, space, import, financing.</p>
+        <p class="lnote"><b>Why a single machine pays:</b> it saves {{r.single_hours}} person-hours a day (S${{r.single_saved}} a month), because in {{r.single_hours}} off-peak hours the roster drops from {{r.min_hand}} people to {{r.min_mixed}}. Today's split saves {{r.today_hours}} hours a day but pays for {{r.today_units}} station units. <b>Model assumption:</b> the minimum crew is {{r.min_hand}} by hand and {{r.min_mixed}} with machines, and it drives this result; robot rungs save no more than today's split until about {{r.ladder_more}} cups a day. Station speeds are the model's, not vendor claims. Simple payback = list price ÷ labour saved a month; no installation, maintenance or financing.</p>
       </div>
     </div>
-    <div class="takeaway" style="margin-top:10px;padding:10px 22px"><span class="lab">TAKEAWAY</span><span>At {{r.ladder_cups}} cups a day, {{s.ladder_wins}} pay at the model's rate. Robot rungs save no more labour than today's split until about {{r.ladder_more}} cups a day, under the model's one-person rule.</span></div>
+    <div class="takeaway" style="margin-top:10px;padding:10px 22px"><span class="lab">TAKEAWAY</span><span>A single machine that lets the roster drop one person for {{r.single_hours}} off-peak hours pays at {{r.ladder_cups}} cups a day under the model; today's {{r.today_units}}-station split does not (S${{r.today_more}} a month more than all by hand). Rosters step in whole people, so this flips with volume and wage.</span></div>
   </div>
   <div class="foot"><span>OPIM639 · Group 3 · Vendor and press figures; not Chagee data · model figures are illustrative assumptions</span><span class="rail"></span><span class="pg"></span></div>
   <aside class="notes">
     <p>This is robotics and automation, not AI; the AI in our project is the forecast that sets the roster. The ladder runs from semi-automation, kiosks and sealers, up to a robot barista. Navy chips are the counter steps each rung puts on machines. The dashed row is our own scenario, today's split from slide 07, so the ladder does not start from an all-human counter.</p>
     <p>Prices are vendor list prices from public sources, not the cost to implement. Gong cha and Richtech do not publish prices, so we show the cost a setup would need to stay under to break even. The robot barista is coffee-first; no tea drinks are listed for Oli.</p>
-    <p>On the right, set your outlet's cups a day, the wage and the machine rate. The honest reading: the cheap semi-automated rungs can pay at our rate; the robot rungs save no more labour than today's split until volume is high, because the model keeps at least one person on the counter all day. That rule is our assumption. Chagee's own equipment cost is not public. About one minute.</p>
+    <p>On the right, set your outlet's cups a day, the wage and the machine rate. Why a single machine pays and today's split does not: one machine lets the roster drop from {{r.min_hand}} people to {{r.min_mixed}} in {{r.single_hours}} off-peak hours, about one person-shift a day, at the cost of one station unit. Today's split saves {{r.today_hours}} person-hours but pays for {{r.today_units}} units, so it ends up a little dearer than all by hand. That minimum crew, {{r.min_hand}} by hand and {{r.min_mixed}} with machines, is our model's assumption, and rosters step in whole people, so the answer flips with volume and wage.</p>
+    <p>Payback is simple payback, if the machine lets the roster drop one person-shift; it leaves out installation, maintenance and financing. Semi-automation and the beverage platform have no published price, so they are priced at the model's per-unit rate. Chagee's own equipment cost is not public. About one minute.</p>
   </aside>
 </section>
 

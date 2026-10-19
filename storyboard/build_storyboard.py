@@ -123,8 +123,9 @@ def values(d: dict) -> dict:
     nd = d["splits"]["none"]
     if nd["_cheapest"] != "all_hand" or nd["_fastest"] == "all_hand":
         raise SystemExit("build: the GM headline says all-by-hand is cheapest but not fastest on a normal day; rewrite it")
-    v["s.cheapest_label"] = sp[cheap]["label"]
-    v["s.heading_label"] = head["label"]
+    disp = RAW["storyboard"]["split_presets"].get("display_labels", {})      # display names only; stored labels unchanged
+    v["s.cheapest_label"] = disp.get(cheap, sp[cheap]["label"])
+    v["s.heading_label"] = disp.get("heading", head["label"])
     v["r.cheapest_cost"] = sp[cheap]["cost"]["total"]
     v["r.heading_staff"] = head["staff"]
     v["r.heading_extra"] = head["cost"]["total"] - sp[cheap]["cost"]["total"]
@@ -168,6 +169,18 @@ def values(d: dict) -> dict:
             or any(abs(R[k]["saved"] - R["today"]["saved"]) > 1e-6 for k in ("arm", "barista")):
         raise SystemExit("build: the ladder says robot rungs save no more labour than today's split until one volume above the default; rewrite it")
     v["r.ladder_more"] = starts[0]
+    # why the single machines pay and today's split does not (slide 08 note and takeaway)
+    singles, today = [R[k] for k in ("semi", "platform", "single")], R["today"]
+    peak = d["counter"]["peakHour"]
+    if not (all(r["hoursDay"] == singles[0]["hoursDay"] == r["hoursLower"] and r["maxDrop"] == 1 and peak not in r["lowerIdx"] for r in singles)
+            and R["platform"]["modelMargin"] > 0 and R["single"]["modelMargin"] > 0 and today["modelMargin"] < 0
+            and today["hoursDay"] > singles[0]["hoursDay"]):
+        raise SystemExit("build: slide 08 says a single machine drops one person in off-peak hours and pays, and today's split does not; rewrite it")
+    v["r.single_hours"] = singles[0]["hoursDay"]
+    v["r.single_saved"] = singles[0]["saved"]
+    v["r.today_hours"] = today["hoursDay"]
+    v["r.today_units"] = today["units"]
+    v["r.today_more"] = -today["modelMargin"]
     v["r.fx"] = RAW["_meta"]["fx_sgd_per_usd"]["value"]
     rep = RAW["costs"]["machine_cost_per_unit_per_month"]["represents"].replace(" Display text only.", "")
     v["s.unit_represents"] = rep[0].lower() + rep[1:] if rep.startswith("Our") else rep
@@ -226,7 +239,7 @@ def appendix() -> str:
         f = RAW["facts"][k]
         out.append(f"<p><b>{label}: {short(f['value'])}</b>. {esc(f['rationale'])} <i>[{esc(f['source'])}]</i></p>")
     out.append("<h5>Sources</h5>")
-    for k in ("L-sg-directory", "L-koalagains", "L-yfchuhai", "L-sec20f", "L-unsw", "I-sg-owned", "I-sg-groundfloor", "I-team-app-first", "L-ester1996"):
+    for k in ("L-sg-directory", "L-koalagains", "L-yfchuhai", "L-sec20f", "L-unsw", "I-chagee-contact", "I-sg-groundfloor", "I-team-app-first", "L-ester1996"):
         out.append(f"<p><b>{k}</b> {esc(RAW['_sources'][k])}</p>")
     out.append("<h5>Assumptions (assumptions.json, illustrative)</h5>")
     for sec, key, label in USED:
@@ -237,6 +250,9 @@ def appendix() -> str:
     out.append("<p>No Chagee sales, staffing or wait-time data is used; the forecast is not a trained model. "
                "We do not claim the bucket brigade always beats fixed stations: with spare staff, a well-assigned "
                "fixed line is as good or slightly faster. Machine breakdowns, breaks and order mix are not modelled.</p>")
+    out.append("<p>We make no claim about: <b>Singapore ownership structure</b> (a Chagee contact says outlets run under one company and "
+               "one data system, and that the ownership form does not matter here; I-chagee-contact); <b>delivery profit by channel</b>; "
+               "<b>Chagee's own equipment cost</b> (not public).</p>")
     return "\n".join(out)
 
 
