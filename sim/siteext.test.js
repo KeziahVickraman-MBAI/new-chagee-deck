@@ -25,7 +25,7 @@ test("siteext: net profit adds up and the recommendation follows the rule", () =
 
 test("siteext: the pin is slide 05's top cluster; moving cups from neighbours lowers net profit", () => {
   const X = evaluate(deps), M = deps.Site.model(deps.Sim, deps.RAW, deps.GEO);
-  assert.equal(X.pin.x, M.candidates[0].x);
+  assert.equal(X.x, M.candidates[0].x);
   assert.ok(X.share > 0 && X.share < 1);
   if (X.contrast) assert.ok(X.contrast.share > X.share && X.contrast.net.base < X.net.base);
 });
@@ -34,4 +34,13 @@ test("siteext: higher rent lowers net profit one for one", () => {
   const RAW = JSON.parse(JSON.stringify(deps.RAW)); RAW.site_ext.rent_per_month.value += 1000;
   const a = evaluate(deps), b = evaluate({ ...deps, RAW });
   assert.ok(Math.abs(a.net.base - b.net.base - 1000) < 1e-6);
+});
+
+test("siteext: the three pins; D (beside an outlet) moves the most cups and appraise matches evaluate", () => {
+  const X = evaluate(deps), E = require("./siteext.js"), e = E.econ(deps.RAW, deps.P);
+  assert.deepEqual(X.pins.map(p => p.id), ["A", "C", "D"]);
+  const D = X.pins.find(p => p.id === "D");
+  assert.ok(D.share > X.share);
+  const a = E.appraise(deps, e, X.share, e.cups.base);
+  assert.ok(Math.abs(a.month.net - X.net.base) < 1e-6 && a.rec === X.rec);
 });

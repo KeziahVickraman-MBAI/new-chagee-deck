@@ -491,29 +491,40 @@ html,body{margin:0;background:#E7E3DC;color:var(--ink);font-family:var(--sans);-
 .xs .row.neg .bar i{background:var(--red)}
 .xs .val{font:700 17px/1 var(--sans);color:var(--navy);text-align:right}
 .xs .row.neg .val{color:var(--red)}
+.xs .bar{position:relative}
+.xs .bar input{position:absolute;inset:-7px 0;width:100%;height:24px;margin:0;opacity:0;cursor:ew-resize}
+.xs .row[data-sc]:not(.neg):hover .bar{outline:2px solid var(--gold);outline-offset:2px}
+.xs .row.tot{background:#EEF1F7;border:1px solid #CBD5E6}
+.xs .row.tot .bar i{background:var(--gold)}
+.xs .sv{color:var(--red)}
+.xpins .btn{height:24px;font-size:11px;padding:0 9px}
+.xwf text{font-family:var(--sans)}
+.xrec{background:#fff;border:1px solid var(--line);border-left:4px solid var(--navy);border-radius:9px;padding:8px 12px;font:12px/1.42 var(--sans);color:var(--ink2)}
+.xrec .k{font:600 9.5px/1.2 var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--taupe)}
+.xrec .call{font:700 22px/1.1 var(--sans);margin:2px 0 3px}
+.xrec.open{border-left-color:#2F6B45} .xrec.open .call{color:#2F6B45}
+.xrec.pilot{border-left-color:#B8860B} .xrec.pilot .call{color:#8A6A12}
+.xrec.skip{border-left-color:var(--red)} .xrec.skip .call{color:var(--red)}
+.xrec dl{display:grid;grid-template-columns:auto 1fr;gap:1px 10px;margin:5px 0 0}
+.xrec dt{color:var(--taupe)} .xrec dd{margin:0;color:var(--ink);font-weight:500}
+.xctl .lab{margin-bottom:1px;grid-column:1/-1}
+.cset.xctl{display:grid;grid-template-columns:1fr 1fr;gap:4px 14px;align-items:start}
+.xctl label{font-size:11px}
 .xs .src{font:600 9px/1 var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--taupe);margin-left:6px}
 .xstrip{margin-top:9px;background:var(--navy);color:#fff;border-radius:10px;padding:8px 18px;display:flex;gap:14px;align-items:baseline;font:12.5px/1.4 var(--sans)}
 .xstrip .lab{flex:none;font:600 10px/1.3 var(--sans);letter-spacing:.16em;text-transform:uppercase;color:var(--gold)}
 .xai{margin:7px 0 0;display:flex;gap:12px;align-items:baseline;background:#EEF1F7;border-left:4px solid var(--navy);border-radius:6px;padding:5px 12px;font:12px/1.4 var(--sans);color:var(--ink)}
 .xai b{flex:none;font:600 10px/1.3 var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--navy)}
 .xill{margin:5px 0 0;font:10.5px/1.35 var(--sans);color:var(--ink2)}
-.xsteps{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:9px;margin-top:14px}
-.xsteps .st{background:var(--cream);border-radius:10px;padding:11px 12px 11px;min-height:150px;display:flex;flex-direction:column;gap:4px}
+.xsteps{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;margin-top:10px}
+.xsteps .st{background:var(--cream);border-radius:10px;padding:7px 10px 8px;display:flex;flex-direction:column;gap:4px}
 .xsteps .st.hot{background:#FBEDEC}
 .xsteps h4{margin:0;font:600 13.5px/1.2 var(--sans);color:var(--ink);display:flex;gap:7px;align-items:baseline}
 .xsteps .st.hot h4{color:var(--red)}
-.xsteps p{margin:0;font:12.4px/1.42 var(--sans);color:var(--ink2)}
+.xsteps p{margin:0;font:11.4px/1.36 var(--sans);color:var(--ink2)}
 .xsteps .ai{align-self:flex-start;margin-top:auto;font:600 9px/1.2 var(--sans);letter-spacing:.08em;text-transform:uppercase;padding:3px 6px;border-radius:4px;background:var(--navy);color:#fff}
 .xsteps .ai.no{background:#ECE8E0;color:var(--taupe)}
-.xwork{margin-top:14px;background:var(--navy);color:#fff;border-radius:10px;padding:10px 16px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px 18px}
-.xwork .h{grid-column:1/-1;display:flex;justify-content:space-between;font:600 10px/1.2 var(--sans);letter-spacing:.16em;text-transform:uppercase;color:var(--gold)}
-.xwork .h span:last-child{color:rgba(255,255,255,.6);letter-spacing:.08em}
-.xwork .k{font:600 9.5px/1.2 var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:2px}
-.xwork .v{font:12px/1.38 var(--sans)}
-.xwork .v b{font-weight:700}
-.xwork .rec{background:rgba(255,255,255,.1);border-radius:7px;padding:5px 9px;color:#fff;font:inherit;text-align:left}
-.xwork .rec .v{color:#fff;font-size:13px}
-.xnote{margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:14px;font:12px/1.4 var(--sans);color:var(--ink2)}
+.xnote{margin-top:8px;display:grid;grid-template-columns:1fr 1fr;gap:14px;font:12px/1.4 var(--sans);color:var(--ink2)}
 .xnote p{margin:0;padding-left:10px;border-left:3px solid var(--red)}
 .xnote p+p{border-left-color:var(--taupe)}
 .slide.agenda.long li{padding:4px 0}
@@ -976,88 +987,83 @@ aside.notes{display:none}
 <!-- ======================================================= 08 EXTENSION: FOUR SCORES (Jin's framework) -->
 <section class="slide content" id="x1" data-chapter="Sites" data-title="Four scores for every location">
   <div class="leafart" aria-hidden="true"></div>
-  <div class="inner">
+  <div class="inner stepper" data-steps="5">
     <p class="kicker">08 · Four scores for every location · corporate expansion planning<span class="ext">Extension: where this scales next. Not included in the S$ benefit.</span></p>
     <h2 class="head">Four scores for every location</h2>
     <p class="sub">Corporate drops a pin; the model rates it on four things (illustrative). Decision-maker here: corporate expansion planning, not the GM.</p>
     <div class="body" style="grid-template-columns:500px 1fr;gap:20px;margin-top:12px">
-      <div class="panel xmap">
-        <div class="ptop"><span class="ptitle">Candidate site A (hypothetical pin) · schematic map</span></div>
-        <div class="visual" style="margin-top:4px">
-          <svg viewBox="0 0 470 270" preserveAspectRatio="xMidYMid meet" aria-label="Schematic map: a candidate pin, its ring, a neighbour outlet and an MRT line">
-            <rect x="0" y="0" width="470" height="270" rx="8" fill="#FBF9F5"/>
-            <g stroke="#ECE6DA" stroke-width="1"><path d="M0 60H470M0 140H470M0 215H470M90 0V270M210 0V270M330 0V270M420 0V270"/></g>
-            <g fill="#E6DCC8"><rect x="34" y="22" width="60" height="34" rx="3"/><rect x="300" y="18" width="64" height="36" rx="3"/><rect x="40" y="200" width="66" height="40" rx="3"/><rect x="360" y="176" width="58" height="36" rx="3"/><rect x="250" y="210" width="54" height="34" rx="3"/></g>
-            <path d="M0 150 L470 112" stroke="#7E9B82" stroke-width="5" fill="none"/>
-            <g fill="#fff" stroke="#7E9B82" stroke-width="2"><circle cx="120" cy="140" r="5"/><circle cx="270" cy="128" r="5"/><circle cx="400" cy="118" r="5"/></g>
-            <circle cx="190" cy="134" r="78" fill="rgba(184,50,43,.07)" stroke="#B8322B" stroke-width="1.5" stroke-dasharray="5 4"/>
-            <line x1="190" y1="134" x2="382" y2="66" stroke="#9A9387" stroke-width="1.4" stroke-dasharray="4 4"/>
-            <circle cx="382" cy="66" r="8" fill="#24406B"/>
-            <path d="M190 112c-9 0-15 7-15 14 0 11 15 24 15 24s15-13 15-24c0-7-6-14-15-14z" fill="#B8322B"/><circle cx="190" cy="126" r="5" fill="#fff"/>
-            <text x="190" y="170" text-anchor="middle" font-family="Roboto,Arial" font-size="12" font-weight="600" fill="#B8322B">Candidate site A</text>
-            <text x="190" y="226" text-anchor="middle" font-family="Roboto,Arial" font-size="10.5" fill="#B8322B">{{x.ring_km|g}} km ring: no Chagee outlet inside</text>
-            <text x="382" y="48" text-anchor="middle" font-family="Roboto,Arial" font-size="11.5" font-weight="600" fill="#24406B">Neighbour outlet B</text>
-            <text x="318" y="80" text-anchor="middle" font-family="Roboto,Arial" font-size="10.5" fill="#4A4A4A" transform="rotate(-19 318 80)">{{x.nb_km|km}} km · loses {{x.nb_share|pct}} of its sales</text>
-          </svg>
-        </div>
+      <div class="panel xmap" data-kind="xmap">
+        <div class="ptop"><span class="ptitle">Schematic map · hypothetical pins</span><span class="seg xpins screenonly"></span></div>
+        <div class="visual" style="margin-top:4px"><svg class="xsvg" viewBox="0 0 470 250" preserveAspectRatio="xMidYMid meet" aria-label="Schematic map: a candidate pin, its ring, the neighbour outlet that loses most, and an MRT line"></svg></div>
+        <ol class="caps" style="min-height:40px">
+          <li data-s="1"><span class="n">1</span><span>Corporate drops a pin: a hypothetical candidate site. Pick another pin above to compare.</span></li>
+          <li data-s="2"><span class="n">2</span><span>The model tags the pin's attributes: people within {{x.residents_radius_km}} km, transit, footfall, delivery orders, competitors, Chagee outlets within {{x.ring_km}} km.</span></li>
+          <li data-s="3"><span class="n">3</span><span>Three scores from those attributes. Here they are set by hand: drag a bar to test another value.</span></li>
+          <li data-s="4"><span class="n">4</span><span>The slide 05 engine computes what existing outlets would lose: the cannibalisation factor.</span></li>
+          <li data-s="5"><span class="n">5</span><span>The site score weighs the three scores; cannibalisation stays out of it and is deducted in the profit (next slide).</span></li>
+        </ol>
         <div class="lg"><span><i style="background:var(--navy)"></i>Existing outlet</span><span><i style="background:var(--red)"></i>Candidate site</span><span><i style="background:#E6DCC8;border-radius:2px"></i>Housing estate</span><span><i style="background:#7E9B82;height:4px;border-radius:1px;vertical-align:2px"></i>MRT line</span></div>
       </div>
       <div class="xs">
-        <div class="row"><div><h4>Demand score<span class="src">hand-set</span></h4><p>Residents, workers and transit riders within reach, plus footfall.</p></div><div class="bar"><i style="width:{{x.score_demand}}%"></i></div><div class="val">{{x.score_demand}}</div></div>
-        <div class="row"><div><h4>Delivery demand score<span class="src">hand-set</span></h4><p>Orders from the area on third-party delivery apps.</p>
-          <p class="nt">All Chagee delivery goes through third-party apps (anonymous Chagee source, to confirm), so we use area demand, not "served from a farther outlet". Whether the platforms share this data is to confirm.</p></div><div class="bar"><i style="width:{{x.score_delivery}}%"></i></div><div class="val">{{x.score_delivery}}</div></div>
-        <div class="row"><div><h4>Competition score<span class="src">hand-set</span></h4><p>Bubble-tea and cafe outlets within {{x.competition_radius_m}} m; dense competition lowers the score, a few prove demand.</p></div><div class="bar"><i style="width:{{x.score_competition}}%"></i></div><div class="val">{{x.score_competition}}</div></div>
-        <div class="row neg"><div><h4>Cannibalisation factor<span class="src">computed · slide 05 engine</span></h4><p>The share of the site's cups that existing Chagee outlets would lose, deducted so the result is net to Chagee.</p></div><div class="bar"><i style="width:{{x.moved_share|pct}}"></i></div><div class="val">{{s.x_cannibal}}</div></div>
+        <div class="row" data-s="3" data-sc="demand"><div><h4>Demand score<span class="src">hand-set</span></h4><p>Residents, workers and transit riders within reach, plus footfall.</p></div><div class="bar"><i style="width:{{x.score_demand}}%"></i><input class="screenonly" type="range" min="0" max="{{x.score_max}}" step="1" value="{{x.score_demand}}" aria-label="Demand score"></div><div class="val">{{x.score_demand}}</div></div>
+        <div class="row" data-s="3" data-sc="delivery"><div><h4>Delivery demand score<span class="src">hand-set</span></h4><p>Orders from the area on third-party delivery apps.</p>
+          <p class="nt">All Chagee delivery goes through third-party apps (anonymous Chagee source, to confirm), so we use area demand, not "served from a farther outlet". Whether the platforms share this data is to confirm.</p></div><div class="bar"><i style="width:{{x.score_delivery}}%"></i><input class="screenonly" type="range" min="0" max="{{x.score_max}}" step="1" value="{{x.score_delivery}}" aria-label="Delivery demand score"></div><div class="val">{{x.score_delivery}}</div></div>
+        <div class="row" data-s="3" data-sc="competition"><div><h4>Competition score<span class="src">hand-set</span></h4><p>Bubble-tea and cafe outlets within {{x.competition_radius_m}} m; dense competition lowers the score, a few prove demand.</p></div><div class="bar"><i style="width:{{x.score_competition}}%"></i><input class="screenonly" type="range" min="0" max="{{x.score_max}}" step="1" value="{{x.score_competition}}" aria-label="Competition score"></div><div class="val">{{x.score_competition}}</div></div>
+        <div class="row neg" data-s="4" data-sc="cannibal"><div><h4>Cannibalisation factor<span class="src">computed · slide 05 engine</span></h4><p class="cw">The share of the site's cups that existing Chagee outlets would lose, deducted so the result is net to Chagee.</p></div><div class="bar"><i style="width:{{x.moved_share|pct}}"></i></div><div class="val">{{s.x_cannibal}}</div></div>
+        <div class="row tot" data-s="5"><div><h4>Site score<span class="src">weighted</span><span class="src sv"></span></h4><p>Demand {{x.w_demand|pct}}, delivery {{x.w_delivery|pct}}, competition {{x.w_competition|pct}} (hand-set weights).</p></div><div class="bar"><i style="width:{{x.site_score}}%"></i></div><div class="val">{{x.site_score}}</div></div>
       </div>
     </div>
-    <div class="xstrip"><span class="lab">Attributes the model tags to each pin</span><span>residents and workers within {{x.residents_radius_km}} km · MRT and bus tap-ins · footfall · delivery orders from the area · competing outlets within {{x.competition_radius_m}} m · Chagee outlets within {{x.ring_km}} km · rent per sq ft · staff needed at peak</span></div>
-    <p class="xai"><b>What is AI here</b><span>Scoring a pin from its attributes would be a supervised model trained on outlets' results: a production idea. Here the three scores are set by hand, and the cannibalisation factor is computed by the slide 05 engine on synthetic data.</span></p>
+    <div class="revctl screenonly" style="top:8px"><span class="lab">Step through</span><span class="ctl"></span></div>
+    <div class="xstrip" data-s="2"><span class="lab">Attributes the model tags to each pin</span><span>residents and workers within {{x.residents_radius_km}} km · MRT and bus tap-ins · footfall · delivery orders from the area · competing outlets within {{x.competition_radius_m}} m · Chagee outlets within {{x.ring_km}} km · rent per sq ft · staff needed at peak</span></div>
+    <p class="xai" data-s="5"><b>What is AI here</b><span>Scoring a pin from its attributes would be a supervised model trained on outlets' results: a production idea. Here the three scores are set by hand, and the cannibalisation factor is computed by the slide 05 engine on synthetic data.</span></p>
     <p class="xill">Illustrative. Synthetic data, not Chagee data. Chagee's opening history is internal and we do not have it.</p>
   </div>
   <div class="foot"><span>OPIM639 · Group 3 · explainer figures are illustrative assumptions · synthetic data, not Chagee data</span><span class="rail"></span><span class="pg"></span></div>
   <aside class="notes">
     <p>An extension: where this scales next, and not part of the benefit figure. The decision-maker here is corporate expansion planning, not the GM. This builds on Jin's site-selection framework.</p>
-    <p>Corporate drops a pin and the model rates it on four things. Demand, delivery demand and competition are set by hand here: in production, a supervised model would score them from the attributes in the strip below. We call the second one delivery demand, not delivery relief, because all Chagee delivery runs through third-party apps, according to an anonymous Chagee source; whether the platforms share this data is to confirm.</p>
-    <p>The cannibalisation factor is computed by the same engine as slide 05: about {{x.moved_share|pct}} of this site's cups would move from existing outlets, mostly from a neighbour {{x.nb_km|km}} km away. All synthetic. About thirty-five seconds.</p>
+    <p>Step through it. Corporate drops a pin; the model tags its attributes; three scores follow. Demand, delivery demand and competition are set by hand here, and you can drag a bar to test another value: in production, a supervised model would score them. We call the second one delivery demand, not delivery relief, because all Chagee delivery runs through third-party apps, according to an anonymous Chagee source; whether the platforms share this data is to confirm.</p>
+    <p>The cannibalisation factor is computed by the same engine as slide 05: about {{x.moved_share|pct}} of site A's cups would move from existing outlets. Switch to the pin with an outlet inside the ring, or the one beside an outlet, and watch it jump. All synthetic. About thirty-five seconds.</p>
   </aside>
 </section>
 
 <!-- ======================================================= 09 EXTENSION: PIN TO NET PROFIT -->
 <section class="slide content" id="x2" data-chapter="Sites" data-title="From pin to net profit">
   <div class="leafart" aria-hidden="true"></div>
-  <div class="inner">
+  <div class="inner stepper" data-steps="6">
     <p class="kicker">09 · From pin to net profit · corporate expansion planning<span class="ext">Extension: where this scales next. Not included in the S$ benefit.</span></p>
     <h2 class="head">From pin to net profit</h2>
     <p class="sub">Six steps from a pin to a go / no-go, on profit net to Chagee overall (illustrative). Decision-maker here: corporate expansion planning, not the GM.</p>
     <div class="xsteps">
-      <div class="st"><h4><span class="num">1</span>Pin a location</h4><p>Corporate clicks any point on the Singapore map.</p><span class="ai no">Not AI</span></div>
-      <div class="st"><h4><span class="num">2</span>Tag attributes</h4><p>Residents, workers, transit, footfall, delivery orders, competitors, Chagee outlets nearby, rent.</p><span class="ai no">Data</span></div>
-      <div class="st"><h4><span class="num">3</span>Four scores</h4><p>Demand, delivery demand, competition, cannibalisation (slide 08).</p><span class="ai">AI · supervised model</span></div>
-      <div class="st"><h4><span class="num">4</span>Find look-alikes</h4><p>Anonymised outlets with similar attributes (e.g. {{s.x_look1}}, {{s.x_look2}}): their actual cups a day and what their neighbours lost.</p><span class="ai">AI · similarity search</span></div>
-      <div class="st hot"><h4><span class="num">5</span>Forecast net profit</h4><p>Cups a day, running cost, minus the profit neighbours lose.</p><span class="ai no">Computed below</span></div>
-      <div class="st"><h4><span class="num">6</span>Decide</h4><p>Open, pilot or skip. Actuals feed back into the model as the outlet reports: continual learning.</p><span class="ai">AI · continual learning</span></div>
+      <div class="st" data-s="1"><h4><span class="num">1</span>Pin a location</h4><p>Corporate clicks a point on the map.</p><span class="ai no">Not AI</span></div>
+      <div class="st" data-s="2"><h4><span class="num">2</span>Tag attributes</h4><p>People, transit, footfall, delivery, competitors, outlets nearby, rent.</p><span class="ai no">Data</span></div>
+      <div class="st" data-s="3"><h4><span class="num">3</span>Four scores</h4><p>Demand, delivery, competition, cannibalisation (slide 08).</p><span class="ai">AI · supervised model</span></div>
+      <div class="st" data-s="4"><h4><span class="num">4</span>Find look-alikes</h4><p>Anonymised outlets ({{s.x_look1}}, {{s.x_look2}}): their cups a day, what neighbours lost.</p><span class="ai">AI · similarity search</span></div>
+      <div class="st hot" data-s="5"><h4><span class="num">5</span>Forecast net profit</h4><p>Cups a day, running cost, minus the profit neighbours lose.</p><span class="ai no">Computed below</span></div>
+      <div class="st" data-s="6"><h4><span class="num">6</span>Decide</h4><p>Open, pilot or skip. Actuals feed back: continual learning.</p><span class="ai">AI · continual learning</span></div>
     </div>
-    <div class="xwork">
-      <div class="h"><span>Worked example · candidate site A (hypothetical pin)</span><span>illustrative · a month per outlet</span></div>
-      <div><div class="k">Site score</div><div class="v"><b>{{x.site_score}} / {{x.score_max}}</b>: demand {{x.w_demand|pct}}, delivery {{x.w_delivery|pct}}, competition {{x.w_competition|pct}} (hand-set)</div></div>
-      <div><div class="k">Forecast cups a day</div><div class="v"><b>{{x.cups}}</b>, range {{x.cups_lo}}–{{x.cups_hi}}, as slide 11 · S${{x.price|c2}} a cup × {{x.margin|pct}} margin = S${{x.m_contribution}}</div></div>
-      <div><div class="k">Operating cost (assumptions)</div><div class="v">Counter staff and one machine S${{x.m_counter}} · rent S${{x.m_rent}} · delivery fees S${{x.m_delivery}} · utilities S${{x.m_utilities}}</div></div>
-      <div><div class="k">Neighbour impact</div><div class="v">Neighbour outlet B <b>−{{x.nb_share|pct}}</b> of its sales; in all <b>−S${{x.m_moved}}</b> of neighbours' profit, deducted</div></div>
-      <div><div class="k">Net profit to Chagee</div><div class="v"><b>{{s.x_net}}</b> at {{x.cups}} cups; {{s.x_net_lo}} to {{s.x_net_hi}} across the range</div></div>
-      <div><div class="k">Payback</div><div class="v"><b>≈ {{x.payback}} months</b>: set-up S${{x.setup_cost}} (assumption, not Chagee data); {{x.pay_lo}}–{{x.pay_hi}} months at S${{x.setup_lo}}–{{x.setup_hi}}</div></div>
-      <div class="rec" style="grid-column:span 2"><div class="k">Recommendation</div><div class="v"><b>{{s.x_rec}}</b>: net profit is {{s.x_rec_why}}.</div></div>
+    <div class="body" style="grid-template-columns:1fr 318px;gap:18px;margin-top:10px">
+      <div class="panel" data-kind="xprofit" data-s="5">
+        <div class="ptop"><span class="ptitle">Net profit to Chagee, a month · <span class="xpin">Site A</span></span><span class="seg xpins screenonly"></span></div>
+        <div class="visual" style="margin-top:2px"><svg class="xwf" viewBox="0 0 700 214" preserveAspectRatio="xMidYMid meet" aria-label="Waterfall: from cups times price times margin to net profit to Chagee"></svg></div>
+        <p class="lnote xrange"></p>
+      </div>
+      <div class="cards" style="gap:8px">
+        <div class="cset sitectl xctl screenonly" data-s="5"></div>
+        <div class="xrec" data-s="6"></div>
+      </div>
     </div>
+    <div class="revctl screenonly" style="top:8px"><span class="lab">Step through</span><span class="ctl"></span></div>
     <div class="xnote">
       <p>A strong-demand site can still fail if rent or staffing is too high, or if it mostly takes sales from our own neighbours.</p>
       <p>In practice this needs Chagee's opening history. With about {{facts.sg_outlets}} outlets in Singapore the model must stay simple (few attributes, ranges not point values).</p>
     </div>
-    <p class="xill">Illustrative. Synthetic data, not Chagee data. Chagee's opening history is internal and we do not have it.</p>
+    <p class="xill">Illustrative. Synthetic data, not Chagee data. Chagee's opening history is internal and we do not have it. Cups a day, price and margin are the benefit slide's (slide 11); rent, delivery, utilities and set-up cost are assumptions, not Chagee data.</p>
   </div>
   <div class="foot"><span>OPIM639 · Group 3 · explainer figures are illustrative assumptions · synthetic data, not Chagee data</span><span class="rail"></span><span class="pg"></span></div>
   <aside class="notes">
     <p>Six steps from a pin to a go or no-go. Steps three, four and six are where the AI would sit in production: a supervised model for the scores, a similarity search for look-alike outlets, and continual learning as each new outlet reports actuals. On this slide only step five is computed.</p>
-    <p>The worked example uses the same cups a day, price and margin as the benefit slide: {{x.cups}} cups a day, which gives about {{s.x_net}} a month net to Chagee after running costs and the profit neighbours lose, and a payback of about {{x.payback}} months. At the low end of the range it loses money, so the call is: {{s.x_rec}}. Rent, utilities, delivery fees and set-up cost are our assumptions, not Chagee data.</p>
-    <p>The honest point: in the same engine, a pin with an outlet {{x.c_nb_km|km}} km away takes {{x.c_share|pct}} of its cups from our own outlets, and comes out at {{s.x_c_net}} a month, a {{s.x_c_rec}}. About forty-five seconds.</p>
+    <p>The waterfall starts from cups a day times price times margin, the same inputs as the benefit slide: {{x.cups}} cups a day. Take off the profit neighbours lose, delivery fees, the counter, rent and utilities: about {{s.x_net}} a month net to Chagee, a payback of about {{x.payback}} months. At the low end of the cups range it loses money, so the call is: {{s.x_rec}}. Move rent, delivery or set-up cost and watch the call change; these are our assumptions, not Chagee data.</p>
+    <p>The honest point: switch to the pin with an outlet {{x.c_nb_km|km}} km away. It takes {{x.c_share|pct}} of its cups from our own outlets and comes out at {{s.x_c_net}} a month, a {{s.x_c_rec}}. About forty-five seconds.</p>
     <p>Later: reuse in new markets via transfer learning, out of scope.</p>
   </aside>
 </section>

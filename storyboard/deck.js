@@ -836,6 +836,119 @@
     inp.oninput = upd; upd();
   })();
 
+  /* ---------------------------------------------------------------- 08 / 09 extension: site selection (sim/siteext.js) */
+  // One shared state: the pin (precomputed from the slide 05 engine), the hand-set scores and slide 09's inputs.
+  // Slide 08 steps pin -> attributes -> scores -> cannibalisation -> site score; slide 09 recomputes net profit live.
+  (function siteExt() {
+    const s8 = $(document, "#x1"), s9 = $(document, "#x2"); if (!s8 || !s9) return;
+    const E = window.ChageeSiteExt, XD = DATA.siteExt, X = RAW.site_ext, TI = window.STORY.TIERS;
+    const PIN = Object.fromEntries(XD.pins.map(p => [p.id, p]));
+    const PIN_LAB = { A: ["Site A", "top app-search cluster"], C: ["Site C", "an outlet inside the ring"], D: ["Site D", "beside an outlet"] };
+    const e0 = E.econ(RAW, P), sc0 = { ...X.scores.value }, W = X.score_weights.value, ringKm = X.ring_km.value;
+    const st = { pin: "A", sc: { ...sc0 }, cups: e0.cups.base, rent: e0.rent, deliveryShare: e0.deliveryShare, setup: e0.setup };
+    const sm = (x, sign = false) => `${x < 0 ? "−" : sign ? "+" : ""}S$${Math.abs(Math.round(x)).toLocaleString("en-SG")}`;
+    const fns = [], redraw = () => fns.forEach(f => f());
+    $$(document, ".xpins").forEach(seg => {
+      seg.innerHTML = XD.pins.map(p => `<button class="btn" data-p="${p.id}" title="${PIN_LAB[p.id][1]}">${PIN_LAB[p.id][0]}</button>`).join("");
+      seg.onclick = ev => { const b = ev.target.closest("[data-p]"); if (b) { st.pin = b.dataset.p; redraw(); } };
+      fns.push(() => $$(seg, "button").forEach(b => b.classList.toggle("on", b.dataset.p === st.pin)));
+    });
+    const score = () => E.siteScore(st.sc, W);
+
+    // slide 08: the schematic map, redrawn per step and pin (positions are schematic; distances and shares are the engine's)
+    const S8 = steppers.find(x => x.p.closest("#x1"))?.S, svg = $(s8, ".xsvg");
+    let step8 = S8 ? S8.cur : 5;
+    const PX = 190, PY = 128, R = 74;
+    function map() {
+      const p = PIN[st.pin], nb = p.neighbour, d = Math.max(16, Math.min(250, R * nb.km / ringKm)), a = -20 * Math.PI / 180;
+      const bx = PX + d * Math.cos(a), by = PY + d * Math.sin(a), txt = (x, y, s, at = "") => T(x, y, s, `font-size="10.5" stroke="#FBF9F5" stroke-width="3" paint-order="stroke" ${at}`);
+      let s = `<rect width="470" height="250" rx="8" fill="#FBF9F5"/><path d="M0 55H470M0 135H470M0 205H470M90 0V250M210 0V250M330 0V250M420 0V250" stroke="#ECE6DA"/>` +
+        `<g fill="#E6DCC8"><rect x="34" y="18" width="60" height="32" rx="3"/><rect x="300" y="14" width="64" height="34" rx="3"/><rect x="40" y="186" width="66" height="38" rx="3"/><rect x="360" y="168" width="58" height="34" rx="3"/><rect x="250" y="196" width="54" height="32" rx="3"/></g>` +
+        `<path d="M0 146 L470 108" stroke="#7E9B82" stroke-width="5" fill="none"/><g fill="#fff" stroke="#7E9B82" stroke-width="2"><circle cx="120" cy="136" r="5"/><circle cx="270" cy="124" r="5"/><circle cx="400" cy="113" r="5"/></g>`;
+      if (step8 >= 2) {
+        const rc = R * X.competition_radius_m.value / 1000 / ringKm, n = p.ring;
+        s += `<circle cx="${PX}" cy="${PY}" r="${R}" fill="rgba(184,50,43,.07)" stroke="${COL.red}" stroke-width="1.5" stroke-dasharray="5 4"/>` +
+          `<circle cx="${PX}" cy="${PY}" r="${rc.toFixed(1)}" fill="none" stroke="${COL.gold}" stroke-width="1.2" stroke-dasharray="2 3"/>` +
+          [[-0.6, 0.5], [0.8, -0.2], [0.1, 0.9]].map(([u, v]) => `<rect x="${(PX + u * rc - 3).toFixed(1)}" y="${(PY + v * rc - 3).toFixed(1)}" width="6" height="6" fill="${COL.gold}"/>`).join("") +
+          txt(PX, PY + R + 14, `${ringKm} km ring: ${n ? `${n} Chagee outlet${n > 1 ? "s" : ""} inside` : "no Chagee outlet inside"}`, `text-anchor="middle" fill="${COL.red}"`) +
+          txt(PX - rc - 5, PY - rc + 4, `competitors within ${X.competition_radius_m.value} m`, `text-anchor="end" fill="#8A6A12" font-size="9.5"`) +
+          `<circle cx="${bx.toFixed(1)}" cy="${by.toFixed(1)}" r="7" fill="${COL.navy}"/>`;
+      }
+      if (step8 >= 4) {
+        const lx = Math.min(430, Math.max(70, bx)), right = bx < 300;
+        s = s.replace(/(<circle cx="[\d.]+" cy="[\d.]+" r="7")/, `<line x1="${PX}" y1="${PY}" x2="${bx.toFixed(1)}" y2="${by.toFixed(1)}" stroke="${COL.taupe}" stroke-width="1.4" stroke-dasharray="4 4"/>$1`) +
+          txt(lx, Math.max(14, by - 13), "Neighbour outlet B", `text-anchor="middle" font-size="11.5" font-weight="600" fill="${COL.navy}"`) +
+          txt(right ? bx + 12 : bx - 12, by + 4, `${nb.km.toFixed(1)} km · loses ${pct(nb.share)} of its sales`, `text-anchor="${right ? "start" : "end"}" fill="${COL.ink2}"`);
+      }
+      s += `<path d="M${PX} ${PY - 22}c-9 0-15 7-15 14 0 11 15 24 15 24s15-13 15-24c0-7-6-14-15-14z" fill="${COL.red}"/><circle cx="${PX}" cy="${PY - 8}" r="5" fill="#fff"/>` +
+        T(PX, PY + 30, `Candidate ${PIN_LAB[st.pin][0].replace("Site", "site")} (hypothetical)`, `text-anchor="middle" font-size="12" font-weight="600" fill="${COL.red}"`);
+      svg.innerHTML = s;
+    }
+    if (S8) S8.hooks.push(k => { step8 = k; map(); });
+    // score rows: drag a hand-set bar; the cannibalisation row follows the pin; the site score follows the bars
+    $$(s8, ".row[data-sc]").forEach(row => {
+      const k = row.dataset.sc, inp = $(row, "input");
+      if (inp) inp.addEventListener("input", () => { st.sc[k] = +inp.value; redraw(); });
+    });
+    function rows() {
+      ["demand", "delivery", "competition"].forEach(k => { const r = $(s8, `.row[data-sc="${k}"]`);
+        $(r, ".bar i").style.width = `${st.sc[k]}%`; $(r, ".val").textContent = st.sc[k]; $(r, "input").value = st.sc[k]; });
+      const p = PIN[st.pin], rc = $(s8, '.row[data-sc="cannibal"]');
+      $(rc, ".bar i").style.width = pct(p.share); $(rc, ".val").textContent = `−${Math.round(100 * p.share)}`;
+      $(rc, ".cw").textContent = `${PIN_LAB[st.pin][0]}: ${pct(p.share)} of its cups would move from existing Chagee outlets; neighbour outlet B loses ${pct(p.neighbour.share)}. Deducted so the result is net to Chagee.`;
+      const t = $(s8, ".row.tot"), v = score();
+      $(t, ".bar i").style.width = `${v}%`; $(t, ".val").textContent = Math.round(v);
+      const moved = Object.keys(sc0).some(k => st.sc[k] !== sc0[k]);
+      $(t, ".sv").textContent = moved ? "bars moved: a what-if, not data" : "";
+    }
+    fns.push(map, rows);
+
+    // slide 09: sliders on the decision inputs, a live waterfall and the call
+    const ctl = $(s9, ".xctl"), svg9 = $(s9, ".xwf"), rec = $(s9, ".xrec"), rangeP = $(s9, ".xrange");
+    const IN = [["cups", "Cups a day (slide 11's range)", Math.round(e0.cups.lo), Math.round(e0.cups.hi), 1, v => `${Math.round(v)}`],
+                ["rent", "Rent a month", ...X.rent_per_month.range, 500, v => sm(v)],
+                ["deliveryShare", "Share of cups via delivery apps", ...X.delivery_share_of_cups.range, 0.01, v => pct(v)],
+                ["setup", "Set-up cost (one-off)", ...X.setup_cost.range, 5000, v => sm(v)]];
+    ctl.innerHTML = `<span class="lab">Decision inputs · assumptions</span>` + IN.map(([k, lab, lo, hi, s]) =>
+      `<label>${lab}<span class="val" data-v="${k}"></span><input type="range" data-k="${k}" min="${lo}" max="${hi}" step="${s}" value="${st[k]}"></label>`).join("");
+    ctl.addEventListener("input", ev => { const k = ev.target.dataset.k; if (!k) return; st[k] = +ev.target.value; redraw(); });
+    function profit() {
+      const p = PIN[st.pin], e = { ...e0, rent: st.rent, deliveryShare: st.deliveryShare, setup: st.setup }, dp = { Sim, C, P, TIERS: TI };
+      const A = E.appraise(dp, e, p.share, st.cups), m = A.month, hi = E.appraise(dp, e, p.share, e0.cups.hi).month.net;
+      IN.forEach(([k, , , , , f]) => { $(ctl, `[data-v="${k}"]`).textContent = f(st[k]); $(ctl, `[data-k="${k}"]`).value = st[k]; });
+      $(s9, ".xpin").textContent = `${PIN_LAB[st.pin][0]}, ${PIN_LAB[st.pin][1]}`;
+      // waterfall: contribution, then each deduction, then the net
+      const bars = [["Cups × price × margin", m.contribution, "start"], ["Neighbours' lost profit", -m.moved, "red"], ["Delivery fees", -m.delivery, "cost"],
+                    ["Counter staff + one machine", -m.counter, "cost"], ["Rent", -m.rent, "cost"], ["Utilities", -m.utilities, "cost"], ["Net to Chagee", m.net, "net"]];
+      const w = 700, h = 214, l = 8, t = 20, b = 44, n = bars.length, bw = (w - l * 2) / n;
+      let run = 0; const pts = bars.map(([lab, v, k]) => { const y0 = k === "net" ? 0 : run, y1 = k === "net" ? v : run + v; if (k !== "net") run = y1; return { lab, v, k, y0, y1 }; });
+      const hiV = Math.max(...pts.map(q => Math.max(q.y0, q.y1))), loV = Math.min(0, ...pts.map(q => Math.min(q.y0, q.y1)));
+      const Y = v => t + (hiV - v) / (hiV - loV || 1) * (h - t - b);
+      const colr = { start: COL.navy, red: COL.red, cost: "#B7AFA0", net: m.net > 0 ? "#2F6B45" : COL.red };
+      let s = `<line x1="0" x2="${w}" y1="${Y(0)}" y2="${Y(0)}" stroke="${COL.ink2}"/>`;
+      pts.forEach((q, i) => {
+        const x = l + i * bw + 8, bwi = bw - 16, top = Math.min(Y(q.y0), Y(q.y1)), hh = Math.max(1.5, Math.abs(Y(q.y0) - Y(q.y1)));
+        s += `<rect x="${x.toFixed(1)}" y="${top.toFixed(1)}" width="${bwi.toFixed(1)}" height="${hh.toFixed(1)}" rx="3" fill="${colr[q.k]}"/>`;
+        if (i < n - 1 && q.k !== "net") s += `<line x1="${(x + bwi).toFixed(1)}" x2="${(x + bw).toFixed(1)}" y1="${Y(q.y1).toFixed(1)}" y2="${Y(q.y1).toFixed(1)}" stroke="${COL.taupe}" stroke-dasharray="2 2"/>`;
+        s += T(x + bwi / 2, top - 5, sm(q.v), `font-size="11.5" font-weight="700" text-anchor="middle" fill="${q.k === "net" ? colr.net : COL.ink}"`);
+        const words = q.lab.split(" "), half = Math.ceil(words.length / 2), l1 = words.length > 2 ? words.slice(0, half).join(" ") : q.lab, l2 = words.length > 2 ? words.slice(half).join(" ") : "";
+        s += T(x + bwi / 2, h - b + 16, l1, `font-size="10.5" text-anchor="middle" fill="${COL.ink2}"`) + (l2 ? T(x + bwi / 2, h - b + 29, l2, `font-size="10.5" text-anchor="middle" fill="${COL.ink2}"`) : "");
+      });
+      svg9.innerHTML = s;
+      rangeP.innerHTML = `At ${Math.round(e0.cups.lo)}–${Math.round(e0.cups.hi)} cups a day: <b>${sm(A.netLo)}</b> to <b>${sm(hi)}</b> a month. Neighbour outlet B, ${PIN[st.pin].neighbour.km.toFixed(1)} km away, loses ${pct(PIN[st.pin].neighbour.share)} of its sales. ` +
+        `Delivery fees: ${pct(st.deliveryShare)} of cups × ${pct(e0.commission)} commission. Counter: the one-machine setup, normal-day roster (counter model).`;
+      const why = A.rec === "skip" ? `net profit is not positive at ${Math.round(st.cups)} cups a day` : A.rec === "open" ? `positive even at ${Math.round(e0.cups.lo)} cups a day, the low end of the range`
+        : `positive at ${Math.round(st.cups)} cups a day, negative at ${Math.round(e0.cups.lo)}, the low end: test it before a full lease`;
+      ["open", "pilot", "skip"].forEach(k => rec.classList.toggle(k, k === A.rec));
+      rec.innerHTML = `<div class="k">Step 6 · Recommendation</div><div class="call">${A.rec[0].toUpperCase() + A.rec.slice(1)}</div><div>${why}.</div>` +
+        `<dl><dt>Site score</dt><dd>${Math.round(score())} / 100 (slide 08)</dd>` +
+        `<dt>Payback</dt><dd>${A.payback ? `≈ ${Math.round(A.payback.base)} months on ${sm(st.setup)}` : "none: not profitable"}</dd></dl>`;
+    }
+    fns.push(profit);
+    printers.push(() => { Object.assign(st, { pin: "A", sc: { ...sc0 }, cups: e0.cups.base, rent: e0.rent, deliveryShare: e0.deliveryShare, setup: e0.setup }); step8 = 5; redraw(); });
+    redraw();
+  })();
+
   /* ---------------------------------------------------------------- expand an explainer to full screen */
   // The explainer panel is enlarged in place, over the rest of the slide, so the slide's own styles and every
   // control keep working; the browser goes full screen too. Esc or the button returns. On slide 05 the pin's
