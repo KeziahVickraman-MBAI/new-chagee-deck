@@ -39,14 +39,15 @@
 
   function peakHour(P) { return P.share.indexOf(Math.max(...P.share)); }
 
-  function create(Sim, P, setup, { surge = P.surgeDefault, seed = P.seed, warm = true, walkBack, order = "slow_first" } = {}) {
+  // opts.staff (optional) overrides the roster for the peak hour; the storyboard deck sets it from counter.js.
+  function create(Sim, P, setup, { surge = P.surgeDefault, seed = P.seed, warm = true, walkBack, order = "slow_first", staff: staffIn } = {}) {
     if (!(walkBack > 0)) throw new Error("store.create: opts.walkBack (illustration.walk_back_speed) is required");
     const pl = Sim.plan(P, setup), h = peakHour(P);
     const mStations = setup === "all_machine" ? P.stations : setup === "mixed" ? P.mixedMachine : [];
     const R = Sim.rng(Sim.hash(seed, 7)), RT = Sim.rng(Sim.hash(seed, 8));
     const base = Sim.dailyBase(P), mult = P.surgeMult[surge];
     const lamOf = hr => base * P.share[hr] * mult / 3600;                    // cups per second
-    const staff = setup === "all_machine" ? 0 : pl.rosterPlan[h];
+    const staff = setup === "all_machine" ? 0 : (staffIn ?? pl.rosterPlan[h]);
     const speeds = Sim.workerSpeeds(staff, P.spread);                       // slowest first (Week 5's order)
     if (order === "fast_first") speeds.reverse();                            // the Week 5 counter-example
     const capNom = Sim.nominalCap(pl, staff);                                // cups per minute

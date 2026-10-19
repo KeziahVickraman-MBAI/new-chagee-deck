@@ -74,6 +74,20 @@ data.defaults = { signal: sig, removeHype: noHype, u: b0.u, band: b0 };
 data.provision = { none: prov(P0.uNone), def: prov(b0.u), strong: prov(P0.uStrong) };
 for (const k in data.provision) delete data.provision[k].curve;
 
+// Staff-optimisation slide (sim/staffing.js): steady demand and the opening-week surge at our defaults.
+{
+  const Staff = require("./staffing.js");
+  const ev = e => e && { wait: e.wait, sl: e.sl, util: e.util, worstWait: e.worstWait, cov: e.cov };
+  const one = over => {
+    const r = Staff.run({ ...Staff.inputs(RAW, S, over), uHigh: b0.u });
+    return { lam: r.inp.lam, req: r.req, feasible: r.sched.feasible, complete: r.sched.complete, hours: r.sched.hours,
+             cost: r.cost, shifts: (r.sched.shifts || []).map(x => ({ start: x.start, len: x.len, brk: x.brk })),
+             base: r.base && { hours: r.base.hours, cost: r.base.cost, ...ev(r.base) }, at: ev(r.at), high: ev(r.high),
+             mu: r.inp.mu, serviceSec: r.inp.serviceSec, handSec: r.inp.handSec };
+  };
+  data.staffing = { steady: one({}), surge: one({ hype: true }) };
+}
+
 // ---------------- brief-v2: break-even triggers, volume curve, machine-speed dependency ----------------
 const u0 = S.defaultU(P0);
 const PAIRS = [
@@ -129,7 +143,7 @@ for (const g of Object.keys(P0.surgeMult)) {
   const gapAt = P => { const r = S.runPoint(P, S.defaultU(P), surge0, P.seed, P.draws); return r.mixed.costPerCup - r.all_human.costPerCup; };
   const base = gapAt(P0), rows = [];
   for (const [sec, o] of Object.entries(RAW)) {
-    if (sec.startsWith("_")) continue;
+    if (sec.startsWith("_") || sec === "staffing") continue;   // staffing slide only; never in the cost model
     for (const [key, a] of Object.entries(o)) {
       if (!a || typeof a !== "object" || !Array.isArray(a.range) || a.range.length !== 2 || typeof a.range[0] !== "number") continue;
       const at = x => {

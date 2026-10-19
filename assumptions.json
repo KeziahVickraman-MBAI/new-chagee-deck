@@ -37,7 +37,15 @@
     "L-mosimtec": "MOSIMTEC, Winter Simulation Conference 2025: store digital twins replicate existing layouts. (brief.md section 9)",
     "L-slate": "Slate, Aug 2021: bubble tea shaker robot needed about one worker vs four to six; two earlier all-robot shops closed within about a year. (brief.md section 9)",
     "I-leeyen": "INFORMAL - call with Lee Yen. Do not cite without checking with her: Yunnan standard sourcing, GM-led new-market forecasting, app-only ordering with tourist exceptions, sub-one-minute fulfilment target.",
-    "L-xrates": "X-Rates monthly averages, https://x-rates.com/average/?amount=1&from=USD&to=SGD&year=2026 (fetched 4 Oct 2026). September 2026 USD to SGD average 1.272467 (30 days). Secondary aggregator; used only for converting the earlier USD assumptions."
+    "L-xrates": "X-Rates monthly averages, https://x-rates.com/average/?amount=1&from=USD&to=SGD&year=2026 (fetched 4 Oct 2026). September 2026 USD to SGD average 1.272467 (30 days). Secondary aggregator; used only for converting the earlier USD assumptions.",
+    "L-koalagains": "KoalaGains, 'CHA business and moat', https://koalagains.com/stocks/NASDAQ/CHA/business-and-moat (SECONDARY - flag when used): FY2025 net revenue about 88% from the franchise (master franchise) model and about 12% from company-owned stores, the latter growing fastest. Taken from the team's ideation doc (OPIM 639_ Ideation Process), not re-checked for this deck.",
+    "L-yfchuhai": "YF Chuhai, https://www.yfchuhai.com/article/9751.html: Chagee's leaf supply chain is in China; it sources only two ingredients locally, fresh milk and fruit. Taken from the team's ideation doc (OPIM 639_ Ideation Process), not re-checked for this deck.",
+    "L-sec20f": "Chagee Holdings Form 20-F for FY2025, SEC EDGAR, https://www.sec.gov/Archives/edgar/data/2013649/000110465926050766/cha-20251231x20f.htm: separate centralized and regional warehouses to lower storage and logistics costs. Taken from the team's ideation doc (OPIM 639_ Ideation Process), not re-checked for this deck.",
+    "L-sg-directory": "Chagee Singapore store directory, mapped by the team (44 locations, checked 15 Oct 2026); Mothership, Sep 2026, https://mothership.sg/2026/09/chagee-more-heartland-stores-singapore-eugene-lee/ gives the same count. Taken from the team's ideation doc (OPIM 639_ Ideation Process), not re-checked for this deck.",
+    "I-sg-owned": "INFORMAL - team check recorded as a comment in the ideation doc: Singapore is company-owned and run by Chagee corporate, usual for new-entry and smaller markets. The underlying source is not named; confirm before presenting.",
+    "I-sg-groundfloor": "INFORMAL - quote in the team's ideation doc (Chagee Singapore's Lee: 'Whenever you see a Chagee, it's always on the first floor'; kiosk-style outlets in basements and MRT stations at entry in 2019). The article is not named in the doc; confirm the source before quoting.",
+    "I-team-automation": "INFORMAL - team research (Oct 2026): Chagee's counters are heading towards machines making the drink while people tag the order and hand it over; consistent with I-leeyen's 'push towards app-to-machine automation, sub-one-minute fulfilment'. Source to be added before it is cited on a slide.",
+    "I-team-app-first": "INFORMAL - team observation in the ideation doc: Chagee Singapore sells mainly through its app, with minimal order kiosks in outlets. Confirm before citing."
   },
   "facts": {
     "_note": "Chagee facts quoted on slides. Not assumptions: each carries its ledger source and appears with that source in the speaker notes.",
@@ -82,6 +90,24 @@
       "unit": "cups (reported, '1,000+')",
       "source": "L-gabgrowth",
       "rationale": "Secondary; one store, one day."
+    },
+    "sg_outlets": {
+      "value": 44,
+      "unit": "outlets in Singapore",
+      "source": "L-sg-directory",
+      "rationale": "Store count used on the storyboard deck. The doc also cites 46 (VnExpress, earlier); the later directory count is used."
+    },
+    "revenue_share_franchise_fy2025": {
+      "value": 0.88,
+      "unit": "share of FY2025 net revenue",
+      "source": "L-koalagains",
+      "rationale": "Secondary source; flagged wherever shown."
+    },
+    "revenue_share_company_owned_fy2025": {
+      "value": 0.12,
+      "unit": "share of FY2025 net revenue",
+      "source": "L-koalagains",
+      "rationale": "Secondary source; flagged wherever shown. Singapore sits in this group (I-sg-owned)."
     }
   },
   "predict": {
@@ -556,70 +582,125 @@
       "unit": "years",
       "range": null,
       "source": "assumption",
-      "rationale": "APPROVED (user, 13 Oct 2026).Length of the A4 table, matching the five-year horizon of the course examples of a revenue and cost analysis."
+      "rationale": "APPROVED (user, 13 Oct 2026). Length of the A4 table, matching the five-year horizon of the course examples of a revenue and cost analysis."
     },
     "opening_year_share": {
       "value": 0.5,
       "unit": "share of a year a store trades in its opening year",
       "range": null,
       "source": "assumption",
-      "rationale": "APPROVED (user, 13 Oct 2026).Mid-year convention: openings spread evenly through the year, so a new store earns half a year of counter saving in its opening year. Openings are held flat at benefit.overseas_stores_per_year every year: L-jiemian covers 2026 only, so we assume no growth."
+      "rationale": "APPROVED (user, 13 Oct 2026). Mid-year convention: openings spread evenly through the year, so a new store earns half a year of counter saving in its opening year. Openings are held flat at benefit.overseas_stores_per_year every year: L-jiemian covers 2026 only, so we assume no growth."
     },
     "specialist_day_rate": {
       "value": 1000,
       "unit": "SGD per person-day",
       "range": null,
       "source": "assumption",
-      "rationale": "APPROVED (user, 13 Oct 2026).Blended rate for data, software and analyst staff, in-house or outsourced. No ledger figure; illustrative. Same structure as the course examples (people x days x rate)."
+      "rationale": "APPROVED (user, 13 Oct 2026). Blended rate for data, software and analyst staff, in-house or outsourced. No ledger figure; illustrative. Same structure as the course examples (people x days x rate)."
     },
     "working_days_per_month": {
       "value": 21,
       "unit": "days/month",
       "range": null,
       "source": "assumption",
-      "rationale": "APPROVED (user, 13 Oct 2026).Standard working month, used to turn person-months into person-days."
+      "rationale": "APPROVED (user, 13 Oct 2026). Standard working month, used to turn person-months into person-days."
     },
     "build_people": {
       "value": 4,
       "unit": "people",
       "range": null,
       "source": "assumption",
-      "rationale": "APPROVED (user, 13 Oct 2026).Year 1 build team, one per gate: demand forecast (Predict), ordering calculator (Provision), counter comparison (Counter), review dashboard (Review)."
+      "rationale": "APPROVED (user, 13 Oct 2026). Year 1 build team, one per gate: demand forecast (Predict), ordering calculator (Provision), counter comparison (Counter), review dashboard (Review)."
     },
     "build_months": {
       "value": 6,
       "unit": "months",
       "range": null,
       "source": "assumption",
-      "rationale": "APPROVED (user, 13 Oct 2026).Build and pilot in one market before roll-out."
+      "rationale": "APPROVED (user, 13 Oct 2026). Build and pilot in one market before roll-out."
     },
     "integration_one_time": {
       "value": 250000,
       "unit": "SGD, one time",
       "range": null,
       "source": "assumption",
-      "rationale": "APPROVED (user, 13 Oct 2026).Connecting POS sales, app membership sign-ups and supplier order feeds, plus hardware and software set-up. Lump sum, illustrative."
+      "rationale": "APPROVED (user, 13 Oct 2026). Connecting POS sales, app membership sign-ups and supplier order feeds, plus hardware and software set-up. Lump sum, illustrative."
     },
     "maintenance_people": {
       "value": 2,
       "unit": "full-time people, every year",
       "range": null,
       "source": "assumption",
-      "rationale": "APPROVED (user, 13 Oct 2026).Keep the tools running, refresh assumptions, support market teams."
+      "rationale": "APPROVED (user, 13 Oct 2026). Keep the tools running, refresh assumptions, support market teams."
     },
     "platform_per_store_month": {
       "value": 50,
       "unit": "SGD per store in operation per month",
       "range": null,
       "source": "assumption",
-      "rationale": "APPROVED (user, 13 Oct 2026).Cloud, licences and dashboards for each store using the gates."
+      "rationale": "APPROVED (user, 13 Oct 2026). Cloud, licences and dashboards for each store using the gates."
     },
     "review_days_per_opening": {
       "value": 1,
       "unit": "analyst person-days per new store",
       "range": null,
       "source": "assumption",
-      "rationale": "APPROVED (user, 13 Oct 2026).Gate 4: build the updated scenario from observed inputs and compare it with the original plan."
+      "rationale": "APPROVED (user, 13 Oct 2026). Gate 4: build the updated scenario from observed inputs and compare it with the original plan."
+    }
+  },
+  "staffing": {
+    "_note": "Staff-optimisation slide only (sim/staffing.js). Never feeds the cost-per-cup model. Reuses existing inputs where they exist: hourly demand shares, cups per day, human seconds per cup with coordination and new-staff speed, the minimum all-human crew, the capacity safety margin as the demand-variability buffer, the target wait, the wage and the opening hype. Excluded from the A2 sensitivity sweep.",
+    "max_staff_available": {
+      "value": 8,
+      "unit": "people who can be rostered in one day",
+      "range": null,
+      "source": "assumption",
+      "rationale": "PROPOSED 14 Oct 2026, awaiting user approval. Labour availability: at most this many shifts in a day (one shift per person). Illustrative; no Chagee roster figure."
+    },
+    "shift_min_hours": {
+      "value": 4,
+      "unit": "hours",
+      "range": null,
+      "source": "assumption",
+      "rationale": "PROPOSED 14 Oct 2026, awaiting user approval. Shortest shift a person is rostered for. Illustrative, not a legal minimum."
+    },
+    "shift_max_hours": {
+      "value": 8,
+      "unit": "hours",
+      "range": null,
+      "source": "assumption",
+      "rationale": "PROPOSED 14 Oct 2026, awaiting user approval. Longest shift, break included. Illustrative."
+    },
+    "break_after_hours": {
+      "value": 6,
+      "unit": "hours",
+      "range": null,
+      "source": "assumption",
+      "rationale": "PROPOSED 14 Oct 2026, awaiting user approval. Shifts longer than this include one break in the middle of the shift. Illustrative house rule, not a statement of Singapore employment law."
+    },
+    "break_minutes": {
+      "value": 30,
+      "unit": "minutes",
+      "range": null,
+      "source": "assumption",
+      "rationale": "PROPOSED 14 Oct 2026, awaiting user approval. Length of that break, in whole half-hours. The person is off the counter, but the break is counted as paid time (conservative for cost)."
+    },
+    "service_level_target": {
+      "value": 0.8,
+      "unit": "share of customers who wait no longer than service.target_wait_minutes",
+      "range": [
+        0.6,
+        0.95
+      ],
+      "source": "assumption",
+      "rationale": "PROPOSED 14 Oct 2026, awaiting user approval. Service-level requirement in every hour; the range is the slide slider. The wait limit itself is the existing service.target_wait_minutes."
+    },
+    "max_utilisation": {
+      "value": 0.85,
+      "unit": "share of staffed capacity",
+      "range": null,
+      "source": "assumption",
+      "rationale": "PROPOSED 14 Oct 2026, awaiting user approval. No hour is planned busier than this, so staff are not run flat out even when the wait target would allow it. Illustrative."
     }
   },
   "simulation": {
@@ -818,6 +899,324 @@
       "range": null,
       "source": "assumption",
       "rationale": "Shows which assumptions decide the headline; feeds the 'what could shift the balance' panel and Q&A. No pass/fail."
+    }
+  },
+  "storyboard": {
+    "_note": "Storyboard deck only (storyboard/, sim/counter.js). Never feeds the cost model. Day types reuse surge.surge_multiplier and surge.surge_hours: the multiplier lands on the two busiest hours. In this deck the busier day is one the forecast can see coming (calendar, promo, launch), so the roster can be set for it.",
+    "day_type_labels": {
+      "value": {
+        "none": "Normal day",
+        "moderate": "Busy day",
+        "large": "Event day"
+      },
+      "unit": "text",
+      "range": null,
+      "source": "assumption",
+      "rationale": "Labels for the surge keys. Busy = weekend or holiday; event = launch, collab or promo. Illustrative."
+    },
+    "day_type_default": {
+      "value": "large",
+      "unit": "text",
+      "range": null,
+      "source": "assumption",
+      "rationale": "Printed state of the forecast and counter slides: the day where the roster decision matters."
+    },
+    "staff_choices": {
+      "value": [
+        1,
+        6
+      ],
+      "unit": "people on the counter in the peak hour",
+      "range": null,
+      "source": "assumption",
+      "rationale": "People range on the side-by-side counter slides (was 1-4; raised so an all-by-hand counter can be tried above its event-day crew of 4). staffing.max_staff_available is the shift-planning limit and is not used here."
+    },
+    "print_minute": {
+      "value": 20,
+      "unit": "minute of the peak hour shown in print",
+      "range": null,
+      "source": "assumption",
+      "rationale": "The printed snapshot of the counter animation."
+    },
+    "pilot_outlets": {
+      "value": 3,
+      "unit": "outlets",
+      "range": null,
+      "source": "assumption",
+      "rationale": "Next-step pilot size, from the review comments in the ideation doc."
+    },
+    "split_presets": {
+      "value": {
+        "today": {
+          "label": "Today's counter",
+          "robots": "today"
+        },
+        "heading": {
+          "label": "Machines make the drink",
+          "robots": [
+            "cup_ice",
+            "tea_milk",
+            "topping_finish",
+            "shake_seal"
+          ]
+        },
+        "all_hand": {
+          "label": "All by hand",
+          "robots": []
+        },
+        "all_robot": {
+          "label": "All robots",
+          "robots": "all"
+        }
+      },
+      "unit": "robot stations per split ('today' = stations.mixed_machine_stations, 'all' = every station)",
+      "range": null,
+      "source": "I-team-automation",
+      "rationale": "The splits the GM compares. 'Machines make the drink' follows the team's research: robots do cup and ice, tea and milk, toppings, shake and seal; people tag the order and hand it over. All-by-hand and all-robots are the two bounds."
+    },
+    "gm_compare_default": {
+      "value": [
+        "today",
+        "heading"
+      ],
+      "unit": "split preset keys, options A and B",
+      "range": null,
+      "source": "assumption",
+      "rationale": "Opening and printed state of the GM slide."
+    },
+    "walkaway_target": {
+      "value": 0.02,
+      "unit": "share of peak-hour orders that walk away",
+      "range": [
+        0.0,
+        0.1
+      ],
+      "source": "assumption",
+      "rationale": "The GM's service rule for the split table: the fewest people (from the forecast roster up) and the better sharing rule that keep peak-hour walk-aways at or under this share. Illustrative."
+    },
+    "extra_staff_search": {
+      "value": 3,
+      "unit": "people above the forecast roster tried by the split table",
+      "range": null,
+      "source": "assumption",
+      "rationale": "Search depth only."
+    }
+  },
+  "sitepick": {
+    "_note": "Slide 05 new-store forecast only (sim/sitepick.js). SYNTHETIC app demand on the team's Singapore map (sim/sg_geo.json, image pixels). Never feeds the cost model. Hub positions are the map's place labels; weights are illustrative, not population data.",
+    "km_per_px": {
+      "value": 0.033,
+      "unit": "km per map pixel",
+      "range": null,
+      "source": "assumption",
+      "rationale": "The island spans about 1,420 px on the map and roughly 47 km west to east. The map is not to scale, so distances are approximate."
+    },
+    "hubs": {
+      "value": [
+        {
+          "name": "Woodlands",
+          "x": 843,
+          "y": 123,
+          "weight": 1.0
+        },
+        {
+          "name": "Sembawang",
+          "x": 946,
+          "y": 75,
+          "weight": 0.5
+        },
+        {
+          "name": "Yishun",
+          "x": 963,
+          "y": 146,
+          "weight": 0.9
+        },
+        {
+          "name": "Punggol",
+          "x": 1240,
+          "y": 163,
+          "weight": 0.9
+        },
+        {
+          "name": "Sengkang",
+          "x": 1121,
+          "y": 230,
+          "weight": 1.0
+        },
+        {
+          "name": "Hougang",
+          "x": 1187,
+          "y": 265,
+          "weight": 0.8
+        },
+        {
+          "name": "Pasir Ris",
+          "x": 1343,
+          "y": 247,
+          "weight": 0.6
+        },
+        {
+          "name": "Tampines",
+          "x": 1419,
+          "y": 305,
+          "weight": 1.1
+        },
+        {
+          "name": "Bedok",
+          "x": 1447,
+          "y": 426,
+          "weight": 0.9
+        },
+        {
+          "name": "Changi",
+          "x": 1529,
+          "y": 262,
+          "weight": 0.4
+        },
+        {
+          "name": "Paya Lebar",
+          "x": 1266,
+          "y": 396,
+          "weight": 0.7
+        },
+        {
+          "name": "Serangoon",
+          "x": 1085,
+          "y": 314,
+          "weight": 0.6
+        },
+        {
+          "name": "Bishan",
+          "x": 927,
+          "y": 299,
+          "weight": 0.8
+        },
+        {
+          "name": "Central city",
+          "x": 990,
+          "y": 470,
+          "weight": 1.6
+        },
+        {
+          "name": "Queenstown",
+          "x": 771,
+          "y": 437,
+          "weight": 0.6
+        },
+        {
+          "name": "Bukit Panjang",
+          "x": 759,
+          "y": 244,
+          "weight": 0.6
+        },
+        {
+          "name": "Bukit Batok",
+          "x": 690,
+          "y": 290,
+          "weight": 0.6
+        },
+        {
+          "name": "Tengah",
+          "x": 577,
+          "y": 226,
+          "weight": 0.6
+        },
+        {
+          "name": "Jurong",
+          "x": 556,
+          "y": 339,
+          "weight": 1.1
+        },
+        {
+          "name": "Choa Chu Kang",
+          "x": 650,
+          "y": 190,
+          "weight": 0.7
+        }
+      ],
+      "unit": "map pixels and relative weight",
+      "range": null,
+      "source": "assumption",
+      "rationale": "Where app sessions concentrate: the map's place labels as town centres. Tengah and Choa Chu Kang are included with no outlet nearby, as new or growing towns. Illustrative."
+    },
+    "hub_spread_km": {
+      "value": 0.8,
+      "unit": "km, standard deviation around a hub",
+      "range": null,
+      "source": "assumption",
+      "rationale": "Size of a town's demand area."
+    },
+    "events": {
+      "value": 3000,
+      "unit": "synthetic app-intent dots on the map",
+      "range": null,
+      "source": "assumption",
+      "rationale": "Each dot stands for a fixed number of app sessions a day; the number is set by calibration (see calibration_cups_per_outlet)."
+    },
+    "background_share": {
+      "value": 0.15,
+      "unit": "share of dots spread evenly over land",
+      "range": null,
+      "source": "assumption",
+      "rationale": "Demand outside the town centres."
+    },
+    "walk_km": {
+      "value": 1.2,
+      "unit": "km a customer will walk to collect",
+      "range": [
+        0.6,
+        2.0
+      ],
+      "source": "assumption",
+      "rationale": "Slider. A session whose nearest outlet is further than this is logged as a 'no store nearby' search; it also sets the distance decay (decay_share). Tuned with decay_share and hub_spread_km so about half of app intent is unmet and the middle 80% of outlets sell roughly 150 to 1,050 cups a day around the calibrated average."
+    },
+    "decay_share": {
+      "value": 1.0,
+      "unit": "distance decay length as a share of walk_km",
+      "range": null,
+      "source": "assumption",
+      "rationale": "Pull of a store = exp(-distance / (walk_km x decay_share)): a store at the walking limit pulls exp(-1), about 37%, of one next door. App ordering ahead lets customers collect along a commute, so the pull fades slowly."
+    },
+    "outside_option": {
+      "value": 0.3,
+      "unit": "pull of not buying, against a store next door (= 1)",
+      "range": null,
+      "source": "assumption",
+      "rationale": "Proximity split (Huff-style): share bought at store j = pull_j / (outside + sum of pulls). A session next to one store converts 1 / 1.3, about 77%."
+    },
+    "dbscan_eps_km": {
+      "value": 0.6,
+      "unit": "km",
+      "range": [
+        0.3,
+        1.2
+      ],
+      "source": "assumption",
+      "rationale": "Slider. DBSCAN neighbourhood radius for 'no store nearby' searches."
+    },
+    "dbscan_min_points": {
+      "value": 15,
+      "unit": "dots within eps to form a cluster core",
+      "range": [
+        5,
+        40
+      ],
+      "source": "assumption",
+      "rationale": "Slider. DBSCAN minimum points."
+    },
+    "calibration_cups_per_outlet": {
+      "value": "store.cups_per_store_per_year / store.open_days_per_year",
+      "unit": "cups/day",
+      "range": null,
+      "source": "assumption",
+      "rationale": "The dot weight is set so the average existing outlet sells the deck's cups per day. A pin's forecast is then in the same units."
+    },
+    "candidates_shown": {
+      "value": 3,
+      "unit": "suggested pins",
+      "range": null,
+      "source": "assumption",
+      "rationale": "Top clusters by net new cups."
     }
   }
 }

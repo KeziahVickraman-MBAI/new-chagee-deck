@@ -432,6 +432,23 @@ td.ptip:hover::after,td.ptip:focus::after{content:attr(data-tip);position:absolu
 .gc-more .dacts li.a-supply::before{background:#92400e} .gc-more .dacts li.a-format::before{background:#1e40af} .gc-more .dacts li.a-ops::before{background:#15803d}
 .gc-calc p{font-size:11px;color:var(--body);margin-bottom:3px}
 /* course concepts */
+.staff .grid{grid-template-columns:318px 1fr;gap:18px;margin-top:6px}
+.staff .points{gap:9px} .staff .point h3{font-size:14px;margin:0} .staff .point p{font-size:11.6px;line-height:1.34;margin:1px 0 0}
+.staff .explainer .caption{margin-bottom:2px}
+.sfgrid{display:grid;grid-template-columns:1fr 212px;gap:12px;align-items:start}
+.sfh{margin:3px 0 0;font:700 9.5px/1.2 var(--mono);text-transform:uppercase;letter-spacing:.04em;color:var(--ink)}
+.sfh span{font-weight:600;color:var(--muted);margin-left:4px;text-transform:none;letter-spacing:0;font-family:inherit;font-style:italic}
+.sfctl{display:grid;grid-template-columns:1fr 1fr;gap:0 14px;margin-top:2px}
+.sfctl .controls{margin:1px 0} .sfctl label{font-size:10.5px} .sfctl .val{font-size:10px;min-width:74px}
+.sfkpi h4{margin:6px 0 1px;font:700 9.5px/1.2 var(--mono);letter-spacing:.04em;color:var(--muted)}
+.sfkpi .big{font-size:24px} .sfkpi .stat{font-size:11px} .sfkpi .note{font-size:10px;margin:5px 0 0}
+.sfok{margin:4px 0;font-size:10.5px;font-weight:700;color:var(--green);line-height:1.3}
+.sfbad{margin:4px 0;font-size:10.5px;font-weight:700;color:var(--red);line-height:1.3}
+.sflegend{display:flex;flex-wrap:wrap;gap:3px 10px;font-size:9.5px;color:var(--muted)}
+.sflegend i{display:inline-block;width:14px;height:0;margin-right:4px;vertical-align:middle}
+.sflegend .lq{border-top:2px dashed #23272f} .sflegend .lc{height:8px;background:var(--c-human);opacity:.45}
+.sflegend .lf{border-top:2px dotted var(--red)} .sflegend .ls{border-top:1.5px dashed #6b7280}
+.staff .view{margin-top:6px;padding:7px 14px 8px}
 .cst{display:inline-block;margin-left:4px;padding:0 5px;border:1px solid var(--line);border-radius:3px;font:600 8.5px/1.5 var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.03em;vertical-align:1px}
 .ginv{grid-template-columns:330px 1fr;gap:20px;margin-top:6px}
 .chain{display:flex;flex-direction:column;gap:4px;margin-bottom:6px}
@@ -719,7 +736,7 @@ addEventListener("mousemove",wake); addEventListener("keydown",wake); wake();
 __W5__
 __MECHJS__
 __ENGINE__
-const WIDGETS={playbook:playbookWidget,brigade:brigadeWidget,volcost:volcostWidget,storefront:storefrontWidget,serve:serveWidget,scope:scopeWidget,aimap:aimapWidget,where:whereWidget,band:bandWidget,stock:stockWidget,cross:crossWidget,benefit:benefitWidget};
+const WIDGETS={staffing:staffingWidget,playbook:playbookWidget,brigade:brigadeWidget,volcost:volcostWidget,storefront:storefrontWidget,serve:serveWidget,scope:scopeWidget,aimap:aimapWidget,where:whereWidget,band:bandWidget,stock:stockWidget,cross:crossWidget,benefit:benefitWidget};
 document.querySelectorAll("[data-widget]").forEach(el=>WIDGETS[el.dataset.widget](el));
 riskToggles();
 applyEdits();

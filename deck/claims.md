@@ -19,20 +19,20 @@ Slide numbers follow the progress rail (on-stage slides); A1-A4 are appendix pag
 
 | ID | Status | Cited on slides |
 |---|---|---|
-| L-jiemian | OK | 1, 3, 10, A4 |
+| L-jiemian | OK | 1, 3, 11, A4 |
 | L-gabgrowth | SECONDARY | 1, 3 |
-| L-unsw | OK | 1, 7, 10, A2 |
-| L-mom-pwm | OK | 8, 9, A2 |
-| L-cpf | OK | 8, 9, A2 |
-| L-mom-ows | OK | 8, 9 |
-| L-sdl | OK | 8, 9 |
-| L-mom-leave | OK | 8, 9 |
-| L-mom-ph | OK | 8, 9 |
+| L-unsw | OK | 1, 7, 11, A2 |
+| L-mom-pwm | OK | 8, 10, A2 |
+| L-cpf | OK | 8, 10, A2 |
+| L-mom-ows | OK | 8, 10 |
+| L-sdl | OK | 8, 10 |
+| L-mom-leave | OK | 8, 10 |
+| L-mom-ph | OK | 8, 10 |
 | L-prn | OK | 1, 2, 4 |
 | L-prometheus | SECONDARY | - |
 | L-chainreact | SECONDARY | - |
 | L-triunity | OK | - |
-| L-cyberrt | OK | 1, 7, 10, A2 |
+| L-cyberrt | OK | 1, 7, 11, A2 |
 | L-gongcha | OK | A2 |
 | L-starbucks | OK | 3 |
 | L-mosimtec | OK | A2 |
@@ -47,22 +47,23 @@ Slide numbers follow the progress rail (on-stage slides); A1-A4 are appendix pag
 | Members order through the app; app-only ordering, with tourist exceptions | 1, 3 | I-leeyen | CHECK: informal call; the Predict slide depends on it |
 | New-market forecasting is judgement-led by a local General Manager | 1 | I-leeyen | CHECK: informal call |
 | One closed app-to-store channel; no third-party sellers | 2 | brief.md section 3, I-leeyen | CHECK: our reading |
-| Chagee's counter today is semi-automated, modelled as our mixed setup | 7, 10 | L-unsw, L-cyberrt | CHECK: our reading of public sources |
+| Chagee's counter today is semi-automated, modelled as our mixed setup | 7, 11 | L-unsw, L-cyberrt | CHECK: our reading of public sources |
 | Chagee sources tea and milk directly for domestic operations; overseas origin not claimed | 1, 4 | L-prn | OK for domestic; overseas deliberately not claimed |
 
 ## Model figures (illustrative)
 
 | Claim | Slides | Source | Status |
 |---|---|---|---|
-| Labour cost S$15.06 per hour worked, fully loaded | 8, 9 | L-mom-pwm, L-cpf, L-sdl, L-mom-leave, L-mom-ph | MODEL |
-| Cost per cup at our forecast: all-human S$0.65, mixed S$0.66; gap S$0.02 | 8, 9 | sim/ volumeCurve | MODEL |
-| Mixed overtakes all-human above about 678 cups a day, a wage of S$15.97, or below a machine cost of S$1,800 a month | 8, 9 | sim/ breakEven | MODEL |
-| Full automation overtakes mixed only above about 1,820 cups a day (a step) | 8, 9 | sim/ breakEven | MODEL |
+| Labour cost S$15.06 per hour worked, fully loaded | 8, 10 | L-mom-pwm, L-cpf, L-sdl, L-mom-leave, L-mom-ph | MODEL |
+| Cost per cup at our forecast: all-human S$0.65, mixed S$0.66; gap S$0.02 | 8, 10 | sim/ volumeCurve | MODEL |
+| Mixed overtakes all-human above about 678 cups a day, a wage of S$15.97, or below a machine cost of S$1,800 a month | 8, 10 | sim/ breakEven | MODEL |
+| Full automation overtakes mixed only above about 1,820 cups a day (a step) | 8, 10 | sim/ breakEven | MODEL |
 | Peak-hour time to serve: today's counter about 2.6 minutes, all-robot about 49 seconds (median) | 7 | sim/ serveTimes (cost model) | MODEL |
 | First fresh-milk delivery: about 788 L on steady demand, about 1,182 L if the opening surge is real | 5 | sim/ provision (same optimum in days of demand) | MODEL |
-| Best opening milk order holds above base unless waste costs over S$25.47 a litre | 5, 9 | sim/ milkTrigger | MODEL |
+| Staffing at our defaults: 24 paid hours a day at steady demand (same as a fixed crew); 30 against 36 in the opening weeks, about S$90 a day | 9 | sim/staffing.js (Erlang C, exact shift search); staffing assumptions PROPOSED | MODEL |
+| Best opening milk order holds above base unless waste costs over S$25.47 a litre | 5, 10 | sim/ milkTrigger | MODEL |
 | Best opening order costs S$1,064 with no signal against S$694 at the default band | 5 | sim/ provision | MODEL |
-| Choosing each store's counter instead of mixed everywhere: about S$455k a year in counter costs plus S$74k once in fresh-milk opening stock (the only inventory item quantified) | 10, A4 | sim/ volumeCurve, breakEven; openings spread evenly (illustrative) | MODEL |
+| Choosing each store's counter instead of mixed everywhere: about S$455k a year in counter costs plus S$74k once in fresh-milk opening stock (the only inventory item quantified) | 11, A4 | sim/ volumeCurve, breakEven; openings spread evenly (illustrative) | MODEL |
 | Week 5 check: pooled formula 4.7% and 6.8% above the Week 5 engine; the test fails | 8 | sim/ tests | MODEL |
 | Band narrows from ±50% to ±15% with signal | 3 | assumption, shown as a sensitivity | MODEL |
 
@@ -86,13 +87,14 @@ Slide numbers follow the progress rail (on-stage slides); A1-A4 are appendix pag
 - Quantities, lead times, shelf lives, minimum orders or origin for tea, other ingredients or packaging.
 - Inventory savings beyond fresh milk: tea, other ingredients and packaging have not been estimated.
 - That inventory and counter are optimised together: the prototype treats them separately.
+- That Chagee uses any particular staffing or rostering system: the staffing slide is illustrative.
 
 ## Likely Q&A: short answers
 
 1. **Is this only about milk?** No. The plan covers the whole store: demand for every drink, and an inventory plan for tea, milk and alternatives, other ingredients and packaging. Fresh milk is the one item we quantify, as a worked example of the ordering trade-off; the others need recipe and supplier data we do not have.
 2. **What does the bucket brigade add?** One service-capacity mechanism: how a crew shares work in a surge, and why fixed machines queue at a bottleneck or sit idle. It informs the counter choice; it is not the solution.
 3. **Why not a marketplace?** Chagee runs one closed app-to-store channel, so the marketplace-design topics do not apply (our reading, partly from an informal call).
-4. **So which counter should a new store open with?** No default. All-human is cheaper at our forecast by S$0.02 a cup; mixed wins once machine cost, wage, staff coordination or volume crosses a trigger (slide 9). The gap is small and the staffing model is simplified, so pilot before relying on it.
+4. **So which counter should a new store open with?** No default. All-human is cheaper at our forecast by S$0.02 a cup; mixed wins once machine cost, wage, staff coordination or volume crosses a trigger (slide 10). The gap is small and the staffing model is simplified, so pilot before relying on it.
 5. **Did uncertainty matter?** Not for the counter: mixed beats full automation at every band width in all seeds, and the all-human versus mixed choice turns on volume and input costs. The band matters for stock.
 6. **Are the serve times real?** No. They are a read-out of the cost model's peak hour; no measured serve time exists in our sources. Timing real orders would replace them.
 7. **How certain is the novelty claim?** Hedged: to our knowledge, based on public sources. Forecasting, automation and digital twins exist; simulating a store before it exists is the part we add.

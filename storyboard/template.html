@@ -1,0 +1,744 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chagee Singapore Storyboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;600&family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --red:#B8322B; --navy:#24406B; --blue:#6F86AE; --gold:#C8A96A; --taupe:#9A9387; --ice:#DCE2EC;
+  --cream:#F6F3ED; --ink:#262626; --ink2:#4A4A4A; --line:#E4DED2; --paper:#FFFFFF;
+  --serif:Garamond,"EB Garamond",Georgia,serif; --sans:Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:#E7E3DC;color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased}
+#stage{position:fixed;inset:0;overflow:hidden}
+#deck{position:absolute;left:50%;top:50%;width:1280px;height:720px;transform-origin:0 0}
+.slide{position:absolute;inset:0;width:1280px;height:720px;background:var(--paper);overflow:hidden;display:none}
+.slide.active{display:block}
+.slide.content>.inner{position:absolute;inset:0;padding:40px 72px 54px;display:flex;flex-direction:column}
+.leafart{position:absolute;right:-6px;top:-8px;width:300px;height:300px;pointer-events:none;background:url({img:leaves_right}) no-repeat right top/contain}
+.kicker{font:500 12px/1 var(--sans);letter-spacing:.2em;text-transform:uppercase;color:var(--red);margin:0 0 10px}
+.head{margin:0;max-width:960px;font:500 37px/1.1 var(--serif);color:var(--ink);letter-spacing:-.005em}
+.sub{margin:8px 0 0;max-width:900px;font:italic 400 16.5px/1.4 var(--sans);color:var(--taupe)}
+.body{flex:1;min-height:0;margin-top:18px;display:grid;grid-template-columns:1fr 318px;gap:26px}
+.body.wide{grid-template-columns:1fr}
+.panel{background:var(--cream);border-radius:12px;padding:14px 18px 12px;display:flex;flex-direction:column;min-height:0;position:relative}
+.ptop{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:30px}
+.ptitle{font:500 11px/1.2 var(--sans);letter-spacing:.16em;text-transform:uppercase;color:var(--taupe)}
+.ctl{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.btn{height:28px;padding:0 12px;border-radius:999px;border:1px solid #D8D1C3;background:#fff;color:var(--navy);
+  font:500 12px/1 var(--sans);cursor:pointer;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.btn:hover{border-color:var(--navy)}
+.btn.on{background:var(--navy);border-color:var(--navy);color:#fff}
+.btn.primary{background:var(--red);border-color:var(--red);color:#fff}
+.seg{display:inline-flex;border:1px solid #D8D1C3;border-radius:999px;overflow:hidden;background:#fff}
+.seg .btn{border:0;border-radius:0;height:26px}
+.count{font:500 12px var(--sans);color:var(--taupe);min-width:38px;text-align:center}
+.visual{flex:1;min-height:0;position:relative;margin-top:8px}
+.caps{list-style:none;margin:8px 0 0;padding:9px 0 0;border-top:1px solid var(--line);min-height:50px}
+.caps li{display:none;font:14.5px/1.42 var(--sans);color:var(--ink2)}
+.caps li.now{display:flex;gap:10px}
+.caps li .n,.num{flex:none;display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;background:var(--red);color:#fff;font:600 11px/1 var(--sans);margin-top:1px}
+[data-s]{transition:opacity .35s ease, filter .35s ease}
+.stepper [data-s]:not(.on){opacity:.16;filter:grayscale(1)}
+.cards{display:flex;flex-direction:column;gap:16px;min-height:0}
+.card{position:relative;padding-left:20px}
+.card:before{content:"";position:absolute;left:0;top:6px;width:9px;height:9px;border-radius:50%;background:var(--red)}
+.card h4{margin:0 0 3px;font:600 15px/1.25 var(--sans);color:var(--ink)}
+.card p{margin:0;font:13.5px/1.45 var(--sans);color:var(--ink2)}
+.card .src{display:block;margin-top:3px;font:11px var(--sans);color:var(--taupe)}
+.takeaway{margin-top:14px;background:var(--navy);color:#fff;border-radius:10px;padding:12px 22px;display:flex;align-items:center;gap:18px;font:15px/1.38 var(--sans)}
+.takeaway .lab{flex:none;font:600 11px/1 var(--sans);letter-spacing:.22em;color:var(--gold);padding-right:18px;border-right:1px solid rgba(255,255,255,.25)}
+.foot{position:absolute;left:72px;right:56px;bottom:18px;display:flex;align-items:center;justify-content:space-between;font:11px/1 var(--sans);color:var(--taupe)}
+.rail{display:flex;gap:12px}
+.rail span.cur{color:var(--red);font-weight:600}
+.rail span.past{color:var(--ink2)}
+.pg{font:12px var(--sans);color:var(--taupe);min-width:20px;text-align:right}
+.chip{display:inline-flex;align-items:center;padding:4px 9px;border-radius:7px;background:#fff;border:1px solid var(--line);font:500 12px/1.25 var(--sans);color:var(--navy)}
+.chip.gold{background:#FBF5E8;border-color:#E8D9B5;color:#7A6432}
+.chip.red{background:#FBEDEC;border-color:#EBC4C1;color:var(--red)}
+.tag{display:inline-block;font:600 10.5px/1 var(--sans);letter-spacing:.14em;text-transform:uppercase;padding:5px 8px;border-radius:5px}
+.tag.in{background:var(--red);color:#fff}
+.tag.out{background:#ECE8E0;color:var(--taupe)}
+.muted{color:var(--taupe)}
+.flag{font:11px/1.35 var(--sans);color:var(--taupe)}
+.printonly{display:none}
+
+/* ---------- title, agenda, section, end ---------- */
+.slide.cover .sand{position:absolute;left:0;right:0;bottom:-6px;width:100%;opacity:.9}
+.slide.cover .ll{position:absolute;left:-20px;top:-30px;width:420px}
+.slide.cover .lr{position:absolute;right:-20px;top:-30px;width:420px}
+.slide.cover .logo{position:absolute;left:50%;top:70px;transform:translateX(-50%);width:200px}
+.slide.cover .cup{position:absolute;left:50%;bottom:52px;transform:translateX(-50%);width:120px}
+.slide.cover .t{position:absolute;left:0;right:0;top:186px;text-align:center}
+.slide.cover h1{margin:0;font:500 64px/1.04 var(--serif);letter-spacing:.06em;text-transform:uppercase;color:var(--ink)}
+.slide.cover .tl{margin:14px 0 0;font:400 19px/1.3 var(--sans);letter-spacing:.24em;text-transform:uppercase;color:var(--navy)}
+.slide.cover .rule{width:72px;height:2px;background:var(--red);margin:20px auto}
+.slide.cover .meta{font:400 13.5px/1.5 var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--taupe)}
+.slide.agenda .inner{position:absolute;inset:0;padding:56px 90px}
+.slide.agenda h2{margin:0 0 26px;font:500 46px/1 var(--serif)}
+.slide.agenda ol{list-style:none;margin:0;padding:0;width:600px}
+.slide.agenda li{display:grid;grid-template-columns:56px 1fr auto;align-items:baseline;padding:11px 0;border-bottom:1px solid var(--line);cursor:pointer}
+.slide.agenda li .no{font:500 19px var(--serif);color:var(--red)}
+.slide.agenda li .nm{font:400 19.5px/1.2 var(--sans);color:var(--ink)}
+.slide.agenda li .why{display:block;font:13px/1.3 var(--sans);color:var(--taupe);margin-top:3px}
+.slide.agenda li:hover .nm{color:var(--red)}
+.slide.agenda .cups{position:absolute;right:70px;top:170px;width:470px;height:380px}
+.slide.agenda .cups img{position:absolute}
+
+/* ---------- slide-specific ---------- */
+/* 01 Chagee in Singapore */
+.sg-grid{display:grid;grid-template-columns:1fr 300px;gap:18px;height:100%}
+.revbar{display:flex;height:44px;border-radius:8px;overflow:hidden;margin-top:8px}
+.revbar div{display:flex;align-items:center;padding:0 12px;color:#fff;font:500 13px var(--sans);white-space:nowrap}
+.revbar .fr{background:var(--navy)} .revbar .co{background:var(--red);justify-content:center;padding:0}
+.revlab{display:flex;justify-content:space-between;margin-top:6px;font:12.5px var(--sans);color:var(--ink2)}
+.sgtag{margin-top:12px;display:flex;justify-content:flex-end;align-items:center;gap:10px;font:13px/1.35 var(--sans);color:var(--ink2)}
+.sgtag .pin{flex:none;width:28px;height:28px;border-radius:50%;background:var(--red);color:#fff;display:grid;place-items:center;font:600 10px var(--sans)}
+.chan{margin-top:14px;display:grid;grid-template-columns:1fr 30px 128px;align-items:center;gap:6px}
+.chan .list{display:flex;flex-direction:column;gap:6px}
+.chan .row{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);border-radius:8px;padding:6px 10px;white-space:nowrap}
+.chan .row b{font:600 13px var(--sans);color:var(--navy);min-width:82px} .chan .row span{font:12px var(--sans);color:var(--ink2)}
+.chan .arrow svg{width:30px;height:100px}
+.chan .counter{background:var(--navy);color:#fff;border-radius:10px;padding:10px 10px;text-align:center;font:600 13px/1.3 var(--sans)}
+.chan .counter small{display:block;font:400 11.5px/1.35 var(--sans);color:#D4DBE8;margin-top:4px}
+.mapbox{background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px;display:flex;flex-direction:column;height:100%}
+.mapbox img{width:100%;border-radius:6px;object-fit:contain;flex:1;min-height:0}
+.mapbox .cap{font:12.5px/1.35 var(--sans);color:var(--ink2);margin-top:7px}
+.mapbox .cap b{font:500 24px/1 var(--serif);color:var(--red);margin-right:6px}
+
+/* 02 farm to cup */
+.chain{position:relative;display:grid;grid-template-columns:repeat(5,1fr);gap:12px;height:100%}
+.chain .track{position:absolute;left:10%;right:10%;top:34px;height:2px;background:repeating-linear-gradient(90deg,var(--gold) 0 6px,transparent 6px 11px)}
+.chain .token{position:absolute;top:22px;width:26px;height:26px;margin-left:-13px;border-radius:50%;background:var(--red);box-shadow:0 0 0 5px rgba(184,50,43,.15);transition:left .7s cubic-bezier(.5,0,.2,1);z-index:2}
+.node{position:relative;display:flex;flex-direction:column;align-items:center;text-align:center}
+.node .ic{width:68px;height:68px;border-radius:50%;background:#fff;border:2px solid var(--navy);display:grid;place-items:center;z-index:1}
+.node.now .ic{border-color:var(--red);box-shadow:0 0 0 6px rgba(184,50,43,.12)}
+.node .ic svg{width:32px;height:32px;stroke:var(--navy);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.node h5{margin:10px 0 4px;font:600 14.5px/1.2 var(--sans);color:var(--ink)}
+.node .what{font:12.3px/1.38 var(--sans);color:var(--ink2);min-height:68px}
+.node .data{margin-top:8px;display:flex;flex-direction:column;gap:5px;align-items:center;width:100%}
+.node .dlab{font:600 9.5px var(--sans);letter-spacing:.16em;text-transform:uppercase;color:#7A6432;margin-top:6px}
+.node .src{font:10.5px var(--sans);color:var(--taupe);margin-top:6px}
+
+/* 03 data matrix */
+.mx{display:grid;grid-template-columns:136px repeat(4,1fr);gap:4px 6px;font:12px/1.22 var(--sans)}
+.mx .ch{background:var(--navy);color:#fff;border-radius:8px;padding:6px 10px;font:500 12px/1.15 var(--sans);display:flex;align-items:center;gap:7px;height:34px}
+.mx .ch svg{width:16px;height:16px;stroke:#fff;fill:none;stroke-width:1.8;flex:none}
+.mx .rl{display:flex;align-items:center;gap:8px;font:600 13px var(--sans);color:var(--ink)}
+.mx .rl:before{content:"";width:9px;height:9px;border-radius:50%;background:var(--red);flex:none}
+.mx .c{display:flex;align-items:center;padding:3px 8px;min-height:29px;color:var(--taupe);border-radius:7px}
+.mx .c.core{background:#fff;border:1px solid var(--line);color:var(--navy);font-weight:500}
+.mx .rowg{display:contents}
+.mx .rowg.dim>*{opacity:.22}
+.mx .rowg.hot .c.core{border-color:var(--red);box-shadow:0 0 0 3px rgba(184,50,43,.10)}
+.mx .rowg.hot .rl{color:var(--red)}
+.mx .rowg.scope .rl{color:var(--red)}
+.mx .rowg.scope .c.core{border-color:var(--red)}
+.mxnote{margin-top:5px;font:11.5px/1.3 var(--sans);color:var(--taupe)}
+
+/* 04 scope */
+.areas{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.area{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:6px;position:relative}
+.area h5{margin:0;font:600 15.5px/1.2 var(--sans)}
+.area .d{font:12.5px/1.38 var(--sans);color:var(--ink2)}
+.area .why{font:12.5px/1.38 var(--sans);color:var(--ink)}
+.area.chosen{border:2px solid var(--red)}
+.area.out h5{color:var(--taupe)}
+.aiwrap{margin-top:12px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.aibox{border-radius:12px;padding:9px 14px;background:#fff;border:1px solid var(--line)}
+.aibox.ai{border-color:var(--navy)}
+.aibox .k{font:600 10.5px/1 var(--sans);letter-spacing:.16em;text-transform:uppercase;color:var(--navy);margin-bottom:6px}
+.aibox.ops .k{color:var(--taupe)}
+.aibox p{margin:0;font:12.5px/1.38 var(--sans);color:var(--ink2)}
+.persona{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.persona .who{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.persona .av{width:44px;height:44px;border-radius:50%;background:var(--navy);display:grid;place-items:center}
+.persona .av svg{width:24px;height:24px;stroke:#fff;fill:none;stroke-width:1.7}
+.persona h4{margin:0;font:600 16px var(--sans)} .persona .role{font:12px var(--sans);color:var(--taupe)}
+.persona dl{margin:0;display:grid;grid-template-columns:62px 1fr;gap:7px 10px;font:13px/1.4 var(--sans)}
+.persona dt{font:600 10.5px/1.7 var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--red)}
+.persona dd{margin:0;color:var(--ink2)}
+
+/* 05 predict */
+.pipe{display:grid;grid-template-columns:170px 1fr;gap:16px;height:100%}
+.inputs{display:flex;flex-direction:column;gap:6px}
+.inputs .h{font:600 10.5px/1 var(--sans);letter-spacing:.16em;text-transform:uppercase;color:var(--taupe);margin-bottom:2px}
+.inputs .chip{justify-content:flex-start}
+.fsvg{width:100%;height:100%;display:block}
+.callout{position:absolute;right:6px;top:4px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px 12px;font:12.5px/1.4 var(--sans);color:var(--ink2);max-width:250px}
+.callout b{color:var(--red);font-weight:600}
+
+/* 06 counter */
+.lane{background:#fff;border:1px solid var(--line);border-radius:10px;padding:5px 10px 2px;margin-top:7px}
+.lanehead{display:flex;align-items:center;gap:12px;font:12.5px var(--sans);color:var(--ink2);flex-wrap:wrap}
+.lanehead .nm{font:600 13.5px var(--sans);color:var(--ink)}
+.lanehead .st{margin-left:auto;display:flex;gap:12px;font:12px var(--sans);color:var(--taupe)}
+.lanehead .st b{color:var(--ink);font-weight:600}
+.lsvg{width:100%;height:auto;display:block}
+.legend{margin-top:6px;font:11.5px/1.35 var(--sans);color:var(--taupe)}
+.res{width:100%;border-collapse:collapse;font:12.3px/1.25 var(--sans)}
+.res th{font:600 10px/1.2 var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--taupe);text-align:right;padding:5px 4px;border-bottom:1px solid var(--line)}
+.res th:first-child,.res td:first-child{text-align:left}
+.res td{padding:6px 4px;border-bottom:1px solid var(--line);text-align:right;color:var(--ink2)}
+.res tr.best td{color:var(--ink);font-weight:600}
+.res td .sw{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:6px;vertical-align:0}
+.staffctl{display:inline-flex;align-items:center;gap:4px}
+.staffctl .v{min-width:22px;text-align:center;font:600 13px var(--sans);color:var(--ink)}
+.rec{font:11.5px var(--sans);color:var(--red)}
+
+.cset{display:flex;flex-direction:column;align-items:flex-start;gap:7px;background:var(--cream);border-radius:10px;padding:10px 12px}
+.cset .lab{font:600 10px/1 var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--taupe)}
+.cset .seg .btn{padding:0 9px;font-size:11.5px}
+/* 05 site forecast */
+.msvg{width:100%;height:100%;display:block;cursor:crosshair}
+.fc{background:#fff;border:1px solid var(--line);border-radius:12px;padding:11px 14px}
+.fc .t{font:600 10.5px/1.2 var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--red)}
+.fc .big{font:500 34px/1 var(--serif);color:var(--ink);margin:6px 0 2px}
+.fc .big small{font:400 13px var(--sans);color:var(--taupe);margin-left:4px}
+.fc dl{margin:8px 0 0;display:grid;grid-template-columns:1fr auto;gap:4px 10px;font:12.5px/1.35 var(--sans);color:var(--ink2)}
+.fc dd{margin:0;text-align:right;font-weight:600;color:var(--ink)}
+.fc .peak{margin-top:8px;padding-top:7px;border-top:1px solid var(--line);font:12.5px/1.4 var(--sans);color:var(--ink2)}
+.fc .peak b{color:var(--red)}
+.sitectl label{display:grid;grid-template-columns:1fr auto;gap:2px 8px;font:12px var(--sans);color:var(--ink2);width:100%}
+.sitectl input{grid-column:1 / -1;accent-color:var(--red);width:100%}
+.sitectl .val{font-weight:600;color:var(--ink)}
+/* side-by-side comparison */
+.cmp{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:6px}
+.opt{background:#fff;border:1px solid var(--line);border-radius:10px;padding:7px 9px 5px;display:flex;flex-direction:column;min-width:0}
+.ohead{display:flex;align-items:center;gap:6px;flex-wrap:wrap;min-height:28px}
+.ohead.printonly{display:none}
+.ohead .badge{flex:none;width:22px;height:22px;border-radius:50%;background:var(--ink);color:#fff;display:grid;place-items:center;font:600 11px var(--sans)}
+.ohead select{height:28px;border:1px solid #D8D1C3;border-radius:8px;background:#fff;font:500 12px var(--sans);color:var(--navy);padding:0 6px;max-width:190px}
+.ohead .nm{font:600 13px var(--sans);color:var(--ink)}
+.ohead .seg .btn{height:24px;padding:0 8px;font-size:11px}
+.ohead .staffctl .btn{height:24px;padding:0 8px}
+.vsvg{width:100%;height:auto;display:block;margin-top:2px}
+.vsvg .st{cursor:default}
+.opt.clickable .vsvg .st{cursor:pointer}
+.opt.clickable .vsvg .st:hover rect{stroke:var(--red);stroke-width:2}
+.ostat{display:flex;flex-wrap:wrap;gap:4px 10px;font:11.5px var(--sans);color:var(--taupe);border-top:1px solid var(--line);padding-top:4px}
+.ostat b{color:var(--ink);font-weight:600}
+.ostat.mean b{color:var(--red)}
+.res.splits td,.res.splits th{padding-left:3px;padding-right:3px}
+.res tr.pick td:first-child:after{content:" ✓";color:var(--red)}
+/* 07 playbook */
+.pb{width:100%;border-collapse:collapse;font:13.5px/1.35 var(--sans)}
+.pb th{font:600 10.5px/1.25 var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--taupe);text-align:left;padding:6px 8px;border-bottom:1px solid var(--line);vertical-align:bottom}
+.pb td{padding:9px 8px;border-bottom:1px solid var(--line);color:var(--ink2)}
+.pb td b{color:var(--ink)}
+.pb .bad{color:var(--red);font-weight:600}
+.moves{margin-top:14px;display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.move{background:#fff;border:1px solid var(--line);border-radius:12px;padding:11px 14px}
+.move .k{display:flex;align-items:center;gap:8px;font:600 14px var(--sans);color:var(--ink)}
+.move p{margin:5px 0 0;font:12.6px/1.42 var(--sans);color:var(--ink2)}
+.calc{margin-top:12px;display:flex;align-items:center;gap:14px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 14px;font:13px var(--sans);color:var(--ink2)}
+.calc input{flex:1;accent-color:var(--red)}
+.calc .out{font:500 22px/1 var(--serif);color:var(--red);min-width:150px;text-align:right}
+.phases{display:flex;gap:6px;margin-top:6px}
+.phases span{flex:1;background:var(--cream);border-radius:6px;padding:6px 8px;font:12px/1.3 var(--sans);color:var(--ink2)}
+.phases b{display:block;font:600 11px var(--sans);color:var(--navy)}
+
+/* appendix */
+.apx{columns:2;column-gap:28px;font:11.3px/1.42 var(--sans);color:var(--ink2)}
+.apx p{margin:0 0 7px;break-inside:avoid}
+.apx b{color:var(--ink)}
+.apx h5{margin:0 0 6px;font:600 10.5px/1.2 var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--red);break-after:avoid}
+
+/* ---------- toolbar, notes ---------- */
+/* presenter toolbar (outside the slide), as in the previous deck */
+#toolbar{position:fixed;left:50%;bottom:14px;transform:translateX(-50%);display:flex;gap:4px;align-items:center;
+  background:rgba(20,22,28,.86);color:#fff;border-radius:999px;padding:5px 8px;font:13px var(--sans);transition:opacity .3s;z-index:12;white-space:nowrap}
+#toolbar button{all:unset;cursor:pointer;padding:4px 10px;border-radius:999px}
+#toolbar button:hover,#toolbar button:focus-visible{background:rgba(255,255,255,.18)}
+#toolbar button.on{background:var(--gold);color:#1f2a44;font-weight:700}
+#toolbar .count{min-width:52px;text-align:center;font-variant-numeric:tabular-nums}
+#toolbar .sep{width:1px;height:16px;background:rgba(255,255,255,.25);margin:0 4px}
+#toolbar .editonly{display:none}
+body.editing #toolbar .editonly{display:inline-block}
+body.idle:not(.editing) #toolbar{opacity:0}
+#toast{position:fixed;left:50%;top:14px;transform:translateX(-50%);background:var(--navy);color:#fff;padding:6px 14px;border-radius:8px;font:13px var(--sans);
+  opacity:0;transition:opacity .3s;pointer-events:none;z-index:13}
+#toast.on{opacity:1}
+body.editing [data-ek]{outline:1px dashed rgba(36,64,107,.35);outline-offset:2px;cursor:text}
+body.editing [data-ek]:focus{outline:2px solid var(--blue);background:rgba(111,134,174,.08)}
+@media (prefers-reduced-motion:reduce){#toolbar,#toast{transition:none}}
+#notes{position:fixed;right:0;top:0;bottom:0;width:380px;background:#fff;border-left:1px solid var(--line);padding:22px 24px;overflow:auto;display:none;z-index:11;font:14.5px/1.55 var(--sans);color:var(--ink2)}
+body.shownotes #notes{display:block}
+#notes h6{margin:0 0 10px;font:600 11px var(--sans);letter-spacing:.16em;text-transform:uppercase;color:var(--red)}
+aside.notes{display:none}
+.notespage{display:none}
+
+@media print{
+  @page{size:1280px 720px;margin:0}
+  html,body{background:#fff}
+  #stage{position:static;overflow:visible}
+  #deck{position:static;transform:none!important;width:auto;height:auto}
+  #toolbar,#toast,#notes{display:none!important}
+  .slide{display:block!important;position:relative;page-break-after:always;break-after:page}
+  .stepper [data-s]{opacity:1!important;filter:none!important}
+  .caps{display:none}
+  .mx .rowg.dim>*{opacity:.4}
+  .screenonly{display:none!important}
+  .printonly{display:block}
+  .ohead.printonly{display:flex}
+  .notespage{display:none}
+  body.printnotes .notespage{display:block!important;position:relative;width:1280px;height:720px;page-break-after:always;padding:60px 90px;font:19px/1.6 var(--sans);color:var(--ink2)}
+  .notespage h6{font:600 13px var(--sans);letter-spacing:.16em;text-transform:uppercase;color:var(--red);margin:0 0 14px}
+}
+</style>
+</head>
+<body>
+<div id="stage"><div id="deck">
+
+<!-- ======================================================= TITLE -->
+<section class="slide cover" data-title="Title">
+  <img class="ll" src="{img:leaves_left}" alt="">
+  <img class="lr" src="{img:leaves_right}" alt="">
+  <img class="sand" src="{img:sand}" alt="">
+  <img class="logo" src="{img:logo}" alt="Chagee">
+  <div class="t">
+    <h1>Chagee Singapore</h1>
+    <p class="tl">Forecast the peak, share the counter</p>
+    <div class="rule"></div>
+    <p class="meta">Predictive AI and robots at the counter: what the GM decides for the busiest hour<br>
+      OPIM639 &nbsp;·&nbsp; Group 3 &nbsp;·&nbsp; Keziah, Jin, Ayumi, Revan &nbsp;·&nbsp; October 2026</p>
+  </div>
+  <img class="cup" src="{img:cup_navy}" alt="">
+  <aside class="notes">
+    <p>Good morning. We are Group 3. Our company is Chagee, and we look at one place in its business: the counter of a Singapore outlet in its busiest hour.</p>
+    <p>Two kinds of AI meet there. Predictive AI forecasts how busy the hour will be. Robotics, Chagee's tea machines, brew the fixed steps. Around them, people share the hand steps like a bucket brigade.</p>
+    <p>Our decision-maker throughout is the GM, Chagee Singapore's general manager. Timing: title and agenda together, about twenty seconds.</p>
+  </aside>
+</section>
+
+<!-- ======================================================= AGENDA -->
+<section class="slide agenda" data-title="Agenda">
+  <div class="leafart" aria-hidden="true"></div>
+  <div class="inner">
+    <h2>Agenda</h2>
+    <ol>
+      <li data-go="c1"><span class="no">01</span><span class="nm">Chagee in Singapore<span class="why">How it earns and sells</span></span></li>
+      <li data-go="c2"><span class="no">02</span><span class="nm">From farm to cup<span class="why">Where the supply chain is stable, and where it is not</span></span></li>
+      <li data-go="c3"><span class="no">03</span><span class="nm">The data trail<span class="why">What every cup already records</span></span></li>
+      <li data-go="c4"><span class="no">04</span><span class="nm">Our scope<span class="why">One area, one decision-maker</span></span></li>
+      <li data-go="c5"><span class="no">05</span><span class="nm">Predict demand<span class="why">App searches, DBSCAN and a new-store pin</span></span></li>
+      <li data-go="c6"><span class="no">06</span><span class="nm">Share the counter<span class="why">The bucket brigade, side by side</span></span></li>
+      <li data-go="c7"><span class="no">07</span><span class="nm">Split the counter<span class="why">Which steps stay human: the GM's call</span></span></li>
+      <li data-go="c8"><span class="no">08</span><span class="nm">The GM's playbook<span class="why">Triggers, pilot and limits</span></span></li>
+    </ol>
+  </div>
+  <div class="cups">
+    <img src="{img:sand_small}" style="left:-30px;top:200px;width:530px" alt="">
+    <img src="{img:cup_green}" style="left:205px;top:0;width:110px" alt="">
+    <img src="{img:cup_cream}" style="left:120px;top:45px;width:110px" alt="">
+    <img src="{img:cup_pink}" style="left:300px;top:40px;width:110px" alt="">
+    <img src="{img:cup_navy}" style="left:155px;top:115px;width:130px" alt="">
+    <img src="{img:cup_red}" style="left:265px;top:130px;width:118px" alt="">
+  </div>
+  <div class="foot"><span>OPIM639 · Group 3 · Chagee Singapore</span><span class="pg"></span></div>
+  <aside class="notes"><p>Eight short chapters. The first four set the scope; the last four are the forecast, the counter, the GM's split and the playbook. Click any chapter to jump there.</p></aside>
+</section>
+
+<!-- ======================================================= 01 CHAGEE IN SINGAPORE -->
+<section class="slide content" id="c1" data-chapter="Context" data-title="Chagee in Singapore">
+  <div class="leafart" aria-hidden="true"></div>
+  <div class="inner">
+    <p class="kicker">01 · Chagee in Singapore</p>
+    <h2 class="head">In Singapore, Chagee runs its own outlets, and every channel ends at one counter</h2>
+    <p class="sub">The same team owns the counter, the app data and the call on who works the peak.</p>
+    <div class="body">
+      <div class="panel stepper" data-steps="4">
+        <div class="ptop"><span class="ptitle">How a Singapore cup is sold · step through</span><span class="ctl screenonly"></span></div>
+        <div class="visual">
+          <div class="sg-grid">
+            <div>
+              <div data-s="1">
+                <div class="ptitle" style="margin-top:6px">Group net revenue, FY 2025 <span class="flag">(secondary source)</span></div>
+                <div class="revbar"><div class="fr" style="width:{{facts.revenue_share_franchise_fy2025|pct}}">Franchise model</div><div class="co" style="width:{{facts.revenue_share_company_owned_fy2025|pct}}"></div></div>
+                <div class="revlab"><span>Franchise <b>{{facts.revenue_share_franchise_fy2025|pct}}</b></span><span>Company-owned <b>{{facts.revenue_share_company_owned_fy2025|pct}}</b>, growing fastest</span></div>
+              </div>
+              <div class="sgtag" data-s="2"><span>Singapore is company-owned: run by Chagee corporate, as is usual for new-entry markets</span><span class="pin">SG</span></div>
+              <div class="chan" data-s="4">
+                <div class="list">
+                  <div class="row"><b>In store</b><span>walk-in, counter or kiosk</span></div>
+                  <div class="row"><b>Chagee app</b><span>order ahead, collect or delivery</span></div>
+                  <div class="row"><b>Grab</b><span>third-party delivery</span></div>
+                </div>
+                <div class="arrow"><svg viewBox="0 0 30 100"><path d="M1 16 C18 16 16 50 27 50 M1 50 H27 M1 84 C18 84 16 50 27 50" stroke="#C8A96A" stroke-width="2" fill="none"/><path d="M23 45 l6 5 -6 5" stroke="#C8A96A" stroke-width="2" fill="none"/></svg></div>
+                <div class="counter">One counter<small>every channel's cup is made here</small></div>
+              </div>
+            </div>
+            <div class="mapbox" data-s="3">
+              <img src="{img:sg_map}" alt="Map of Chagee outlets in Singapore">
+              <div class="cap"><b>{{facts.sg_outlets}}</b>outlets, ground-floor mall units by policy; kiosks in basements and MRT stations at entry in 2019</div>
+            </div>
+          </div>
+        </div>
+        <ol class="caps">
+          <li data-s="1"><span class="n">1</span><span>Group level: most net revenue comes from franchising; company-owned stores are the smaller, faster-growing part.</span></li>
+          <li data-s="2"><span class="n">2</span><span>Singapore sits in the company-owned part, so one team can change how every outlet is staffed.</span></li>
+          <li data-s="3"><span class="n">3</span><span>{{facts.sg_outlets}} outlets across the island, mostly ground-floor mall units that shoppers pass every day.</span></li>
+          <li data-s="4"><span class="n">4</span><span>Walk-in, app and Grab orders all queue at the same counter, so the peak hour lands in one place.</span></li>
+        </ol>
+      </div>
+      <div class="cards">
+        <div class="card"><h4>Company-run</h4><p>Outlets are run by Chagee itself, so the GM can roll out a new counter design and roster rule centrally.</p><span class="src">Team check, to confirm with Chagee</span></div>
+        <div class="card"><h4>App-first</h4><p>Most orders come through the app, with few kiosks in store. Every order and search is logged: the raw material for a forecast.</p><span class="src">Team observation, to confirm</span></div>
+        <div class="card"><h4>Why Chagee</h4><p>A fast-growing, playful brand with heavy app use: plenty of data, and room for AI to help the stores.</p></div>
+      </div>
+    </div>
+    <div class="takeaway"><span class="lab">TAKEAWAY</span><span>Whatever the channel, every order ends at one counter. The peak hour is where an outlet wins or loses.</span></div>
+  </div>
+  <div class="foot"><span>OPIM639 · Group 3 · explainer figures are illustrative assumptions</span><span class="rail"></span><span class="pg"></span></div>
+  <aside class="notes">
+    <p>Step through four points. One: at group level most revenue comes from franchising, about {{facts.revenue_share_franchise_fy2025|pct}} in FY 2025; company-owned is about {{facts.revenue_share_company_owned_fy2025|pct}} and growing fastest. That split is from a secondary source.</p>
+    <p>Two: Singapore is company-owned, run by Chagee corporate. We have this from a team check; we will confirm it with Chagee.</p>
+    <p>Three: {{facts.sg_outlets}} outlets, by the store directory in October. Chagee prefers ground-floor mall units.</p>
+    <p>Four: walk-in, app and Grab all end at the same counter. That is why we look at the counter. About fifty seconds.</p>
+  </aside>
+</section>
+
+<!-- ======================================================= 02 FARM TO CUP -->
+<section class="slide content" id="c2" data-chapter="Operations" data-title="From farm to cup">
+  <div class="leafart" aria-hidden="true"></div>
+  <div class="inner">
+    <p class="kicker">02 · From farm to cup</p>
+    <h2 class="head">Supply is standard and planned ahead; the counter feels demand within minutes</h2>
+    <p class="sub">Tea leaves travel one standard route. Only fresh milk and fruit are bought locally.</p>
+    <div class="body">
+      <div class="panel stepper" data-steps="5">
+        <div class="ptop"><span class="ptitle">Follow one cup · step through</span><span class="ctl screenonly"></span></div>
+        <div class="visual">
+          <div class="chain">
+            <div class="track"></div><div class="token screenonly"></div>
+            <div class="node" data-s="1"><div class="ic"><svg viewBox="0 0 32 32"><path d="M6 26 C6 12 16 6 27 5 C26 17 20 26 6 26 Z"/><path d="M6 26 L18 14"/></svg></div>
+              <h5>Source</h5><div class="what">Tea leaves from Yunnan through standard channels for every market</div>
+              <div class="dlab">Data created</div><div class="data"><span class="chip gold">Shipments, lead times</span></div><div class="src">Local: fresh milk, fruit</div></div>
+            <div class="node" data-s="2"><div class="ic"><svg viewBox="0 0 32 32"><path d="M4 13 L16 6 L28 13 V27 H4 Z"/><path d="M10 27 V18 H22 V27 M10 22 H22"/></svg></div>
+              <h5>Warehouse</h5><div class="what">Separate central and regional warehouses keep storage and logistics costs down</div>
+              <div class="dlab">Data created</div><div class="data"><span class="chip gold">Stock vs par, expiry</span></div></div>
+            <div class="node" data-s="3"><div class="ic"><svg viewBox="0 0 32 32"><path d="M5 12 H27 L25 6 H7 Z"/><path d="M6 12 V27 H26 V12 M13 27 V19 H19 V27"/></svg></div>
+              <h5>Outlet counter</h5><div class="what">Machines brew each cup from a scanned recipe; people do ice, toppings and hand-over</div>
+              <div class="dlab">Data created</div><div class="data"><span class="chip red">Cups by hour</span><span class="chip red">Wait times</span></div></div>
+            <div class="node" data-s="4"><div class="ic"><svg viewBox="0 0 32 32"><circle cx="8" cy="23" r="4"/><circle cx="25" cy="23" r="4"/><path d="M8 23 H16 L20 13 H25 L25 23 M13 13 H20"/></svg></div>
+              <h5>Last mile</h5><div class="what">Self-collect, Chagee app delivery or Grab; riders wait at the same counter</div>
+              <div class="dlab">Data created</div><div class="data"><span class="chip gold">Orders by channel</span><span class="chip gold">Rider wait</span></div></div>
+            <div class="node" data-s="5"><div class="ic"><svg viewBox="0 0 32 32"><circle cx="16" cy="10" r="5"/><path d="M6 28 C6 20 11 17 16 17 C21 17 26 20 26 28"/></svg></div>
+              <h5>Customer</h5><div class="what">Orders in the app, collects at the counter, comes back (or not)</div>
+              <div class="dlab">Data created</div><div class="data"><span class="chip gold">App orders, drop-offs</span></div></div>
+          </div>
+        </div>
+        <ol class="caps">
+          <li data-s="1"><span class="n">1</span><span>Sourcing is standard across markets. Singapore buys only fresh milk and fruit locally.</span></li>
+          <li data-s="2"><span class="n">2</span><span>Central and regional warehouses, with restocking already planned from forecasts and tracked in real time.</span></li>
+          <li data-s="3"><span class="n">3</span><span>At the counter, robots brew the fixed steps and people do the variable ones. Demand swings here hour by hour.</span></li>
+          <li data-s="4"><span class="n">4</span><span>Self-collect, Chagee delivery and Grab all pick up at the same counter, adding to the queue.</span></li>
+          <li data-s="5"><span class="n">5</span><span>Every hand-off leaves a timestamp. The red chips are the data the counter decision needs.</span></li>
+        </ol>
+      </div>
+      <div class="cards">
+        <div class="card"><h4>Stable upstream</h4><p>Standard sourcing, regional warehouses and forecast-led restocking: Chagee already plans this part.</p><span class="src">YF Chuhai; Chagee Form 20-F</span></div>
+        <div class="card"><h4>Volatile downstream</h4><p>Demand at a counter moves by the hour: lunch, a mall event, rain, a new drink launch.</p></div>
+        <div class="card"><h4>So we stop at the counter</h4><p>The open question is not the shipment. It is how many people the counter needs this hour, and how they work.</p></div>
+      </div>
+    </div>
+    <div class="takeaway"><span class="lab">TAKEAWAY</span><span>Chagee already plans its stock. The open problem is matching people to the hourly peak.</span></div>
+  </div>
+  <div class="foot"><span>OPIM639 · Group 3 · explainer figures are illustrative assumptions</span><span class="rail"></span><span class="pg"></span></div>
+  <aside class="notes">
+    <p>Press play and the cup travels farm to customer. Sourcing is standard; only fresh milk and fruit are local (YF Chuhai). Chagee runs central and regional warehouses (Form 20-F) and already plans restocking from forecasts.</p>
+    <p>The volatile part is the counter, the red chips. Under time pressure, summarise this slide in one sentence: supply is planned, the counter is not. About forty seconds.</p>
+  </aside>
+</section>
+
+<!-- ======================================================= 03 DATA TRAIL -->
+<section class="slide content" id="c3" data-chapter="Data" data-title="The data trail">
+  <div class="leafart" aria-hidden="true"></div>
+  <div class="inner">
+    <p class="kicker">03 · The data trail</p>
+    <h2 class="head">Every cup is already a timestamped record: the inputs for a forecast exist today</h2>
+    <p class="sub">Four data sources and six decisions they could feed. We follow the four that start in the app and end at the counter.</p>
+    <div class="body">
+      <div class="panel stepper" data-steps="7" data-kind="matrix">
+        <div class="ptop"><span class="ptitle">Which source feeds which decision · step through</span><span class="ctl screenonly"></span></div>
+        <div class="visual">
+          <div class="mx">
+            <div></div>
+            <div class="ch"><svg viewBox="0 0 16 16"><path d="M2 6 H14 L13 3 H3 Z M3 6 V14 H13 V6"/></svg>Store and production</div>
+            <div class="ch"><svg viewBox="0 0 16 16"><rect x="4" y="1.5" width="8" height="13" rx="1.5"/><path d="M7 12 H9"/></svg>App and members</div>
+            <div class="ch"><svg viewBox="0 0 16 16"><circle cx="4" cy="11.5" r="2.3"/><circle cx="12.5" cy="11.5" r="2.3"/><path d="M4 11.5 H8 L10 6 H12.5 V11.5"/></svg>Delivery</div>
+            <div class="ch"><svg viewBox="0 0 16 16"><path d="M2 14 V8 H7 V14 M9 14 V4 H14 V14 M1 14 H15"/></svg>Supply and context</div>
+            <div class="rowg" data-row="1"><div class="rl">Demand forecasts</div><div class="c core">Cups per hour by drink and channel</div><div class="c">Member repeat demand</div><div class="c core">Orders per hour by platform</div><div class="c">Weather, holidays, launches</div></div>
+            <div class="rowg" data-row="2"><div class="rl">Staffing and prep</div><div class="c core">Wait times, machine logs</div><div class="c">Pickup no-shows</div><div class="c">Hand-over peaks</div><div class="c core">Labour hours vs cups per hour</div></div>
+            <div class="rowg" data-row="3"><div class="rl">Replenishment</div><div class="c core">Drink mix per outlet</div><div class="c">Launch trial rates</div><div class="c">Group-order toppings</div><div class="c core">Ingredient use, expiry, par</div></div>
+            <div class="rowg" data-row="4"><div class="rl">Queue and capacity</div><div class="c core">Wait time, footfall vs sales</div><div class="c">Store-select drop-offs</div><div class="c">Rider wait at counter</div><div class="c">Stock-outs at peak</div></div>
+            <div class="rowg" data-row="5"><div class="rl">Site selection</div><div class="c">Sales density per outlet</div><div class="c core">"No store nearby", home and work</div><div class="c core">Distance and fee by postcode</div><div class="c">Mall footfall, competitors</div></div>
+            <div class="rowg" data-row="6"><div class="rl">Menu and promos</div><div class="c">Drink share, customisation</div><div class="c core">Trial and repeat, voucher uplift</div><div class="c">Delivery basket mix</div><div class="c">Collab calendar</div></div>
+          </div>
+          <div class="mxnote">White chips mark the core input; grey text refines it. Red rows: our scope.</div>
+        </div>
+        <ol class="caps">
+          <li data-s="1"><span class="n">1</span><span>Demand forecasts: cups per hour from the store and platform orders, refined by the calendar and weather.</span></li>
+          <li data-s="2"><span class="n">2</span><span>Staffing and prep: wait times and machine logs show where labour hours fall short of cups per hour.</span></li>
+          <li data-s="3"><span class="n">3</span><span>Replenishment: the drink mix and ingredient use, expiry and par levels.</span></li>
+          <li data-s="4"><span class="n">4</span><span>Queue and capacity: wait time against footfall shows customers who looked and left.</span></li>
+          <li data-s="5"><span class="n">5</span><span>Site selection: only the app links a cup to where a person lives and works.</span></li>
+          <li data-s="6"><span class="n">6</span><span>Menu and promos: trial, repeat and voucher uplift from members.</span></li>
+          <li data-s="7"><span class="n">7</span><span>Our scope: app data feeds the demand forecast and site selection, and the forecast feeds staffing and queue capacity.</span></li>
+        </ol>
+      </div>
+      <div class="cards">
+        <div class="card"><h4>No new sensors needed</h4><p>Point-of-sale, app and machine logs already exist. The work is joining them by outlet and hour.</p></div>
+        <div class="card"><h4>The app is the link</h4><p>Only the app ties a cup to a person. That needs consent and care under Singapore's data protection law (PDPA).</p></div>
+        <div class="card"><h4>What we take forward</h4><p>Demand forecast, then staffing, then queue capacity: one chain that ends with the GM's counter and roster.</p></div>
+      </div>
+    </div>
+    <div class="takeaway"><span class="lab">TAKEAWAY</span><span>The data for an hourly forecast is already collected. What is missing is turning it into a roster.</span></div>
+  </div>
+  <div class="foot"><span>OPIM639 · Group 3 · explainer figures are illustrative assumptions</span><span class="rail"></span><span class="pg"></span></div>
+  <aside class="notes">
+    <p>Each step lights up one decision and the data that feeds it. Skip to the last step under time pressure: our scope is the three counter rows: forecast, staffing, queue.</p>
+    <p>This list is our reading of what Chagee's systems record, based on public material and our industry conversation, not a Chagee data dictionary. About fifty seconds.</p>
+  </aside>
+</section>
+
+<!-- ======================================================= 04 SCOPE -->
+<section class="slide content" id="c4" data-chapter="Scope" data-title="Our scope">
+  <div class="leafart" aria-hidden="true"></div>
+  <div class="inner">
+    <p class="kicker">04 · Our scope</p>
+    <h2 class="head">One area, the in-store peak, and one decision-maker: the GM</h2>
+    <p class="sub">Ideation gave us three improvement areas. The counter is where AI and the course's operations tools meet.</p>
+    <div class="body">
+      <div class="panel stepper" data-steps="4">
+        <div class="ptop"><span class="ptitle">From three ideas to one · step through</span><span class="ctl screenonly"></span></div>
+        <div class="visual">
+          <div class="areas">
+            <div class="area out" data-s="1"><span class="tag out">Future work</span><h5>Online retailing</h5>
+              <div class="d">Steer orders between app pickup and Grab by hour.</div>
+              <div class="why">Needs platform fees and price tests we do not have.</div></div>
+            <div class="area" data-s="2"><span class="tag in">Forecast only</span><h5>New stores</h5>
+              <div class="d">Forecast a new outlet from app searches (slide 05).</div>
+              <div class="why">Rent, fit-out and payback stay future work.</div></div>
+            <div class="area chosen" data-s="3"><span class="tag in">Our focus</span><h5>In-store operations</h5>
+              <div class="d">Forecast the peak, set the roster, share the counter.</div>
+              <div class="why">Data exists, the decision is daily; Topic 3 forecasting, Topic 6 bucket brigades.</div></div>
+          </div>
+          <div class="aiwrap" data-s="4">
+            <div class="aibox ai"><div class="k">AI · predictive</div><p>Forecast cups per hour from history, calendar and app orders.</p></div>
+            <div class="aibox ai"><div class="k">AI · robotics</div><p>Tea machines brew the fixed steps from a scanned recipe.</p></div>
+            <div class="aibox ops"><div class="k">Operations tools, not AI</div><p>Bucket brigade and cross-training: how people share the hand steps.</p></div>
+          </div>
+        </div>
+        <ol class="caps">
+          <li data-s="1"><span class="n">1</span><span>Online retailing is promising but depends on platform fees and pricing tests. We park it as future work.</span></li>
+          <li data-s="2"><span class="n">2</span><span>New stores: we forecast demand from the app; the property and payback decision stays future work.</span></li>
+          <li data-s="3"><span class="n">3</span><span>In-store operations: a daily decision, with data that already exists. This is our focus.</span></li>
+          <li data-s="4"><span class="n">4</span><span>We are explicit about the AI: predictive AI and the machines. The bucket brigade is the operations rule around them.</span></li>
+        </ol>
+      </div>
+      <div class="cards">
+        <div class="persona">
+          <div class="who"><div class="av"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21 C4 15 8 13 12 13 C16 13 20 15 20 21"/></svg></div>
+            <div><h4>The GM</h4><div class="role">General manager, Chagee Singapore</div></div></div>
+          <dl>
+            <dt>Decides</dt><dd>Which counter steps go to robots, how many people work the peak, and how they share it</dd>
+            <dt>When</dt><dd>Before a store opens, and when rosters are set</dd>
+            <dt>Uses</dt><dd>The forecast and the counter simulation</dd>
+            <dt>Today</dt><dd>To confirm with Chagee: how rosters are set now</dd>
+          </dl>
+        </div>
+      </div>
+    </div>
+    <div class="takeaway"><span class="lab">TAKEAWAY</span><span>Predictive AI says how many people the peak needs; the GM decides which steps robots do; the bucket brigade decides who does what.</span></div>
+  </div>
+  <div class="foot"><span>OPIM639 · Group 3 · explainer figures are illustrative assumptions</span><span class="rail"></span><span class="pg"></span></div>
+  <aside class="notes">
+    <p>Our ideation produced three areas. We park online retailing as future work, forecast new stores from app data, and focus on the in-store peak.</p>
+    <p>We are careful about what counts as AI: the forecast and the machines. Bucket brigade and cross-training are operations tools, but they decide whether a lean roster actually works.</p>
+    <p>The decision-maker is the GM; outlet teams run the roster day to day. We do not yet know how Chagee sets rosters today; that is a question for our industry contact. About fifty seconds.</p>
+  </aside>
+</section>
+
+<!-- ======================================================= 05 PREDICT -->
+<section class="slide content" id="c5" data-chapter="Predict" data-title="Predict demand for a new store">
+  <div class="leafart" aria-hidden="true"></div>
+  <div class="inner">
+    <p class="kicker">05 · Predict demand for a new store</p>
+    <h2 class="head">App searches show where demand goes unserved: cluster them, drop a pin, forecast the store</h2>
+    <p class="sub">Chagee Singapore sells mainly through its app, so every search is a demand signal, even where no store is near.</p>
+    <div class="body" style="grid-template-columns:1fr 300px">
+      <div class="panel stepper" data-steps="5" data-kind="site">
+        <div class="ptop"><span class="ptitle">App demand to a new-store forecast</span><span class="ctl screenonly"></span></div>
+        <div class="visual"><svg class="msvg" viewBox="0 0 1672 640" preserveAspectRatio="xMidYMid meet" aria-label="Map of synthetic app demand, clusters and a new-store pin"></svg></div>
+        <ol class="caps">
+          <li data-s="1"><span class="n">1</span><span>Synthetic app sessions: gold where an outlet is within walking distance, red where the search found no store nearby.</span></li>
+          <li data-s="2"><span class="n">2</span><span>DBSCAN, an unsupervised method, groups red searches that sit densely together. Scattered searches stay grey as noise.</span></li>
+          <li data-s="3"><span class="n">3</span><span>Each cluster's centre is a candidate site, ranked by the cups it would add that no outlet sells today.</span></li>
+          <li data-s="4"><span class="n">4</span><span>Click anywhere to drop your own pin. Nearby searches split between stores by distance; the lines show the outlets it takes cups from.</span></li>
+          <li data-s="5"><span class="n">5</span><span>The forecast's peak hour sets the opening roster for today's counter, which slides 06 and 07 then run.</span></li>
+        </ol>
+      </div>
+      <div class="cards" style="gap:10px">
+        <div class="cset screenonly sitectl"></div>
+        <div class="fc"></div>
+        <p class="flag">Synthetic app data on the team's map; outlet positions approximate (the central inset is enlarged). Not a trained model: the point is the method.</p>
+      </div>
+    </div>
+    <div class="takeaway"><span class="lab">TAKEAWAY</span><span>The top cluster, near {{s.top_hub}}, would sell about {{r.top_cups}} cups a day, {{r.top_net}} of them new to Chagee. A pin beside an existing outlet mostly moves cups around: about {{r.nextdoor_cannibal|pct}} of its sales are taken from that outlet.</span></div>
+  </div>
+  <div class="foot"><span>OPIM639 · Group 3 · explainer figures are illustrative assumptions · synthetic app data</span><span class="rail"></span><span class="pg"></span></div>
+  <aside class="notes">
+    <p>Chagee Singapore runs on its app, with few kiosks, so every search is a demand signal, including searches where no store is close. That makes the app the forecasting input for a new store, before it has any sales.</p>
+    <p>Step one: synthetic app sessions on our map. Gold are within walking distance of an outlet; red found no store nearby. Step two: DBSCAN, unsupervised machine learning, groups red searches that are dense; scattered ones are noise. Step three: cluster centres are candidate sites.</p>
+    <p>Step four: click the map to drop a pin. The model splits nearby searches between stores by distance, so a pin next to an existing outlet mostly takes its customers. Step five: the forecast's peak hour gives the opening roster for the counter on the next slides.</p>
+    <p>The three sliders are the only inputs: cluster radius, minimum searches per cluster, and how far people will walk. The data is synthetic; with Chagee's real app logs, the same steps would run unchanged. About one and a half minutes.</p>
+  </aside>
+</section>
+
+<!-- ======================================================= 06 SHARE THE COUNTER -->
+<section class="slide content" id="c6" data-chapter="Share" data-title="Share the counter">
+  <div class="leafart" aria-hidden="true"></div>
+  <div class="inner">
+    <p class="kicker">06 · Share the counter</p>
+    <h2 class="head">With a lean roster, a bucket brigade keeps cups moving without knowing who is fastest</h2>
+    <p class="sub">Today's counter, two ways of sharing the hand steps, side by side. Pick what each side runs.</p>
+    <div class="body" style="grid-template-columns:1fr 286px">
+      <div class="panel" data-kind="compare" data-mode="share">
+        <div class="ptop"><span class="ptitle">Peak hour · same customers on both sides</span><span class="ctl screenonly cctl"></span></div>
+        <div class="cmp"><div class="opt" data-o="0"></div><div class="opt" data-o="1"></div></div>
+        <div class="legend">Red circle = a person (number = speed) · gold ring = held back · faded = walking · ▲ = hand-over · navy = robot · red cup = waiting for a person</div>
+      </div>
+      <div class="cards" style="gap:12px">
+        <div class="cset screenonly"><span class="lab">Day</span><span class="dslot"></span></div>
+        <div><div class="ptitle" style="margin-bottom:4px">All three rules, mean of {{a.seeds}} runs</div><table class="res"></table>
+          <p class="flag" style="margin-top:5px">At the people on side A. A customer leaves if the wait would pass {{a.target_wait|min}}. With spare people, a well-assigned fixed line is as good or a little faster.</p></div>
+        <div class="card printonly"><h4>Why lean is where it counts</h4><p>Work flows to whoever is free, so the line balances itself (Topic 6). Fixed stations are only as good as the guess of who is fast.</p></div>
+      </div>
+    </div>
+    <div class="takeaway"><span class="lab">TAKEAWAY</span><span>At the forecast's roster on an event day, the brigade loses about {{r.lost_brigade|pct1}} of orders; fixed stations lose {{r.lost_fixed_best|pct1}} to {{r.lost_fixed_worst|pct}}, depending on who is on toppings.</span></div>
+  </div>
+  <div class="foot"><span>OPIM639 · Group 3 · explainer figures are illustrative assumptions · mechanism in seconds, Week 5 bucket-brigade rules</span><span class="rail"></span><span class="pg"></span></div>
+  <aside class="notes">
+    <p>Same counter, same customers, two sharing rules side by side. Robots, the navy boxes, take the order, brew tea and milk, and shake and seal. People do cup and ice, toppings and hand-over.</p>
+    <p>Left, a bucket brigade: each person carries a cup forward; the last hands it over, walks back and takes over a colleague's cup. Right, fixed stations: each person owns a station.</p>
+    <p>Press play on an event day. Then set the right side to "slowest on toppings": the queue builds at toppings and customers walk away. The brigade never needed to know who was fast.</p>
+    <p>Be honest about the other case: add people and fixed stations catch up, or are a little faster. About one minute.</p>
+  </aside>
+</section>
+
+<!-- ======================================================= 07 SPLIT THE COUNTER (GM) -->
+<section class="slide content" id="c7" data-chapter="Split" data-title="Split the counter">
+  <div class="leafart" aria-hidden="true"></div>
+  <div class="inner">
+    <p class="kicker">07 · Split the counter · the GM's decision</p>
+    <h2 class="head">Which steps stay human? Robots buy a shorter wait; on a normal day, people are still cheaper</h2>
+    <p class="sub">Choose a split for each side, or click any station to hand it to a robot or a person, then run the peak hour.</p>
+    <div class="body" style="grid-template-columns:1fr 330px">
+      <div class="panel" data-kind="compare" data-mode="split">
+        <div class="ptop"><span class="ptitle">Peak hour · same customers on both sides</span><span class="ctl screenonly cctl"></span></div>
+        <div class="cmp"><div class="opt" data-o="0"></div><div class="opt" data-o="1"></div></div>
+        <div class="legend">Navy = robot, white = by hand (click to switch) · red circle = a person · faded = walking · red cup = waiting for a person.</div>
+      </div>
+      <div class="cards" style="gap:10px">
+        <div class="cset screenonly"><span class="lab">Day</span><span class="dslot"></span></div>
+        <div><div class="ptitle" style="margin-bottom:4px">All four splits, mean of {{a.seeds}} runs</div><table class="res splits"></table>
+          <p class="flag" style="margin-top:5px">Each split gets the fewest people, from the forecast roster up, and the better sharing rule that keep walk-aways within {{sb.walkaway_target|pct}}. Cost per day: people hours at the wage plus robots at their monthly cost.</p></div>
+      </div>
+    </div>
+    <div class="takeaway"><span class="lab">TAKEAWAY</span><span class="gmtake">On an event day, {{s.cheapest_label}} is the cheapest split within the walk-away limit, at about S${{r.cheapest_cost}} a day. {{s.heading_label}} needs {{r.heading_staff}} people at fixed posts and costs about S${{r.heading_extra}} more, for a median wait of {{r.heading_wait|mmss}}.</span></div>
+  </div>
+  <div class="foot"><span>OPIM639 · Group 3 · explainer figures are illustrative assumptions · robot speeds and costs are assumptions, not Chagee data</span><span class="rail"></span><span class="pg"></span></div>
+  <aside class="notes">
+    <p>This is the GM's decision: which steps of the counter stay human and which go to robots. Our research says Chagee is heading towards machines making the drink while people tag the order and hand it over; that is side B.</p>
+    <p>Click any station to switch it. Each side gets its forecast roster; change people with plus and minus. The table on the right is the simulation run for all four splits.</p>
+    <p>What it shows, honestly: on a normal day, all by hand is cheapest; robots buy a shorter wait, not a lower cost, at about {{d.cupsPerDay}} cups a day. On an event day, today's split is cheapest within the limit. Machines making the drink needs a second person at the peak, because one person cannot tag and hand over at opposite ends of the counter. About one and a half minutes.</p>
+  </aside>
+</section>
+
+<!-- ======================================================= 08 PLAYBOOK -->
+<section class="slide content" id="c8" data-chapter="Decide" data-title="The GM's playbook">
+  <div class="leafart" aria-hidden="true"></div>
+  <div class="inner">
+    <p class="kicker">08 · The GM's playbook</p>
+    <h2 class="head">Choose the split, roster to the forecast, and share the work to suit the split</h2>
+    <p class="sub">Three moves for the GM, each with a trigger, then a pilot to test them.</p>
+    <div class="body">
+      <div class="panel">
+        <div class="ptop"><span class="ptitle">What the forecast changes, peak hour, today's counter</span></div>
+        <table class="pb"></table>
+        <div class="calc screenonly"><span>Forecast peak</span><input type="range" min="0" step="1"><span class="out"></span></div>
+        <div class="moves">
+          <div class="move"><div class="k"><span class="num">1</span>Choose the split</div><p>Robots where speed matters more than cost; people where the work varies: tagging and hand-over.</p></div>
+          <div class="move"><div class="k"><span class="num">2</span>Roster to the forecast</div><p>On today's counter, one more person for about every {{r.cups_per_person}} forecast cups in the peak hour.</p></div>
+          <div class="move"><div class="k"><span class="num">3</span>Share to suit the split</div><p>A brigade when hand steps sit along the line; fixed posts when machines make the drink.</p></div>
+        </div>
+      </div>
+      <div class="cards">
+        <div class="card"><h4>Next step: pilot in {{sb.pilot_outlets}} outlets</h4>
+          <div class="phases"><span><b>Shadow</b>forecast only</span><span><b>Roster</b>staff to it</span><span><b>Roll out</b>if KPIs hold</span></div>
+          <p style="margin-top:6px">KPIs: cups per labour hour, wait time, walk-aways at the peak. Compare forecast and actual cups weekly.</p></div>
+        <div class="card"><h4>Limits we know</h4><p>All figures are illustrative assumptions, not Chagee data. Robot speeds and costs are assumed; breakdowns and breaks are not modelled.</p></div>
+        <div class="card"><h4>To confirm with Chagee</h4><p>How rosters are set today, robot costs per station, and whether outlets log wait times and walk-aways.</p></div>
+      </div>
+    </div>
+    <div class="takeaway"><span class="lab">TAKEAWAY</span><span>Predictive AI sets how many people; the split sets what robots do; the sharing rule sets who does what. Next, test it in {{sb.pilot_outlets}} outlets.</span></div>
+  </div>
+  <div class="foot"><span>OPIM639 · Group 3 · explainer figures are illustrative assumptions</span><span class="rail"></span><span class="pg"></span></div>
+  <aside class="notes">
+    <p>Three moves for the GM: choose the split, roster to the forecast, and share the work to suit the split. Then a pilot in {{sb.pilot_outlets}} outlets: shadow, roster, roll out, judged on cups per labour hour, wait time and walk-aways.</p>
+    <p>Close on the limits: these are our assumptions, not Chagee data. New-store openings, the next part of our work, will use the same simulator before a store opens. About one minute, then questions.</p>
+  </aside>
+</section>
+
+<!-- ======================================================= END -->
+<section class="slide cover" data-title="Thank you">
+  <img class="ll" src="{img:leaves_left}" alt="">
+  <img class="sand" src="{img:sand}" alt="">
+  <div class="t" style="top:210px">
+    <h1>Thank you</h1>
+    <p class="tl">Questions and discussion</p>
+    <div class="rule"></div>
+    <p class="meta">OPIM639 &nbsp;·&nbsp; Group 3 &nbsp;·&nbsp; Keziah, Jin, Ayumi, Revan</p>
+  </div>
+  <img class="cup" src="{img:cup_red}" alt="" style="left:auto;right:120px;transform:none;bottom:70px;width:110px">
+  <aside class="notes"><p>Likely questions: is the brigade always better? No; with spare staff fixed stations are as good. Is the forecast real? No, it is an illustration of the chain, built on stated assumptions.</p></aside>
+</section>
+
+<!-- ======================================================= APPENDIX -->
+<section class="slide content" id="a1" data-chapter="Appendix" data-title="Sources and assumptions">
+  <div class="leafart" aria-hidden="true"></div>
+  <div class="inner">
+    <p class="kicker">Appendix · Sources and assumptions</p>
+    <h2 class="head" style="font-size:30px">Where every number comes from</h2>
+    <div class="body wide" style="margin-top:12px"><div class="apx"><!--APPENDIX--></div></div>
+  </div>
+  <div class="foot"><span>OPIM639 · Group 3 · explainer figures are illustrative assumptions</span><span class="rail"></span><span class="pg"></span></div>
+  <aside class="notes"><p>Soft copy only.</p></aside>
+</section>
+
+</div></div>
+
+<div id="toolbar" role="toolbar" aria-label="Slide controls">
+  <button id="prev" aria-label="Previous slide" title="Previous (←)">◀</button><span class="count" id="count"></span>
+  <button id="next" aria-label="Next slide" title="Next (→ or Space)">▶</button><span class="sep"></span>
+  <button id="modeb" title="Step through each panel, or show every step at once (V)">Reveal: one by one</button>
+  <button id="notesb" title="Speaker notes (N)">Notes</button>
+  <button id="editb" title="Edit text (E)">✎ Edit</button>
+  <button id="dl" class="editonly" title="Save a copy of the deck with your edits built in">⤓ Download</button>
+  <button id="reset" class="editonly" title="Undo all edits made in this browser">Reset</button>
+  <span class="sep"></span><button id="printb" title="Print or save as PDF, one slide per page (P)">⎙ Print / PDF</button>
+  <button id="fs" aria-label="Full screen" title="Full screen (F)">⛶ Full screen</button>
+</div>
+<div id="toast" role="status"></div>
+<script id="baked-edits" type="application/json">{}</script>
+<div id="notes"><h6>Speaker notes</h6><div class="nb"></div></div>
+
+<script>/*__DATA__*/</script>
+<script>/*__JS__*/</script>
+</body>
+</html>

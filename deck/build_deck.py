@@ -93,7 +93,7 @@ CONTENT = [
             ("counter", "Counter",
              "Moving toward semi-automation: QR-scan dispensing, Chagee Express.",
              "Simulate the counter before the store exists, and flag which inputs would change the choice.",
-             "Store format / equipment; franchisees", "slides {{ref.mech|int}} to {{ref.cost|int}}"),
+             "Store format / equipment; franchisees", "slides {{ref.mech|int}} to {{ref.staff|int}}"),
             ("after", "After opening",
              "Not covered by public sources.",
              "Compare actual demand with the range to narrow the next market's forecast.",
@@ -183,15 +183,12 @@ CONTENT = [
         view_lead="Three topics, three decisions.",
         view_body="Topic 3 feeds Predict; Topics 4 and 5 feed Provision and Counter. Sourcing is fixed by design, "
                   "so we take it as given, and the franchise revenue share stays out of scope.",
-        notes=("About 40 seconds. The course has eight topics. Chagee runs one closed channel, from its app to its "
-               "own stores, so the marketplace topics do not arise: there are no third-party sellers, no "
-               "fulfilment-service choice and no channel conflict. Topics 6 and 7 are simply outside our question, "
-               "which stops at the counter. Topics 3, 4 and 5 are where a new store's risk sits: predicting demand, "
-               "planning the opening inventory, and choosing people or robots at the counter. Use the toggle: because "
-               "Chagee's sourcing is fixed, a demand miss can only be absorbed in the store. If asked why, open "
-               "How the logic works: goods flow from suppliers through warehouses to stores, and a miss is absorbed "
-               "wherever something can still change in time; with origin and routes fixed long before opening, "
-               "only the store's opening stock and counter speed can react. That is why we chose this slice."),
+        notes=("About 35 seconds. The course has eight topics. Chagee runs one closed channel, from its app to its "
+               "own stores, so the marketplace topics do not arise: no third-party sellers, no fulfilment-service "
+               "choice, no channel conflict. Topics 6 and 7 are outside our question. Topics 3, 4 and 5 are where a "
+               "new store's risk sits: predicting demand, planning the opening inventory, and choosing people or "
+               "robots at the counter. Use the toggle: because Chagee's sourcing is fixed, a demand miss can only "
+               "be absorbed in the store, in its opening stock and its counter."),
         sources="Topic names and content: OPIM639 course outline (AY2026-27), weekly lesson plans. Closed channel, "
                 "no third-party sellers: brief.md section 3, our reading; app ordering rests on I-leeyen (INFORMAL). "
                 "Direct sourcing and HQ distribution: L-prn. Franchise revenue share: out of scope, no figure "
@@ -287,11 +284,10 @@ CONTENT = [
         view_kicker="Our view",
         view_lead="Materials are half of opening; service capacity is the other half.",
         view_body="People flex; machines come in whole units. Next: the same counter in a store replica, then its cost.",
-        notes=("About 25 seconds. Materials are only half of an opening; the counter is the other half. Two "
-               "course concepts. Bucket brigade: people carry a drink along and hand it over, so in a surge the "
-               "load evens out. Bottleneck: machines are fixed at their station, so the queue builds at the slowest "
-               "one. Flip to as sized in our cost model: no queue, but the machines sit idle much of the run, and "
-               "idle capacity is what a store pays for. Next, the same idea inside a real store layout."),
+        notes=("About 20 seconds. Materials are half of an opening; the counter is the other half. Two course "
+               "concepts. Bucket brigade: people hand a drink along, so in a surge the load evens out. Bottleneck: "
+               "machines are fixed, so the queue builds at the slowest one, and sized for the peak they sit idle. "
+               "Next, the same idea in a store layout."),
         sources="Bucket-brigade engine: course Week 5 explainer (reference, read-only), wrapped by "
                 "sim/mechanism.js. As-sized ratios read from sim/ peakUtilisation and plan. Illustration settings: "
                 "assumptions.json illustration (mixed_sizing needs approval).",
@@ -314,14 +310,12 @@ CONTENT = [
         serve_printnote="Printed at the moderate surge.",
         view_kicker="Our view",
         view_lead="Robots buy speed in the peak; whether it pays is the next slide.",
-        notes=("About 40 seconds. The main counter view: two counters laid out like a Chagee tea bar, seeing the "
-               "same customers. Order on the right, brewing behind the counter, pick-up on the left; it plays on its "
-               "own. Top: people as the Week 5 bucket brigade, slowest first: the last worker hands over, walks "
-               "back and takes over from the colleague behind, so the line balances itself. Bottom: fastest first. "
-               "The fast worker is held back by the slow one, the red ring, and fewer cups get out. Switch the "
-               "bottom to All-robot: nobody moves, the cups move. Underneath, from the cost model: today's counter "
-               "hands over a cup in about {{sim.st_med_mixed|min1}} at the median, all-robot in about "
-               "{{sim.st_med_all_machine|sec}}. None of it is measured. Next: what each counter costs."),
+        notes=("About 30 seconds. The main counter view: two counters laid out like a Chagee tea bar, same "
+               "customers, playing on their own. Top: people as the Week 5 bucket brigade, slowest first, so the "
+               "line balances itself. Bottom: fastest first; the fast worker is held back by the slow one, the red "
+               "ring, and fewer cups get out. Switch the bottom to All-robot: the cups move, nobody walks. From the "
+               "cost model: today's counter hands over a cup in about {{sim.st_med_mixed|min1}} at the median, "
+               "all-robot in about {{sim.st_med_all_machine|sec}}. Not measured. Next: what each costs."),
         sources="Semi-automation (machine dispenses the formulation): L-unsw; Chagee Express semi-automated "
                 "machine: L-cyberrt. Layout: illustrative, after a Chagee tea-bar storefront (order right, pick-up "
                 "left). Animation: sim/store.js (Week 5 brigade rules, illustration.walk_back_speed). Times and lost "
@@ -573,8 +567,8 @@ CONTENT = [
     ),
     dict(
         key="a1d", widget="a1", kicker="Appendix A1 · assumptions (continued)", chapter="appendix",
-        headline="Every assumption, with its unit, range and source (continued): business case",
-        sections=["business_case"],
+        headline="Every assumption, with its unit, range and source (continued): business case and staffing",
+        sections=["business_case", "staffing"],
         notes="Handout only. Generated from assumptions.json at build time. These cost lines are approved illustrative assumptions and feed "
               "only the A4 revenue and cost analysis, never the simulator.",
         sources="assumptions.json.",
@@ -609,6 +603,7 @@ CONTENT = [
             "Quantities, lead times, shelf lives, minimum orders or origin for tea, other ingredients or packaging.",
             "Inventory savings beyond fresh milk: tea, other ingredients and packaging have not been estimated.",
             "That inventory and counter are optimised together: the prototype treats them separately.",
+            "That Chagee uses any particular staffing or rostering system: the staffing slide is illustrative.",
         ],
         notes="Handout only. Ledger from assumptions.json _sources; the list of claims not made follows brief.md "
               "section 9 plus the limits found while building the deck.",
@@ -665,6 +660,73 @@ CONTENT = [
                 "L-mosimtec. Labour cost floor: L-mom-pwm, L-cpf.",
     ),
     dict(
+        key="staff", widget="staffing",
+        kicker="Counter · staffing", chapter="perform",
+        headline="AI-driven staff optimisation: matching workforce capacity to predicted hourly demand",
+        sub="How many people should a store schedule through the day to minimise labour cost while keeping "
+            "service acceptable?",
+        points=[
+            ("alert", "The operational problem",
+             "Demand peaks at lunch and in the evening. A fixed crew sized for the busiest hour pays for quiet "
+             "hours; a thin crew lets peak queues grow."),
+            ("phone", "How AI contributes",
+             "AI forecasts each hour's demand (Predict). An optimiser, not AI, then sets the roster: forecasting "
+             "and workforce optimisation are separate steps."),
+            ("cycle", "Optimisation logic",
+             "Each hour: the fewest people serving {{staffing.service_level_target|pct}} within "
+             "{{service.target_wait_minutes|int}} minutes at under {{staffing.max_utilisation|pct}} busy (a queueing "
+             "model). Then the cheapest {{staffing.shift_min_hours|int}}–{{staffing.shift_max_hours|int}}-hour "
+             "shifts, with breaks, for at most {{staffing.max_staff_available|int}} people."),
+            ("coins", "Expected business impact",
+             "Steady demand: the minimum crew of {{people.min_staff_on_shift.all_human|int}} covers every hour, so "
+             "no saving. Opening weeks: {{sim.sf_hours_surge|int}} paid hours a day against {{sim.sf_base_surge|int}} "
+             "for a fixed crew, about {{sim.sf_save_open|sgd0}} per opening (illustrative)."),
+            ("lock", "Limitations",
+             "Textbook queue (random arrivals, one shared line), whole-hour shift starts, no absences or skill "
+             "mix. Illustrative inputs; not Chagee's rostering system."),
+        ],
+        explainer_title="Staffing optimiser: one store, one day",
+        caption="Illustrative data: assumed hourly demand, one cup per order, all-human counter.",
+        printnote="Printed at steady demand and our defaults; the opening-week result is under Expected business impact.",
+        gate=dict(
+            n=3, name="Counter · staffing", who=["ops", "entry"],
+            decision="How many people should this store roster each hour, and on which shifts?",
+            action="{{sim.sf_action|txt}}",
+            evidence=[("cost", "Labour a day", "{{sim.sf_cost_steady|sgd0}} vs {{sim.sf_basecost_steady|sgd0}} fixed"),
+                      ("sl", "Served within {{service.target_wait_minutes|int}} min", "{{sim.sf_sl_steady|pct1}}"),
+                      ("busy", "Staff busy", "{{sim.sf_util_steady|pct}}")],
+            tradeoff="Fewer people: lower cost, longer waits at the peaks. A fixed crew: simple, but it pays for "
+                     "the quiet hours.",
+            limitation="Textbook queue and illustrative inputs; the shift rules are proposed. Check the roster "
+                       "against real waits in a pilot before adopting it.",
+            actions=[
+                ("entry", "Send store operations the hourly forecast, including the opening-week hype."),
+                ("ops", "Publish the suggested roster; in opening weeks add the extra shifts only at the peaks."),
+                ("ops", "Each week, rerun with actual hourly sales and measured waits; change the roster only if "
+                        "the service level or cost moves."),
+            ],
+            calc=["Per hour: the fewest people (queueing model, one shared line) who serve "
+                  "{{staffing.service_level_target|pct}} of customers within {{service.target_wait_minutes|int}} minutes "
+                  "and are busy at most {{staffing.max_utilisation|pct}}, at forecast × {{costs.capacity_safety_margin|x}}.",
+                  "Shifts: the set with the fewest paid hours covering every half-hour, {{staffing.shift_min_hours|int}} to "
+                  "{{staffing.shift_max_hours|int}} hours, a break in shifts over {{staffing.break_after_hours|int}} hours, at "
+                  "most {{staffing.max_staff_available|int}} people. The search is exhaustive, so the result is the lowest "
+                  "cost within these rules.",
+                  "Baseline: a fixed crew sized for the busiest hour, every open hour."],
+        ),
+        notes=("About 30 seconds. Same counter, now the people. Two steps to keep apart: AI forecasts each hour's "
+               "demand; an optimiser then sets the roster. Per hour it finds the fewest people that keep "
+               "{{staffing.service_level_target|pct}} of customers within {{service.target_wait_minutes|int}} "
+               "minutes, then picks the cheapest shifts with breaks. At steady demand two people cover every hour, "
+               "so nothing to save. Toggle opening week: a third person only at the peaks, "
+               "{{sim.sf_hours_surge|int}} paid hours instead of {{sim.sf_base_surge|int}} for a fixed crew."),
+        sources="All inputs: assumptions.json (illustrative): store hourly demand shares and cups per day, human "
+                "seconds per cup with coordination and new-staff speed, minimum crew, capacity safety margin, "
+                "target wait, wage, opening hype, and the proposed staffing section. Model: sim/staffing.js "
+                "(Erlang C per hour; exact shift search). Per opening: the daily saving over the assumed opening-hype weeks. "
+                "No Chagee rostering system or figure is claimed.",
+    ),
+    dict(
         key="playbook", widget="playbook",
         kicker="Decide", chapter="decide",
         headline="Review: rerun the comparison with observed inputs and compare it with the original plan",
@@ -709,15 +771,13 @@ CONTENT = [
                   "the model contains no measured service times.",
                   "Updated wages and machine quotes: rerun the counter comparison. Feeds the model directly."],
         ),
-        notes=("About 50 seconds. This is the call to action. There is no default counter; the table collects "
-               "every trigger from the simulator, nearest first. For mixed over all-human, three sit within a few "
-               "per cent of our defaults: machine cost, how well staff coordinate, and the wage. Volume needs "
-               "about {{sim.be_cupsPerDay_all_human_mixed|int}} cups a day. Full automation needs about "
-               "{{sim.be_cupsPerDay_mixed_all_machine|int}} cups a day, and nothing else in range gets it there. "
-               "Fresh milk: order above the base forecast unless waste costs over {{sim.milk_trigger|sgd}} a litre, "
-               "far outside our range; check stockouts of every other item against the opening list. On the right, put in a market: say a higher wage, or a cheaper "
-               "machine. The panel recomputes the verdict, how much it wins by, and which trigger is closest to "
-               "flipping it. If the margin is under a cent a cup, call it a tie and decide on other grounds."),
+        notes=("About 45 seconds. Review: after the opening weeks, rerun with what the store actually saw. The "
+               "table lists every threshold, nearest first. For mixed over all-human, machine cost, staff "
+               "coordination and the wage each sit a few per cent from our defaults; volume needs about "
+               "{{sim.be_cupsPerDay_all_human_mixed|int}} cups a day. Fresh milk: order above base unless waste "
+               "costs over {{sim.milk_trigger|sgd}} a litre; check other stockouts against the opening list. On "
+               "the right, enter a market's wage or machine price: the panel compares the updated scenario with "
+               "the original plan. Under a cent a cup is a tie."),
         sources="Wage: L-mom-pwm, L-mom-ows, L-cpf, L-sdl, L-mom-leave, L-mom-ph. Triggers: sim/ breakEven "
                 "(data.json breakEven, leverNow) and milkTrigger. Your market: sim/ "
                 "runPoint with simulation.live_draws, nearest flip found by bisection at the user's inputs. All "
@@ -769,17 +829,15 @@ CONTENT = [
         view_body="Volume and operating costs mattered more; demand uncertainty still matters for inventory. This "
                   "holds for the scenarios we tested, not as a general rule. Next: replace the assumptions with "
                   "Chagee data and back-test on recent openings such as Korea (Q2 2026).",
-        notes=("About 1 minute. To close: for each opening the four gates give four outputs. A demand estimate for "
-               "the whole store. An opening inventory and replenishment plan, item by item, with fresh milk worked "
-               "through. A counter evaluated against demand and local costs. And a review once sales, stockouts, "
-               "waste and service performance come in. What is it worth? Only part is quantified. Choosing each "
-               "store's counter, rather than a mixed counter everywhere, is worth about {{sim.bn_counter|sgdk}} a "
-               "year in counter costs across about {{benefit.overseas_stores_per_year|int}} openings: move the "
-               "openings and the volume range and the bars follow. The only inventory benefit we quantified is fresh "
-               "milk, about {{sim.bn_stock|sgdk}} once, and only if the pre-launch signal narrows the range as "
-               "assumed. Tea, other ingredients and packaging have not been estimated. These are modelled avoided "
-               "costs, not demonstrated savings; appendix A4 sets them against the cost of building the gates. "
-               "Close on the next step: real data, a back-test on recent openings such as Korea, and a paired pilot."),
+        notes=("About 55 seconds. To close: each opening gets four outputs. A demand estimate for the whole store. "
+               "An opening inventory and replenishment plan, with fresh milk worked through. A counter and a "
+               "roster evaluated against demand and local costs. And a review once sales, stockouts, waste and "
+               "service come in. Only part is quantified: choosing each store's counter rather than a mixed one "
+               "everywhere is worth about {{sim.bn_counter|sgdk}} a year across about "
+               "{{benefit.overseas_stores_per_year|int}} openings, and fresh milk about {{sim.bn_stock|sgdk}} once, if "
+               "the pre-launch signal works as assumed. Tea, other ingredients and packaging are not estimated. "
+               "Modelled avoided costs, not demonstrated savings; appendix A4 sets them against the cost of the "
+               "gates. Next step: real data, a back-test on recent openings such as Korea, and a paired pilot."),
         sources="Overseas openings planned for 2026 and Korea launch: L-jiemian. Semi-automated counter as Chagee's "
                 "standard: L-unsw, L-cyberrt (our reading). Per-store cost: data.json volumeCurve and the cups-per-day "
                 "break-even, x open days. Share below the trigger: openings assumed evenly spread over the approved "
@@ -818,6 +876,9 @@ MODEL_CLAIMS = [
      "{{sim.st_med_all_machine|sec}} (median)", ["store"], "sim/ serveTimes (cost model)"),
     ("First fresh-milk delivery: about {{sim.opt_litres|int}} L on steady demand, about {{sim.opt_litres_hype|int}} L "
      "if the opening surge is real", ["s3"], "sim/ provision (same optimum in days of demand)"),
+    ("Staffing at our defaults: {{sim.sf_hours_steady|int}} paid hours a day at steady demand (same as a fixed crew); "
+     "{{sim.sf_hours_surge|int}} against {{sim.sf_base_surge|int}} in the opening weeks, about {{sim.sf_save_day|sgd0}} a day",
+     ["staff"], "sim/staffing.js (Erlang C, exact shift search); staffing assumptions PROPOSED"),
     ("Best opening milk order holds above base unless waste costs over {{sim.milk_trigger|sgd}} a litre",
      ["s3", "playbook"], "sim/ milkTrigger"),
     ("Best opening order costs {{sim.prov_none|sgd0}} with no signal against {{sim.prov_def|sgd0}} at the "
@@ -858,11 +919,11 @@ QA = [
 # ---------------------------------------------------------------------------
 CHAPTERS = [
     ("context", "Context", "One new store: the whole-store problem, and what AI would add", 50),
-    ("scope", "Scope", "Which course topics we use, which we leave out, and why", 40),
+    ("scope", "Scope", "Which course topics we use, which we leave out, and why", 35),
     ("predict", "Predict", "Gate 1: what demand the whole store should plan for", 40),
     ("provision", "Provision", "Gate 2: the opening inventory plan, with fresh milk as the worked example", 75),
-    ("perform", "Counter", "Gate 3: how the counter flows in a store, and which one to install", 95),
-    ("decide", "Review", "Gate 4: review after opening, and the conditional business case", 110),
+    ("perform", "Counter", "Gate 3: the counter in a store, which one to install, and how to staff it", 110),
+    ("decide", "Review", "Gate 4: review after opening, and the conditional business case", 100),
 ]
 CONTENTS_SECONDS = 10          # the Contents slide itself
 QA_SECONDS = 180               # brief.md: about 3 minutes of Q&A
@@ -873,7 +934,7 @@ PLACEHOLDERS = {
                     plan="Chagee scale facts, the core processes AI can enhance (demand forecasting, opening "
                          "inventory, counter service), the problem statement and its significance."),
 }
-DECK = ["c1", "sc", "s2", "inv", "s3", "mech", "store", "cost", "playbook", "s5", "a1", "a1b", "a1c", "a1d", "a2", "s4",
+DECK = ["c1", "sc", "s2", "inv", "s3", "mech", "store", "cost", "staff", "playbook", "s5", "a1", "a1b", "a1c", "a1d", "a2", "s4",
         "a3", "a4"]
 
 # ---------------------------------------------------------------------------
@@ -967,6 +1028,7 @@ def sim_values(d: dict) -> dict:
                            * A["provision"]["milk_litres_per_cup"]["value"],
         **benefit_values(d),
         **business_values(d),
+        **staffing_values(d),
         "critical_ratio": under / (under + pv["milk_waste_cost_per_litre"]["value"]),
         "prov_none": d["provision"]["none"]["optTotal"],
         "prov_def": d["provision"]["def"]["optTotal"],
@@ -1029,6 +1091,43 @@ def benefit_values(d: dict) -> dict:
     stock = stores * (d["provision"]["none"]["optTotal"] - d["provision"]["def"]["optTotal"])
     return {"bn_store": per, "bn_share": share, "bn_counter": counter, "bn_stock": stock,
             "bn_total": counter + stock, "bn_full_lo": min(full), "bn_full_hi": max(full)}
+
+
+def staffing_values(d: dict) -> dict:
+    """Staff-optimisation slide figures at our defaults (sim/staffing.js via precompute)."""
+    st, su = d["staffing"]["steady"], d["staffing"]["surge"]
+    wage, days = A["costs"]["labour_cost_per_hour"]["value"], 7 * A["demand"]["opening_hype_weeks"]["value"]
+    if not (st["feasible"] and su["feasible"] and st["complete"] and su["complete"]):
+        raise SystemExit("staffing: the default schedule is not a completed, feasible search")
+    return {"sf_hours_steady": st["hours"], "sf_base_steady": st["base"]["hours"],
+            "sf_hours_surge": su["hours"], "sf_base_surge": su["base"]["hours"],
+            "sf_save_day": (su["base"]["hours"] - su["hours"]) * wage,
+            "sf_save_open": (su["base"]["hours"] - su["hours"]) * wage * days,
+            "sf_sl_surge": su["at"]["sl"], "sf_wait_surge": su["at"]["wait"] * 60,
+            "sf_cost_steady": st["cost"], "sf_basecost_steady": st["base"]["cost"], "sf_sl_steady": st["at"]["sl"],
+            "sf_util_steady": st["at"]["util"], "sf_action": staffing_action(st, wage)}
+
+
+def staffing_action(r: dict, wage: float) -> str:
+    """The gate's suggested roster in words; deck.js staffingWidget writes the same sentence live."""
+    req, fixed = r["req"], r["base"]["hours"] / len(r["req"])
+    lo, hi = min(req), max(req)
+    lab = lambda h: f"{10 + h:02d}:00"
+    runs, h = [], 0
+    while h < len(req):
+        if req[h] == hi:
+            e = h
+            while e < len(req) and req[e] == hi:
+                e += 1
+            runs.append(f"{lab(h)}–{lab(e)}")
+            h = e
+        else:
+            h += 1
+    who = (f"Roster {lo} people every hour" if lo == hi else f"Roster {lo} people all day and {hi} at {' and '.join(runs)}")
+    save = (r["base"]["hours"] - r["hours"]) * wage
+    tail = (f" Saves S${save:,.0f} a day against a fixed crew of {fixed:.0f}." if save > 0.5 else
+            f" A fixed crew of {fixed:.0f} costs the same here, so keep it.")
+    return f"{who}: {len(r['shifts'])} shifts, {r['hours']} paid hours (S${r['cost']:,.0f} a day).{tail}"
 
 
 def business_case(d: dict, openings: float = None, one_time_mult: float = 1.0, saving_mult: float = 1.0) -> dict:
@@ -2014,7 +2113,8 @@ def build() -> Path:
             .replace("__SIMJS__", sim_js)
             .replace("__W5__", week5_engine())
             .replace("__MECHJS__", (ROOT / "sim" / "mechanism.js").read_text(encoding="utf-8") + "\n"
-                     + (ROOT / "sim" / "store.js").read_text(encoding="utf-8"))
+                     + (ROOT / "sim" / "store.js").read_text(encoding="utf-8") + "\n"
+                     + (ROOT / "sim" / "staffing.js").read_text(encoding="utf-8"))
             .replace("__ENGINE__", ENGINE_PATH.read_text(encoding="utf-8")))
     OUT.write_text(page, encoding="utf-8")
     return OUT

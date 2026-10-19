@@ -10,7 +10,7 @@ Does what the four gates (Predict, Provision, Counter, Review) save across Chage
 
 It follows the course examples of a revenue and cost analysis: a benefit line, one-time (fixed) costs, recurring (variable) costs, net benefit and cumulative net, year by year, with the assumption behind each line.
 
-- **Benefit (the "revenue" side).** The modelled avoided cost from the benefit slide (slide 10): choosing each store's counter for its conditions instead of a mixed counter at every opening, plus a better first fresh-milk order. It is not sales revenue, and it covers no inventory other than fresh milk.
+- **Benefit (the "revenue" side).** The modelled avoided cost from the benefit slide (slide 11): choosing each store's counter for its conditions instead of a mixed counter at every opening, plus a better first fresh-milk order. It is not sales revenue, and it covers no inventory other than fresh milk.
 - **One-time costs.** Building the four gates and connecting the data (POS sales, app sign-ups, supplier orders). Year 1 only.
 - **Recurring costs.** A maintenance team, a platform fee for every store using the gates, and one analyst day per opening for the Review gate.
 

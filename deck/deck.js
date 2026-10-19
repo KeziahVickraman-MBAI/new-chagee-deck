@@ -696,3 +696,100 @@ function gateSet(root,vals,state=""){                               // vals: {ac
   c.classList.toggle("stale",!!state);
   const st=c.querySelector(".gstate"); if(st) st.textContent=state==="stale"?"· inputs changed, recomputing on release":state==="computing"?"· computing…":state==="error"?"· could not compute":"";
 }
+
+/* ================= staffing: hourly roster from the forecast (sim/staffing.js) =================
+ * Step 1 demand by hour, steps 2-3 the Erlang C requirement, step 4 the lowest-cost shifts, step 5 against
+ * a fixed crew sized for the busiest hour. Forecasting (the demand bars) and optimisation (the roster) are
+ * drawn separately on purpose. */
+function staffingWidget(root){
+  const Stf=window.ChageeStaffing, body=$(root,".body");
+  const cpd=P.ranges.cupsPerDay, wr=P.ranges.wage, slr=RAW.staffing.service_level_target.range, hr=RAW.stations.human_seconds_per_cup.range;
+  const hand=Object.values(RAW.stations.human_seconds_per_cup.value).reduce((a,b)=>a+b,0);
+  const st={hype:false, cups:Sim.dailyBase(P), wage:P.wage, sl:RAW.staffing.service_level_target.value, mult:1};
+  const ctl=(k,label,lo,hi,step,v)=>`<div class="controls"><label for="sf-${k}">${label}</label><div class="rng"><input id="sf-${k}" data-k="${k}" type="range" min="${lo}" max="${hi}" step="${step}" value="${v}"><span class="val" data-v="${k}"></span></div></div>`;
+  body.innerHTML=`<div class="sfgrid"><div>
+      <div class="variants"><button data-h="0">Steady demand</button><button data-h="1">Opening week ×${P.hype}</button></div>
+      <p class="sfh">1 · Forecast orders per hour <span>demand forecasting</span></p>
+      <svg class="chart sfd" viewBox="0 0 560 80" role="img" aria-label="Forecast orders per hour"></svg>
+      <p class="sfh">2–4 · People needed, and the recommended shifts <span>workforce optimisation</span></p>
+      <svg class="chart sfs" viewBox="0 0 560 150" role="img" aria-label="People required and scheduled by half-hour, with the shifts"></svg>
+      <div class="sfctl">${ctl("cups","Demand volume",cpd[0],cpd[1],1,st.cups)}${ctl("wage","Labour cost",wr[0],wr[1],0.01,st.wage)}${ctl("sl","Service-level target",slr[0],slr[1],0.01,st.sl)}${ctl("mult","Processing time",hr[0],hr[1],0.01,st.mult)}</div>
+    </div><div class="sfkpi"></div></div>`;
+  const dsvg=$(body,".sfd"), ssvg=$(body,".sfs"), kpi=$(body,".sfkpi");
+  const H=RAW.store.open_hours_per_day.value, L=34, R=552, X=h=>L+(R-L)*h/H;
+  const hourLab=h=>String(10+h).padStart(2,"0");
+  const secs=s=>!isFinite(s)?"queue keeps growing":s<60?`${Math.round(s)} s`:`${Math.floor(s/60)}:${String(Math.round(s%60)).padStart(2,"0")} min`;
+  const teal=css("--c-human"), ink="#23272f", mute="#6b7280", red=css("--red");
+  function draw(r,steadyLam,steadyReq){
+    const inp=r.inp;
+    // 1 · demand bars; the steady day as a dashed outline when the opening week is on
+    const dmax=Math.max(...inp.lam,...(steadyLam||[]))*1.12, dB=64, dT=6, Y=v=>dB-(dB-dT)*v/dmax, bw=(R-L)/H*0.72;
+    let s=ticks(dmax,2).map(v=>`<line x1="${L}" x2="${R}" y1="${Y(v)}" y2="${Y(v)}" stroke="#e5e7eb"/>`+txt(L-5,Y(v)+3,int(v),`font-size="9" fill="${mute}" text-anchor="end"`)).join("");
+    inp.lam.forEach((l,h)=>{ const x=X(h)+((R-L)/H-bw)/2;
+      s+=`<rect x="${x}" y="${Y(l)}" width="${bw}" height="${Math.max(0,dB-Y(l)-1)}" rx="3" fill="${css("--amber")}"><title>${hourLab(h)}:00 · ${int(l)} orders forecast</title></rect>`;
+      if(steadyLam) s+=`<rect x="${x}" y="${Y(steadyLam[h])}" width="${bw}" height="${dB-Y(steadyLam[h])}" fill="none" stroke="${ink}" stroke-width="1" stroke-dasharray="3 2"/>`;
+      s+=txt(X(h)+(R-L)/H/2,dB+12,hourLab(h),`font-size="9" fill="${mute}" text-anchor="middle"`); });
+    if(steadyLam) s+=txt(R,dT+4,"dashed = steady demand",`font-size="9" fill="${mute}" text-anchor="end"`);
+    dsvg.innerHTML=s;
+    // 2-4 · people required (dashed) against people on the counter (shaded), then one bar per shift
+    const sch=r.sched, cov=sch.feasible?Stf.coverage(sch.shifts,2*H):null, req=r.req.map(x=>x??inp.maxStaff+1);
+    const fixed=r.base?r.base.hours/H:0;
+    const pmax=Math.max(...req,...(cov||[0]),fixed)+1, cT=5, cB=50, Yc=v=>cB-(cB-cT)*v/pmax, Xs=sl=>L+(R-L)*sl/(2*H);
+    s="";
+    for(let v=0; v<=pmax; v+=(pmax>6?2:1)) s+=`<line x1="${L}" x2="${R}" y1="${Yc(v)}" y2="${Yc(v)}" stroke="#eef0f3"/>`+txt(L-5,Yc(v)+3,v,`font-size="9" fill="${mute}" text-anchor="end"`);
+    if(cov){ let d=`M${Xs(0)} ${Yc(0)}`; cov.forEach((c,i)=>{ d+=`L${Xs(i)} ${Yc(c)}L${Xs(i+1)} ${Yc(c)}`; }); d+=`L${Xs(2*H)} ${Yc(0)}Z`;
+      s+=`<path d="${d}" fill="${teal}" opacity=".3"/>`; }
+    const stepPath=(arr,attr)=>{ let d=""; arr.forEach((c,h)=>{ d+=(h?"L":"M")+X(h)+" "+Yc(c)+"L"+X(h+1)+" "+Yc(c); }); return `<path d="${d}" fill="none" ${attr}/>`; };
+    if(steadyReq) s+=stepPath(steadyReq,`stroke="${mute}" stroke-width="1.5" stroke-dasharray="2 2"`);
+    s+=stepPath(req,`stroke="${ink}" stroke-width="2" stroke-dasharray="5 3"`);
+    if(r.base) s+=`<line x1="${L}" x2="${R}" y1="${Yc(fixed)}" y2="${Yc(fixed)}" stroke="${red}" stroke-width="1.5" stroke-dasharray="1 3"/>`;
+    for(let h=0;h<=H;h+=2) s+=txt(X(h),cB+11,hourLab(h)+":00",`font-size="9" fill="${mute}" text-anchor="middle"`);
+    const n=(sch.shifts||[]).length, g0=cB+16, rh=n?Math.min(10,(150-g0)/n):10;
+    (sch.shifts||[]).forEach((x,i)=>{ const y=g0+i*rh;
+      s+=txt(L-5,y+rh*0.7,`P${i+1}`,`font-size="8.5" fill="${mute}" text-anchor="end"`);
+      s+=`<rect x="${X(x.start)}" y="${y}" width="${X(x.start+x.len)-X(x.start)}" height="${rh-2}" rx="3" fill="${teal}"><title>Person ${i+1}: ${hourLab(x.start)}:00 to ${hourLab(x.start+x.len)}:00${x.brk!=null?", break at "+hourLab(Math.floor(x.brk/2))+":"+(x.brk%2?"30":"00"):""}</title></rect>`;
+      if(x.brk!=null) s+=`<rect x="${Xs(x.brk)}" y="${y-0.5}" width="${Xs(x.brk+inp.breakSlots)-Xs(x.brk)}" height="${rh-1}" fill="#fff"/>`; });
+    if(!sch.feasible) s+=txt((L+R)/2,g0+34,"No schedule meets every constraint",`font-size="12" font-weight="700" fill="${red}" text-anchor="middle"`);
+    ssvg.innerHTML=s;
+    // KPIs
+    const status=sch.feasible&&sch.complete?`<p class="sfok">✓ Lowest-cost schedule within these shift rules</p>`
+      :sch.feasible?`<p class="sfbad">Best schedule found; the search stopped early, so it is not proven lowest-cost</p>`
+      :`<p class="sfbad">No schedule meets every constraint: ${sch.reason==="requirement"?`an hour needs more than ${inp.maxStaff} people`:`covering every hour needs more than ${inp.maxStaff} people within the shift rules`}.</p>`;
+    const b=r.base, a=r.at, hi=r.high;
+    kpi.innerHTML=`<div class="sflegend"><span><i class="lq"></i>needed</span><span><i class="lc"></i>on the counter</span><span><i class="lf"></i>fixed crew</span>${steadyReq?`<span><i class="ls"></i>steady need</span>`:""}</div>`+status+(sch.feasible?`
+      <h4>LABOUR COST A DAY</h4><div class="big">${money0(r.cost)}</div>
+      <div class="stat"><span>Fixed crew of ${fixed}</span><b>${money0(b.cost)}</b></div>
+      <div class="stat best"><span>Saving</span><b>${money0(b.cost-r.cost)} (${pct((b.cost-r.cost)/b.cost)})</b></div>
+      <div class="stat"><span>Paid hours</span><b>${sch.hours} vs ${b.hours}</b></div>
+      <hr><h4>SERVICE AT FORECAST DEMAND</h4>
+      <div class="stat"><span>Average wait</span><b>${secs(a.wait*3600)}</b></div>
+      <div class="stat"><span>Within ${RAW.service.target_wait_minutes.value} min</span><b>${pct1(a.sl)}</b></div>
+      <div class="stat"><span>…at the top of the range</span><b>${pct1(hi.sl)}</b></div>
+      <div class="stat"><span>Staff busy (fixed crew)</span><b>${pct(a.util)} (${pct(b.util)})</b></div>
+      <p class="note">Labour cost changes the bill, not the roster: every hour costs the same.</p>`:"");
+    // the gate's decision, in the same words build_deck.py prints (staffing_action)
+    if(sch.feasible){
+      const lo=Math.min(...r.req), hi=Math.max(...r.req), runs=[];
+      for(let h=0;h<r.req.length;){ if(r.req[h]===hi){ let e=h; while(e<r.req.length&&r.req[e]===hi) e++; runs.push(`${hourLab(h)}:00–${hourLab(e)}:00`); h=e; } else h++; }
+      const save=b.cost-r.cost;
+      gateSet(root,{action:(lo===hi?`Roster ${lo} people every hour`:`Roster ${lo} people all day and ${hi} at ${runs.join(" and ")}`)
+          +`: ${sch.shifts.length} shifts, ${sch.hours} paid hours (${money0(r.cost)} a day).`
+          +(save>0.5?` Saves ${money0(save)} a day against a fixed crew of ${fixed}.`:` A fixed crew of ${fixed} costs the same here, so keep it.`),
+        cost:`${money0(r.cost)} vs ${money0(b.cost)} fixed`, sl:pct1(a.sl), busy:pct(a.util)});
+    } else gateSet(root,{action:"No roster meets every constraint: add staff, relax the service-level target or accept longer waits.",
+        cost:"–", sl:"–", busy:"–"});
+    $$(body,"[data-v]").forEach(el=>{ const k=el.dataset.v;
+      el.textContent=k==="cups"?`${int(st.cups)} cups/day`:k==="wage"?`${money(st.wage)}/h`:k==="sl"?pct(st.sl):`${Math.round(hand*st.mult)} s/cup`; });
+    $$(body,".variants button").forEach(x=>x.classList.toggle("on",(x.dataset.h==="1")===st.hype));
+  }
+  function compute(){
+    const over={cupsPerDay:st.cups,wage:st.wage,slTarget:st.sl,humanMult:st.mult};
+    const r=Stf.run({...Stf.inputs(RAW,Sim,{...over,hype:st.hype}),uHigh:DATA.defaults.u});
+    let steadyLam=null, steadyReq=null;
+    if(st.hype){ const s0=Stf.inputs(RAW,Sim,over); steadyLam=s0.lam; steadyReq=Stf.requirement(s0); }
+    draw(r,steadyLam,steadyReq);
+  }
+  $$(body,"input[type=range]").forEach(i=>i.addEventListener("input",()=>{ st[i.dataset.k]=+i.value; compute(); }));
+  $$(body,".variants button").forEach(x=>x.onclick=()=>{ st.hype=x.dataset.h==="1"; compute(); });
+  compute();
+}
