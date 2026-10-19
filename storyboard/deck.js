@@ -212,6 +212,7 @@
                             mode: o.share === "brigade" ? "brigade" : "fixed", assign: o.share === "fixed_worst" ? "worst" : "best" });
 
     ctl.innerHTML = `<button class="btn primary" data-k="play">▶ Play</button><button class="btn" data-k="step">Step +30 s</button>
+      <button class="btn" data-k="end" title="Skip to the end of the peak hour and compare A and B">⏭ End</button>
       <button class="btn" data-k="reset">Reset</button><span class="seg"><button class="btn" data-v="10">×10</button><button class="btn" data-v="30">×30</button></span>`;
     $(side, ".dslot").replaceWith(daySeg(setDay));
 
@@ -279,7 +280,7 @@
       if (!S.workers.length) s += T(292, Y0 + 3 * RH, "robots only", `font-size="10" fill="${COL.taupe}" text-anchor="middle"`);
       $(el, "svg").innerHTML = s;
       const mi = Math.max(0, Math.min(60, minute(S)));
-      $(el, ".ostat.live").innerHTML = `<span>minute <b>${mi.toFixed(0)}</b></span><span>served <b>${S.servedInHour}</b></span><span>walked away <b>${S.lost}</b></span>` +
+      $(el, ".ostat.live").innerHTML = `<span>minute <b>${mi.toFixed(0)}</b> / 60</span><span>served <b>${S.servedInHour}</b></span><span>walked away <b>${S.lost}</b></span>` +
         (S.mode === "brigade" && S.workers.length > 1 ? `<span>hand-overs <b>${S.handovers.length}</b></span>` : "");
     }
     function table() {
@@ -305,6 +306,41 @@
           `. Four splits only; a single machine can undercut all by hand (slide 08).`;
       }
     }
+    // end of the hour: A against B, this run and the mean of the seeded runs
+    const endBox = document.createElement("div"); endBox.className = "endcmp screenonly"; panel.append(endBox);
+    endBox.addEventListener("click", e => { const k = e.target.closest("[data-x]")?.dataset.x; if (!k) return;
+      endBox.classList.remove("open"); if (k === "again") { restartBoth(); st.playing = true; sync(); } });
+    function showEnd() {
+      const R = st.o.map((o, i) => {
+        const S = o.S, t0 = S.measureFrom, inH = S.done.filter(c => c.born >= t0 && c.born < t0 + 3600).map(c => c.out - c.born).sort((a, b) => a - b);
+        const c = conf(o), cost = C.dayCost(Sim, c.P, c.setup, BUS.day, c.setup === "all_machine" ? undefined : o.staff);
+        return { name: mode === "share" ? SHARE.find(x => x[0] === o.share)[1] : (presetOf(o) ? PRESETS[presetOf(o)].label : "Custom split"),
+          people: c.setup === "all_machine" ? 0 : o.staff, served: S.servedInHour, lost: S.lost, wait: inH.length ? inH[Math.floor(inH.length / 2)] : null,
+          hand: S.mode === "brigade" && S.workers.length > 1 ? S.handovers.length : null, cost: cost.total, res: o.res };
+      });
+      const [a, b] = R, row = (lab, f, fmt, better, show = true) => { if (!show) return "";
+        const va = f(a), vb = f(b), w = va == null || vb == null || va === vb ? -1 : (better === "low" ? (va < vb ? 0 : 1) : (va > vb ? 0 : 1));
+        return `<tr><td>${lab}</td><td class="${w === 0 ? "win" : ""}">${va == null ? "–" : fmt(va)}</td><td class="${w === 1 ? "win" : ""}">${vb == null ? "–" : fmt(vb)}</td></tr>`; };
+      const id = x => `${x}`, sp = mode === "split";
+      const dl = b.lost - a.lost, dw = (b.wait ?? 0) - (a.wait ?? 0), dc = b.cost - a.cost;
+      const say = [dl ? `B, ${b.name}, ${dl < 0 ? "kept" : "lost"} ${Math.abs(dl)} more ${Math.abs(dl) === 1 ? "order" : "orders"} than A` : "A and B kept the same orders",
+                   a.wait != null && b.wait != null && Math.abs(dw) >= 1 ? `waits ${mmss(Math.abs(dw))} ${dw < 0 ? "shorter" : "longer"}` : "",
+                   sp && Math.abs(dc) >= 1 ? `and costs ${money(Math.abs(dc))} a day ${dc > 0 ? "more" : "less"}` : ""].filter(Boolean).join(", ");
+      endBox.innerHTML = `<div class="eh"><b>End of the peak hour · ${DAY_LABEL[BUS.day]}</b><button class="btn" data-x="again">▶ Watch again</button><button class="btn" data-x="close" title="Back to the counters">✕</button></div>
+        <table><tr><th></th><th><span class="badge">A</span>${a.name}</th><th><span class="badge">B</span>${b.name}</th></tr>
+        ${row("People on the line", r => r.people, id, "low")}
+        ${row("Served in the hour", r => r.served, id, "high")}
+        ${row("Walked away", r => r.lost, id, "low")}
+        ${row("Median wait", r => r.wait, mmss, "low")}
+        ${row("Hand-overs", r => r.hand, id, "none", mode === "share")}
+        ${row("Cost a day", r => r.cost, money, "low", sp)}
+        <tr class="sub"><td colspan="3">Mean of ${SEEDS} runs</td></tr>
+        ${row("Walked away", r => r.res && r.res.lostShare, x => pct(x, 1), "low")}
+        ${row("Median wait", r => r.res && r.res.medianWait, mmss, "low")}</table>
+        <p class="say">${say}. Green = better on that row.</p>`;
+      const pt = $(panel, ".ptop"); endBox.style.top = `${pt.offsetTop + pt.offsetHeight + 4}px`;
+      endBox.classList.add("open");
+    }
     function sync() {
       $(ctl, "[data-k=play]").textContent = st.playing ? "❚❚ Pause" : "▶ Play";
       $$(ctl, ".seg .btn").forEach(b => b.classList.toggle("on", +b.dataset.v === st.speed));
@@ -325,14 +361,15 @@
       const f = e.target.dataset.f, i = +e.target.closest(".opt")?.dataset.o; if (!f) return;
       if (f === "share") st.o[i].share = e.target.value;
       if (f === "split" && e.target.value) st.o[i].robots = [...PRESETS[e.target.value].robots];
-      rebuild(i, f === "share"); restartBoth();
+      endBox.classList.remove("open"); rebuild(i, f === "share"); restartBoth();
     });
     panel.addEventListener("click", e => {
       const b = e.target.closest("button"), optEl = e.target.closest(".opt");
       if (b && b.closest(".cctl")) {
-        if (b.dataset.k === "play") { if (minute(st.o[0].S) >= 60) restartBoth(); st.playing = !st.playing; }
+        if (b.dataset.k === "play") { endBox.classList.remove("open"); if (minute(st.o[0].S) >= 60) restartBoth(); st.playing = !st.playing; }
         else if (b.dataset.k === "step") { st.playing = false; for (const o of st.o) { const S = o.S, end = S.t + 30; while (S.t < end - 1e-9) S.step(0.5); } }
-        else if (b.dataset.k === "reset") { st.playing = false; restartBoth(); return; }
+        else if (b.dataset.k === "reset") { st.playing = false; endBox.classList.remove("open"); restartBoth(); return; }
+        else if (b.dataset.k === "end") { st.playing = false; for (const o of st.o) { const S = o.S, end = S.measureFrom + 3600; while (S.t < end - 1e-9) S.step(0.5); } sync(); showEnd(); return; }
         else if (b.dataset.v) st.speed = +b.dataset.v;
         sync(); return;
       }
@@ -349,18 +386,19 @@
         rebuild(i); restartBoth();
       }
     });
-    BUS.fns.push(() => rebuild());
+    BUS.fns.push(() => { endBox.classList.remove("open"); rebuild(); });
     let last = null;
     (function frame(ts) {
       if (st.playing && slides[cur] === slide && last != null) {
         const sec = Math.min(0.1, (ts - last) / 1000) * st.speed;
         for (const o of st.o) { const S = o.S, end = S.t + sec; while (S.t < end - 1e-9) S.step(Math.min(0.25, end - S.t)); }
-        if (minute(st.o[0].S) >= 60) st.playing = false;
-        sync();
+        const done = minute(st.o[0].S) >= 60;
+        if (done) st.playing = false;
+        sync(); if (done) showEnd();
       }
       last = ts; requestAnimationFrame(frame);
     })();
-    printers.push(() => { st.o = init(); rebuild(null, false, SB.print_minute.value); });
+    printers.push(() => { endBox.classList.remove("open"); st.o = init(); rebuild(null, false, SB.print_minute.value); });
     rebuild(null, false, SB.print_minute.value);                // first frame, and the printed one
   }
   $$(document, '.panel[data-kind="compare"]').forEach(compareWidget);
