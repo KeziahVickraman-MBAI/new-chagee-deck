@@ -372,7 +372,6 @@
     const mapImg = $(svg, "image"), layer = $(svg, "g");
     let M = null, pin = null, userPin = false, step = S.N;
     const oname = j => `${GEO.numbers[j]} · ${GEO.names[j]}`;
-    const nearHub = pt => SP.hubs.value.reduce((a, h) => (Math.hypot(h.x - pt.x, h.y - pt.y) < Math.hypot(a.x - pt.x, a.y - pt.y) ? h : a)).name;
     const CL = [COL.red, "#8E5BA8", "#D07A2D", "#2E8B7A", "#B8860B", "#C0457A", "#5470A8"];
     const avg = RAW.store.cups_per_store_per_year.value / RAW.store.open_days_per_year.value;
     function rebuild() {
@@ -390,27 +389,40 @@
         s += `<circle cx="${e.x.toFixed(0)}" cy="${e.y.toFixed(0)}" r="${M.unmet[i] && step >= 2 && lab >= 0 ? 4 : 3}" fill="${c}" opacity="${M.unmet[i] ? 0.8 : 0.45}"/>`;
       });
       if (step >= 2) M.clusters.forEach(c => (s += `<circle cx="${c.x}" cy="${c.y}" r="${Math.max(14, c.r)}" fill="none" stroke="${CL[c.id % CL.length]}" stroke-width="2" stroke-dasharray="6 5"/>`));
-      if (step >= 3) M.candidates.slice(0, SP.candidates_shown.value).forEach((c, k) =>
-        (s += `<g><circle cx="${c.x}" cy="${c.y}" r="22" fill="#fff" stroke="${COL.navy}" stroke-width="4"/>` +
-              T(c.x, c.y + 9, k + 1, `font-size="26" font-weight="700" fill="${COL.navy}" text-anchor="middle"`) +
-              T(c.x + 30, c.y + 9, `+${Math.round(c.f.netNew)} new cups`, `font-size="27" font-weight="700" fill="${COL.navy}" paint-order="stroke" stroke="#fff" stroke-width="7"`) + `</g>`));
       // existing outlets: hover for name and the model's cups a day today (a click still drops a new pin)
       GEO.outlets.forEach(([x, y], j) => (s += `<g><title>${oname(j)}: about ${Math.round(M.storeCups[j])} cups a day today (model)</title>` +
         `<circle cx="${x}" cy="${y - 14}" r="14" fill="${COL.navy}" stroke="#fff" stroke-width="3"/>` +
         T(x, y - 9, GEO.numbers[j], `font-size="14" font-weight="700" fill="#fff" text-anchor="middle"`) + `</g>`));
+      if (step >= 3) {                                                     // suggested sites, labels placed so they do not overlap
+        const placed = [], W = 210, H = 34;
+        const hits = (r) => placed.some(q => r.x < q.x + q.w && q.x < r.x + r.w && r.y < q.y + q.h && q.y < r.y + r.h);
+        M.candidates.slice(0, SP.candidates_shown.value).forEach((c, k) => {
+          placed.push({ x: c.x - 24, y: c.y - 24, w: 48, h: 48 });
+          const opts = [[30, -17], [30, 26], [30, -60], [-30 - W, -17], [-30 - W, 26]];
+          const [dx, dy] = opts.find(([dx, dy]) => !hits({ x: c.x + dx, y: c.y + dy, w: W, h: H })) || opts[0];
+          placed.push({ x: c.x + dx, y: c.y + dy, w: W, h: H });
+          s += `<g><circle cx="${c.x}" cy="${c.y}" r="22" fill="#fff" stroke="${COL.navy}" stroke-width="4"/>` +
+               T(c.x, c.y + 9, k + 1, `font-size="26" font-weight="700" fill="${COL.navy}" text-anchor="middle"`) +
+               `<rect x="${c.x + dx}" y="${c.y + dy}" width="${W}" height="${H}" rx="8" fill="#fff" stroke="${COL.navy}" stroke-width="2"/>` +
+               T(c.x + dx + W / 2, c.y + dy + 24, `+${Math.round(c.f.netNew)} cups for Chagee`, `font-size="20" font-weight="700" fill="${COL.navy}" text-anchor="middle"`) + `</g>`;
+        });
+      }
       if (step >= 4) {
         s += `<circle cx="${pin.x}" cy="${pin.y}" r="${walkPx}" fill="rgba(184,50,43,.08)" stroke="${COL.red}" stroke-width="2"/>`;
-        f.hit.slice(0, 4).forEach(h => (s += `<line x1="${pin.x}" y1="${pin.y}" x2="${h.x}" y2="${h.y}" stroke="${COL.red}" stroke-width="${Math.max(1.5, Math.min(9, h.cups / 15))}" opacity=".55"/>`));
+        f.hit.slice(0, 4).forEach(h => (s += `<line x1="${pin.x}" y1="${pin.y}" x2="${h.x}" y2="${h.y - 14}" stroke="${COL.red}" stroke-width="${Math.max(2, Math.min(10, h.cups / 12))}" opacity=".6"/>`));
         s += `<path d="M${pin.x} ${pin.y} l-13 -30 a14 14 0 1 1 26 0 z" fill="${COL.red}" stroke="#fff" stroke-width="2.5"/><circle cx="${pin.x}" cy="${pin.y - 36}" r="5" fill="#fff"/>`;
       }
       layer.innerHTML = s;
       const pf = C.forecastDay(Sim, { ...P, cupsYear: f.cups * P.days }, "none");
-      const beside = GEO.outlets.findIndex(([x, y]) => Math.hypot(x - pin.x, y - pin.y) * M.kmpx < 0.3);
-      const at = beside >= 0 ? `Your pin, beside ${oname(beside)}` : userPin ? `Your pin, near ${nearHub(pin)}` : `Suggested pin 1, near ${nearHub(pin)}`;
-      fc.innerHTML = `<div class="t">${at}</div><div class="big">${Math.round(f.cups).toLocaleString("en-SG")}<small>cups a day · ${(f.cups / avg).toFixed(1)}× an average outlet</small></div>
-        <dl><dt>New to Chagee (no store nearby today)</dt><dd>${Math.round(f.netNew)}</dd>
-            <dt>Taken from existing outlets</dt><dd>${Math.round(f.cannibal)}</dd>
-            ${f.hit.slice(0, 2).map(h => `<dt>&nbsp;· ${oname(h.j)}, ${h.km.toFixed(1)} km<br><span class="muted">&nbsp;&nbsp;${Math.round(M.storeCups[h.j])} → ${Math.round(M.storeCups[h.j] - h.cups)} a day</span></dt><dd>−${Math.round(h.cups)}</dd>`).join("")}</dl>
+      const near = GEO.outlets.map(([x, y], j) => ({ j, km: Math.hypot(x - pin.x, y - pin.y) * M.kmpx })).sort((a, b) => a.km - b.km)[0];
+      const share = f.cups > 0 ? f.netNew / f.cups : 0, V = SP.verdict.value;
+      const [vcls, vtxt] = share >= V.strong_new_share ? ["good", "Strong site: mostly new cups"] : share < V.weak_new_share ? ["bad", "Weak site: mostly moves cups"] : ["mid", "Mixed: adds some, moves some"];
+      const who = userPin ? "Your pin" : "Suggested site 1";
+      fc.innerHTML = `<div class="t">${who} · ${near.km < 0.05 ? "on" : near.km.toFixed(1) + " km from"} ${oname(near.j)}</div>
+        <span class="verdict ${vcls}">${vtxt}</span>
+        <div class="big">+${Math.round(f.netNew).toLocaleString("en-SG")}<small>cups a day for Chagee</small></div>
+        <div class="why2">The new store sells ${Math.round(f.cups)} a day (${(f.cups / avg).toFixed(1)}× an average outlet). ${Math.round(f.cannibal)} of those move from outlets nearby${f.hit.length ? ":" : "."}</div>
+        <dl>${f.hit.slice(0, 2).map(h => `<dt title="${Math.round(M.storeCups[h.j])} → ${Math.round(M.storeCups[h.j] - h.cups)} cups a day">${oname(h.j)}, ${h.km.toFixed(1)} km</dt><dd>−${Math.round(h.cups)}</dd>`).join("")}</dl>
         <div class="peak">Peak hour ${hourLabel(pf.peak)}: <b>${Math.round(pf.peakCups)} cups</b> → <b>${pf.peakStaff} ${pf.peakStaff === 1 ? "person" : "people"}</b> on today's counter (slides 06–07).</div>`;
       $$(ctlEl, "[data-v]").forEach(el => { const d = sl.find(x => x[0] === el.dataset.v); el.textContent = d[4](par[d[0]]); });
     }

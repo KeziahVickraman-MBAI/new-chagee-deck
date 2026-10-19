@@ -1231,6 +1231,16 @@
       "range": null,
       "source": "assumption",
       "rationale": "Top clusters by net new cups."
+    },
+    "verdict": {
+      "value": {
+        "strong_new_share": 0.6,
+        "weak_new_share": 0.4
+      },
+      "unit": "share of the new store's cups that are new to Chagee",
+      "range": null,
+      "source": "assumption",
+      "rationale": "The GM's read of a pin: at or above strong_new_share it is a strong site (it mostly adds cups); below weak_new_share it mostly moves cups from existing outlets; in between, mixed. Illustrative cut-offs."
     }
   }
 }

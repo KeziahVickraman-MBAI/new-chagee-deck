@@ -201,6 +201,10 @@ html,body{margin:0;background:#E7E3DC;color:var(--ink);font-family:var(--sans);-
 .fc .big small{font:400 13px var(--sans);color:var(--taupe);margin-left:4px}
 .fc dl{margin:8px 0 0;display:grid;grid-template-columns:1fr auto;gap:4px 10px;font:12.5px/1.35 var(--sans);color:var(--ink2)}
 .fc dd{margin:0;text-align:right;font-weight:600;color:var(--ink)}
+.fc .verdict{display:inline-block;margin-top:6px;padding:3px 8px;border-radius:6px;font:600 11.5px/1.3 var(--sans)}
+.fc .verdict.good{background:#E6EEF8;color:var(--navy)} .fc .verdict.mid{background:#FBF5E8;color:#7A6432} .fc .verdict.bad{background:#FBEDEC;color:var(--red)}
+.fc .why2{font:12.3px/1.4 var(--sans);color:var(--ink2);margin-top:2px}
+.fc dl{grid-template-columns:1fr auto}
 .fc .peak{margin-top:8px;padding-top:7px;border-top:1px solid var(--line);font:12.5px/1.4 var(--sans);color:var(--ink2)}
 .fc .peak b{color:var(--red)}
 .cset.sitectl{gap:3px;padding:8px 12px}
@@ -570,8 +574,8 @@ aside.notes{display:none}
   <div class="leafart" aria-hidden="true"></div>
   <div class="inner">
     <p class="kicker">05 · Predict demand for a new store</p>
-    <h2 class="head">App searches show where demand goes unserved: cluster them, drop a pin, forecast the store</h2>
-    <p class="sub">Chagee Singapore sells mainly through its app, so every search is a demand signal, even where no store is near.</p>
+    <h2 class="head">Where would outlet {{r.next_outlet}} add the most cups for Chagee?</h2>
+    <p class="sub">Not what a new store sells, but what it adds once you subtract the cups it takes from nearby outlets.</p>
     <div class="body" style="grid-template-columns:1fr 300px">
       <div class="panel stepper" data-steps="5" data-kind="site">
         <div class="ptop"><span class="ptitle">App demand to a new-store forecast</span><span class="ctl screenonly"></span></div>
@@ -579,8 +583,8 @@ aside.notes{display:none}
         <ol class="caps">
           <li data-s="1"><span class="n">1</span><span>Navy pins are Chagee's {{facts.sg_outlets}} outlets today (hover for name and cups a day). Dots are synthetic app sessions: gold near an outlet, red where no store was nearby.</span></li>
           <li data-s="2"><span class="n">2</span><span>DBSCAN, an unsupervised method, groups red searches that sit densely together. Scattered searches stay grey as noise.</span></li>
-          <li data-s="3"><span class="n">3</span><span>Each cluster's centre is a candidate site, ranked by the cups it would add that no outlet sells today.</span></li>
-          <li data-s="4"><span class="n">4</span><span>Click anywhere to drop your own pin. Nearby searches split between stores by distance; the lines show the outlets it takes cups from.</span></li>
+          <li data-s="3"><span class="n">3</span><span>Each cluster's centre is a candidate site, ranked by cups for Chagee: what the store sells minus what it takes from nearby outlets.</span></li>
+          <li data-s="4"><span class="n">4</span><span>Click anywhere to test a site. The card gives the gain for Chagee and a verdict; red lines show which outlets would lose cups.</span></li>
           <li data-s="5"><span class="n">5</span><span>The forecast's peak hour sets the opening roster for today's counter, which slides 06 and 07 then run.</span></li>
         </ol>
       </div>
@@ -590,13 +594,13 @@ aside.notes{display:none}
         <p class="flag printonly">Synthetic app data on the team's map; outlet positions approximate (the central inset is enlarged). Not a trained model: the point is the method.</p>
       </div>
     </div>
-    <div class="takeaway"><span class="lab">TAKEAWAY</span><span>The top cluster, near {{s.top_hub}}, would sell about {{r.top_cups}} cups a day, {{r.top_net}} of them new to Chagee. A pin beside an existing outlet mostly moves cups around: about {{r.nextdoor_cannibal|pct}} of its sales are taken from that outlet.</span></div>
+    <div class="takeaway"><span class="lab">TAKEAWAY</span><span>Judge a site by what it adds to Chagee, not what it sells. The top cluster, near {{s.top_hub}}, adds about {{r.top_net}} cups a day; a store beside an existing outlet would sell plenty, but about {{r.nextdoor_cannibal|pct}} of it is moved from that outlet.</span></div>
   </div>
   <div class="foot"><span>OPIM639 · Group 3 · explainer figures are illustrative assumptions · synthetic app data</span><span class="rail"></span><span class="pg"></span></div>
   <aside class="notes">
     <p>Chagee Singapore runs on its app, with few kiosks, so every search is a demand signal, including searches where no store is close. That makes the app the forecasting input for a new store, before it has any sales.</p>
     <p>Step one: synthetic app sessions on our map. Gold are within walking distance of an outlet; red found no store nearby. Step two: DBSCAN, unsupervised machine learning, groups red searches that are dense; scattered ones are noise. Step three: cluster centres are candidate sites.</p>
-    <p>Step four: click the map to drop a pin. The model splits nearby searches between stores by distance, so a pin next to an existing outlet mostly takes its customers. Step five: the forecast's peak hour gives the opening roster for the counter on the next slides.</p>
+    <p>Step four: click the map to test a site. The card leads with the gain for Chagee, which is the store's sales minus the cups it takes from nearby outlets, and gives a verdict: strong, mixed, or mostly moving cups. Try a pin next to Tampines West CC: it sells, but most of it moves from the two Tampines outlets nearby. Step five: the forecast's peak hour gives the opening roster for the counter on the next slides.</p>
     <p>The three sliders are the only inputs: cluster radius, minimum searches per cluster, and how far people will walk. The data is synthetic; with Chagee's real app logs, the same steps would run unchanged. About one and a half minutes.</p>
   </aside>
 </section>

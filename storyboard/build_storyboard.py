@@ -132,6 +132,7 @@ def values(d: dict) -> dict:
     # slide 05: the new-store forecast at the slider defaults (storyboard/precompute.js)
     st = d["site"]
     v["s.top_hub"] = st["top"]["hub"]
+    v["r.next_outlet"] = RAW["facts"]["sg_outlets"]["value"] + 1
     v["r.top_cups"] = st["top"]["cups"]
     v["r.top_net"] = st["top"]["netNew"]
     v["r.nextdoor_cannibal"] = st["nextDoor"]["cannibal"] / st["nextDoor"]["cups"]
