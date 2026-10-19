@@ -125,12 +125,12 @@ html,body{margin:0;background:#E7E3DC;color:var(--ink);font-family:var(--sans);-
 .node .src{font:10.5px var(--sans);color:var(--taupe);margin-top:6px}
 
 /* 03 data matrix */
-.mx{display:grid;grid-template-columns:136px repeat(4,1fr);gap:4px 6px;font:12px/1.22 var(--sans)}
-.mx .ch{background:var(--navy);color:#fff;border-radius:8px;padding:6px 10px;font:500 12px/1.15 var(--sans);display:flex;align-items:center;gap:7px;height:34px}
+.mx{display:grid;grid-template-columns:136px repeat(4,1fr);gap:3px 6px;font:12px/1.22 var(--sans)}
+.mx .ch{background:var(--navy);color:#fff;border-radius:8px;padding:5px 10px;font:500 12px/1.15 var(--sans);display:flex;align-items:center;gap:7px;height:30px}
 .mx .ch svg{width:16px;height:16px;stroke:#fff;fill:none;stroke-width:1.8;flex:none}
 .mx .rl{display:flex;align-items:center;gap:8px;font:600 13px var(--sans);color:var(--ink)}
 .mx .rl:before{content:"";width:9px;height:9px;border-radius:50%;background:var(--red);flex:none}
-.mx .c{display:flex;align-items:center;padding:3px 8px;min-height:29px;color:var(--taupe);border-radius:7px}
+.mx .c{display:flex;align-items:center;padding:2px 8px;min-height:26px;color:var(--taupe);border-radius:7px}
 .mx .c.core{background:#fff;border:1px solid var(--line);color:var(--navy);font-weight:500}
 .mx .rowg{display:contents}
 .mx .rowg.dim>*{opacity:.22}
@@ -712,7 +712,7 @@ aside.notes{display:none}
             <div class="rowg" data-row="5"><div class="rl">Site selection</div><div class="c">Sales density per outlet</div><div class="c core">"No store nearby", home and work</div><div class="c core">Distance and fee by postcode</div><div class="c">Mall footfall, competitors</div></div>
             <div class="rowg" data-row="6"><div class="rl">Menu and promos</div><div class="c">Drink share, customisation</div><div class="c core">Trial and repeat, voucher uplift</div><div class="c">Delivery basket mix</div><div class="c">Collab calendar</div></div>
           </div>
-          <div class="mxnote">White chips mark the core input; grey text refines it. Red rows: our scope. Wait times, footfall, searches ("no store nearby") and home and work location are candidates to confirm, not known fields.</div>
+          <div class="mxnote">White chips: core input; grey: refines it; red rows: our scope. Wait times, footfall, searches and location are to confirm.</div>
         </div>
         <ol class="caps">
           <li data-s="1"><span class="n">1</span><span>Demand forecasts: cups per hour from the store and platform orders, refined by the calendar and weather.</span></li>
