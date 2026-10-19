@@ -137,7 +137,7 @@
   /* ---------------------------------------------------------------- step-through panels */
   function stepper(panel) {
     const N = +panel.dataset.steps, els = $$(panel, "[data-s]"), hooks = [];
-    const ctl = $(panel, ".ctl");
+    const ctl = $(panel, ".ctl:not(.cctl)");
     ctl.innerHTML = `<button class="btn" data-k="prev" aria-label="Previous step">◀</button>
       <button class="btn primary" data-k="play">▶ Play</button>
       <button class="btn" data-k="next" aria-label="Next step">▶</button>
@@ -163,7 +163,7 @@
     panel.closest(".slide")._stepper = S;
     return S;
   }
-  const steppers = $$(document, ".panel.stepper").map(p => ({ p, S: stepper(p) }));
+  const steppers = $$(document, ".panel.stepper, .inner.stepper").map(p => ({ p, S: stepper(p) }));
 
   // 02: the cup token travels along the chain
   steppers.filter(x => x.p.closest("#c2")).forEach(({ p, S }) => {

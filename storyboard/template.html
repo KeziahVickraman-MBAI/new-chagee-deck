@@ -438,6 +438,9 @@ html,body{margin:0;background:#E7E3DC;color:var(--ink);font-family:var(--sans);-
 .endcmp .say{margin:auto 0 0;padding-top:6px;font:500 13.5px/1.4 var(--sans);color:var(--ink)}
 .decide{margin:8px 0 0;display:flex;gap:12px;align-items:baseline;background:#EEF5F0;border-left:4px solid #2F6B45;border-radius:6px;padding:6px 12px;font:12.8px/1.4 var(--sans);color:var(--ink)}
 .decide b{flex:none;font:600 10px/1.3 var(--sans);letter-spacing:.14em;text-transform:uppercase;color:#2F6B45}
+.revctl{position:absolute;right:150px;top:34px;display:flex;align-items:center;gap:8px;z-index:3}
+.revctl .lab{font:600 10px/1 var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--taupe)}
+.revctl .btn{height:24px;padding:0 9px;font-size:11px}
 .apx{columns:3;column-gap:22px;font:9.6px/1.36 var(--sans);color:var(--ink2)}
 .apx p{margin:0 0 4px;break-inside:avoid}
 .apx b{color:var(--ink)}
@@ -859,24 +862,25 @@ aside.notes{display:none}
 <!-- ======================================================= 07 SPLIT THE COUNTER (GM) -->
 <section class="slide content" id="c7" data-chapter="Split" data-title="Split the counter">
   <div class="leafart" aria-hidden="true"></div>
-  <div class="inner">
-    <p class="kicker">07 · Split the counter · the GM's decision<span class="ctag">Course link · Week 5 and Week 6, equipment and technology · the bucket-brigade simulation, with machines</span></p>
+  <div class="inner stepper" data-steps="5">
+    <p class="kicker">07 · Split the counter · the GM's decision<span class="ctag">Course link · Week 5 and Week 6, equipment and technology</span></p>
     <h2 class="head" style="font-size:33px">Keep today's split: machines on the fixed steps, people on the rest. Robots buy a shorter wait, not a lower cost</h2>
-    <p class="decide"><b>GM decision</b><span>Keep machines on order and tag, tea and milk, shake and seal: the cheapest split within the walk-away limit on an event day (S${{r.dec_today_cost}}), and only S${{r.dec_normal_gap}} a day above all by hand on a normal day. Do not buy the machine-made drink yet: S${{r.dec_mm_extra}} a day more for a {{r.dec_mm_faster|mmss}} shorter wait. Revisit at about {{r.ladder_more}} cups a day.</span></p>
     <div class="body" style="grid-template-columns:1fr 330px">
-      <div class="panel" data-kind="compare" data-mode="split">
+      <div class="panel" data-kind="compare" data-mode="split" data-s="1">
         <div class="ptop"><span class="ptitle">Peak hour · same customers</span><span class="ctl screenonly cctl"></span></div>
         <div class="cmp"><div class="opt" data-o="0"></div><div class="opt" data-o="1"></div></div>
         <div class="legend">Navy = robot, white = by hand (click to switch) · red circle = a person · faded = walking · red cup = waiting for a person.</div>
       </div>
       <div class="cards" style="gap:10px">
         <div class="cset screenonly" style="flex-direction:row;align-items:center;gap:10px;padding:7px 12px"><span class="lab">Day</span><span class="dslot"></span></div>
-        <div><div class="ptitle" style="margin-bottom:4px">All four splits, mean of {{a.seeds}} runs</div><table class="res splits"></table>
-          <p class="flag" style="margin-top:5px">Fewest people and the better sharing rule keeping walk-aways within {{sb.walkaway_target|pct}}; cost = people hours × wage + robots.</p>
-          <p class="flag normday" style="margin-top:4px;color:var(--ink2);font-size:10.5px"></p></div>
+        <div><div data-s="2"><div class="ptitle" style="margin-bottom:4px">All four splits, mean of {{a.seeds}} runs</div><table class="res splits"></table>
+          <p class="flag" style="margin-top:5px">Fewest people and the better sharing rule keeping walk-aways within {{sb.walkaway_target|pct}}; cost = people hours × wage + robots.</p></div>
+          <p class="flag normday" data-s="3" style="margin-top:4px;color:var(--ink2);font-size:10.5px"></p></div>
       </div>
     </div>
-    <div class="vs"><div class="wo"><span class="lab">Without AI<br><small style="letter-spacing:.06em;text-transform:none;font-weight:400">our assumed baseline</small></span><span>All by hand on an event day: <b>{{r.hand_staff}} people</b>, median wait {{r.hand_wait|mmss}}, <b>S${{r.hand_cost}}</b> a day.</span></div><div class="wi"><span class="lab">With AI<br><small style="letter-spacing:.06em;text-transform:none;font-weight:400">our proposal</small></span><span>Machines on the fixed steps ({{s.cheapest_label}}): <b>{{r.cheapest_staff}} people</b>, <b>S${{r.cheapest_cost}}</b> a day, but {{s.cheapest_slower}} wait ({{r.cheapest_wait|mmss}}); {{s.fastest_label}} wait {{r.fast_wait|mmss}} for S${{r.fast_cost}}.</span></div></div>
+    <div class="revctl screenonly"><span class="lab">Step through</span><span class="ctl"></span></div>
+    <div class="vs" data-s="4"><div class="wo"><span class="lab">Without AI<br><small style="letter-spacing:.06em;text-transform:none;font-weight:400">our assumed baseline</small></span><span>All by hand on an event day: <b>{{r.hand_staff}} people</b>, median wait {{r.hand_wait|mmss}}, <b>S${{r.hand_cost}}</b> a day.</span></div><div class="wi"><span class="lab">With AI<br><small style="letter-spacing:.06em;text-transform:none;font-weight:400">our proposal</small></span><span>Machines on the fixed steps ({{s.cheapest_label}}): <b>{{r.cheapest_staff}} people</b>, <b>S${{r.cheapest_cost}}</b> a day, but {{s.cheapest_slower}} wait ({{r.cheapest_wait|mmss}}); {{s.fastest_label}} wait {{r.fast_wait|mmss}} for S${{r.fast_cost}}.</span></div></div>
+    <p class="decide" data-s="5"><b>GM decision</b><span>Keep machines on order and tag, tea and milk, shake and seal: the cheapest split within the walk-away limit on an event day (S${{r.dec_today_cost}}), and only S${{r.dec_normal_gap}} a day above all by hand on a normal day. Do not buy the machine-made drink yet: S${{r.dec_mm_extra}} a day more for a {{r.dec_mm_faster|mmss}} shorter wait. Revisit at about {{r.ladder_more}} cups a day.</span></p>
   </div>
   <div class="foot"><span>OPIM639 · Group 3 · explainer figures are illustrative assumptions · robot speeds and costs are assumptions, not Chagee data</span><span class="rail"></span><span class="pg"></span></div>
   <aside class="notes">
