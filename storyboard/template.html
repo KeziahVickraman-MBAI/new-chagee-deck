@@ -548,6 +548,30 @@ html,body{margin:0;background:#E7E3DC;color:var(--ink);font-family:var(--sans);-
 .xnote{margin-top:8px;display:grid;grid-template-columns:1fr 1fr;gap:14px;font:12px/1.4 var(--sans);color:var(--ink2)}
 .xnote p{margin:0;padding-left:10px;border-left:3px solid var(--red)}
 .xnote p+p{border-left-color:var(--taupe)}
+/* ---------- slide 08b: the supervised model ---------- */
+.smf{display:grid;grid-template-columns:1fr 1fr;gap:4px 8px;margin-top:4px}
+.smf .t{display:grid;grid-template-columns:16px 1fr 58px;gap:2px 7px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:7px;padding:4px 8px;cursor:pointer;font:11.5px/1.2 var(--sans);color:var(--ink)}
+.smf .t.off{background:#F3F0EA;color:var(--taupe)}
+.smf .t.nodata{cursor:default;border-style:dashed;color:var(--taupe);background:transparent}
+.smf .cb{width:13px;height:13px;border:1.5px solid var(--navy);border-radius:3px;display:grid;place-items:center;font:700 10px/1 var(--sans);color:#fff}
+.smf .t:not(.off):not(.nodata) .cb{background:var(--navy)}
+.smf .nm b{font-weight:600}
+.smf .nmk{display:block;font:600 8.5px/1.2 var(--sans);letter-spacing:.08em;text-transform:uppercase;margin-top:1px}
+.smf .nmk.yes{color:#2F6B45} .smf .nmk.maybe{color:#8A6A12} .smf .nmk.no{color:var(--red)}
+.smf .cf{position:relative;height:8px;background:var(--ice);border-radius:3px}
+.smf .cf i{position:absolute;top:0;height:100%;border-radius:3px}
+.smf .cf:after{content:"";position:absolute;left:50%;top:-2px;bottom:-2px;width:1px;background:var(--ink2)}
+.smsvg{width:100%;height:100%;display:block;font-family:var(--sans)}
+.smacc .big,.smnew .big{font:700 24px/1.05 var(--sans);color:var(--navy);margin:2px 0}
+.smacc .big small,.smnew .big small{font:500 11px var(--sans);color:var(--ink2);margin-left:4px}
+.smacc table{width:100%;border-collapse:collapse;margin-top:4px;font:11px/1.3 var(--sans);color:var(--ink2)}
+.smacc td{padding:2px 0;border-top:1px solid var(--line)} .smacc td:last-child{text-align:right;font-weight:600;color:var(--ink)}
+.smacc tr.cur td{color:var(--navy);font-weight:700}
+.smnew label{display:grid;grid-template-columns:1fr auto;gap:0 8px;font:11px var(--sans);color:var(--ink2);margin-top:3px}
+.smnew input{grid-column:1/-1;accent-color:var(--navy);width:100%;margin:1px 0 0}
+.smnew .val{font-weight:600;color:var(--ink)}
+.smnew .warn{font:10.5px/1.35 var(--sans);color:var(--red);margin-top:4px}
+.smnew .use{margin-top:6px;height:24px;font-size:11px}
 .slide.agenda.long li{padding:4px 0}
 .slide.agenda.long li .nm{font-size:18px}
 .slide.agenda.long li .why{font-size:11.5px;margin-top:1px}
@@ -637,7 +661,7 @@ aside.notes{display:none}
       <li data-go="c5"><span class="no">05</span><span class="nm">Predict demand<span class="why">App searches, DBSCAN and a new-store pin</span></span></li>
       <li data-go="c6"><span class="no">06</span><span class="nm">Share the counter<span class="why">The bucket brigade, side by side</span></span></li>
       <li data-go="c7"><span class="no">07</span><span class="nm">Split the counter<span class="why">Which steps stay human: the GM's call</span></span></li>
-      <li data-go="x1"><span class="no">08</span><span class="nm">Four scores for every location <span class="ext sm">Extension</span><span class="why">A pin rated on demand, delivery, competition and cannibalisation</span></span></li>
+      <li data-go="x1"><span class="no">08</span><span class="nm">Four scores for every location <span class="ext sm">Extension</span><span class="why">A pin rated on four things · 08b the supervised model, as a proxy for a new market</span></span></li>
       <li data-go="x2"><span class="no">09</span><span class="nm">From pin to net profit <span class="ext sm">Extension</span><span class="why">Six steps to a go / no-go, net to Chagee</span></span></li>
       <li data-go="c8"><span class="no">10</span><span class="nm">The GM's playbook <span class="tbc sm">TBC</span><span class="why">Four decisions and a pilot</span></span></li>
       <li data-go="c9"><span class="no">11</span><span class="nm">The size of the benefit <span class="tbc sm">TBC</span><span class="why">Orders kept, revenue, and what it rests on</span></span></li>
@@ -1132,7 +1156,7 @@ aside.notes{display:none}
     </div>
     <div class="revctl screenonly" style="top:8px"><span class="lab">Step through</span><span class="ctl"></span></div>
     <div class="xstrip" data-s="2"><span class="lab">Attributes the model tags to each pin</span><span>residents and workers within {{x.residents_radius_km}} km · MRT and bus tap-ins · footfall · delivery orders from the area · competing outlets within {{x.competition_radius_m}} m · Chagee outlets within {{x.ring_km}} km · rent per sq ft · staff needed at peak</span></div>
-    <p class="xai" data-s="5"><b>What is AI here</b><span>Scoring a pin from its attributes would be a supervised model trained on outlets' results: a production idea. Here the three scores are set by hand, and the cannibalisation factor is computed by the slide 05 engine on synthetic data.</span></p>
+    <p class="xai" data-s="5"><b>What is AI here</b><span>Scoring a pin from its attributes would be a supervised model trained on outlets' results: a production idea. Here the three scores are set by hand, and the cannibalisation factor is computed by the slide 05 engine on synthetic data. Slide 08b runs the supervised model.</span></p>
     <p class="xill">Illustrative. Synthetic data, not Chagee data. Chagee's opening history is internal and we do not have it.</p>
   </div>
   <div class="foot"><span>OPIM639 · Group 3 · explainer figures are illustrative assumptions · synthetic data, not Chagee data</span><span class="rail"></span><span class="pg"></span></div>
@@ -1140,6 +1164,42 @@ aside.notes{display:none}
     <p>An extension: where this scales next, and not part of the benefit figure. The decision-maker here is corporate expansion planning, not the GM. This builds on Jin's site-selection framework.</p>
     <p>Step through it. Corporate drops a pin; the model tags its attributes; three scores follow. Demand, delivery demand and competition are set by hand here, and you can drag a bar to test another value: in production, a supervised model would score them. We call the second one delivery demand, not delivery relief, because all Chagee delivery runs through third-party apps, according to an anonymous Chagee source; whether the platforms share this data is to confirm.</p>
     <p>The cannibalisation factor is computed by the same engine as slide 05: about {{x.moved_share|pct}} of site A's cups would move from existing outlets. Switch to the pin with an outlet inside the ring, or the one beside an outlet, and watch it jump. All synthetic. About thirty-five seconds.</p>
+  </aside>
+</section>
+
+<!-- ======================================================= 08b EXTENSION: THE SUPERVISED MODEL -->
+<section class="slide content" id="x1b" data-chapter="Sites" data-title="The supervised model">
+  <div class="leafart" aria-hidden="true"></div>
+  <div class="inner stepper" data-steps="4">
+    <p class="kicker">08b · The supervised model behind the scores<span class="ext">Extension: where this scales next. Not included in the S$ benefit.</span></p>
+    <h2 class="head" style="font-size:30px;max-width:1000px">A model trained on Singapore's outlets can score a site where Chagee has no history yet, if it uses inputs that market has</h2>
+    <p class="sub">Supervised learning: switch inputs on or off; the model retrains live and is tested on outlets it has not seen. A proxy for a new market with no data (illustrative, synthetic).</p>
+    <div class="body" style="grid-template-columns:1fr 318px;gap:18px;margin-top:10px">
+      <div class="panel smp" data-kind="smodel">
+        <div class="ptop"><span class="ptitle">Train on {{x.sm_n}} outlets · toggle the inputs</span><span class="seg smpre screenonly"></span></div>
+        <div class="smf" data-s="2"></div>
+        <div class="visual" style="margin-top:4px"><svg class="smsvg" viewBox="0 0 560 170" preserveAspectRatio="xMidYMid meet" aria-label="Each outlet's cups a day against the model's prediction when that outlet is held out"></svg></div>
+        <ol class="caps" style="min-height:36px">
+          <li data-s="1"><span class="n">1</span><span>Training data: each Singapore outlet's cups a day is the label (synthetic, from the slide 05 engine).</span></li>
+          <li data-s="2"><span class="n">2</span><span>Inputs: attributes at each outlet. Click to switch one off; the bar shows how much it moves the forecast.</span></li>
+          <li data-s="3"><span class="n">3</span><span>Test: each outlet is predicted by a model trained on the others. Dots on the line are perfect forecasts.</span></li>
+          <li data-s="4"><span class="n">4</span><span>New market: no app history and no outlets yet. Keep only the inputs it has, then score a site with the sliders.</span></li>
+        </ol>
+      </div>
+      <div class="cards" style="gap:8px">
+        <div class="bc smacc" data-s="3"></div>
+        <div class="bc smnew" data-s="4"></div>
+      </div>
+    </div>
+    <div class="revctl screenonly" style="top:8px"><span class="lab">Step through</span><span class="ctl"></span></div>
+    <p class="xai" data-s="4" style="margin-top:8px"><b>What is AI here</b><span>Supervised learning (ridge regression) from site attributes to cups a day. The labels are the slide 05 engine's synthetic outlets, so the fit flatters; Chagee's real opening history would fit worse. Using Singapore to score another market assumes its customers behave alike: check against the first outlets' actuals.</span></p>
+    <p class="xill">Illustrative. Synthetic data, not Chagee data. Chagee's opening history is internal and we do not have it.</p>
+  </div>
+  <div class="foot"><span>OPIM639 · Group 3 · explainer figures are illustrative assumptions · synthetic data, not Chagee data</span><span class="rail"></span><span class="pg"></span></div>
+  <aside class="notes">
+    <p>This is the model behind step three of the framework, actually running. It learns cups a day from a site's attributes, trained on Singapore's {{x.sm_n}} outlets. The labels are synthetic, from the slide 05 engine, so read it as the method, not a forecast.</p>
+    <p>We test it fairly: each outlet is predicted by a model that never saw it. With every input, it misses by about {{x.sm_all_mae}} cups a day on average. Now the proxy for a new market: there is no Chagee app history and no outlet network yet, so switch those inputs off. With only population and distance to a town centre, the error grows to about {{x.sm_nm_mae}} cups a day, still better than guessing the average outlet, about {{x.sm_none_mae}}.</p>
+    <p>So the model can travel, but only on inputs the new market has, with wider ranges, and it must be rechecked against the first outlets' actuals. That is the continual-learning step on the next slide. About forty seconds.</p>
   </aside>
 </section>
 

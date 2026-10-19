@@ -1457,6 +1457,27 @@
       "range": null,
       "source": "assumption",
       "rationale": "Derives slide 09's recommendation from the computed numbers."
+    },
+    "model": {
+      "value": {
+        "ridge_lambda": 1,
+        "delivery_km": 3,
+        "nearest_cap_km": 5
+      },
+      "unit": "ridge penalty on standardised features; delivery radius km; cap on distance to the nearest outlet km",
+      "range": null,
+      "source": "assumption",
+      "rationale": "Slide 08b's supervised model (sim/sitemodel.js): ridge regression trained on the slide 05 engine's synthetic outlet cups a day, tested by leave-one-out. A small penalty keeps the fit stable with few outlets. Illustrative; not trained on Chagee data."
+    },
+    "new_market_inputs": {
+      "value": [
+        "pop",
+        "hubKm"
+      ],
+      "unit": "feature keys a market with no Chagee history would have (preset on slide 08b)",
+      "range": null,
+      "source": "assumption",
+      "rationale": "Our assumption: population and town-centre distance exist anywhere; delivery-area demand depends on platform data (to confirm); app searches and the outlet network do not exist before Chagee opens."
     }
   }
 }

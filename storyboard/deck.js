@@ -874,6 +874,84 @@
     printers.push(() => { sel = null; mark(); site = "top"; cannibal(); });
   })();
 
+  /* ---------------------------------------------------------------- 08b the supervised model (sim/sitemodel.js) */
+  // Ridge regression on the synthetic outlets (DATA.siteModel), retrained and tested by leave-one-out on every toggle.
+  // The new-market card scores a site with only the inputs a market with no Chagee history has.
+  (function siteModel() {
+    const sl = $(document, "#x1b"); if (!sl) return;
+    const SMm = window.ChageeSiteModel, D = DATA.siteModel, X = RAW.site_ext, F = SMm.FEATURES, lam = D.lambda;
+    const NM = X.new_market_inputs.value, R = X.residents_radius_km.value, RING = X.ring_km.value, DEL = X.model.value.delivery_km;
+    const UNIT = { pop: `within ${R} km`, hubKm: "km", area: `within ${DEL} km`, unmet: `within ${RING} km`, own: `within ${RING} km`, nearKm: `km, capped at ${D.cap}` };
+    const NMK = { yes: "new market: has it", maybe: "new market: to confirm", no: "new market: none" };
+    const on = new Set(F.map(f => f.key));
+    const S = steppers.find(x => x.p.closest("#x1b"))?.S; let step = S ? S.cur : 4;
+    const fixedNM = { unmet: 0, own: 0, nearKm: D.cap };            // what a market with no Chagee history looks like
+    const med = k => { const v = D.rows.map(r => r.f[k]).sort((a, b) => a - b); return v[Math.floor(v.length / 2)]; };
+    const site = { pop: med("pop"), hubKm: med("hubKm"), area: med("area"), ...fixedNM };
+    const pre = $(sl, ".smpre");
+    pre.innerHTML = `<button class="btn" data-p="all">All inputs</button><button class="btn" data-p="nm">New-market inputs</button>`;
+    pre.onclick = ev => { const b = ev.target.closest("[data-p]"); if (!b) return; on.clear(); (b.dataset.p === "all" ? F.map(f => f.key) : NM).forEach(k => on.add(k)); draw(); };
+    const tiles = $(sl, ".smf");
+    tiles.onclick = ev => { const t = ev.target.closest(".t[data-k]"); if (!t) return; const k = t.dataset.k; on.has(k) ? on.delete(k) : on.add(k); draw(); };
+    let cache = {};
+    const run = keys => { const id = keys.join(","); if (!cache[id]) cache[id] = { m: SMm.fit(D.rows, keys, lam), L: SMm.loo(D.rows, keys, lam) }; return cache[id]; };
+    const near = (a, b) => a.length === b.length && a.every(k => b.includes(k));
+    function draw() {
+      const keys = F.map(f => f.key).filter(k => on.has(k)), { m, L } = run(keys), all = run(F.map(f => f.key)), nm = run(NM), none = run([]);
+      // preset buttons
+      $$(pre, "button").forEach(b => b.classList.toggle("on", b.dataset.p === "all" ? keys.length === F.length : near(keys, NM)));
+      // input tiles with each input's standardised weight (the forecast moves by this many cups per standard deviation)
+      const bmax = Math.max(1, ...m.beta.map(Math.abs));
+      tiles.innerHTML = F.map(f => { const i = keys.indexOf(f.key), b = i >= 0 ? m.beta[i] : 0, w = 50 * Math.abs(b) / bmax;
+        return `<div class="t${i < 0 ? " off" : ""}" data-k="${f.key}" title="${f.unit}"><span class="cb">${i < 0 ? "" : "✓"}</span>` +
+          `<span class="nm"><b>${f.label}</b> <span style="color:${COL.taupe}">${UNIT[f.key]}</span><span class="nmk ${f.newMarket}">${NMK[f.newMarket]}</span></span>` +
+          `<span class="cf" title="${i < 0 ? "off" : `${b >= 0 ? "+" : "−"}${Math.abs(Math.round(b))} cups per standard deviation`}">${i < 0 ? "" : `<i style="${b >= 0 ? `left:50%;width:${w}%;background:${COL.navy}` : `left:${50 - w}%;width:${w}%;background:${COL.red}`}"></i>`}</span></div>`; }).join("") +
+        [["Competitors within " + X.competition_radius_m.value + " m"], ["Rent per sq ft"]].map(([l]) =>
+          `<div class="t nodata"><span class="cb" style="border-style:dashed;border-color:${COL.taupe}"></span><span class="nm"><b>${l}</b><span class="nmk" style="color:${COL.taupe}">not in our synthetic data</span></span><span></span></div>`).join("");
+      // chart: each outlet's cups a day against the held-out prediction (before step 3: the labels alone)
+      const W = 560, H = 170, l = 44, r = 10, t = 10, b = 26, ys = D.rows.map(q => q.y), pr = step >= 3 ? L.pred : ys;
+      const lo = Math.min(...ys, ...pr) * 0.95, hi = Math.max(...ys, ...pr) * 1.03;
+      const Xs = v => l + (v - lo) / (hi - lo) * (W - l - r), Ys = v => H - b - (v - lo) / (hi - lo) * (H - t - b);
+      let g = `<line x1="${Xs(lo)}" y1="${Ys(lo)}" x2="${Xs(hi)}" y2="${Ys(hi)}" stroke="${COL.taupe}" stroke-dasharray="4 3"/>`;
+      [lo, (lo + hi) / 2, hi].forEach(v => { const vv = Math.round(v / 50) * 50;
+        g += T(Xs(vv), H - b + 13, vv, `font-size="9.5" text-anchor="middle" fill="${COL.taupe}"`) + T(l - 5, Ys(vv) + 3, vv, `font-size="9.5" text-anchor="end" fill="${COL.taupe}"`); });
+      g += T((l + W - r) / 2, H - 2, "each outlet's cups a day (synthetic label)", `font-size="10" text-anchor="middle" fill="${COL.ink2}"`) +
+        T(12, (t + H - b) / 2, step >= 3 ? "predicted, outlet held out" : "the label", `font-size="10" text-anchor="middle" fill="${COL.ink2}" transform="rotate(-90 12 ${(t + H - b) / 2})"`);
+      D.rows.forEach((q, i) => { const x = Xs(q.y), y = Ys(pr[i]);
+        if (step >= 3) g += `<line x1="${x.toFixed(1)}" y1="${Ys(q.y).toFixed(1)}" x2="${x.toFixed(1)}" y2="${y.toFixed(1)}" stroke="${COL.red}" stroke-opacity=".35"/>`;
+        g += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3.6" fill="${step >= 3 ? COL.navy : COL.taupe}"/>`; });
+      if (step >= 3) g += T(l + 8, t + 12, `average miss ±${Math.round(L.mae)} cups a day`, `font-size="11" font-weight="700" fill="${COL.navy}"`);
+      $(sl, ".smsvg").innerHTML = g;
+      // accuracy on held-out outlets, against the two presets and the average-outlet guess
+      $(sl, ".smacc").innerHTML = `<div class="k">Tested on outlets it has not seen</div><div class="big">±${Math.round(L.mae)}<small>cups a day, average miss</small></div>` +
+        `<div style="font:11px var(--sans);color:${COL.ink2}">R² ${L.r2.toFixed(2)} with ${keys.length ? `${keys.length} input${keys.length > 1 ? "s" : ""}` : "no inputs"}</div>` +
+        `<table><tr class="${keys.length === F.length ? "cur" : ""}"><td>All inputs (Singapore)</td><td>±${Math.round(all.L.mae)} · R² ${all.L.r2.toFixed(2)}</td></tr>` +
+        `<tr class="${near(keys, NM) ? "cur" : ""}"><td>New-market inputs only</td><td>±${Math.round(nm.L.mae)} · R² ${nm.L.r2.toFixed(2)}</td></tr>` +
+        `<tr class="${keys.length ? "" : "cur"}"><td>No inputs: guess the average outlet</td><td>±${Math.round(none.L.mae)}</td></tr></table>`;
+      // a site in a new market: sliders for the inputs it has; the others sit at a no-history value
+      const slid = keys.filter(k => k in site && !(k in fixedNM)), stuck = keys.filter(k => k in fixedNM);
+      const f = { ...site }, pred = m.predict(f), mae = L.mae;
+      const fmt = k => k === "hubKm" ? `${site[k].toFixed(1)} km` : `${Math.round(site[k])}`;
+      const card = $(sl, ".smnew");
+      card.innerHTML = `<div class="k">Score a site in a new market</div><div class="big">≈ ${Math.round(pred)}<small>± ${Math.round(mae)} cups a day</small></div>` +
+        `<div class="screenonly">${slid.map(k => { const [a, z] = D.ranges[k], fe = F.find(x => x.key === k);
+          return `<label>${fe.label}<span class="val" data-v="${k}">${fmt(k)}</span><input type="range" data-k="${k}" min="${a}" max="${z}" step="${k === "hubKm" ? 0.05 : 1}" value="${site[k]}"></label>`; }).join("") || `<p style="font:11px var(--sans);color:${COL.taupe};margin:4px 0 0">No input to set: the model guesses the average outlet.</p>`}</div>` +
+        (stuck.length ? `<p class="warn">${stuck.map(k => F.find(x => x.key === k).label).join(", ")}: a new market has none, so the model is outside what it was trained on. Switch ${stuck.length > 1 ? "them" : "it"} off.</p>` : "") +
+        `<p class="printonly" style="font:11px var(--sans);color:${COL.ink2};margin:3px 0 0">At the outlets' median inputs. Sliders on screen.</p>` +
+        `<button class="btn use screenonly" data-act="use">Use on slide 09 →</button>`;
+    }
+    $(sl, ".smnew").addEventListener("input", ev => { const k = ev.target.dataset.k; if (!k) return; site[k] = +ev.target.value;
+      clearTimeout(draw.tm); draw.tm = setTimeout(() => { draw(); const i = $(sl, `.smnew input[data-k="${k}"]`); if (i) i.focus(); }, 30); });
+    $(sl, ".smnew").addEventListener("click", ev => { if (!ev.target.closest("[data-act=use]")) return;
+      const keys = F.map(f => f.key).filter(k => on.has(k)), c = run(keys).m.predict(site), got = window.ChageeX?.setCups(c);
+      const b = ev.target.closest("[data-act=use]"); b.textContent = got != null ? `Sent: ${Math.round(got)} cups a day${Math.round(got) !== Math.round(c) ? " (range end)" : ""}` : "Slide 09 not found"; });
+    // step 4 is the new market: entering it keeps only the inputs that market has; stepping back restores all inputs
+    const preset = keys => { on.clear(); keys.forEach(k => on.add(k)); };
+    if (S) S.hooks.push(k => { if (k === 4 && step < 4) preset(NM); else if (k < 4 && step === 4) preset(F.map(f => f.key)); step = k; draw(); });
+    printers.push(() => { preset(NM); Object.assign(site, { pop: med("pop"), hubKm: med("hubKm"), area: med("area"), ...fixedNM }); step = 4; draw(); });
+    draw();
+  })();
+
   /* ---------------------------------------------------------------- 08 / 09 extension: site selection (sim/siteext.js) */
   // One shared state: the pin (precomputed from the slide 05 engine), the hand-set scores and slide 09's inputs.
   // Slide 08 steps pin -> attributes -> scores -> cannibalisation -> site score; slide 09 recomputes net profit live.
@@ -983,6 +1061,8 @@
         `<dt>Payback</dt><dd>${A.payback ? `≈ ${Math.round(A.payback.base)} months on ${sm(st.setup)}` : "none: not profitable"}</dd></dl>`;
     }
     fns.push(profit);
+    // slide 08b's "Use on slide 09": its forecast becomes slide 09's cups a day, within slide 11's range
+    window.ChageeX = { setCups: c => { st.cups = Math.max(e0.cups.lo, Math.min(e0.cups.hi, c)); redraw(); return st.cups; } };
     printers.push(() => { Object.assign(st, { pin: "A", sc: { ...sc0 }, cups: e0.cups.base, rent: e0.rent, deliveryShare: e0.deliveryShare, setup: e0.setup }); step8 = 5; redraw(); });
     redraw();
   })();

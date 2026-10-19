@@ -325,6 +325,12 @@ def values(d: dict) -> dict:
     C_ = X["contrast"]
     v["x.c_share"], v["x.c_nb_share"], v["x.c_nb_km"] = C_["share"], C_["neighbour"]["share"], C_["neighbour"]["km"]
     v["s.x_c_net"], v["s.x_c_rec"] = money(C_["net"]["base"]), C_["rec"]
+    # slide 08b: the supervised model (sim/sitemodel.js); the notes say all inputs beat the new-market inputs, which beat the mean
+    SMd = d["siteModel"]; al, nm_, no_ = SMd["all"], SMd["newMarket"], SMd["none"]
+    if not (al["r2"] > nm_["r2"] > no_["r2"] and al["mae"] < nm_["mae"] < no_["mae"]):
+        raise SystemExit("build: slide 08b says all inputs beat the new-market inputs, which beat the mean; rewrite it")
+    v["x.sm_all_mae"], v["x.sm_all_r2"], v["x.sm_nm_mae"], v["x.sm_nm_r2"], v["x.sm_none_mae"] = al["mae"], al["r2"], nm_["mae"], nm_["r2"], no_["mae"]
+    v["x.sm_n"] = len(SMd["rows"])
     return v
 
 
@@ -513,7 +519,7 @@ def build() -> Path:
     imgs = images()
     html = re.sub(r"\{img:(\w+)\}", lambda m: imgs[m.group(1)], html)
     html = html.replace("<!--APPENDIX-->", appendix()).replace("<!--TIERS-->", tiers_table())
-    js = "\n".join((ROOT / "sim" / f).read_text(encoding="utf-8") for f in ("sim.js", "store.js", "counter.js", "sitepick.js", "ladder.js", "benefit.js", "siteext.js"))
+    js = "\n".join((ROOT / "sim" / f).read_text(encoding="utf-8") for f in ("sim.js", "store.js", "counter.js", "sitepick.js", "ladder.js", "benefit.js", "siteext.js", "sitemodel.js"))
     js += "\n" + (HERE / "deck.js").read_text(encoding="utf-8")
     payload = {"RAW": RAW, "DATA": d, "GEO": json.loads((ROOT / "sim" / "sg_geo.json").read_text(encoding="utf-8")),
                "MAP": imgs["sg_map_crop"],

@@ -15,6 +15,7 @@ const TIERS = require("../machine_tiers.json");
 const B = require("../sim/benefit.js");
 const Dec = require("../sim/decisions.js");
 const Ext = require("../sim/siteext.js");
+const SMod = require("../sim/sitemodel.js");
 
 const RAW = JSON.parse(fs.readFileSync(path.join(__dirname, "..", "assumptions.json"), "utf8"));
 const P = Sim.params(RAW), SB = RAW.storyboard;
@@ -87,11 +88,14 @@ const decisions = Dec.decide({ Sim, Store, C, Site, B, RAW, P, GEO, TIERS },
 // slides 08 and 09, the extension: Jin's site-selection framework on the slide 05 engine (illustrative)
 const siteExt = Ext.evaluate({ Sim, C, Site, RAW, P, GEO, TIERS });
 benefit.econ = B.econ(RAW, P);                                  // what the build compares slide 09's inputs against
+// slide 08b: the supervised model on the synthetic outlets; leave-one-out with every input and with the new-market inputs
+const smD = SMod.dataset(Sim, RAW, GEO, Site), smAll = SMod.FEATURES.map(f => f.key), smNM = RAW.site_ext.new_market_inputs.value;
+const siteModel = { ...smD, all: SMod.loo(smD.rows, smAll, smD.lambda), newMarket: SMod.loo(smD.rows, smNM, smD.lambda), none: SMod.loo(smD.rows, [], smD.lambda) };
 
 const pl = Sim.plan(P, "mixed");
 const data = {
   generated: new Date().toISOString(), seeds,
-  grid, splits, site, ladder, benefit, decisions, siteExt,
+  grid, splits, site, ladder, benefit, decisions, siteExt, siteModel,
   counter: {
     peakHour: C.peakHour(P), firstHour: 10, cupsPerDay: Sim.dailyBase(P),
     perWorkerHour: pl.perWorker * 60, handSeconds: pl.W,
