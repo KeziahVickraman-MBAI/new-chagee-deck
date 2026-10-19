@@ -357,7 +357,7 @@ def appendix() -> str:
     out.append("<p>No Chagee sales, staffing or wait-time data is used; the forecast is not a trained model. "
                "We do not claim the bucket brigade always beats fixed stations: with spare staff, a well-assigned "
                "fixed line is as good or slightly faster. Machine breakdowns, breaks and order mix are not modelled.</p>")
-    out.append("<p>We make no claim about: <b>Singapore ownership structure</b> (a Chagee contact says outlets run under one company and "
+    out.append("<p>We make no claim about: <b>Singapore ownership structure</b> (an anonymous Chagee source says outlets run under one company and "
                "one data system, and that the ownership form does not matter here; I-chagee-contact); <b>delivery profit by channel</b>; "
                "<b>Chagee's own equipment cost</b> (not public); <b>gross margin per cup</b> (our assumption); "
                "<b>Chagee's current rostering</b> (unknown; slide 09's baseline is ours).</p>")
