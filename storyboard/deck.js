@@ -682,8 +682,8 @@
       $(sl, ".rules").textContent = `Walk-away rule: fewest people keeping peak-hour walk-aways within ${pct(SB.walkaway_target.value)} (the forecast crew at ${BD.cups} cups a day). Economic rule: add a person only when orders kept × price × margin beat the extra labour.`;
       const M = x => `S$${(x / 1e6).toFixed(2)}m`, sp = S.split.L;
       $(sl, ".hstrip").innerHTML = `<span>Profit a year, ${N} outlets: <b>${M(sp.total * N)}</b></span>` +
-        `<span>= counter automation <b>${M(sp.automation * N)}</b> <small>(depends on the minimum-crew rule)</small></span>` +
-        `<span class="ai">+ forecast roster, the AI part <b>${M(sp.forecast * N)}</b></span>` +
+        `<span>= counter automation, physical AI <b>${M(sp.automation * N)}</b> <small>(depends on the minimum-crew rule)</small></span>` +
+        `<span class="ai">+ forecast roster, predictive AI <b>${M(sp.forecast * N)}</b></span>` +
         `<span class="rg">Without / with the minimum-crew rule: <b>${M(S.minCrew[0] * N)} to ${M(S.minCrew[1] * N)}</b></span>`;
       $(sl, ".ixnote").textContent = `"Both" is one run, not a sum: the levers keep many of the same orders, and with the machine the forecast crew needs fewer extra hours (${S.interaction.profit >= 0 ? "+" : ""}${$m(S.interaction.profit)} against the sum).`;
       $(sl, ".rng").innerHTML = `Profit a year, one outlet: low <b>${$m(S.low.year.ab.profit)}</b> · base <b>${$m(Y.ab.profit)}</b> · high <b>${$m(S.high.year.ab.profit)}</b>`;
