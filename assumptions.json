@@ -52,7 +52,9 @@
     "P-eatbook": "PRESS - in-store sightings, indicative. Eatbook (Aug 2024), https://eatbook.sg/?p=168476 : Chagee price sightings in Singapore; not a current full menu, and older than the deck.",
     "I-team-expansion": "INFORMAL - team research (Oct 2026): Chagee is looking to expand rapidly in Singapore; how many stores it is going for is confidential. Singapore only. Confirm before citing.",
     "I-team-press-outlets": "INFORMAL - team note (Oct 2026): press reports give between 44 and 46 Singapore outlets. Specific articles to be added before citing.",
-    "I-team-site-framework": "TEAM WORK (Oct 2026): Jin's site-selection framework, two team slides ('Four Scores for Every Location', 'From Pin to Profit Forecast'): four scores per pin, six steps from a pin to a go / no-go on profit net to Chagee. Used for slides 08 and 09 (extension). Its example values and outlet names are not used; ours are illustrative."
+    "I-team-site-framework": "TEAM WORK (Oct 2026): Jin's site-selection framework, two team slides ('Four Scores for Every Location', 'From Pin to Profit Forecast'): four scores per pin, six steps from a pin to a go / no-go on profit net to Chagee. Used for slides 08 and 09 (extension). Its example values and outlet names are not used; ours are illustrative.",
+    "L-chagee-q2-2026-call": "Chagee (CHA) Q2 2026 Earnings Call, full transcript, TradingKey, 29 Aug 2026 (local copy: 'Chagee (CHA) Q2 2026 Earnings Call_ Profit Margin Improves as Overseas GMV Doubles.pdf', supplied by the team). COO's remarks, interpreted: 'As of the end of June, our total registered members reached 257 million. The repurchase rate among active members remain above 43%, while members who made 2 or more purchases accounted for more than 78% of total orders.' Group-wide, not Singapore. The page's AI summary is not used; the quote is from the transcript.",
+    "L-chagee-q1-2025": "Chagee Holdings, 'Chagee Announces First Quarter 2025 Unaudited Financial Results', GlobeNewswire, 30 May 2025 (local copy supplied by the team; the team's link https://investor.chagee.com/node/6736/pdf blocks automated access, so not checked by us). 'Chagee's Mobile Mini Program had a total of 192.4 million registered members as of March 31, 2025'; active members = registered members who placed an order at least once in a period. Shows that membership sits on Chagee's ordering app. Group-wide."
   },
   "facts": {
     "_note": "Chagee facts quoted on slides. Not assumptions: each carries its ledger source and appears with that source in the speaker notes.",
@@ -125,6 +127,18 @@
       "range": null,
       "source": "I-team-press-outlets",
       "rationale": "Speaker notes only. Press counts of Singapore outlets vary between these values; the slide keeps sg_outlets (store directory, October 2026)."
+    },
+    "registered_members_jun2026": {
+      "value": 257000000,
+      "unit": "registered members, group-wide, end of June 2026",
+      "source": "L-chagee-q2-2026-call",
+      "rationale": "Company statement on the Q2 2026 earnings call (COO, interpreted). Group-wide, not Singapore. Membership is on Chagee's mobile mini program (L-chagee-q1-2025)."
+    },
+    "repeat_member_order_share": {
+      "value": 0.78,
+      "unit": "share of total orders from members who made 2 or more purchases (stated as 'more than'), Q2 2026",
+      "source": "L-chagee-q2-2026-call",
+      "rationale": "Company statement on the Q2 2026 earnings call. A floor ('more than 78%'). Group-wide, not Singapore."
     }
   },
   "predict": {

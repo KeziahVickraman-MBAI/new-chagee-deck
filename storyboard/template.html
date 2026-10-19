@@ -484,9 +484,9 @@ html,body{margin:0;background:#E7E3DC;color:var(--ink);font-family:var(--sans);-
 .nfx.pick .nsvg .fx:not(.hl){opacity:.28}
 .nfc .bc{cursor:pointer;transition:box-shadow .2s}
 .nfc .bc.hl{box-shadow:0 0 0 2px var(--gold)}
-.nfc .bc p{font-size:11.6px}
+.nfc .bc p{font-size:11.4px;line-height:1.38}
 .nfc .bc h4{font-size:13.5px;margin:1px 0 2px}
-.nfc .bc{padding:6px 11px}
+.nfc .bc{padding:5px 11px}
 .nfnot .k{margin-bottom:2px}
 .nfnot{border-left-color:var(--taupe)!important;background:#FAF8F4}
 .nfw{margin-top:5px}
@@ -778,16 +778,16 @@ aside.notes{display:none}
         </div>
         <ol class="caps" style="min-height:38px">
           <li data-s="1"><span class="n">1</span><span>Customers buy from Chagee's outlets through every channel: a pipeline sale, not a match between two sides.</span></li>
-          <li data-s="2"><span class="n">2</span><span>The one network effect we grow: more app use gives more search and order data, so the forecast and site pick get sharper.</span></li>
+          <li data-s="2"><span class="n">2</span><span>The one network effect we grow, and why we chose Chagee: its sales run through the app, so more app use gives more search and order data, and the forecast and site pick get sharper.</span></li>
           <li data-s="3"><span class="n">3</span><span>Buzz is the same-side plus: a visible queue and posts draw more drinkers. We do not model it.</span></li>
           <li data-s="4"><span class="n">4</span><span>Congestion is the same-side minus: at the peak, each extra customer adds to everyone's wait. Pick a day type on the right.</span></li>
           <li data-s="5"><span class="n">5</span><span>Cannibalisation is the outlets' same-side minus: a new outlet takes cups from its neighbours. Switch the site on the right.</span></li>
           <li data-s="6"><span class="n">6</span><span>Cross-side effects live on others' platforms: delivery apps and malls. Not our lever.</span></li>
         </ol>
       </div>
-      <div class="cards nfc" style="gap:7px">
+      <div class="cards nfc" style="gap:5px">
         <div class="bc phys" data-fx="grow" data-s="2"><div class="k">① Grow · predictive AI</div><h4>Feed the data loop</h4>
-          <p>App searches pick the next site: <b>+{{r.top_net}}</b> cups a day against <b>+{{r.nd_net}}</b> beside an outlet (synthetic). More users, sharper picks.</p></div>
+          <p><b>Why Chagee:</b> app-first and member-led. Group-wide, <b>{{facts.registered_members_jun2026|mn}}</b> registered members (end of June 2026), and members with two or more purchases place <b>more than {{facts.repeat_member_order_share|pct}}</b> of orders <span class="flag">(earnings call, Aug 2026; SG share to confirm)</span>.</p><p style="margin-top:2px">Site pick: <b>+{{r.top_net}}</b> vs <b>+{{r.nd_net}}</b> cups a day (synthetic).</p></div>
         <div class="bc warn" data-fx="congest" data-s="4"><div class="k">② Cap · forecast + counter</div><h4>Absorb the peak crowd</h4>
           <p class="nfcopy printonly">Forecast crew plus a bucket brigade: event-day walk-aways <b>{{r.lost_normal_roster|pct}}</b> → <b>{{r.lost_brigade|pct1}}</b>.</p>
           <div class="nfw screenonly"><span class="nfday"></span><div class="nfbars"></div></div></div>
@@ -804,7 +804,7 @@ aside.notes{display:none}
   <div class="foot"><span>OPIM639 · Group 3 · explainer figures are illustrative assumptions · synthetic data</span><span class="rail"></span><span class="pg"></span></div>
   <aside class="notes">
     <p>A quick lens from the course before the operations. On eBay, buyers and sellers attract each other: a cross-side network effect. Chagee is not that, in our reading: it sells its own tea, so there is no seller side to match. Customers to outlets is a pipeline sale.</p>
-    <p>What it does have sits on one side. One effect to grow: the data loop, like Netflix. More app users give more searches and orders, so the forecast and the site pick get sharper. A same-side plus, buzz: queues and posts draw more drinkers; we do not model it.</p>
+    <p>What it does have sits on one side. One effect to grow: the data loop, like Netflix. More app users give more searches and orders, so the forecast and the site pick get sharper. This is why we chose Chagee: its business model is app-first and member-led. On its second-quarter 2026 earnings call, Chagee said it had {{facts.registered_members_jun2026|mn}} registered members at the end of June, and that members who made two or more purchases accounted for more than {{facts.repeat_member_order_share|pct}} of total orders. Those members sit on Chagee's mobile mini program, its ordering app, according to its first-quarter 2025 results. So nearly every cup leaves a data trail that can feed the loop. These are group-wide figures, not Singapore; Singapore's app share of orders is still to confirm. A same-side plus, buzz: queues and posts draw more drinkers; we do not model it.</p>
     <p>And two crowding effects to cap. Congestion: at the peak, every extra customer lengthens everyone's wait; with a normal-day roster on an event day, about {{r.lost_normal_roster|pct}} of peak-hour orders walk away, and the forecast crew with a bucket brigade brings it to about {{r.lost_brigade|pct1}}. Cannibalisation: a new outlet takes cups from its neighbours; of {{r.top_cups}} cups at the app-search site, {{r.top_moved}} move from nearby outlets, against far more beside an existing outlet.</p>
     <p>Cross-side effects exist, but on others' platforms: delivery apps and malls. Not our lever. About forty-five seconds.</p>
   </aside>

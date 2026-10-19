@@ -385,11 +385,13 @@ def appendix() -> str:
     esc = lambda s: str(s).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
     out = ["<h5>Facts quoted</h5>"]
     for k, label in (("sg_outlets", "Outlets in Singapore"), ("revenue_share_franchise_fy2025", "Franchise share of FY2025 net revenue"),
-                     ("revenue_share_company_owned_fy2025", "Company-owned share of FY2025 net revenue")):
+                     ("revenue_share_company_owned_fy2025", "Company-owned share of FY2025 net revenue"),
+                     ("registered_members_jun2026", "Registered members, group-wide, end of June 2026"),
+                     ("repeat_member_order_share", "Orders from members with two or more purchases, group-wide (more than)")):
         f = RAW["facts"][k]
         out.append(f"<p><b>{label}: {short(f['value'])}</b>. {esc(f['rationale'])} <i>[{esc(f['source'])}]</i></p>")
     out.append("<h5>Sources</h5>")
-    for k in ("L-sg-directory", "L-koalagains", "L-yfchuhai", "L-sec20f", "L-unsw", "I-chagee-contact", "I-sg-groundfloor", "I-team-app-first", "L-ester1996", "P-honeycombers", "P-eatbook", "I-team-expansion", "I-team-site-framework"):
+    for k in ("L-sg-directory", "L-koalagains", "L-yfchuhai", "L-sec20f", "L-unsw", "I-chagee-contact", "I-sg-groundfloor", "I-team-app-first", "L-ester1996", "P-honeycombers", "P-eatbook", "I-team-expansion", "I-team-site-framework", "L-chagee-q2-2026-call", "L-chagee-q1-2025"):
         out.append(f"<p><b>{k}</b> {esc(RAW['_sources'][k])}</p>")
     out.append("<h5>Assumptions (assumptions.json, illustrative)</h5>")
     for sec, key, label in USED:
@@ -472,6 +474,7 @@ FMT = {
     "m2": lambda x: f"{x / 1e6:.2f}m",
     "km": lambda x: f"{x:.1f}",
     "c2": lambda x: f"{x:.2f}",
+    "mn": lambda x: f"{x / 1e6:,.0f} million",
 }
 
 
