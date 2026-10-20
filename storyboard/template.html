@@ -606,6 +606,11 @@ html,body{margin:0;background:#E7E3DC;color:var(--ink);font-family:var(--sans);-
 #toolbar button:hover,#toolbar button:focus-visible{background:rgba(255,255,255,.18)}
 #toolbar button.on{background:var(--gold);color:#1f2a44;font-weight:700}
 #toolbar .count{min-width:52px;text-align:center;font-variant-numeric:tabular-nums}
+#toolbar #goto{all:unset;width:2.4ch;padding:2px 4px;border-radius:6px;text-align:right;color:#fff;background:rgba(255,255,255,.12);cursor:text;font:inherit;font-variant-numeric:tabular-nums}
+#toolbar #goto:hover{background:rgba(255,255,255,.22)}
+#toolbar #goto:focus{background:#fff;color:#1f2a44;outline:2px solid var(--gold)}
+#toolbar #goto.bad{outline:2px solid var(--red)}
+#toolbar .tot{color:rgba(255,255,255,.75);margin-left:3px}
 #toolbar .sep{width:1px;height:16px;background:rgba(255,255,255,.25);margin:0 4px}
 #toolbar .editonly{display:none}
 body.editing #toolbar .editonly{display:inline-block}
@@ -1504,7 +1509,7 @@ aside.notes{display:none}
 </div></div>
 
 <div id="toolbar" role="toolbar" aria-label="Slide controls">
-  <button id="prev" aria-label="Previous slide" title="Previous (←)">◀</button><span class="count" id="count"></span>
+  <button id="prev" aria-label="Previous slide" title="Previous (←)">◀</button><span class="count" id="count"><input id="goto" type="text" inputmode="numeric" aria-label="Go to slide number" title="Type a slide number and press Enter (G)"><span class="tot"></span></span>
   <button id="next" aria-label="Next slide" title="Next (→ or Space)">▶</button><span class="sep"></span>
   <button id="modeb" title="Step through each panel, or show every step at once (V)">Reveal: one by one</button>
   <button id="notesb" title="Speaker notes (N)">Notes</button>

@@ -56,7 +56,7 @@
     slides.forEach((s, k) => s.classList.toggle("active", k === cur));
     const st = slides[cur]._stepper; if (st) st.go(fromEnd || revealAll ? st.N : 1, true);
     const rv = $(slides[cur], ".vs.clickrev"); if (rv) setRev(rv, fromEnd || revealAll ? 2 : 0);
-    $(document, "#count").textContent = `${cur + 1} / ${slides.length}`;
+    const gt = $(document, "#goto"); if (document.activeElement !== gt) gt.value = cur + 1; $(document, "#count .tot").textContent = `/ ${slides.length}`;
     const n = $(slides[cur], "aside.notes");
     $(document, "#notes .nb").innerHTML = n ? n.innerHTML : "";
     history.replaceState(null, "", `${location.search}#${cur + 1}`);
@@ -86,6 +86,19 @@
   const toggleNotes = () => { document.body.classList.toggle("shownotes"); $(document, "#notesb").classList.toggle("on", document.body.classList.contains("shownotes")); fit(); };
   const doPrint = () => { preparePrint(); window.print(); };
   $(document, "#prev").onclick = prev; $(document, "#next").onclick = next;
+  // the slide number box: type a number and press Enter to jump; Escape or leaving the box restores the current number
+  (function gotoBox() {
+    const gt = $(document, "#goto"), reset = () => { gt.value = cur + 1; gt.classList.remove("bad"); };
+    gt.addEventListener("focus", () => gt.select());
+    gt.addEventListener("input", () => { gt.value = gt.value.replace(/\D/g, "").slice(0, 3); gt.classList.remove("bad"); });
+    gt.addEventListener("keydown", e => {
+      e.stopPropagation();
+      if (e.key === "Enter") { const n = parseInt(gt.value, 10);
+        if (n >= 1 && n <= slides.length) { show(n - 1); gt.blur(); } else { gt.classList.add("bad"); gt.select(); } }
+      else if (e.key === "Escape") { reset(); gt.blur(); }
+    });
+    gt.addEventListener("blur", reset);
+  })();
   $(document, "#modeb").onclick = () => setReveal(!revealAll, true);
   $(document, "#notesb").onclick = toggleNotes;
   $(document, "#printb").onclick = doPrint;
@@ -137,6 +150,7 @@
     else if (e.key === "e" || e.key === "E") setEditing(!editingNow());
     else if (e.key === "v" || e.key === "V") setReveal(!revealAll, true);
     else if (e.key === "p" || e.key === "P") doPrint();
+    else if (e.key === "g" || e.key === "G") { e.preventDefault(); $(document, "#goto").focus(); }
   });
   let idle; const wake = () => { document.body.classList.remove("idle"); clearTimeout(idle); idle = setTimeout(() => document.body.classList.add("idle"), 2500); };
   addEventListener("mousemove", wake); addEventListener("keydown", wake); wake();

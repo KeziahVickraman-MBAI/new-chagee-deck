@@ -606,6 +606,11 @@ html,body{margin:0;background:#E7E3DC;color:var(--ink);font-family:var(--sans);-
 #toolbar button:hover,#toolbar button:focus-visible{background:rgba(255,255,255,.18)}
 #toolbar button.on{background:var(--gold);color:#1f2a44;font-weight:700}
 #toolbar .count{min-width:52px;text-align:center;font-variant-numeric:tabular-nums}
+#toolbar #goto{all:unset;width:2.4ch;padding:2px 4px;border-radius:6px;text-align:right;color:#fff;background:rgba(255,255,255,.12);cursor:text;font:inherit;font-variant-numeric:tabular-nums}
+#toolbar #goto:hover{background:rgba(255,255,255,.22)}
+#toolbar #goto:focus{background:#fff;color:#1f2a44;outline:2px solid var(--gold)}
+#toolbar #goto.bad{outline:2px solid var(--red)}
+#toolbar .tot{color:rgba(255,255,255,.75);margin-left:3px}
 #toolbar .sep{width:1px;height:16px;background:rgba(255,255,255,.25);margin:0 4px}
 #toolbar .editonly{display:none}
 body.editing #toolbar .editonly{display:inline-block}
@@ -1576,7 +1581,7 @@ aside.notes{display:none}
 </div></div>
 
 <div id="toolbar" role="toolbar" aria-label="Slide controls">
-  <button id="prev" aria-label="Previous slide" title="Previous (←)">◀</button><span class="count" id="count"></span>
+  <button id="prev" aria-label="Previous slide" title="Previous (←)">◀</button><span class="count" id="count"><input id="goto" type="text" inputmode="numeric" aria-label="Go to slide number" title="Type a slide number and press Enter (G)"><span class="tot"></span></span>
   <button id="next" aria-label="Next slide" title="Next (→ or Space)">▶</button><span class="sep"></span>
   <button id="modeb" title="Step through each panel, or show every step at once (V)">Reveal: one by one</button>
   <button id="notesb" title="Speaker notes (N)">Notes</button>
@@ -3136,7 +3141,7 @@ aside.notes{display:none}
     slides.forEach((s, k) => s.classList.toggle("active", k === cur));
     const st = slides[cur]._stepper; if (st) st.go(fromEnd || revealAll ? st.N : 1, true);
     const rv = $(slides[cur], ".vs.clickrev"); if (rv) setRev(rv, fromEnd || revealAll ? 2 : 0);
-    $(document, "#count").textContent = `${cur + 1} / ${slides.length}`;
+    const gt = $(document, "#goto"); if (document.activeElement !== gt) gt.value = cur + 1; $(document, "#count .tot").textContent = `/ ${slides.length}`;
     const n = $(slides[cur], "aside.notes");
     $(document, "#notes .nb").innerHTML = n ? n.innerHTML : "";
     history.replaceState(null, "", `${location.search}#${cur + 1}`);
@@ -3166,6 +3171,19 @@ aside.notes{display:none}
   const toggleNotes = () => { document.body.classList.toggle("shownotes"); $(document, "#notesb").classList.toggle("on", document.body.classList.contains("shownotes")); fit(); };
   const doPrint = () => { preparePrint(); window.print(); };
   $(document, "#prev").onclick = prev; $(document, "#next").onclick = next;
+  // the slide number box: type a number and press Enter to jump; Escape or leaving the box restores the current number
+  (function gotoBox() {
+    const gt = $(document, "#goto"), reset = () => { gt.value = cur + 1; gt.classList.remove("bad"); };
+    gt.addEventListener("focus", () => gt.select());
+    gt.addEventListener("input", () => { gt.value = gt.value.replace(/\D/g, "").slice(0, 3); gt.classList.remove("bad"); });
+    gt.addEventListener("keydown", e => {
+      e.stopPropagation();
+      if (e.key === "Enter") { const n = parseInt(gt.value, 10);
+        if (n >= 1 && n <= slides.length) { show(n - 1); gt.blur(); } else { gt.classList.add("bad"); gt.select(); } }
+      else if (e.key === "Escape") { reset(); gt.blur(); }
+    });
+    gt.addEventListener("blur", reset);
+  })();
   $(document, "#modeb").onclick = () => setReveal(!revealAll, true);
   $(document, "#notesb").onclick = toggleNotes;
   $(document, "#printb").onclick = doPrint;
@@ -3217,6 +3235,7 @@ aside.notes{display:none}
     else if (e.key === "e" || e.key === "E") setEditing(!editingNow());
     else if (e.key === "v" || e.key === "V") setReveal(!revealAll, true);
     else if (e.key === "p" || e.key === "P") doPrint();
+    else if (e.key === "g" || e.key === "G") { e.preventDefault(); $(document, "#goto").focus(); }
   });
   let idle; const wake = () => { document.body.classList.remove("idle"); clearTimeout(idle); idle = setTimeout(() => document.body.classList.add("idle"), 2500); };
   addEventListener("mousemove", wake); addEventListener("keydown", wake); wake();
