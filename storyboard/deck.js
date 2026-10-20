@@ -55,14 +55,21 @@
     cur = Math.max(0, Math.min(slides.length - 1, i));
     slides.forEach((s, k) => s.classList.toggle("active", k === cur));
     const st = slides[cur]._stepper; if (st) st.go(fromEnd || revealAll ? st.N : 1, true);
+    const rv = $(slides[cur], ".vs.clickrev"); if (rv) setRev(rv, fromEnd || revealAll ? 2 : 0);
     $(document, "#count").textContent = `${cur + 1} / ${slides.length}`;
     const n = $(slides[cur], "aside.notes");
     $(document, "#notes .nb").innerHTML = n ? n.innerHTML : "";
     history.replaceState(null, "", `${location.search}#${cur + 1}`);
   }
   const editingNow = () => document.body.classList.contains("editing");
-  function next() { const st = slides[cur]._stepper; if (st && st.cur < st.N && !revealAll && !editingNow()) st.go(st.cur + 1); else if (cur < slides.length - 1) show(cur + 1); }
-  function prev() { const st = slides[cur]._stepper; if (st && st.cur > 1 && !revealAll && !editingNow()) st.go(st.cur - 1); else if (cur > 0) show(cur - 1, true); }
+  // a band revealed by click (.vs.clickrev, slide 05): 0 hidden, 1 Without AI, 2 both; arrows step it after the panel's steps
+  function setRev(el, r) { el._r = r; el.classList.toggle("r1", r >= 1); el.classList.toggle("r2", r >= 2); }
+  $$(document, ".vs.clickrev").forEach(el => { setRev(el, 2); el.addEventListener("click", ev => { if (!ev.target.closest(".vsb")) setRev(el, Math.min(2, (el._r || 0) + 1)); }); });
+  const revOf = () => { const el = $(slides[cur], ".vs.clickrev"); return el && !revealAll && !editingNow() ? el : null; };
+  function next() { const st = slides[cur]._stepper, rv = revOf();
+    if (st && st.cur < st.N && !revealAll && !editingNow()) st.go(st.cur + 1); else if (rv && rv._r < 2) setRev(rv, rv._r + 1); else if (cur < slides.length - 1) show(cur + 1); }
+  function prev() { const st = slides[cur]._stepper, rv = revOf();
+    if (rv && rv._r > 0) setRev(rv, rv._r - 1); else if (st && st.cur > 1 && !revealAll && !editingNow()) st.go(st.cur - 1); else if (cur > 0) show(cur - 1, true); }
   /* ---------------------------------------------------------------- toolbar (as in the previous deck) */
   const toast = m => { const t = $(document, "#toast"); t.textContent = m; t.classList.add("on"); clearTimeout(toast.h); toast.h = setTimeout(() => t.classList.remove("on"), 2200); };
   const MODE_KEY = "opim639-storyboard-reveal";
@@ -72,6 +79,7 @@
     revealAll = all; try { localStorage.setItem(MODE_KEY, all ? "all" : "one"); } catch (e) {}
     const b = $(document, "#modeb"); b.textContent = all ? "Reveal: all at once" : "Reveal: one by one"; b.classList.toggle("on", all);
     const st = slides[cur]._stepper; if (st) st.go(all ? st.N : st.cur, true);
+    const rv = $(slides[cur], ".vs.clickrev"); if (rv && all) setRev(rv, 2);
     if (say) toast((all ? "Every step shown" : "Step through each panel") + " · every slide");
   }
   const toggleFull = () => { try { const p = document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen?.(); p && p.catch && p.catch(() => {}); } catch (e) {} };
@@ -99,6 +107,7 @@
     $$(document, "[data-ek]").forEach(el => (on ? el.setAttribute("contenteditable", "true") : el.removeAttribute("contenteditable")));
     if (!on && document.activeElement?.blur) document.activeElement.blur();
     steppers.forEach(({ S }) => S.go(on || revealAll ? S.N : S.cur, true));            // edit mode shows every step
+    if (on) $$(document, ".vs.clickrev").forEach(el => setRev(el, 2));
     toast(on ? "Edit mode: click any text to change it" : "Edits saved in this browser");
   }
   $(document, "#editb").onclick = () => setEditing(!editingNow());
