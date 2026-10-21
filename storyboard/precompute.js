@@ -18,6 +18,7 @@ const Ext = require("../sim/siteext.js");
 const SMod = require("../sim/sitemodel.js");
 const NM = require("../sim/newmarket.js");
 const PNL = require("../sim/pnl.js");
+const MB = require("../sim/members.js");
 
 const RAW = JSON.parse(fs.readFileSync(path.join(__dirname, "..", "assumptions.json"), "utf8"));
 const P = Sim.params(RAW), SB = RAW.storyboard;
@@ -137,10 +138,14 @@ const newMarket = { runs: nmR, score: nmScore, sensitivity: nmSens, pilot: nmPil
   newMarket.quote = q;
 }
 
+// slides M1-M3 (candidate chapter): the closed-form table, and the friend-network check of each tipping point
+const members = { table: MB.table(RAW), breakEven: MB.breakEven(RAW) };
+members.network = members.table.map(s => ({ id: s.id, closed: s.eq ? s.eq.low : null, sim: MB.tipping(RAW, s.p, s.k, Sim) }));
+
 const pl = Sim.plan(P, "mixed");
 const data = {
   generated: new Date().toISOString(), seeds,
-  grid, splits, aiLayer, newMarket, pnl, site, ladder, benefit, decisions, siteExt, siteModel,
+  grid, splits, aiLayer, newMarket, pnl, members, site, ladder, benefit, decisions, siteExt, siteModel,
   counter: {
     peakHour: C.peakHour(P), firstHour: 10, cupsPerDay: Sim.dailyBase(P),
     perWorkerHour: pl.perWorker * 60, handSeconds: pl.W,

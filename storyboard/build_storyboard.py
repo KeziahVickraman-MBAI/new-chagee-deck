@@ -366,6 +366,37 @@ def values(d: dict) -> dict:
     PR = RAW["pnl"]
     v["r.pnl_ai_impl"], v["r.pnl_ai_rec"], v["r.pnl_ramp1"] = PR["ai_implementation_cost"]["value"], PR["ai_recurring_per_year"]["value"], PR["ramp_up"]["value"][0]
     v["r.pnl_years"] = PR["years"]["value"]
+    # slides M1-M3 (sim/members.js via precompute.js): the scenario table must equal members.expected_table
+    MBd, MBR = d["members"], RAW["members"]
+    exp = MBR["expected_table"]["value"]
+    for s_ in MBd["table"]:
+        got = None if s_["eq"] is None else [round(s_["eq"]["low"], 2), round(s_["eq"]["high"], 2)]
+        if got != exp[s_["id"]]:
+            raise SystemExit(f"build: members scenario {s_['id']} computes {got}, expected {exp[s_['id']]}; check sim/members.js or assumptions.json")
+        if s_["eq"]:
+            v[f"r.mb_{s_['id']}_lo"], v[f"r.mb_{s_['id']}_hi"] = s_["eq"]["low"], s_["eq"]["high"]
+        v[f"r.mb_{s_['id']}_p"], v[f"r.mb_{s_['id']}_k"] = s_["p"], s_["k"]
+    for q in MBR["quotes"]["value"]:
+        if q["text"] not in q["excerpt"]:
+            raise SystemExit(f"build: quote {q['id']} is not word for word in its source excerpt")
+        v[f"s.{q['id']}"], v[f"s.{q['id']}_src"] = q["text"], q["source"]
+    v["x.mb_squad_lo"], v["x.mb_squad_hi"] = MBR["squad_size"]["value"]
+    NW = MBR["network"]["value"]
+    v["x.mb_n"], v["x.mb_m"], v["x.mb_runs"] = NW["customers"], NW["friends_per_customer"], NW["runs"]
+    gaps = [(n_["id"], n_["sim"] - n_["closed"]) for n_ in MBd["network"] if n_["closed"] is not None and n_["sim"] is not None]
+    v["x.mb_gap_max"] = max(abs(g) for _, g in gaps)
+    big = [i for i, g in gaps if abs(g) > 0.05]
+    lab = {s_["id"]: s_["label"].lower() for s_ in MBR["scenarios"]["value"]}
+    v["s.mb_gap_big"] = ", ".join(lab[i] for i in big) if big else "none"
+    if not big:
+        raise SystemExit("build: slide M2 says some network tipping points differ from the closed form by more than five points; they no longer do, rewrite it")
+    for n_ in MBd["network"]:
+        if n_["sim"] is not None:
+            v[f"r.mb_{n_['id']}_sim"] = n_["sim"]
+    BE = MBd["breakEven"]
+    v["x.mb_credit"], v["x.mb_base"], v["x.mb_extra"], v["x.mb_price"] = BE["credit"], BE["base"], BE["extra"], BE["price"]
+    for k_ in ("low", "mid", "high"):
+        v[f"x.mb_be_{k_}"], v[f"x.mb_marg_{k_}"], v[f"x.mb_net_{k_}"] = BE[k_]["extraNeeded"], BE[k_]["margin"], BE[k_]["netPerMember"]
     # slides 8A-8D, the new-market worked example (sim/newmarket.js via precompute.js; A$, scenario assumptions)
     NMd, NMR = d["newMarket"], RAW["new_market"]
     A_ = {a["id"]: a for a in NMR["areas"]["value"]}
@@ -479,7 +510,7 @@ def appendix() -> str:
         f = RAW["facts"][k]
         out.append(f"<p><b>{label}: {short(f['value'])}</b>. {esc(f['rationale'])} <i>[{esc(f['source'])}]</i></p>")
     out.append("<h5>Sources</h5>")
-    for k in ("L-sg-directory", "L-koalagains", "L-yfchuhai", "L-sec20f", "L-unsw", "I-chagee-contact", "I-sg-groundfloor", "I-team-app-first", "L-ester1996", "P-honeycombers", "P-eatbook", "I-team-expansion", "I-team-site-framework", "L-chagee-q2-2026-call", "L-chagee-q1-2025", "P-appstore", "P-vulcanpost-comeback", "L-sec20f-data"):
+    for k in ("L-sg-directory", "L-koalagains", "L-yfchuhai", "L-sec20f", "L-unsw", "I-chagee-contact", "I-sg-groundfloor", "I-team-app-first", "L-ester1996", "P-honeycombers", "P-eatbook", "I-team-expansion", "I-team-site-framework", "L-chagee-q2-2026-call", "L-chagee-q1-2025", "P-appstore", "P-vulcanpost-comeback", "L-sec20f-data", "L-sec20f-member", "C-topic8", "I-chagee-contact-tiers"):
         out.append(f"<p><b>{k}</b> {esc(RAW['_sources'][k])}</p>")
     out.append("<h5>Assumptions (assumptions.json, illustrative)</h5>")
     for sec, key, label in USED:
@@ -614,14 +645,14 @@ def fill(text: str, vals: dict) -> str:
     return re.sub(r"\{\{([a-zA-Z_][\w.]*)(?:\|(\w+))?\}\}", rep, text)
 
 
-ALLOWED = re.compile(r"\b8[A-D]\b|\b(?:19|20)\d\d\b|OPIM\s?639|Topic \d|\bT\d\b|\b0[1-9]b?\b|\b1\d(?= ·)|\bslides? 1\d\b|Week \d|\b1 (?=company|counter)|Group \d|Form 20-F")
+ALLOWED = re.compile(r"\bM[1-3]\b|Item 3\.D|\bslides? 3\d\b|\b8[A-D]\b|\b(?:19|20)\d\d\b|OPIM\s?639|Topic \d|\bT\d\b|\b0[1-9]b?\b|\b1\d(?= ·)|\bslides? 1\d\b|Week \d|\b1 (?=company|counter)|Group \d|Form 20-F")
 
 
 def digit_check(tpl: str) -> None:
     body = tpl.split("<body", 1)[1]
     body = re.sub(r"<script[\s\S]*?</script>|<style[\s\S]*?</style>|<!--[\s\S]*?-->", " ", body)
     body = re.sub(r'<span class="(?:n|num)">\d</span>', " ", body)              # step numbers
-    body = re.sub(r'<span class="no">(?:\d\d|8[A-D])</span>', " ", body)        # agenda chapter numbers
+    body = re.sub(r'<span class="no">(?:\d\d|8[A-D]|M[1-3])</span>', " ", body)        # agenda chapter numbers
     body = re.sub(r"\{\{[^}]*\}\}|\{img:[\w]+\}|<[^>]*>", " ", body)        # placeholders, tags (with attributes)
     bad = [m for m in re.finditer(r"\d", ALLOWED.sub(" ", body))]
     if bad:
@@ -640,7 +671,7 @@ def build() -> Path:
     imgs = images()
     html = re.sub(r"\{img:(\w+)\}", lambda m: imgs[m.group(1)], html)
     html = html.replace("<!--APPENDIX-->", appendix()).replace("<!--NMAPPENDIX-->", nm_appendix()).replace("<!--TIERS-->", tiers_table())
-    js = "\n".join((ROOT / "sim" / f).read_text(encoding="utf-8") for f in ("sim.js", "store.js", "counter.js", "sitepick.js", "ladder.js", "benefit.js", "siteext.js", "sitemodel.js", "newmarket.js", "pnl.js"))
+    js = "\n".join((ROOT / "sim" / f).read_text(encoding="utf-8") for f in ("sim.js", "store.js", "counter.js", "sitepick.js", "ladder.js", "benefit.js", "siteext.js", "sitemodel.js", "newmarket.js", "pnl.js", "members.js"))
     js += "\n" + (HERE / "deck.js").read_text(encoding="utf-8")
     payload = {"RAW": RAW, "DATA": d, "GEO": json.loads((ROOT / "sim" / "sg_geo.json").read_text(encoding="utf-8")),
                "MAP": imgs["sg_map_crop"],

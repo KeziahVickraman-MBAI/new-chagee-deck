@@ -1542,6 +1542,112 @@
     }
   })();
 
+  /* ---------------------------------------------------------------- M1-M3 members, candidate chapter (sim/members.js) */
+  (function members() {
+    const MB = window.ChageeMembers, MR = RAW.members, MD = DATA.members; if (!MB || !MD) return;
+    const SC = MR.scenarios.value, SD = MR.slider_defaults.value, SR = MR.slider_ranges.value, NR = MR.rounds.value;
+    const GREEN = "#2F6B45";
+    function hump(svg, p, k, z0) {
+      const vb = svg.viewBox.baseVal, W = vb.width, H = vb.height, L = 34, R = 12, Tp = 12, B = 26;
+      const ym = Math.max(k / 4, p) * 1.2, X = z => L + z * (W - L - R), Y = v => Tp + (1 - v / ym) * (H - Tp - B), eq = MB.equilibria(p, k);
+      let s = `<line x1="${L}" x2="${W - R}" y1="${Y(0)}" y2="${Y(0)}" stroke="${COL.ink2}"/>` +
+        [0, 0.5, 1].map(z => T(X(z), H - B + 13, pct(z), `font-size="10" fill="${COL.taupe}" text-anchor="middle"`)).join("") +
+        T((L + W - R) / 2, H - 3, "z, share of a customer's circle on the app", `font-size="9.5" fill="${COL.taupe}" text-anchor="middle"`);
+      if (eq) s += `<rect x="${X(eq.low)}" y="${Tp}" width="${X(eq.high) - X(eq.low)}" height="${Y(0) - Tp}" fill="${GREEN}" opacity=".07"/>`;
+      s += `<polyline points="${Array.from({ length: 51 }, (_, i) => { const z = i / 50; return `${X(z).toFixed(1)},${Y(k * z * (1 - z)).toFixed(1)}`; }).join(" ")}" fill="none" stroke="${COL.navy}" stroke-width="2.6"/>`;
+      s += `<line x1="${L}" x2="${W - R}" y1="${Y(p)}" y2="${Y(p)}" stroke="${COL.red}" stroke-width="1.6" stroke-dasharray="5 4"/>` + T(L + 2, Y(p) - 4, `effort p = ${p.toFixed(2)}`, `font-size="10" fill="${COL.red}"`);
+      if (eq) {
+        [["low", "tipping point z′"], ["high", "take-off z″"]].forEach(([q, lab], i) => { const z = eq[q];
+          s += `<line x1="${X(z)}" x2="${X(z)}" y1="${Y(p)}" y2="${Y(0)}" stroke="${COL.ink2}" stroke-dasharray="2 3"/><circle cx="${X(z)}" cy="${Y(p)}" r="5" fill="${i ? GREEN : "#fff"}" stroke="${i ? GREEN : COL.ink}" stroke-width="2"/>` +
+               T(X(z), Y(0) - 16 - (i ? 0 : 12), `${lab} ${pct(z)}`, `font-size="10" font-weight="700" fill="${i ? GREEN : COL.ink}" text-anchor="middle"`); });
+        const ar = (a, b, y, c) => `<path d="M${X(a)} ${y} L${X(b)} ${y}" stroke="${c}" stroke-width="1.6" marker-end="url(#mbar)"/>`;
+        const ya = Y(0) - 7;
+        s = `<defs><marker id="mbar" viewBox="0 0 6 6" refX="5" refY="3" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L6 3L0 6z" fill="${COL.ink2}"/></marker></defs>` + s +
+            ar(eq.low * 0.75, eq.low * 0.25, ya, COL.red) + ar(eq.low + (eq.high - eq.low) * 0.3, eq.low + (eq.high - eq.low) * 0.7, ya, GREEN) + ar(Math.min(0.99, eq.high + (1 - eq.high) * 0.8), eq.high + (1 - eq.high) * 0.25, ya, COL.ink2);
+      } else s += T((L + W - R) / 2, Tp + 14, "4p/k > 1: no positive equilibrium, the app stalls at zero", `font-size="11" font-weight="700" fill="${COL.red}" text-anchor="middle"`);
+      if (z0 != null) s += `<path d="M${X(z0)} ${Y(0) + 1} l-5 8 h10 z" fill="${COL.gold}"/>` + T(X(z0), Y(0) + 20, "", "");
+      svg.innerHTML = s;
+    }
+    function roundsChart(svg, path, eq, n) {
+      const vb = svg.viewBox.baseVal, W = vb.width, H = vb.height, L = 34, R = 12, Tp = 12, B = 26, N = path.length - 1;
+      const X = i => L + i / N * (W - L - R), Y = v => Tp + (1 - v) * (H - Tp - B);
+      let s = [0, 0.5, 1].map(v => `<line x1="${L}" x2="${W - R}" y1="${Y(v)}" y2="${Y(v)}" stroke="${v ? COL.line : COL.ink2}"/>` + T(L - 5, Y(v) + 3.5, pct(v), `font-size="10" fill="${COL.taupe}" text-anchor="end"`)).join("");
+      s += T((L + W - R) / 2, H - 3, "adoption round", `font-size="9.5" fill="${COL.taupe}" text-anchor="middle"`);
+      if (eq) [["low", "z′", COL.ink], ["high", "z″", GREEN]].forEach(([q, l, c]) => (s += `<line x1="${L}" x2="${W - R}" y1="${Y(eq[q])}" y2="${Y(eq[q])}" stroke="${c}" stroke-dasharray="4 4" opacity=".7"/>` + T(W - R, Y(eq[q]) - 3, `${l} ${pct(eq[q])}`, `font-size="10" fill="${c}" text-anchor="end"`)));
+      const pts = path.slice(0, n + 1), up = path[N] > 0.01;
+      s += `<polyline points="${pts.map((v, i) => `${X(i).toFixed(1)},${Y(v).toFixed(1)}`).join(" ")}" fill="none" stroke="${up ? GREEN : COL.red}" stroke-width="2.6"/>` +
+           pts.map((v, i) => `<circle cx="${X(i).toFixed(1)}" cy="${Y(v).toFixed(1)}" r="3" fill="${up ? GREEN : COL.red}"/>`).join("");
+      svg.innerHTML = s;
+    }
+    // M1: the hump at today's setting
+    const m1 = document.getElementById("m1"), today = SC.find(s => s.id === "today");
+    if (m1) hump($(m1, ".mbmini"), today.p, today.k, null);
+
+    // M2: sliders, scenarios, rounds, table, network check
+    const m2 = document.getElementById("m2");
+    if (m2) {
+      const st = { ...SD, shown: NR, timer: null }, ctl = $(m2, ".mbctl");
+      const SL = [["p", "Effort of tiering up, p", 0.01, v => v.toFixed(2)], ["k", "Worth of friends on the app, k", 0.05, v => v.toFixed(2)],
+                  ["incentive", "Launch incentive, lowers p", 0.01, v => v.toFixed(2)], ["z0", "Starting share, z0", 0.01, v => pct(v)]];
+      ctl.innerHTML = `<span class="lab">Scenario</span><span class="seg" style="flex-wrap:wrap">${SC.map(s => `<button class="btn" data-sc="${s.id}">${s.label}</button>`).join("")}</span>` +
+        SL.map(([k, lab, step, f]) => `<label>${lab}<span class="val" data-v="${k}">${f(st[k])}</span><input type="range" data-k="${k}" min="${SR[k][0]}" max="${SR[k][1]}" step="${step}" value="${st[k]}"></label>`).join("");
+      const tab = $(m2, ".mbtab");
+      function draw() {
+        const pe = Math.max(0.001, st.p - st.incentive), eq = MB.equilibria(pe, st.k), path = MB.rounds(st.z0, pe, st.k, NR), up = path[NR] > 0.01;
+        hump($(m2, ".mbhump"), pe, st.k, st.z0); roundsChart($(m2, ".mbround"), path, eq, Math.min(st.shown, NR));
+        const pill = $(m2, ".mbstate"); pill.className = `mbstate ${up ? "up" : "down"}`;
+        pill.textContent = up ? `from ${pct(st.z0)}: takes off to about ${pct(path[NR])}` : `from ${pct(st.z0)}: collapses to zero`;
+        $(m2, ".mbread").innerHTML = `<div class="k">Reading · illustrative</div><p>Effort after the incentive <b>${pe.toFixed(2)}</b>, k <b>${st.k.toFixed(2)}</b>. ` +
+          (eq ? `Tipping point <b>${pct(eq.low)}</b>, take-off <b>${pct(eq.high)}</b>. Start below the tipping point and adoption collapses; start above and it takes off.`
+              : `4p/k is above one: no positive equilibrium, so the app stalls at zero from any start.`) + ` The model shows direction and what to pilot.</p>`;
+        $(m2, ".mbctlp").innerHTML = `<div class="k">Shown</div><p>Effort ${st.p.toFixed(2)}, incentive ${st.incentive.toFixed(2)}, k ${st.k.toFixed(2)}, starting share ${pct(st.z0)}.</p>`;
+        tab.innerHTML = `<tr><th>Scenario</th><th>p</th><th>k</th><th>z′</th><th>z″</th></tr>` + MB.table(RAW).map(s =>
+          `<tr class="${Math.abs(s.p - pe) < 1e-9 && Math.abs(s.k - st.k) < 1e-9 ? "on" : ""}"><td>${s.label}</td><td>${s.p.toFixed(2)}</td><td>${s.k.toFixed(1)}</td><td>${s.eq ? pct(s.eq.low) : "none"}</td><td>${s.eq ? pct(s.eq.high) : "none"}</td></tr>`).join("");
+        $$(ctl, "[data-sc]").forEach(b => { const s = SC.find(x => x.id === b.dataset.sc); b.classList.toggle("on", Math.abs(s.p - pe) < 1e-9 && Math.abs(s.k - st.k) < 1e-9); });
+        $$(ctl, "input").forEach(i => { i.value = st[i.dataset.k]; $(ctl, `.val[data-v="${i.dataset.k}"]`).textContent = SL.find(x => x[0] === i.dataset.k)[3](st[i.dataset.k]); });
+      }
+      const stop = () => { clearInterval(st.timer); st.timer = null; $(m2, ".mbplay").textContent = "▶ Play"; };
+      $(m2, ".mbplay").onclick = () => { if (st.timer) return stop(); st.shown = 0; draw(); $(m2, ".mbplay").textContent = "❚❚ Pause";
+        st.timer = setInterval(() => { st.shown++; draw(); if (st.shown >= NR) stop(); }, reduce ? 600 : 380); };
+      ctl.addEventListener("input", e => { const k = e.target.dataset?.k; if (!k) return; st[k] = +e.target.value; st.shown = NR; stop(); draw(); });
+      ctl.addEventListener("click", e => { const b = e.target.closest("[data-sc]"); if (!b) return; const s = SC.find(x => x.id === b.dataset.sc);
+        Object.assign(st, { p: s.p, k: s.k, incentive: 0, shown: NR }); stop(); draw(); });
+      // network check: closed-form tipping point against the friend-network simulation
+      const net = MD.network.filter(n => n.closed != null && n.sim != null), svg = $(m2, ".mbnet"), W = 400, L = 128, R = 14, rh = 19;
+      const X = v => L + v / 0.6 * (W - L - R);
+      let s = [0, 0.2, 0.4, 0.6].map(v => `<line x1="${X(v)}" x2="${X(v)}" y1="4" y2="${8 + net.length * rh}" stroke="${COL.line}"/>` + T(X(v), 18 + net.length * rh, pct(v), `font-size="9.5" fill="${COL.taupe}" text-anchor="middle"`)).join("");
+      net.forEach((n, i) => { const y = 14 + i * rh, lab = SC.find(x => x.id === n.id).label, big = Math.abs(n.sim - n.closed) > 0.05;
+        s += T(0, y + 3.5, lab, `font-size="10.5" fill="${COL.ink}"`) + `<line x1="${X(n.closed)}" x2="${X(n.sim)}" y1="${y}" y2="${y}" stroke="${big ? COL.red : COL.taupe}" stroke-width="2"/>` +
+             `<circle cx="${X(n.closed)}" cy="${y}" r="4.5" fill="${COL.navy}"/><circle cx="${X(n.sim)}" cy="${y}" r="4.5" fill="#fff" stroke="${COL.red}" stroke-width="2"/>`; });
+      svg.innerHTML = s;
+      const big = net.filter(n => Math.abs(n.sim - n.closed) > 0.05), mx = Math.max(...net.map(n => Math.abs(n.sim - n.closed)));
+      $(m2, ".mbnetnote").innerHTML = `<b style="color:${COL.navy}">●</b> formula · <b style="color:${COL.red}">○</b> simulation. ` +
+        (big.length ? `Gap above five points for ${big.map(n => SC.find(x => x.id === n.id).label.toLowerCase()).join(", ")} (up to ${(mx * 100).toFixed(0)} points): with a handful of friends each, pockets of friends keep each other on the app, so the network tips lower than the formula, which assumes everyone sees the whole population's share.`
+                    : `Within five points everywhere.`);
+      printers.push(() => { stop(); Object.assign(st, SD, { shown: NR }); draw(); });
+      draw();
+    }
+
+    // M3: the break-even of the group-order credit
+    const m3 = document.getElementById("m3");
+    if (m3) {
+      const o0 = { credit: MR.group_credit_share.value, base: MR.base_group_orders_per_member_month.value, extra: MR.extra_orders_per_member_month.value }, o = { ...o0 };
+      const ctl = $(m3, ".mbbectl"), R_ = { credit: MR.group_credit_share.range, base: MR.base_group_orders_per_member_month.range, extra: MR.extra_orders_per_member_month.range };
+      const SL = [["credit", "Credit, share of price", 0.005, v => pct(v, 1)], ["base", "Group orders a month anyway", 0.5, v => v.toFixed(1)], ["extra", "Extra orders a month", 0.25, v => v.toFixed(2)]];
+      ctl.innerHTML = `<span class="lab">Test it · assumptions, not Chagee data</span>` + SL.map(([k, lab, step, f]) => `<label>${lab}<span class="val" data-v="${k}">${f(o[k])}</span><input type="range" data-k="${k}" min="${R_[k][0]}" max="${R_[k][1]}" step="${step}" value="${o[k]}"></label>`).join("");
+      function draw() {
+        const b = MB.breakEven(RAW, o), f2 = x => (x == null ? "never" : x.toFixed(2));
+        $(m3, ".mbbet").innerHTML = `<tr><th>Gross margin</th><th>Extra orders needed a month</th><th>Net a member a month at ${o.extra.toFixed(2)} extra</th></tr>` +
+          ["low", "mid", "high"].map(q => `<tr class="${q === "mid" ? "best" : ""}"><td>${pct(b[q].margin)}</td><td>${f2(b[q].extraNeeded)}</td><td>${b[q].netPerMember < 0 ? "−" : ""}S$${Math.abs(b[q].netPerMember).toFixed(2)}</td></tr>`).join("");
+        $(m3, ".mbbenote").innerHTML = `Extra orders needed = credit × orders a month anyway ÷ (margin − credit). Price S$${b.price.toFixed(2)} and the margin range are the deck's; the credit, the orders a month and the extra orders are new inputs.`;
+        $$(ctl, "input").forEach(i => { i.value = o[i.dataset.k]; $(ctl, `.val[data-v="${i.dataset.k}"]`).textContent = SL.find(x => x[0] === i.dataset.k)[3](o[i.dataset.k]); });
+      }
+      ctl.addEventListener("input", e => { const k = e.target.dataset?.k; if (!k) return; o[k] = +e.target.value; draw(); });
+      printers.push(() => { Object.assign(o, o0); draw(); });
+      draw();
+    }
+  })();
+
   /* ---------------------------------------------------------------- print */
   function preparePrint() {
     PRINTING = true;
