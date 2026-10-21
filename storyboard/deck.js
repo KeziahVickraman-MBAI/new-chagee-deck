@@ -1049,7 +1049,7 @@
 
   /* ---------------------------------------------------------------- 04b network effects */
   // Click a loop or a card to pair them. The congestion card follows the shared day type (the counter grid,
-  // DATA.grid); the cannibalisation card switches between slide 05's two sites (DATA.site).
+  // DATA.grid); the cannibalisation card switches between slide 10's two sites (DATA.site).
   (function networkFx() {
     const sl = $(document, "#c1b"); if (!sl) return;
     const panel = $(sl, ".nfx"); let sel = null;
@@ -1068,7 +1068,7 @@
       copy.innerHTML = `Forecast crew plus a bucket brigade: ${DAY_LABEL[d].toLowerCase()} walk-aways <b>${pct(a, a < 0.1 ? 1 : 0)}</b> → <b>${pct(b, 1)}</b> of peak-hour orders.`;
     };
     BUS.fns.push(congest); congest(BUS.day);
-    // cannibalisation: the app-search site against a store beside the outlet nearest it (slide 05)
+    // cannibalisation: the app-search site against a store beside the outlet nearest it (slide 10)
     const ST = DATA.site, SITES = { top: ["App-search site", ST.top], beside: ["Beside an outlet", ST.besideTop] };
     const seg = $(sl, ".nfsite"), stack = $(sl, ".nfstack"), copy2 = $(sl, ".nfcopy2");
     let site = "top";
