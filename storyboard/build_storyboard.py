@@ -528,6 +528,49 @@ def appendix() -> str:
     return "\n".join(out)
 
 
+def mb_appendix(d: dict) -> tuple:
+    """Appendix for slides M1-M3: derivation and parameters, scenario table; network check; break-even and inputs."""
+    M, D = RAW["members"], d["members"]
+    pc = lambda x: "none" if x is None else f"{round(100 * x)}%"
+    gap = lambda n: "" if n["closed"] is None or n["sim"] is None else f"{100 * (n['sim'] - n['closed']):+.1f}"
+    need = lambda r: "none" if r["extraNeeded"] is None else f"{r['extraNeeded']:.2f}"
+    a = ["<h5>Derivation (OPIM639 Topic 8, slides 30 to 36)</h5>",
+         "<p>Customer x in (0, 1) has interest r(x) = 1 - x. With a share z of friends participating, x joins if r(x) k z &gt;= p, "
+         "that is x &lt;= 1 - p/(k z): the share who would join is 1 - p/(k z). An equilibrium is a share that reproduces itself, "
+         "z = 1 - p/(k z), which gives <b>p = k z (1 - z)</b>. This hump is the equilibrium curve of the population; one customer's "
+         "benefit is r k z, a straight line in z.</p>",
+         "<p>The hump peaks at k/4, at z = 50%. If p &lt; k/4 the effort line crosses it twice: <b>z' = (1 - sqrt(1 - 4p/k))/2</b>, the "
+         "unstable tipping point, and <b>z'' = (1 + sqrt(1 - 4p/k))/2</b>, the stable level. At p = k/4 they merge at 50%; above it there "
+         "is no positive equilibrium and participation falls to zero from any start. Rounds: z_next = max(0, min(1, 1 - p/(k z))).</p>",
+         "<h5>Parameters (illustrative index, not Chagee data)</h5>",
+         "<p><b>r</b> individual interest, 0 to 1, uniform across customers. <b>k</b> value of friends participating; squads are hypothesised to raise it. "
+         "<b>z</b> share of a customer's friends participating. <b>p</b> effort score of joining or progressing, 0 to 1: 1 is the whole benefit a fully "
+         f"interested customer gets with every friend on at k = 1; not money. Slider defaults: {short(M['slider_defaults']['value'])}. "
+         f"Levers, read from the scenario table: squads add {d['members']['levers']['dk']:g} to k; a launch incentive takes {d['members']['levers']['dp']:g} off p.</p>",
+         "<h5>Scenario table, computed (sim/members.js); the build fails if it differs from members.expected_table</h5>",
+         "<table class='res mbt'><tr><th>Scenario</th><th>p</th><th>k</th><th>4p/k</th><th>z'</th><th>z''</th></tr>" +
+         "".join(f"<tr><td>{x['label']}</td><td>{x['p']:.2f}</td><td>{x['k']:.1f}</td><td>{4 * x['p'] / x['k']:.2f}</td><td>{pc(x['eq'] and x['eq']['low'])}</td><td>{pc(x['eq'] and x['eq']['high'])}</td></tr>" for x in D["table"]) + "</table>"]
+    NW = M["network"]["value"]
+    b = ["<table class='res mbt' style='margin-top:6px'><tr><th>Scenario</th><th>Closed form z'</th><th>Simulated</th><th>Gap, points</th></tr>" +
+         "".join(f"<tr><td>{next(x['label'] for x in M['scenarios']['value'] if x['id'] == n['id'])}</td><td>{pc(n['closed'])}</td><td>{pc(n['sim'])}</td>"
+                 f"<td>{gap(n)}</td></tr>" for n in D["network"]) + "</table>",
+         f"<p>{NW['customers']:,} customers on a seeded random graph with about {NW['friends_per_customer']} friends each, interest uniform; a customer is on next round "
+         f"if r k (share of friends on) &gt;= p. {NW['runs']} seeded runs; the simulated tipping point is the smallest starting share (to {NW['z0_step']:g}) from which the "
+         f"mean run ends above {NW['takeoff_share']:.0%}. Gaps above five points mean the friend-group structure matters: with a handful of friends each, pockets of "
+         "friends keep each other on, so the network tips lower than the formula, which assumes everyone sees the whole population's share. We report the gap, not hide it.</p>"]
+    BE = D["breakEven"]
+    c = ["<h5>Break-even of the group-order credit</h5>",
+         f"<p>Contribution per member a month = price x (margin x E - credit x (B + E)), with E extra orders and B group orders a member would place anyway. "
+         f"Break-even E* = credit x B / (margin - credit); none if the credit reaches the margin. Price S${BE['price']:.2f}, credit {BE['credit']:.0%}, B {BE['base']:g}, E {BE['extra']:g}.</p>",
+         "<table class='res mbt'><tr><th>Gross margin</th><th>Extra orders needed a month</th><th>Contribution a member a month at E</th></tr>" +
+         "".join(f"<tr><td>{BE[q]['margin']:.0%}</td><td>{need(BE[q])}</td><td>S${BE[q]['netPerMember']:.2f}</td></tr>" for q in ("low", "mid", "high")) + "</table>",
+         "<h5>New inputs (assumptions.json members; assumption, not Chagee data)</h5>"]
+    for k in ("group_credit_share", "extra_orders_per_member_month", "base_group_orders_per_member_month", "squad_size", "example_interest", "app_rules", "network"):
+        o = M[k]; rng = f" (range {short(o['range'])})" if o.get("range") else ""
+        c.append(f"<p><b>{k.replace('_', ' ')}</b>: {short(o['value'])}{rng}. {o['rationale']}</p>")
+    return "\n".join(a), "\n".join(b), "\n".join(c)
+
+
 def nm_appendix() -> str:
     """Appendix for slides 8A-8D: every new_market input, the method, and what we do not claim."""
     esc = lambda s: str(s).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
@@ -670,6 +713,8 @@ def build() -> Path:
     html = fill(tpl, vals)
     imgs = images()
     html = re.sub(r"\{img:(\w+)\}", lambda m: imgs[m.group(1)], html)
+    mx = mb_appendix(d)
+    html = html.replace("<!--MBAPPX1-->", mx[0]).replace("<!--MBAPPX2-->", mx[1]).replace("<!--MBAPPX3-->", mx[2])
     html = html.replace("<!--APPENDIX-->", appendix()).replace("<!--NMAPPENDIX-->", nm_appendix()).replace("<!--TIERS-->", tiers_table())
     js = "\n".join((ROOT / "sim" / f).read_text(encoding="utf-8") for f in ("sim.js", "store.js", "counter.js", "sitepick.js", "ladder.js", "benefit.js", "siteext.js", "sitemodel.js", "newmarket.js", "pnl.js", "members.js"))
     js += "\n" + (HERE / "deck.js").read_text(encoding="utf-8")

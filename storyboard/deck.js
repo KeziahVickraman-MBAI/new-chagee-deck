@@ -1545,106 +1545,220 @@
   /* ---------------------------------------------------------------- M1-M3 members, candidate chapter (sim/members.js) */
   (function members() {
     const MB = window.ChageeMembers, MR = RAW.members, MD = DATA.members; if (!MB || !MD) return;
-    const SC = MR.scenarios.value, SD = MR.slider_defaults.value, SR = MR.slider_ranges.value, NR = MR.rounds.value;
-    const GREEN = "#2F6B45";
-    function hump(svg, p, k, z0) {
-      const vb = svg.viewBox.baseVal, W = vb.width, H = vb.height, L = 34, R = 12, Tp = 12, B = 26;
-      const ym = Math.max(k / 4, p) * 1.2, X = z => L + z * (W - L - R), Y = v => Tp + (1 - v / ym) * (H - Tp - B), eq = MB.equilibria(p, k);
-      let s = `<line x1="${L}" x2="${W - R}" y1="${Y(0)}" y2="${Y(0)}" stroke="${COL.ink2}"/>` +
-        [0, 0.5, 1].map(z => T(X(z), H - B + 13, pct(z), `font-size="10" fill="${COL.taupe}" text-anchor="middle"`)).join("") +
-        T((L + W - R) / 2, H - 3, "z, share of a customer's circle on the app", `font-size="9.5" fill="${COL.taupe}" text-anchor="middle"`);
-      if (eq) s += `<rect x="${X(eq.low)}" y="${Tp}" width="${X(eq.high) - X(eq.low)}" height="${Y(0) - Tp}" fill="${GREEN}" opacity=".07"/>`;
-      s += `<polyline points="${Array.from({ length: 51 }, (_, i) => { const z = i / 50; return `${X(z).toFixed(1)},${Y(k * z * (1 - z)).toFixed(1)}`; }).join(" ")}" fill="none" stroke="${COL.navy}" stroke-width="2.6"/>`;
-      s += `<line x1="${L}" x2="${W - R}" y1="${Y(p)}" y2="${Y(p)}" stroke="${COL.red}" stroke-width="1.6" stroke-dasharray="5 4"/>` + T(L + 2, Y(p) - 4, `effort p = ${p.toFixed(2)}`, `font-size="10" fill="${COL.red}"`);
-      if (eq) {
-        [["low", "tipping point z′"], ["high", "take-off z″"]].forEach(([q, lab], i) => { const z = eq[q];
-          s += `<line x1="${X(z)}" x2="${X(z)}" y1="${Y(p)}" y2="${Y(0)}" stroke="${COL.ink2}" stroke-dasharray="2 3"/><circle cx="${X(z)}" cy="${Y(p)}" r="5" fill="${i ? GREEN : "#fff"}" stroke="${i ? GREEN : COL.ink}" stroke-width="2"/>` +
-               T(X(z), Y(0) - 16 - (i ? 0 : 12), `${lab} ${pct(z)}`, `font-size="10" font-weight="700" fill="${i ? GREEN : COL.ink}" text-anchor="middle"`); });
-        const ar = (a, b, y, c) => `<path d="M${X(a)} ${y} L${X(b)} ${y}" stroke="${c}" stroke-width="1.6" marker-end="url(#mbar)"/>`;
-        const ya = Y(0) - 7;
-        s = `<defs><marker id="mbar" viewBox="0 0 6 6" refX="5" refY="3" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L6 3L0 6z" fill="${COL.ink2}"/></marker></defs>` + s +
-            ar(eq.low * 0.75, eq.low * 0.25, ya, COL.red) + ar(eq.low + (eq.high - eq.low) * 0.3, eq.low + (eq.high - eq.low) * 0.7, ya, GREEN) + ar(Math.min(0.99, eq.high + (1 - eq.high) * 0.8), eq.high + (1 - eq.high) * 0.25, ya, COL.ink2);
-      } else s += T((L + W - R) / 2, Tp + 14, "4p/k > 1: no positive equilibrium, the app stalls at zero", `font-size="11" font-weight="700" fill="${COL.red}" text-anchor="middle"`);
-      if (z0 != null) s += `<path d="M${X(z0)} ${Y(0) + 1} l-5 8 h10 z" fill="${COL.gold}"/>` + T(X(z0), Y(0) + 20, "", "");
-      svg.innerHTML = s;
-    }
-    function roundsChart(svg, path, eq, n) {
-      const vb = svg.viewBox.baseVal, W = vb.width, H = vb.height, L = 34, R = 12, Tp = 12, B = 26, N = path.length - 1;
-      const X = i => L + i / N * (W - L - R), Y = v => Tp + (1 - v) * (H - Tp - B);
+    const SC = MR.scenarios.value, SD = MR.slider_defaults.value, SR = MR.slider_ranges.value, NR = MR.rounds.value, LV = MB.levers(RAW);
+    const GREEN = "#2F6B45", RX = MR.example_interest.value, f2 = x => x.toFixed(2);
+    const MBS = { p: SD.p, k: SD.k, z0: SD.z0, fns: [] };                 // the model state M1 sets and M2 reads
+    const setMB = o => { Object.assign(MBS, o); MBS.fns.forEach(f => f()); };
+    const ends = (p, k, z0) => MB.rounds(z0, p, k, 60)[60];
+    function rounds(svg, path, eq) {
+      const vb = svg.viewBox.baseVal, W = vb.width, H = vb.height, L = 34, R = 10, Tp = 10, B = 24, N = path.length - 1;
+      const X = i => L + i / N * (W - L - R), Y = v => Tp + (1 - v) * (H - Tp - B), up = path[N] > 0.01;
       let s = [0, 0.5, 1].map(v => `<line x1="${L}" x2="${W - R}" y1="${Y(v)}" y2="${Y(v)}" stroke="${v ? COL.line : COL.ink2}"/>` + T(L - 5, Y(v) + 3.5, pct(v), `font-size="10" fill="${COL.taupe}" text-anchor="end"`)).join("");
-      s += T((L + W - R) / 2, H - 3, "adoption round", `font-size="9.5" fill="${COL.taupe}" text-anchor="middle"`);
+      s += T((L + W - R) / 2, H - 4, "adoption round", `font-size="9.5" fill="${COL.taupe}" text-anchor="middle"`);
       if (eq) [["low", "z′", COL.ink], ["high", "z″", GREEN]].forEach(([q, l, c]) => (s += `<line x1="${L}" x2="${W - R}" y1="${Y(eq[q])}" y2="${Y(eq[q])}" stroke="${c}" stroke-dasharray="4 4" opacity=".7"/>` + T(W - R, Y(eq[q]) - 3, `${l} ${pct(eq[q])}`, `font-size="10" fill="${c}" text-anchor="end"`)));
-      const pts = path.slice(0, n + 1), up = path[N] > 0.01;
-      s += `<polyline points="${pts.map((v, i) => `${X(i).toFixed(1)},${Y(v).toFixed(1)}`).join(" ")}" fill="none" stroke="${up ? GREEN : COL.red}" stroke-width="2.6"/>` +
-           pts.map((v, i) => `<circle cx="${X(i).toFixed(1)}" cy="${Y(v).toFixed(1)}" r="3" fill="${up ? GREEN : COL.red}"/>`).join("");
+      s += `<polyline points="${path.map((v, i) => `${X(i).toFixed(1)},${Y(v).toFixed(1)}`).join(" ")}" fill="none" stroke="${up ? GREEN : COL.red}" stroke-width="2.6"/>` +
+           path.map((v, i) => `<circle cx="${X(i).toFixed(1)}" cy="${Y(v).toFixed(1)}" r="2.8" fill="${up ? GREEN : COL.red}"/>`).join("");
       svg.innerHTML = s;
     }
-    // M1: the hump at today's setting
-    const m1 = document.getElementById("m1"), today = SC.find(s => s.id === "today");
-    if (m1) hump($(m1, ".mbmini"), today.p, today.k, null);
 
-    // M2: sliders, scenarios, rounds, table, network check
+    // M1: one customer's rule, then the equilibrium curve, the crossings and the rounds
+    const m1 = document.getElementById("m1");
+    if (m1) {
+      const panel = $(m1, ".panel"), S = panel.closest(".slide")._stepper, ctl = $(m1, ".mbctl"), big = $(m1, ".mbbig");
+      let step = S ? S.cur : 5;
+      const eqs = $$(m1, ".mbeq .e");
+      eqs[0].innerHTML = `Join when <b>perceived benefit ≥ effort</b>`;
+      eqs[1].innerHTML = `One customer: <b>r × k × z ≥ p</b>`;
+      eqs[2].innerHTML = `Equilibrium, interest r = 1 − x across customers: <b>p = k z (1 − z)</b>`;
+      const SL = [["p", "Effort score, p", 0.01, f2, "big"], ["k", "Value of friends, k", 0.05, f2, ""], ["z0", "Starting participation, z0", 0.01, v => pct(v), ""]];
+      ctl.innerHTML = `<span class="lab">Effort of joining or progressing</span>` +
+        SL.map(([k, lab, st, f, cls], i) => (i === 1 ? `<div class="sep"></div>` : "") + `<label class="${cls}">${lab}<span class="val" data-v="${k}">${f(MBS[k])}</span><input type="range" data-k="${k}" min="${SR[k][0]}" max="${SR[k][1]}" step="${st}" value="${MBS[k]}"></label>` +
+          (i === 0 ? `<p class="scale">An illustrative index from none to one: one is the whole benefit a fully interested customer gets with every friend on (k = 1). Not money, not a Chagee metric.</p>` : "")).join("") +
+        `<button class="btn" data-k="reset" style="height:24px;font-size:11px">Reset</button>`;
+      function draw() {
+        const { p, k, z0 } = MBS, eq = MB.equilibria(p, k), kd = MB.kind(p, k), W = 560, H = 250, L = 42, R = 14, Tp = 14, B = 30;
+        const ym = Math.max(k / 4 * 1.3, p * 1.15, step < 3 ? RX * k * 1.05 : 0), X = z => L + z * (W - L - R), Y = v => Tp + (1 - v / ym) * (H - Tp - B);
+        let s = `<defs><marker id="mba" viewBox="0 0 6 6" refX="5" refY="3" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L6 3L0 6z" fill="context-stroke"/></marker></defs>`;
+        s += `<line x1="${L}" x2="${W - R}" y1="${Y(0)}" y2="${Y(0)}" stroke="${COL.ink2}"/><line x1="${L}" x2="${L}" y1="${Tp}" y2="${Y(0)}" stroke="${COL.line}"/>` +
+          [0, 0.25, 0.5, 0.75, 1].map(z => T(X(z), H - B + 14, pct(z), `font-size="10.5" fill="${COL.taupe}" text-anchor="middle"`)).join("") +
+          T((L + W - R) / 2, H - 3, "z, share of a customer's friends participating", `font-size="10.5" fill="${COL.taupe}" text-anchor="middle"`) +
+          `<text transform="translate(12 ${(Tp + H - B) / 2}) rotate(-90)" font-size="10.5" fill="${COL.taupe}" text-anchor="middle">benefit and effort, index</text>`;
+        // one customer's benefit, r k z: the subject of steps one and two, greyed once the equilibrium curve appears
+        const zi = p / (RX * k);
+        const ze = Math.min(1, ym / (RX * k));                            // clipped where it leaves the chart
+        s += `<line x1="${X(0)}" y1="${Y(0)}" x2="${X(ze)}" y2="${Y(RX * k * ze)}" stroke="${step < 3 ? COL.ink2 : "#B9B2A6"}" stroke-width="${step < 3 ? 2.4 : 1.6}"${step < 3 ? "" : ' stroke-dasharray="5 4"'}/>` +
+             T(X(ze) - 4, Y(RX * k * ze) + (ze < 1 ? 14 : -6), `one customer, r = ${RX}: benefit r k z`, `font-size="10.5" fill="${step < 3 ? COL.ink : COL.taupe}" text-anchor="end"`);
+        if (step < 3 && zi <= 1) s += `<circle cx="${X(zi)}" cy="${Y(p)}" r="5" fill="${COL.gold}"/>` + `<line x1="${X(zi)}" x2="${X(zi)}" y1="${Y(p)}" y2="${Y(0)}" stroke="${COL.gold}" stroke-dasharray="3 3"/>` +
+             T(X(zi) + 7, Y(p) + 16, `joins once ${pct(zi)} of friends are on`, `font-size="11" font-weight="700" fill="${COL.ink}"`);
+        if (step >= 3) {
+          if (step >= 4 && eq && kd === "two") s += `<rect x="${X(eq.low)}" y="${Tp}" width="${X(eq.high) - X(eq.low)}" height="${Y(0) - Tp}" fill="${GREEN}" opacity=".08"/>`;
+          s += `<polyline points="${Array.from({ length: 61 }, (_, i) => { const z = i / 60; return `${X(z).toFixed(1)},${Y(k * z * (1 - z)).toFixed(1)}`; }).join(" ")}" fill="none" stroke="${COL.navy}" stroke-width="3"/>` +
+               `<circle cx="${X(0.5)}" cy="${Y(k / 4)}" r="3" fill="${COL.navy}"/>` + T(X(0.5), Y(k / 4) - 7, `equilibrium curve k z (1 − z) · peak k/4 = ${f2(k / 4)}`, `font-size="10.5" font-weight="600" fill="${COL.navy}" text-anchor="middle"`);
+        }
+        s += `<line x1="${L}" x2="${W - R}" y1="${Y(p)}" y2="${Y(p)}" stroke="${COL.red}" stroke-width="2" stroke-dasharray="6 4"/>` + T(L + 4, Y(p) - 5, `effort p = ${f2(p)}`, `font-size="11" font-weight="700" fill="${COL.red}"`);
+        if (step >= 4) {
+          const ar = (a, b, c) => `<line x1="${X(a)}" x2="${X(b)}" y1="${Y(0) - 9}" y2="${Y(0) - 9}" stroke="${c}" stroke-width="2" marker-end="url(#mba)"/>`;
+          if (kd === "two") {
+            [["low", "tipping point z′", COL.ink, "#fff"], ["high", "stable level z″", GREEN, GREEN]].forEach(([q, lab, c, fill], i) => { const z = eq[q];
+              s += `<line x1="${X(z)}" x2="${X(z)}" y1="${Y(p)}" y2="${Y(0)}" stroke="${c}" stroke-dasharray="2 3"/><circle cx="${X(z)}" cy="${Y(p)}" r="6" fill="${fill}" stroke="${c}" stroke-width="2.4"/>` +
+                   T(X(z), Y(0) - 18 - (i ? 0 : 13), `${lab} ${pct(z)}`, `font-size="11" font-weight="700" fill="${c}" text-anchor="middle"`); });
+            s += ar(eq.low * 0.8, eq.low * 0.2, COL.red) + ar(eq.low + (eq.high - eq.low) * 0.25, eq.low + (eq.high - eq.low) * 0.75, GREEN) + ar(eq.high + (1 - eq.high) * 0.85, eq.high + (1 - eq.high) * 0.2, COL.ink2);
+          } else if (kd === "merged") {
+            s += `<circle cx="${X(0.5)}" cy="${Y(p)}" r="6" fill="#fff" stroke="${COL.red}" stroke-width="2.4"/>` + T(X(0.5), Y(0) - 18, "the two points merge at 50%: a knife-edge", `font-size="11" font-weight="700" fill="${COL.red}" text-anchor="middle"`) + ar(0.4, 0.1, COL.red);
+          } else s += T((L + W - R) / 2, Y(0) - 18, `effort above the peak (${f2(k / 4)}): no positive equilibrium, participation falls to zero`, `font-size="11" font-weight="700" fill="${COL.red}" text-anchor="middle"`) + ar(0.7, 0.3, COL.red);
+        }
+        if (step >= 5) s += `<path d="M${X(z0)} ${Y(0) + 2} l-6 9 h12 z" fill="${COL.gold}"/>` + T(X(z0), Y(0) + 23, "", "");
+        big.innerHTML = s;
+        rounds($(m1, ".mbtraj"), MB.rounds(z0, p, k, NR), eq && kd !== "none" ? eq : null);
+        const fin = ends(p, k, z0);
+        $(m1, ".mbtake .t").innerHTML = step < 3
+          ? (zi <= 1 ? `This customer, interest ${RX}, joins once <b>${pct(zi)}</b> of friends are on; a customer with less interest needs more friends on, one with more needs fewer.`
+                     : `Even with every friend on, this customer's benefit stays below the effort of ${f2(p)}: they do not join.`)
+          : step < 4 ? `Interest varies, so the share who would join depends on how many are already on. The hump is that equilibrium curve; its peak is <b>${f2(k / 4)}</b>.`
+          : kd === "none"
+          ? `At an effort of <b>${f2(p)}</b> the effort line sits above the curve's peak, <b>${f2(k / 4)}</b>: no positive equilibrium, so participation falls to zero from any start. Lower the effort or raise k to get a tipping point.`
+          : kd === "merged" ? `At an effort of <b>${f2(p)}</b> the tipping point and the stable level merge at <b>50%</b>: participation holds only from a start at or above it, and any slip fades.`
+          : `Tipping point <b>${pct(eq.low)}</b>, stable level <b>${pct(eq.high)}</b>. Starting at ${pct(z0)}, participation ${fin > 0.01 ? `rises to about <b>${pct(fin)}</b>` : `<b>falls to zero</b>: too few friends are on for joining to feel worth it`}. Illustrative.`;
+        $(m1, ".mbctlp").innerHTML = `<div class="k">Shown</div><p>Effort score ${f2(p)} (an illustrative index, not money), value of friends k ${f2(k)}, starting participation ${pct(z0)}.</p>`;
+        $$(ctl, "input").forEach(i => { i.value = MBS[i.dataset.k]; $(ctl, `.val[data-v="${i.dataset.k}"]`).textContent = SL.find(x => x[0] === i.dataset.k)[3](MBS[i.dataset.k]); });
+      }
+      ctl.addEventListener("input", e => { const k = e.target.dataset?.k; if (!k) return; setMB({ [k]: +e.target.value }); });
+      ctl.addEventListener("click", e => { if (e.target.closest("[data-k=reset]")) setMB({ p: SD.p, k: SD.k, z0: SD.z0 }); });
+      if (S) S.hooks.push(k => { step = k; draw(); });
+      MBS.fns.push(draw);
+      printers.push(() => { MBS.p = SD.p; MBS.k = SD.k; MBS.z0 = SD.z0; step = 5; MBS.fns.forEach(f => f()); });
+      draw();
+    }
+
+    // M2: the proposed squad experience on a phone, and the same model state as M1, without and with squads
     const m2 = document.getElementById("m2");
     if (m2) {
-      const st = { ...SD, shown: NR, timer: null }, ctl = $(m2, ".mbctl");
-      const SL = [["p", "Effort of tiering up, p", 0.01, v => v.toFixed(2)], ["k", "Worth of friends on the app, k", 0.05, v => v.toFixed(2)],
-                  ["incentive", "Launch incentive, lowers p", 0.01, v => v.toFixed(2)], ["z0", "Starting share, z0", 0.01, v => pct(v)]];
-      ctl.innerHTML = `<span class="lab">Scenario</span><span class="seg" style="flex-wrap:wrap">${SC.map(s => `<button class="btn" data-sc="${s.id}">${s.label}</button>`).join("")}</span>` +
-        SL.map(([k, lab, step, f]) => `<label>${lab}<span class="val" data-v="${k}">${f(st[k])}</span><input type="range" data-k="${k}" min="${SR[k][0]}" max="${SR[k][1]}" step="${step}" value="${st[k]}"></label>`).join("");
-      const tab = $(m2, ".mbtab");
-      function draw() {
-        const pe = Math.max(0.001, st.p - st.incentive), eq = MB.equilibria(pe, st.k), path = MB.rounds(st.z0, pe, st.k, NR), up = path[NR] > 0.01;
-        hump($(m2, ".mbhump"), pe, st.k, st.z0); roundsChart($(m2, ".mbround"), path, eq, Math.min(st.shown, NR));
-        const pill = $(m2, ".mbstate"); pill.className = `mbstate ${up ? "up" : "down"}`;
-        pill.textContent = up ? `from ${pct(st.z0)}: takes off to about ${pct(path[NR])}` : `from ${pct(st.z0)}: collapses to zero`;
-        $(m2, ".mbread").innerHTML = `<div class="k">Reading · illustrative</div><p>Effort after the incentive <b>${pe.toFixed(2)}</b>, k <b>${st.k.toFixed(2)}</b>. ` +
-          (eq ? `Tipping point <b>${pct(eq.low)}</b>, take-off <b>${pct(eq.high)}</b>. Start below the tipping point and adoption collapses; start above and it takes off.`
-              : `4p/k is above one: no positive equilibrium, so the app stalls at zero from any start.`) + ` The model shows direction and what to pilot.</p>`;
-        $(m2, ".mbctlp").innerHTML = `<div class="k">Shown</div><p>Effort ${st.p.toFixed(2)}, incentive ${st.incentive.toFixed(2)}, k ${st.k.toFixed(2)}, starting share ${pct(st.z0)}.</p>`;
-        tab.innerHTML = `<tr><th>Scenario</th><th>p</th><th>k</th><th>z′</th><th>z″</th></tr>` + MB.table(RAW).map(s =>
-          `<tr class="${Math.abs(s.p - pe) < 1e-9 && Math.abs(s.k - st.k) < 1e-9 ? "on" : ""}"><td>${s.label}</td><td>${s.p.toFixed(2)}</td><td>${s.k.toFixed(1)}</td><td>${s.eq ? pct(s.eq.low) : "none"}</td><td>${s.eq ? pct(s.eq.high) : "none"}</td></tr>`).join("");
-        $$(ctl, "[data-sc]").forEach(b => { const s = SC.find(x => x.id === b.dataset.sc); b.classList.toggle("on", Math.abs(s.p - pe) < 1e-9 && Math.abs(s.k - st.k) < 1e-9); });
-        $$(ctl, "input").forEach(i => { i.value = st[i.dataset.k]; $(ctl, `.val[data-v="${i.dataset.k}"]`).textContent = SL.find(x => x[0] === i.dataset.k)[3](st[i.dataset.k]); });
+      const AR = MR.app_rules.value, price = RAW.storyboard.price_per_cup.value, credit = MR.group_credit_share.value, [sqLo, sqHi] = MR.squad_size.value;
+      const PPL = AR.people, AVC = [COL.red, COL.navy, "#2E8B7A", "#B8860B"], DR = ["Jasmine milk tea", "Oolong milk tea", "Fresh fruit tea", "Black milk tea"];
+      const cr = price * credit, n = PPL.length, mine = AR.points_own_drink + n * AR.points_per_squad_drink, after = AR.points_now + mine;
+      const av = (i, off) => `<span class="av${off ? " off" : ""}" style="background:${AVC[i]}">${PPL[i][0]}</span>`;
+      const bar = (a, b, sq) => `<div class="prog"><i class="${sq ? "sq" : ""}" style="width:${Math.min(100, 100 * a / b)}%"></i></div>`;
+      const top = (t, h) => `<div class="bar"><span>9:41</span><span>●●●</span></div><div class="hd"><small>${t}</small><h3>${h}</h3></div>`;
+      const JR = ["See your progress and start a squad", "Invite friends from the share sheet", "Friends join and add to a group order", "Collect the order: everyone's progress moves", "Gift a drink to a friend"];
+      const SCR = [
+        () => top("Members · illustrative", `${AR.tier_now} member`) + `<div class="bd"><div class="crd"><h5>${AR.points_now} / ${AR.points_next} points to ${AR.tier_next}</h5>${bar(AR.points_now, AR.points_next)}<p>${AR.points_own_drink} points for each drink you buy.</p></div>
+          <div class="crd"><h5>Start a squad</h5><p>Squads of ${sqLo} to ${sqHi}. Every drink in a squad's group order earns <b>${AR.points_per_squad_drink} points for every member</b>, and ${pct(credit)} back as credit.</p><button class="cta" data-go="1">Create a squad</button></div></div>`,
+        () => top(`${AR.squad_name} · 1 of ${sqHi}`, "Invite your friends") + `<div class="bd"><div class="crd"><h5>${AR.squad_name}</h5><div class="avs">${PPL.map((_, i) => av(i, i > 0)).join("")}</div><p>Only you so far.</p></div></div>
+          <div class="sheet"><div class="grab"></div><b>Share invite to ${AR.squad_name}</b><div class="apps"><span><i>✉</i>Messages</span><span><i>⧉</i>Copy link</span><span><i>@</i>Email</span><span><i>…</i>More</span></div>
+          <button class="cta" data-go="2">Send invite</button><span class="sim">Simulated: no message is sent.</span></div>`,
+        () => top(`${AR.squad_name} · ${n} members`, "Group order") + `<div class="bd"><div class="crd"><div class="avs">${PPL.map((_, i) => av(i)).join("")}</div><p><span class="ok">✓</span> ${PPL.slice(1).join(", ")} joined</p></div>
+          <div class="crd">${PPL.map((p, i) => `<div class="row"><span>${p} · ${DR[i]}</span><span>S$${price.toFixed(2)}</span></div>`).join("")}<p style="margin-top:4px">${n} drinks · each earns ${AR.points_per_squad_drink} points for all ${n} of you</p>
+          <button class="cta" data-go="3">Place group order</button><span class="sim">Simulated: no payment is taken.</span></div></div>`,
+        () => top("Order collected · simulated", "Everyone moved up") + `<div class="bd"><div class="crd"><h5>You: ${after} / ${AR.points_next} points</h5>${bar(after, AR.points_next)}<p>+${AR.points_own_drink} for your drink, +${n * AR.points_per_squad_drink} from the squad's ${n} drinks.</p></div>
+          <div class="crd"><h5>Each friend: +${mine} points too</h5><div class="avs">${PPL.map((_, i) => av(i)).join("")}</div></div>
+          <div class="crd"><h5>S$${cr.toFixed(2)} credit each</h5><p>${pct(credit)} of each drink in the group order, for your next order.</p></div><button class="cta ghost" data-go="4">Next: gift a drink</button></div>`,
+        () => top(AR.squad_name, "Gift a drink") + `<div class="bd"><div class="crd"><h5>Send ${PPL[1]} a drink</h5><div class="avs">${av(1)}</div><p>${PPL[1]} gets a voucher for one drink. When ${PPL[1]} collects it, it counts as a squad drink: ${AR.points_per_squad_drink} points for every member.</p>
+          <button class="cta" data-go="0">Send gift</button><span class="sim">Simulated: nothing is bought or sent.</span></div></div>`];
+      const WHY = [
+        ["Shared", "Nothing yet: you see your own progress."], ["Shared", "An invite link to the squad, only to the friends you pick."],
+        ["Shared", "Who is in the squad and the group order. Each pays for their own drink."], ["Progress", `Everyone in the squad: your drink gives you ${AR.points_own_drink}; each drink in the order gives every member ${AR.points_per_squad_drink}.`],
+        ["Reward", "A gifted drink counts as a squad drink when collected, so it moves the whole squad."]];
+      const WHY2 = ["Your progress is yours; the squad is how friends' orders start to count for you.", "Joining is one tap for a friend: the effort, p, the squad has to keep low.",
+        "This is where friends' value, k, comes from: their drinks move your tier.", `The reward: ${AR.points_per_squad_drink} points a squad drink to every member, and ${pct(credit)} credit on each group-order drink.`, "Gifting brings a friend in without asking them to set anything up."];
+      let cur2 = 3;
+      const scr = $(m2, ".scr"), jour = $(m2, ".mbjour"), why = $(m2, ".mbwhy"), nav = $(m2, ".mbnav");
+      jour.innerHTML = JR.map((t, i) => `<li data-i="${i}"><span class="n">${i + 1}</span><span>${t}</span></li>`).join("");
+      nav.innerHTML = `<button class="btn" data-d="-1" aria-label="Previous screen">◀</button><button class="btn" data-d="1" aria-label="Next screen">▶</button>`;
+      function screen(i) {
+        cur2 = (i + SCR.length) % SCR.length; scr.innerHTML = SCR[cur2]();
+        $$(jour, "li").forEach((li, j) => li.classList.toggle("on", j === cur2));
+        why.innerHTML = `<div class="bc"><div class="k">${WHY[cur2][0]}</div><p>${WHY[cur2][1]}</p></div><div class="bc"><div class="k">Why it matters</div><p>${WHY2[cur2]}</p></div>` +
+          `<p class="lnote">Our illustrative rules, used throughout this chapter; not Chagee's membership rules, which are to confirm.</p>`;
       }
-      const stop = () => { clearInterval(st.timer); st.timer = null; $(m2, ".mbplay").textContent = "▶ Play"; };
-      $(m2, ".mbplay").onclick = () => { if (st.timer) return stop(); st.shown = 0; draw(); $(m2, ".mbplay").textContent = "❚❚ Pause";
-        st.timer = setInterval(() => { st.shown++; draw(); if (st.shown >= NR) stop(); }, reduce ? 600 : 380); };
-      ctl.addEventListener("input", e => { const k = e.target.dataset?.k; if (!k) return; st[k] = +e.target.value; st.shown = NR; stop(); draw(); });
-      ctl.addEventListener("click", e => { const b = e.target.closest("[data-sc]"); if (!b) return; const s = SC.find(x => x.id === b.dataset.sc);
-        Object.assign(st, { p: s.p, k: s.k, incentive: 0, shown: NR }); stop(); draw(); });
-      // network check: closed-form tipping point against the friend-network simulation
-      const net = MD.network.filter(n => n.closed != null && n.sim != null), svg = $(m2, ".mbnet"), W = 400, L = 128, R = 14, rh = 19;
-      const X = v => L + v / 0.6 * (W - L - R);
-      let s = [0, 0.2, 0.4, 0.6].map(v => `<line x1="${X(v)}" x2="${X(v)}" y1="4" y2="${8 + net.length * rh}" stroke="${COL.line}"/>` + T(X(v), 18 + net.length * rh, pct(v), `font-size="9.5" fill="${COL.taupe}" text-anchor="middle"`)).join("");
-      net.forEach((n, i) => { const y = 14 + i * rh, lab = SC.find(x => x.id === n.id).label, big = Math.abs(n.sim - n.closed) > 0.05;
-        s += T(0, y + 3.5, lab, `font-size="10.5" fill="${COL.ink}"`) + `<line x1="${X(n.closed)}" x2="${X(n.sim)}" y1="${y}" y2="${y}" stroke="${big ? COL.red : COL.taupe}" stroke-width="2"/>` +
-             `<circle cx="${X(n.closed)}" cy="${y}" r="4.5" fill="${COL.navy}"/><circle cx="${X(n.sim)}" cy="${y}" r="4.5" fill="#fff" stroke="${COL.red}" stroke-width="2"/>`; });
-      svg.innerHTML = s;
-      const big = net.filter(n => Math.abs(n.sim - n.closed) > 0.05), mx = Math.max(...net.map(n => Math.abs(n.sim - n.closed)));
-      $(m2, ".mbnetnote").innerHTML = `<b style="color:${COL.navy}">●</b> formula · <b style="color:${COL.red}">○</b> simulation. ` +
-        (big.length ? `Gap above five points for ${big.map(n => SC.find(x => x.id === n.id).label.toLowerCase()).join(", ")} (up to ${(mx * 100).toFixed(0)} points): with a handful of friends each, pockets of friends keep each other on the app, so the network tips lower than the formula, which assumes everyone sees the whole population's share.`
-                    : `Within five points everywhere.`);
-      printers.push(() => { stop(); Object.assign(st, SD, { shown: NR }); draw(); });
+      scr.addEventListener("click", e => { const b = e.target.closest("[data-go]"); if (b) screen(+b.dataset.go); });
+      jour.addEventListener("click", e => { const li = e.target.closest("li"); if (li) screen(+li.dataset.i); });
+      nav.addEventListener("click", e => { const b = e.target.closest("[data-d]"); if (b) screen(cur2 + +b.dataset.d); });
+      const inc = $(m2, ".mbinc input");
+      function model() {
+        const { p, k } = MBS, pw = Math.max(0.001, p - (inc.checked ? LV.dp : 0)), kw = k + LV.dk, e0 = MB.equilibria(p, k), e1 = MB.equilibria(pw, kw);
+        const svg = $(m2, ".mbws"), W = 260, H = 170, L = 28, R = 16, Tp = 18, B = 22, ym = Math.max(kw / 4, p) * 1.25;
+        const X = z => L + z * (W - L - R), Y = v => Tp + (1 - v / ym) * (H - Tp - B);
+        const curve = (kk, c, w, dash) => `<polyline points="${Array.from({ length: 41 }, (_, i) => { const z = i / 40; return `${X(z).toFixed(1)},${Y(kk * z * (1 - z)).toFixed(1)}`; }).join(" ")}" fill="none" stroke="${c}" stroke-width="${w}"${dash ? ' stroke-dasharray="5 4"' : ""}/>`;
+        let s = `<line x1="${L}" x2="${W - R}" y1="${Y(0)}" y2="${Y(0)}" stroke="${COL.ink2}"/>` + [0, 0.5, 1].map(z => T(X(z), H - B + 13, pct(z), `font-size="9.5" fill="${COL.taupe}" text-anchor="middle"`)).join("");
+        s += curve(k, "#B9B2A6", 2, true) + curve(kw, COL.navy, 2.6, false);
+        s += `<line x1="${L}" x2="${W - R}" y1="${Y(p)}" y2="${Y(p)}" stroke="${COL.red}" stroke-width="1.6" stroke-dasharray="5 4"/>`;
+        if (inc.checked) s += `<line x1="${L}" x2="${W - R}" y1="${Y(pw)}" y2="${Y(pw)}" stroke="${COL.gold}" stroke-width="1.6" stroke-dasharray="5 4"/>`;
+        if (e0) s += `<circle cx="${X(e0.low)}" cy="${Y(p)}" r="4.5" fill="#fff" stroke="${COL.taupe}" stroke-width="2"/>`;
+        if (e1) s += `<circle cx="${X(e1.low)}" cy="${Y(pw)}" r="4.5" fill="#fff" stroke="${COL.navy}" stroke-width="2.4"/>`;
+        s += T(L, 11, "without squads", `font-size="10" fill="${COL.taupe}"`) + T(L + 84, 11, "with squads", `font-size="10" font-weight="700" fill="${COL.navy}"`) + T(W - R, 11, `effort ${f2(pw)}`, `font-size="10" fill="${COL.red}" text-anchor="end"`);
+        svg.innerHTML = s;
+        const tp = e => (e ? pct(e.low) : "none (stalls)");
+        $(m2, ".mbtake .t").innerHTML = `At M1's effort of <b>${f2(p)}</b>, squads (assumed k ${f2(k)} → ${f2(kw)})${inc.checked ? ` plus a launch incentive (effort → ${f2(pw)})` : ""} would move the tipping point from <b>${tp(e0)}</b> to <b>${tp(e1)}</b>` +
+          (!e0 && e1 ? `: without squads the app never takes off; with them it can.` : e0 && e1 ? `: fewer friends need to be on before joining feels worth it.` : `.`) + ` Assumptions to test, not measured effects.`;
+      }
+      inc.addEventListener("change", model);
+      MBS.fns.push(model);
+      printers.push(() => { inc.checked = false; screen(3); model(); });
+      screen(3); model();
+    }
+
+    // M3: contribution per member a month against extra orders, after credits
+    const m3 = document.getElementById("m3");
+    if (m3) {
+      const S = m3.querySelector(".panel")?.closest(".slide")._stepper, ctl = $(m3, ".mbpctl"), svg = $(m3, ".mbpay");
+      const o0 = { credit: MR.group_credit_share.value, base: MR.base_group_orders_per_member_month.value }, o = { ...o0 };
+      const Er = MR.extra_orders_per_member_month.range, mg = RAW.storyboard.gross_margin_per_cup, Edef = MR.extra_orders_per_member_month.value;
+      let step = S ? S.cur : 3;
+      const SL = [["credit", "Credit rate, share of price", MR.group_credit_share.range, 0.005, v => pct(v, 1), "big"], ["base", "Group orders a month anyway", MR.base_group_orders_per_member_month.range, 0.5, v => v.toFixed(1), ""]];
+      ctl.innerHTML = `<span class="lab">The credit</span>` + SL.map(([k, lab, [lo, hi], st, f, cls], i) => (i ? `<div class="sep"></div>` : "") +
+        `<label class="${cls}">${lab}<span class="val" data-v="${k}">${f(o[k])}</span><input type="range" data-k="${k}" min="${lo}" max="${hi}" step="${st}" value="${o[k]}"></label>`).join("") +
+        `<button class="btn" data-k="reset" style="height:24px;font-size:11px">Reset</button>`;
+      ctl.classList.add("mbctl");
+      function draw() {
+        const b = MB.breakEven(RAW, o), W = 640, H = 270, L = 58, R = 20, Tp = 16, B = 34, xm = Er[1];
+        const f = (E, m) => MB.perMember(RAW, o, E, m), ys = [mg.range[0], mg.value, mg.range[1]].flatMap(m => [f(0, m), f(xm, m)]);
+        let y0 = Math.min(0, ...ys), y1 = Math.max(0, ...ys); const pad = (y1 - y0) * 0.08; y0 -= pad; y1 += pad;
+        const X = E => L + E / xm * (W - L - R), Y = v => Tp + (y1 - v) / (y1 - y0) * (H - Tp - B);
+        let s = "";
+        const st = (() => { const r = (y1 - y0) / 5, m = 10 ** Math.floor(Math.log10(r)); return [1, 2, 2.5, 5, 10].map(q => q * m).find(q => q >= r); })();
+        for (let v = Math.ceil(y0 / st) * st; v <= y1; v += st) s += `<line x1="${L}" x2="${W - R}" y1="${Y(v)}" y2="${Y(v)}" stroke="${Math.abs(v) < 1e-9 ? COL.ink2 : COL.line}" stroke-width="${Math.abs(v) < 1e-9 ? 1.6 : 1}"/>` +
+          T(L - 6, Y(v) + 3.5, `${v < 0 ? "−" : ""}S$${Math.abs(v).toFixed(2)}`, `font-size="10.5" fill="${COL.taupe}" text-anchor="end"`);
+        for (let E = 0; E <= xm + 1e-9; E += 0.5) s += T(X(E), H - B + 15, E.toFixed(1), `font-size="10.5" fill="${COL.taupe}" text-anchor="middle"`);
+        s += T((L + W - R) / 2, H - 3, "additional orders per member per month", `font-size="10.5" fill="${COL.taupe}" text-anchor="middle"`) +
+             `<text transform="translate(13 ${(Tp + H - B) / 2}) rotate(-90)" font-size="10.5" fill="${COL.taupe}" text-anchor="middle">S$ per member a month</text>` +
+             T(W - R, Y(0) - 5, "zero contribution", `font-size="10" fill="${COL.ink2}" text-anchor="end"`);
+        if (step >= 2) s += `<polygon points="${[[0, mg.range[1]], [xm, mg.range[1]], [xm, mg.range[0]], [0, mg.range[0]]].map(([E, m]) => `${X(E)},${Y(f(E, m))}`).join(" ")}" fill="${COL.navy}" opacity=".1"/>`;
+        s += `<line x1="${X(0)}" y1="${Y(f(0))}" x2="${X(step >= 2 ? xm : 0.0001)}" y2="${Y(f(step >= 2 ? xm : 0.0001))}" stroke="${COL.navy}" stroke-width="3"/>` +
+             `<circle cx="${X(0)}" cy="${Y(f(0))}" r="5" fill="${COL.red}"/>` + T(X(0) + 9, Y(f(0)) + 15, `credits on orders members place anyway: −S$${Math.abs(f(0)).toFixed(2)}`, `font-size="11" font-weight="600" fill="${COL.red}"`);
+        if (step >= 2) s += T(X(xm) - 4, Y(f(xm)) - 8, `${pct(mg.value)} margin; band ${pct(mg.range[0])}–${pct(mg.range[1])}`, `font-size="10.5" fill="${COL.navy}" text-anchor="end"`);
+        const Es = b.mid.extraNeeded;
+        if (step >= 3) s += Es == null ? T((L + W - R) / 2, Tp + 14, "credit at or above the margin: the line never reaches zero, no break-even", `font-size="12" font-weight="700" fill="${COL.red}" text-anchor="middle"`)
+          : Es > xm ? T(W - R, Tp + 14, `break-even beyond ${xm} extra orders a month`, `font-size="12" font-weight="700" fill="${COL.red}" text-anchor="end"`)
+          : `<line x1="${X(Es)}" x2="${X(Es)}" y1="${Y(0)}" y2="${H - B}" stroke="${GREEN}" stroke-dasharray="3 3"/><circle cx="${X(Es)}" cy="${Y(0)}" r="6.5" fill="${GREEN}" stroke="#fff" stroke-width="2"/>` +
+            T(X(Es) + 10, Y(0) - 10, `break-even: about ${Es.toFixed(2)} extra orders a month`, `font-size="12" font-weight="700" fill="${GREEN}"`);
+        svg.innerHTML = s;
+        const lo = b.high.extraNeeded, hi = b.low.extraNeeded;
+        const slope = b.price * (mg.value - o.credit);
+        $(m3, ".mbtake .t").innerHTML = step < 2 ? `With no extra orders, a <b>${pct(o.credit, 1)}</b> credit costs about <b>S$${Math.abs(f(0)).toFixed(2)}</b> a member a month, paid on the ${o.base.toFixed(1)} group orders they would place anyway.`
+          : step < 3 ? `Each extra order adds about <b>S$${slope.toFixed(2)}</b>: the ${pct(mg.value)} margin less its own ${pct(o.credit, 1)} credit, on a S$${b.price.toFixed(2)} cup.`
+          : Es == null ? `At a credit of <b>${pct(o.credit, 1)}</b>, at or above the margin, the credit never pays for itself.`
+          : `At a <b>${pct(o.credit, 1)}</b> credit, each squad member must add about <b>${Es.toFixed(2)}</b> orders a month before it pays for itself (${lo == null ? "–" : lo.toFixed(2)} to ${hi == null ? "none" : hi.toFixed(2)} across the margin range), because ${o.base.toFixed(1)} orders a month would earn the credit anyway. How many orders squads add is what the pilot must measure.`;
+        $(m3, ".mbpctlp").innerHTML = `<div class="k">Shown</div><p>Credit ${pct(o.credit, 1)} of the S$${b.price.toFixed(2)} price; ${o.base.toFixed(1)} group orders a month anyway; margin ${pct(mg.value)} (band ${pct(mg.range[0])}–${pct(mg.range[1])}).</p>`;
+        $$(ctl, "input").forEach(i => { i.value = o[i.dataset.k]; $(ctl, `.val[data-v="${i.dataset.k}"]`).textContent = SL.find(x => x[0] === i.dataset.k)[4](o[i.dataset.k]); });
+      }
+      ctl.addEventListener("input", e => { const k = e.target.dataset?.k; if (!k) return; o[k] = +e.target.value; draw(); });
+      ctl.addEventListener("click", e => { if (e.target.closest("[data-k=reset]")) { Object.assign(o, o0); draw(); } });
+      if (S) S.hooks.push(k => { step = k; draw(); });
+      printers.push(() => { Object.assign(o, o0); step = 3; draw(); });
       draw();
     }
 
-    // M3: the break-even of the group-order credit
-    const m3 = document.getElementById("m3");
-    if (m3) {
-      const o0 = { credit: MR.group_credit_share.value, base: MR.base_group_orders_per_member_month.value, extra: MR.extra_orders_per_member_month.value }, o = { ...o0 };
-      const ctl = $(m3, ".mbbectl"), R_ = { credit: MR.group_credit_share.range, base: MR.base_group_orders_per_member_month.range, extra: MR.extra_orders_per_member_month.range };
-      const SL = [["credit", "Credit, share of price", 0.005, v => pct(v, 1)], ["base", "Group orders a month anyway", 0.5, v => v.toFixed(1)], ["extra", "Extra orders a month", 0.25, v => v.toFixed(2)]];
-      ctl.innerHTML = `<span class="lab">Test it · assumptions, not Chagee data</span>` + SL.map(([k, lab, step, f]) => `<label>${lab}<span class="val" data-v="${k}">${f(o[k])}</span><input type="range" data-k="${k}" min="${R_[k][0]}" max="${R_[k][1]}" step="${step}" value="${o[k]}"></label>`).join("");
-      function draw() {
-        const b = MB.breakEven(RAW, o), f2 = x => (x == null ? "never" : x.toFixed(2));
-        $(m3, ".mbbet").innerHTML = `<tr><th>Gross margin</th><th>Extra orders needed a month</th><th>Net a member a month at ${o.extra.toFixed(2)} extra</th></tr>` +
-          ["low", "mid", "high"].map(q => `<tr class="${q === "mid" ? "best" : ""}"><td>${pct(b[q].margin)}</td><td>${f2(b[q].extraNeeded)}</td><td>${b[q].netPerMember < 0 ? "−" : ""}S$${Math.abs(b[q].netPerMember).toFixed(2)}</td></tr>`).join("");
-        $(m3, ".mbbenote").innerHTML = `Extra orders needed = credit × orders a month anyway ÷ (margin − credit). Price S$${b.price.toFixed(2)} and the margin range are the deck's; the credit, the orders a month and the extra orders are new inputs.`;
-        $$(ctl, "input").forEach(i => { i.value = o[i.dataset.k]; $(ctl, `.val[data-v="${i.dataset.k}"]`).textContent = SL.find(x => x[0] === i.dataset.k)[3](o[i.dataset.k]); });
-      }
-      ctl.addEventListener("input", e => { const k = e.target.dataset?.k; if (!k) return; o[k] = +e.target.value; draw(); });
-      printers.push(() => { Object.assign(o, o0); draw(); });
-      draw();
+    // appendix: the network check chart
+    const am1 = document.getElementById("am1");
+    if (am1) {
+      const net = MD.network.filter(n => n.closed != null && n.sim != null), svg = $(am1, ".mbnet"), W = 400, L = 128, R = 14, rh = 19;
+      const X = v => L + v / 0.6 * (W - L - R);
+      let s = [0, 0.2, 0.4, 0.6].map(v => `<line x1="${X(v)}" x2="${X(v)}" y1="4" y2="${8 + net.length * rh}" stroke="${COL.line}"/>` + T(X(v), 18 + net.length * rh, pct(v), `font-size="9.5" fill="${COL.taupe}" text-anchor="middle"`)).join("");
+      net.forEach((n, i) => { const y = 14 + i * rh, big = Math.abs(n.sim - n.closed) > 0.05;
+        s += T(0, y + 3.5, SC.find(x => x.id === n.id).label, `font-size="10.5" fill="${COL.ink}"`) + `<line x1="${X(n.closed)}" x2="${X(n.sim)}" y1="${y}" y2="${y}" stroke="${big ? COL.red : COL.taupe}" stroke-width="2"/>` +
+             `<circle cx="${X(n.closed)}" cy="${y}" r="4.5" fill="${COL.navy}"/><circle cx="${X(n.sim)}" cy="${y}" r="4.5" fill="#fff" stroke="${COL.red}" stroke-width="2"/>`; });
+      s += T(W - R, 126, "● formula · ○ simulation", `font-size="9.5" fill="${COL.taupe}" text-anchor="end"`);
+      svg.innerHTML = s;
     }
   })();
 

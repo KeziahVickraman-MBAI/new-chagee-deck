@@ -139,7 +139,7 @@ const newMarket = { runs: nmR, score: nmScore, sensitivity: nmSens, pilot: nmPil
 }
 
 // slides M1-M3 (candidate chapter): the closed-form table, and the friend-network check of each tipping point
-const members = { table: MB.table(RAW), breakEven: MB.breakEven(RAW) };
+const members = { table: MB.table(RAW), breakEven: MB.breakEven(RAW), levers: MB.levers(RAW) };
 members.network = members.table.map(s => ({ id: s.id, closed: s.eq ? s.eq.low : null, sim: MB.tipping(RAW, s.p, s.k, Sim) }));
 
 const pl = Sim.plan(P, "mixed");

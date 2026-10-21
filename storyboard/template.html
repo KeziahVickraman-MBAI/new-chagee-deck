@@ -489,17 +489,50 @@ html,body{margin:0;background:#E7E3DC;color:var(--ink);font-family:var(--sans);-
 .pnlx .chart h5{margin:0 0 2px;font:600 10px/1.2 var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--taupe)}
 .pnlx .chart svg{width:100%;height:auto;display:block}
 /* slides M1-M3, candidate chapter: members and squad tiers (sim/members.js) */
-.mbq{margin:8px 0 0;padding:8px 12px;background:#fff;border:1px solid var(--line);border-left:4px solid var(--navy);border-radius:8px}
-.mbq blockquote{margin:0;font:500 17px/1.32 var(--serif);color:var(--ink)} .mbq .qs{display:block;margin-top:3px;font:10.5px var(--sans);color:var(--taupe)}
-.mbq.crs{border-left-color:var(--gold)} .mbq svg{width:100%;height:auto;display:block}
-.mbcharts{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:2px} .mbbot{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:4px}
-.mb .ch{font:600 9.5px/1.3 var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--taupe);margin-bottom:1px;display:flex;align-items:center}
-.mbcharts svg{width:100%;height:auto;display:block;background:#fff;border-radius:8px} .mbbot svg{width:100%;height:auto;display:block}
-.res.mbtab{font-size:10.8px} .res.mbtab td,.res.mbtab th{padding:2px 4px} .res.mbtab th{text-transform:none;letter-spacing:.04em} .res.mbtab tr.on td{color:var(--ink);font-weight:700;background:#FBF1DD}
-.mbdes .ic{display:flex;gap:9px;align-items:baseline;margin:3px 0 0;font:12.5px/1.3 var(--sans);color:var(--ink)} .mbdes .ic i{font-style:normal;color:var(--red);font-size:15px;width:16px;flex:none;text-align:center}
-.mbctl .seg .btn{font-size:10.5px;padding:0 7px;height:22px} .mbstate{margin-left:auto;font:600 11px var(--sans);padding:2px 9px;border-radius:999px}
-.mbstate.up{background:#E7F0EA;color:#2F6B45} .mbstate.down{background:#F6E3E1;color:var(--red)}
-.res.mbbet{font-size:12px;margin-top:4px} .res.mbbet td,.res.mbbet th{padding:3px 4px}
+.mb .ch{font:600 9.5px/1.3 var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--taupe);margin-bottom:2px}
+.mbeq{display:flex;gap:8px;flex-wrap:wrap;margin:2px 0 4px;min-height:26px}
+.mbeq .e{padding:3px 10px;border-radius:7px;background:#fff;border:1px solid var(--line);font:13px/1.35 var(--sans);color:var(--ink)}
+.mbeq .e b{color:var(--red)} .mbeq .e.now{border-color:var(--navy);box-shadow:0 0 0 2px rgba(36,64,107,.12)}
+.mbviz{display:grid;grid-template-columns:1fr 228px;gap:12px;flex:1;min-height:0;align-items:start}
+.mbviz svg{width:100%;height:auto;display:block;background:#fff;border-radius:9px}
+.mbctl .big{font-size:13.5px!important;font-weight:600;color:var(--ink)!important} .mbctl .big .val{font-size:18px;color:var(--red)}
+.mbctl .scale{font:10.5px/1.35 var(--sans);color:var(--taupe);margin:-2px 0 6px}
+.mbctl .sep{border-top:1px solid var(--line);width:100%;margin:2px 0 1px}
+.mbkey p{margin:1px 0 0!important;font-size:12px!important} .mbkey b{display:inline-block;width:14px;color:var(--red)}
+.mbapp{display:grid;grid-template-columns:1fr 236px 1fr;gap:16px;align-items:center;flex:1;min-height:0}
+.mbjour{list-style:none;margin:0;padding:0;align-self:center}
+.mbjour li{display:flex;gap:9px;align-items:baseline;padding:6px 8px;border-radius:8px;font:12.5px/1.35 var(--sans);color:var(--ink2);cursor:pointer}
+.mbjour li .n{flex:none;display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;background:#D8D1C3;color:#fff;font:600 11px/1 var(--sans)}
+.mbjour li.on{background:#fff;color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.08)} .mbjour li.on .n{background:var(--red)}
+.phone{position:relative;width:236px;height:392px;border-radius:36px;background:#1E2430;padding:10px;box-shadow:0 10px 24px rgba(30,36,48,.22)}
+.phone .notch{position:absolute;left:50%;top:10px;width:86px;height:18px;margin-left:-43px;border-radius:0 0 12px 12px;background:#1E2430;z-index:2}
+.phone .scr{position:relative;width:100%;height:100%;border-radius:27px;background:#FBF8F2;overflow:hidden;font:12px/1.35 var(--sans);color:var(--ink)}
+.scr .bar{display:flex;justify-content:space-between;padding:8px 18px 0;font:600 10px var(--sans);color:var(--ink2)}
+.scr .hd{padding:12px 14px 6px;background:var(--navy);color:#fff} .scr .hd small{display:block;opacity:.75;font-size:10.5px}
+.scr .hd h3{margin:2px 0 0;font:500 19px/1.2 var(--serif)}
+.scr .bd{padding:8px 11px}
+.scr .crd{background:#fff;border:1px solid var(--line);border-radius:12px;padding:7px 10px;margin:0 0 6px}
+.scr .crd h5{margin:0 0 3px;font:600 12.5px var(--sans)} .scr .crd p{margin:0;font-size:11.2px;color:var(--ink2)}
+.scr .prog{height:8px;border-radius:5px;background:#EAE3D6;overflow:hidden;margin:5px 0 3px} .scr .prog i{display:block;height:100%;background:var(--gold);transition:width .6s}
+.scr .prog i.sq{background:#2F6B45}
+.scr .cta{display:block;width:100%;margin-top:6px;padding:8px;border:0;border-radius:10px;background:var(--red);color:#fff;font:600 12px var(--sans);cursor:pointer}
+.scr .cta.ghost{background:#fff;color:var(--navy);border:1.5px solid var(--navy)}
+.scr .avs{display:flex;gap:6px;margin:4px 0} .scr .av{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;color:#fff;font:700 11px var(--sans)}
+.scr .av.off{opacity:.3} .scr .row{display:flex;justify-content:space-between;align-items:center;padding:2px 0;border-bottom:1px solid #EFE9DE;font-size:11.2px}
+.scr .ok{color:#2F6B45;font-weight:700} .scr .tag{font:600 9.5px var(--sans);padding:1px 6px;border-radius:999px;background:#FBF1DD;color:#8A6416}
+.scr .sheet{position:absolute;left:0;right:0;bottom:0;background:#fff;border-radius:18px 18px 0 0;box-shadow:0 -6px 18px rgba(0,0,0,.14);padding:12px 14px 16px}
+.scr .sheet .grab{width:40px;height:4px;border-radius:3px;background:#D8D1C3;margin:0 auto 8px}
+.scr .apps{display:flex;justify-content:space-around;margin:8px 0} .scr .apps span{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10px;color:var(--ink2)}
+.scr .apps i{width:34px;height:34px;border-radius:10px;background:#EEF1F7;display:grid;place-items:center;font-style:normal;color:var(--navy);font-size:16px}
+.scr .sim{display:block;text-align:center;margin-top:6px;font-size:9.5px;color:var(--taupe)}
+.mbwhy .bc{margin:0 0 8px} .mbwhy .bc p{font-size:12px}
+.mbinc{display:flex;gap:6px;align-items:center;margin-top:4px;font:11.5px var(--sans);color:var(--ink2)}
+.mbwsb svg{width:100%;height:auto;display:block}
+.mb .takeaway{margin-top:10px;padding:9px 20px;font-size:14px}
+.mbapx{font:11px/1.38 var(--sans);color:var(--ink2)} .mbapx h5{margin:6px 0 2px;font:600 9.5px/1.25 var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--red)} .mbapx p{margin:0 0 4px} .mbapx b{color:var(--ink)}
+.res.mbt{font-size:11px} .res.mbt td,.res.mbt th{padding:2px 5px} .res.mbt th{text-transform:none;letter-spacing:.03em}
+.mbq{margin:6px 0 0;padding:6px 10px;background:#fff;border:1px solid var(--line);border-left:4px solid var(--navy);border-radius:8px}
+.mbq blockquote{margin:0;font:500 14.5px/1.3 var(--serif);color:var(--ink)} .mbq .qs{display:block;margin-top:2px;font:10px var(--sans);color:var(--taupe)}
 .vs.clickrev{cursor:pointer}
 .vs.clickrev>div{position:relative}
 .vs.clickrev:not(.r1) .wo>*,.vs.clickrev:not(.r2) .wi>*{visibility:hidden}
@@ -765,7 +798,7 @@ aside.notes{display:none}
       <li data-go="x2"><span class="no">09</span><span class="nm">From pin to net profit <span class="ext sm">Extension</span><span class="why">Six steps to a go / no-go, net to Chagee</span></span></li>
       <li data-go="c8"><span class="no">10</span><span class="nm">The GM's playbook <span class="tbc sm">TBC</span><span class="why">Four decisions and a pilot</span></span></li>
       <li data-go="c9"><span class="no">11</span><span class="nm">The size of the benefit <span class="tbc sm">TBC</span><span class="why">Orders kept, revenue, and what it rests on</span></span></li>
-      <li data-go="m1"><span class="no">M1</span><span class="nm">Members: squad tiers <span class="ext sm">Candidate chapter</span><span class="why">M2 squads move the tipping point · M3 how we would test it</span></span></li>
+      <li data-go="m1"><span class="no">M1</span><span class="nm">Members: squad tiers <span class="ext sm">Candidate chapter</span><span class="why">When joining feels worth it · M2 the squad experience · M3 does it pay for itself</span></span></li>
     </ol>
   </div>
   <div class="cups">
@@ -1591,97 +1624,103 @@ aside.notes{display:none}
   </aside>
 </section>
 
-<!-- ======================================================= M1 MEMBERS: THE APP ONLY WORKS IF FRIENDS USE IT (candidate chapter) -->
-<section class="slide content mb" id="m1" data-chapter="Members" data-title="Members: the app only works if friends use it">
-  <div class="leafart" aria-hidden="true"></div>
-  <div class="inner stepper" data-steps="3">
-    <p class="kicker">M1 · Members: the app only works if friends use it<span class="ext">Candidate chapter</span></p>
-    <h2 class="head" style="font-size:29px;max-width:1010px">Membership value depends on others using the app, so below a critical mass the app stalls, and the effort of tiering up keeps customers below it.</h2>
-    <div class="body" style="grid-template-columns:1fr 330px;gap:18px;margin-top:12px">
-      <div class="panel">
-        <div class="ptop"><span class="ptitle">What the sources say · quoted word for word</span></div>
-        <div class="mbq" data-s="1"><blockquote>“{{s.q20f_rate}}”</blockquote><span class="qs">{{s.q20f_rate_src}}</span></div>
-        <div class="mbq" data-s="1"><blockquote>“{{s.q20f_deepen}}”</blockquote><span class="qs">{{s.q20f_deepen_src}}</span></div>
-        <div class="mbq crs" data-s="2" style="display:grid;grid-template-columns:1fr 250px;gap:14px;align-items:center">
-          <div><blockquote>“{{s.qtopic8}}”</blockquote><span class="qs">{{s.qtopic8_src}}</span>
-            <p class="lnote" style="margin-top:6px">Below the hump, people expect too few others on the app, so it is not worth joining and the expectation fulfils itself. Above it, adoption grows to the stable level.</p></div>
-          <svg class="mbmini" viewBox="0 0 250 130" preserveAspectRatio="xMidYMid meet" aria-label="The hump: below the tipping point adoption falls back, above it adoption grows"></svg>
-        </div>
-      </div>
-      <div class="cards" style="gap:10px">
-        <div class="bc warn" data-s="3"><div class="k">Informal source, anonymised, to confirm</div><p>Paraphrased, not quoted: the barrier to levelling up is not outlet operations; it is whether customers think the effort of tiering up is worth it.</p></div>
-        <div class="bc" data-s="3"><div class="k">Our reading</div><p>Chagee's Form 20-F says it cannot predict who joins; the course says an app with network effects must get over a hump. To our knowledge, based on public sources, Chagee does not publish its Singapore tier rules, so we treat the effort of tiering up as a cost and ask what lowers the hump.</p></div>
-        <div class="bc" data-s="3"><div class="k">What kind of model</div><p>An <b>analytics model</b> from Topic 8, not AI. Every parameter on the next slides is illustrative, not Chagee data.</p></div>
-      </div>
-    </div>
-    <div class="revctl screenonly" style="top:8px"><span class="lab">Step through</span><span class="ctl"></span></div>
-  </div>
-  <div class="foot"><span>OPIM639 · Group 3 · candidate chapter · illustrative, not Chagee data · quotes checked against their sources</span><span class="rail"></span><span class="pg"></span></div>
-  <aside class="notes">
-    <p>A candidate chapter, on members. Chagee's own filing says it cannot predict who will join its membership programme. The course explains why: when an app's value depends on others using it, there is a hump to get over. An informal source, anonymised and to confirm, says the barrier is whether tiering up feels worth the effort. About twenty seconds.</p>
-  </aside>
-</section>
-
-<!-- ======================================================= M2 SQUAD TIERS MOVE THE TIPPING POINT (candidate chapter) -->
-<section class="slide content mb" id="m2" data-chapter="Members" data-title="Squad tiers move the tipping point">
+<!-- ======================================================= M1 MEMBERS: WHEN DOES JOINING FEEL WORTH IT (candidate chapter) -->
+<section class="slide content mb" id="m1" data-chapter="Members" data-title="Members: when does joining feel worth it?">
   <div class="leafart" aria-hidden="true"></div>
   <div class="inner">
-    <p class="kicker">M2 · Squad tiers move the tipping point<span class="ext">Candidate chapter</span><span class="ctag">Course link · Topic 8, network effects</span></p>
-    <h2 class="head" style="font-size:29px;max-width:1010px">Squads make friends worth more and a launch incentive lowers the effort: both pull the tipping point down</h2>
-    <div class="body" style="grid-template-columns:1fr 300px;gap:16px;margin-top:8px">
-      <div class="panel" style="padding-bottom:8px">
-        <div class="ptop"><span class="ptitle">Join if r(x) × k × z ≥ p · illustrative, not Chagee data</span><span class="mbstate"></span></div>
-        <div class="mbcharts"><div><div class="ch">The hump against the effort p</div><svg class="mbhump" viewBox="0 0 400 190" preserveAspectRatio="xMidYMid meet" aria-label="Hump curve, the effort line, the tipping point and the take-off point"></svg></div>
-          <div><div class="ch">Adoption rounds from the starting share <button class="btn mbplay screenonly" style="height:22px;font-size:11px;padding:0 9px;margin-left:6px">▶ Play</button></div><svg class="mbround" viewBox="0 0 400 190" preserveAspectRatio="xMidYMid meet" aria-label="Share of customers on the app, round by round"></svg></div></div>
-        <div class="mbbot"><div><div class="ch">Scenario table · computed</div><table class="res mbtab"></table></div>
-          <div><div class="ch">Network check · {{x.mb_n}} customers, about {{x.mb_m}} friends each, {{x.mb_runs}} seeded runs</div><svg class="mbnet" viewBox="0 0 400 120" preserveAspectRatio="xMidYMid meet" aria-label="Tipping point, closed form against the friend-network simulation"></svg>
-            <p class="lnote mbnetnote"></p></div></div>
+    <p class="kicker">M1 · Members: when does joining feel worth it?<span class="ext">Candidate chapter</span><span class="ctag">Course link · Topic 8, network effects</span></p>
+    <h2 class="head" style="font-size:30px;max-width:1010px">With a social feature, joining pays off only once enough friends are on; below the tipping point, participation shrinks</h2>
+    <p class="sub">A network-effects analytics model, not AI. Every number is an illustrative index, not Chagee data. Friend-dependent value is our hypothesis about the proposed social features, not about membership as a whole.</p>
+    <div class="body" style="grid-template-columns:1fr 292px;gap:16px;margin-top:6px">
+      <div class="panel stepper" data-steps="5" data-kind="mbm">
+        <div class="ptop"><span class="ptitle">Benefit against effort · illustrative index</span><span class="ctl screenonly"></span></div>
+        <div class="mbeq"><span class="e" data-s="1"></span><span class="e" data-s="2"></span><span class="e" data-s="3"></span></div>
+        <div class="mbviz"><svg class="mbbig" viewBox="0 0 560 250" preserveAspectRatio="xMidYMid meet" aria-label="One customer's benefit, the equilibrium curve, the effort line and where they cross"></svg>
+          <div class="mbtr" data-s="5"><div class="ch">Participation, round by round</div><svg class="mbtraj" viewBox="0 0 260 226" preserveAspectRatio="xMidYMid meet" aria-label="Participating share over adoption rounds"></svg></div></div>
+        <ol class="caps" style="min-height:40px">
+          <li data-s="1"><span class="n">1</span><span>Join when the perceived benefit is at least the effort. The grey line is one customer's benefit as more friends join.</span></li>
+          <li data-s="2"><span class="n">2</span><span>The rule for one customer: interest × value of friends × share participating ≥ effort. Symbols on the right.</span></li>
+          <li data-s="3"><span class="n">3</span><span>Customers differ in interest. The navy hump is where the share who would join equals the share already on: the equilibrium curve, not any one customer's benefit.</span></li>
+          <li data-s="4"><span class="n">4</span><span>Where the effort line crosses the hump: the tipping point and the stable level. Arrows show which way participation moves.</span></li>
+          <li data-s="5"><span class="n">5</span><span>Follow the rounds from a starting share: below the tipping point participation falls to zero; above it, it rises to the stable level.</span></li>
+        </ol>
       </div>
       <div class="cards" style="gap:8px">
-        <div class="bc mbdes"><div class="k">The design · our proposal</div>
-          <p class="ic"><i>◎</i>Squads of {{x.mb_squad_lo}} to {{x.mb_squad_hi}} friends</p>
-          <p class="ic"><i>⇄</i>Group orders count toward every member's tier progress</p>
-          <p class="ic"><i>♡</i>Gift a drink to a friend</p>
-          <p class="lnote" style="margin-top:3px">Squads raise k, what friends on the app are worth; a launch incentive lowers p, the effort.</p></div>
         <div class="cset sitectl mbctl screenonly"></div>
         <div class="bc printonly mbctlp"></div>
-        <div class="bc mbread"></div>
+        <div class="bc mbkey"><div class="k">The symbols</div>
+          <p><b>r</b> individual interest, from none to full</p><p><b>k</b> value of friends participating</p><p><b>z</b> share of a customer's friends participating</p><p><b>p</b> effort of joining or progressing</p></div>
       </div>
     </div>
+    <div class="takeaway mbtake"><span class="lab">TAKEAWAY</span><span class="t"></span></div>
   </div>
-  <div class="foot"><span>OPIM639 · Group 3 · candidate chapter · analytics model, not AI · every parameter illustrative, not Chagee data</span><span class="rail"></span><span class="pg"></span></div>
+  <div class="foot"><span>OPIM639 · Group 3 · candidate chapter · analytics model, not AI · illustrative, not Chagee data · tables: appendix</span><span class="rail"></span><span class="pg"></span></div>
   <aside class="notes">
-    <p>Our proposal: squads of {{x.mb_squad_lo}} to {{x.mb_squad_hi}} friends, group orders that count toward everyone's tier, and gifting a drink. Squads make friends on the app worth more; a launch incentive lowers the effort. Both pull the tipping point down: from about {{r.mb_today_lo|pct}} today to {{r.mb_both_lo|pct}} with both.</p>
-    <p>We lead with the stalled app because there a feature changes the outcome, not just its size: without squads it never gets going; with them it can, once about {{r.mb_stalled_squad_lo|pct}} are on. A friend-network check tips lower in some cases, and we show that gap. An analytics model, not AI: it shows direction and what to pilot. About forty seconds.</p>
+    <p>A candidate chapter on members, built on the network-effects model from Topic 8. It is an analytics model, not AI. One customer joins when the benefit beats the effort: interest times the value of friends times the share of friends on, against the effort score. Customers differ in interest, so the share who would join traces a hump.</p>
+    <p>Where the effort line crosses the hump there are two points. Below the lower one, the tipping point, participation falls back to zero; above it, it climbs to the stable level. At our default the tipping point is about {{r.mb_today_lo|pct}}. Raise the effort and the two points close in, then vanish: the app stalls from any start. About thirty seconds. Tables and the derivation are in the appendix.</p>
   </aside>
 </section>
 
-<!-- ======================================================= M3 HOW WE WOULD TEST IT (candidate chapter) -->
-<section class="slide content mb" id="m3" data-chapter="Members" data-title="How we would test it">
+<!-- ======================================================= M2 MEMBERS: THE PROPOSED SQUAD EXPERIENCE (candidate chapter) -->
+<section class="slide content mb" id="m2" data-chapter="Members" data-title="The proposed squad experience">
   <div class="leafart" aria-hidden="true"></div>
   <div class="inner">
-    <p class="kicker">M3 · How we would test it<span class="ext">Candidate chapter</span></p>
-    <h2 class="head" style="font-size:29px;max-width:1010px">Pilot squads in matched Singapore outlets; the group-order credit pays for itself if each member adds about {{x.mb_be_mid|c2}} orders a month</h2>
-    <div class="body" style="grid-template-columns:1fr 1fr 300px;gap:16px;margin-top:12px">
-      <div class="bc"><div class="k">The pilot · Singapore only</div>
-        <h4>Matched outlets, squads on against squads off</h4><p>Pairs of outlets alike in volume and customers; squads switched on at one of each pair.</p>
-        <h4 style="margin-top:8px">What we measure</h4><ul class="lnote" style="padding-left:16px;margin-top:2px;font-size:12px"><li>tier-up rate</li><li>orders per member</li><li>share of orders placed in groups</li></ul>
-        <h4 style="margin-top:8px">What it tells us</h4><p>Whether squads move members over the hump in practice: the model shows direction and what to pilot, not the size of the effect.</p></div>
-      <div class="bc mbbe"><div class="k">Break-even · the group-order credit</div>
-        <p>A credit of <b>{{x.mb_credit|pct}}</b> of the S${{x.mb_price|c2}} price on every group order, including the <b>{{x.mb_base}}</b> a month a member would place anyway. Extra orders needed a month for the credit to pay for itself:</p>
-        <table class="res mbbet"></table>
-        <p class="lnote mbbenote"></p>
-        <div class="cset sitectl mbbectl screenonly" style="margin-top:6px"></div></div>
+    <p class="kicker">M2 · Members: what sharing would look like in the app<span class="ext">Candidate chapter</span></p>
+    <h2 class="head" style="font-size:30px;max-width:1010px">Squads make friends' orders count for everyone: our hypothesis is that this raises the value of friends and lowers the tipping point</h2>
+    <div class="body" style="grid-template-columns:1fr 286px;gap:16px;margin-top:10px">
+      <div class="panel" data-kind="mbapp">
+        <div class="ptop"><span class="ptitle">Proposed experience — illustrative</span><span class="seg mbnav screenonly"></span></div>
+        <div class="mbapp">
+          <ol class="mbjour"></ol>
+          <div class="phone"><div class="notch"></div><div class="scr"></div></div>
+          <div class="mbwhy"></div>
+        </div>
+      </div>
       <div class="cards" style="gap:8px">
-        <div class="bc"><div class="k">Own app, not a platform</div><p>More orders in Chagee's own app means fewer on third-party platforms. The commission rate is not sourced, so we make no S$ claim for it.</p></div>
-        <div class="bc warn"><div class="k">Caveats</div><p>Friend data needs customers' consent (PDPA). Chagee's actual tier rules in Singapore are to confirm. New inputs here are assumptions, not Chagee data.</p></div>
+        <div class="bc"><div class="k">From the app to the model · assumptions to test</div>
+          <p>Shared benefits are hypothesised to raise <b>k</b>, the value of friends participating. Simpler progression or a launch incentive may lower <b>p</b>, the effort. Not measured effects.</p></div>
+        <div class="bc mbwsb"><div class="k">Without squads / with squads</div><svg class="mbws" viewBox="0 0 260 170" preserveAspectRatio="xMidYMid meet" aria-label="The hump without and with squads, against the same effort"></svg>
+          <label class="mbinc screenonly"><input type="checkbox"> add a launch incentive (lower p)</label></div>
       </div>
     </div>
-    <p class="decide"><b>To pilot</b><span>Squads in matched outlets for a fixed period, judged on tier-up rate, orders per member and the share of group orders, against the break-even above.</span></p>
+    <div class="takeaway mbtake"><span class="lab">TAKEAWAY</span><span class="t"></span></div>
   </div>
-  <div class="foot"><span>OPIM639 · Group 3 · candidate chapter · illustrative, not Chagee data · S$</span><span class="rail"></span><span class="pg"></span></div>
+  <div class="foot"><span>OPIM639 · Group 3 · candidate chapter · illustrative prototype, not Chagee's rules · nothing real is sent or bought</span><span class="rail"></span><span class="pg"></span></div>
   <aside class="notes">
-    <p>To test it: matched Singapore outlets, squads on at one of each pair, judged on tier-up rate, orders per member and the share of group orders. The credit pays for itself if each member adds about {{x.mb_be_mid|c2}} orders a month. Friend data needs consent, and Chagee's tier rules are to confirm. About twenty-five seconds.</p>
+    <p>This is what we would build, as an illustrative prototype; the rules are ours, not Chagee's. Click through: a member sees their progress and starts a squad, invites friends through the phone's share sheet, friends join and add drinks to one group order, and when it is collected everyone's progress moves, not just the buyer's. Last, gifting a drink.</p>
+    <p>Why it matters for the model: our hypothesis is that shared progress raises the value of friends, k, so the hump rises and the tipping point falls, from about {{r.mb_today_lo|pct}} to {{r.mb_squad_lo|pct}} at the default effort. The stalled case is the headline: at a high effort the app never takes off without squads, and with them it can. These are assumptions to test, not measured effects. About thirty seconds.</p>
+  </aside>
+</section>
+
+<!-- ======================================================= M3 MEMBERS: COULD SQUADS PAY FOR THEMSELVES (candidate chapter) -->
+<section class="slide content mb" id="m3" data-chapter="Members" data-title="Could squads pay for themselves?">
+  <div class="leafart" aria-hidden="true"></div>
+  <div class="inner">
+    <p class="kicker">M3 · Members: could squads pay for themselves?<span class="ext">Candidate chapter</span></p>
+    <h2 class="head" style="font-size:30px;max-width:1010px">The group-order credit pays for itself only once members add enough orders, because it is also paid on orders they would place anyway</h2>
+    <div class="body" style="grid-template-columns:1fr 292px;gap:16px;margin-top:10px">
+      <div class="panel stepper" data-steps="3" data-kind="mbpay">
+        <div class="ptop"><span class="ptitle">Per member a month, after credits · S$ · illustrative</span><span class="ctl screenonly"></span></div>
+        <div class="visual" style="flex:none"><svg class="mbpay" viewBox="0 0 640 270" preserveAspectRatio="xMidYMid meet" aria-label="Contribution per member a month against additional orders, with the break-even point"></svg></div>
+        <ol class="caps" style="min-height:40px">
+          <li data-s="1"><span class="n">1</span><span>With no extra orders the credit is a pure cost: it is paid on the group orders members would have placed anyway.</span></li>
+          <li data-s="2"><span class="n">2</span><span>Each extra order earns the margin minus its own credit: that is the slope. The shaded band is the margin range.</span></li>
+          <li data-s="3"><span class="n">3</span><span>Break-even is where the line crosses zero. If the credit reaches the margin, the line never rises and there is no break-even.</span></li>
+        </ol>
+      </div>
+      <div class="cards" style="gap:8px">
+        <div class="cset sitectl mbpctl screenonly"></div>
+        <div class="bc printonly mbpctlp"></div>
+        <div class="bc"><div class="k">The pilot · Singapore only</div><p>Matched outlets, squads on against squads off. Measure tier progression, incremental orders and group-order participation. The model's adoption is not turned into purchases: the pilot measures orders directly.</p></div>
+        <div class="bc warn"><div class="k">Caveats</div><p>Friend data needs consent (PDPA). Chagee's tier rules in Singapore are to confirm. More orders in Chagee's own app means fewer on platforms; the commission is not sourced, so no S$ claim.</p></div>
+      </div>
+    </div>
+    <div class="takeaway mbtake"><span class="lab">TAKEAWAY</span><span class="t"></span></div>
+  </div>
+  <div class="foot"><span>OPIM639 · Group 3 · candidate chapter · S$ · assumptions, not Chagee data · table: appendix</span><span class="rail"></span><span class="pg"></span></div>
+  <aside class="notes">
+    <p>Could it pay for itself? The line is the contribution per member a month after the group-order credit. It starts below zero, because the credit is also paid on orders members would have placed anyway, and rises with each extra order. At a credit of {{x.mb_credit|pct}} it crosses zero at about {{x.mb_be_mid|c2}} extra orders a month at our base margin. Push the credit up to the margin and it never breaks even.</p>
+    <p>The pilot compares matched outlets with squads on and off, and measures orders directly, rather than reading purchases off the adoption model. About twenty-five seconds.</p>
   </aside>
 </section>
 
@@ -1867,6 +1906,36 @@ aside.notes{display:none}
   </div>
   <div class="foot"><span>OPIM639 · Group 3 · explainer figures are illustrative assumptions · Australian inputs are scenario assumptions, not sourced</span><span class="rail"></span><span class="pg"></span></div>
   <aside class="notes"><p>Soft copy only. Backup for slides 8A to 8D: every new-market input, how the numbers are worked out, and what we do not claim.</p></aside>
+</section>
+
+<section class="slide content mb" id="am1" data-chapter="Appendix" data-title="Members: the model and its checks">
+  <div class="leafart" aria-hidden="true"></div>
+  <div class="inner">
+    <p class="kicker">Appendix · Members, slides M1 to M3: the model, the scenario table and the network check</p>
+    <h2 class="head" style="font-size:28px">From one customer's rule to the tipping point, and how far a friend network moves it</h2>
+    <div class="body" style="grid-template-columns:1fr 1fr;gap:18px;margin-top:10px">
+      <div class="mbapx"><!--MBAPPX1--></div>
+      <div><div class="ptitle" style="margin-bottom:2px">Network check · closed form against the friend-network simulation</div><svg class="mbnet" viewBox="0 0 400 130" style="width:100%;height:auto;display:block;background:#fff;border-radius:8px" preserveAspectRatio="xMidYMid meet" aria-label="Tipping point, closed form against simulation"></svg><div class="mbapx"><!--MBAPPX2--></div></div>
+    </div>
+  </div>
+  <div class="foot"><span>OPIM639 · Group 3 · candidate chapter · analytics model, not AI · illustrative, not Chagee data</span><span class="rail"></span><span class="pg"></span></div>
+  <aside class="notes"><p>Soft copy only. Backup for slides M1 and M2: the derivation, every parameter, the computed scenario table and the network check.</p></aside>
+</section>
+
+<section class="slide content mb" id="am2" data-chapter="Appendix" data-title="Members: break-even, assumptions and sources">
+  <div class="leafart" aria-hidden="true"></div>
+  <div class="inner">
+    <p class="kicker">Appendix · Members, slides M1 to M3: break-even table, assumptions and source excerpts</p>
+    <h2 class="head" style="font-size:28px">The break-even across the margin range, every new input, and what the sources say</h2>
+    <div class="body" style="grid-template-columns:1fr 1fr;gap:18px;margin-top:10px"><div class="mbapx"><!--MBAPPX3--></div>
+      <div><div class="ptitle">Source excerpts · quoted word for word</div>
+        <div class="mbq"><blockquote>“{{s.q20f_rate}}”</blockquote><span class="qs">{{s.q20f_rate_src}}</span></div>
+        <div class="mbq"><blockquote>“{{s.q20f_deepen}}”</blockquote><span class="qs">{{s.q20f_deepen_src}}</span></div>
+        <div class="mbq"><blockquote>“{{s.qtopic8}}”</blockquote><span class="qs">{{s.qtopic8_src}}</span></div>
+        <div class="bc warn" style="margin-top:8px"><div class="k">Informal source, anonymised, to confirm</div><p>Paraphrased, not quoted: the barrier to levelling up is not outlet operations; it is whether customers think the effort of tiering up is worth it.</p></div></div></div>
+  </div>
+  <div class="foot"><span>OPIM639 · Group 3 · candidate chapter · quotes checked against sources · assumptions, not Chagee data</span><span class="rail"></span><span class="pg"></span></div>
+  <aside class="notes"><p>Soft copy only. Backup for slide M3, and the source excerpts behind the chapter.</p></aside>
 </section>
 
 </div></div>

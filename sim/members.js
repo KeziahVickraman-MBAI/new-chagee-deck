@@ -14,6 +14,9 @@
  *                               each, r uniform; a customer is on the app next round if r k (share of friends on it) >= p
  *   tipping(RAW, p, k, Sim)     the smallest starting share (bisection, to members.network.z0_step) from which the mean
  *                               of the seeded runs does not collapse (ends above takeoff_share): the simulated tipping point
+ *   kind(p, k)                  'two' crossings, 'merged' at the hump's peak (4p = k), or 'none'
+ *   levers(RAW)                 squads' k step and the incentive's p step, read from members.scenarios
+ *   perMember(RAW, o, E, m)     contribution per member a month at E extra orders, after credits (S$)
  *   breakEven(RAW, o)           extra orders a squad member must place a month for the group-order credit to pay for
  *                               itself, at the low, base and high gross margin
  */
@@ -76,7 +79,23 @@
     return { credit: c, base: B, extra: E, price, low: at(gLo), mid: at(g.value), high: at(gHi) };
   }
 
-  const api = { equilibria, next, rounds, table, network, tipping, breakEven };
+  // what kind of crossing the effort line makes with the hump: two points, one (they merge at the peak), or none
+  function kind(p, k) { const d = 1 - 4 * p / k; return Math.abs(d) < 1e-9 ? "merged" : d < 0 ? "none" : "two"; }
+
+  // the levers as the scenario table defines them: squads add (squad k - today k), an incentive takes (today p - incentive p)
+  function levers(RAW) {
+    const S = Object.fromEntries(M(RAW, "scenarios").map(s => [s.id, s]));
+    const r6 = x => Math.round(x * 1e6) / 1e6;
+    return { dk: r6(S.squad.k - S.today.k), dp: r6(S.today.p - S.incentive.p) };
+  }
+
+  // contribution per squad member a month at E extra orders, after the credit on every group order (old and new)
+  function perMember(RAW, o, E, margin) {
+    const b = breakEven(RAW, o), m = margin ?? b.mid.margin;
+    return b.price * (m * E - b.credit * (b.base + E));
+  }
+
+  const api = { equilibria, next, rounds, table, network, tipping, breakEven, kind, levers, perMember };
   if (typeof module !== "undefined" && module.exports) module.exports = api;
   else root.ChageeMembers = api;
 })(typeof window !== "undefined" ? window : globalThis);

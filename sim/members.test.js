@@ -71,3 +71,21 @@ test("members: the network simulation is seeded and stalls when the formula has 
   assert.deepEqual(a.path, b.path);
   assert.equal(MB.network(RAW, 0.3, 1, 0.6, 0, Sim).final, 0);
 });
+
+test("members: crossings are two, merged at the hump's peak (4p = k), or none", () => {
+  assert.equal(MB.kind(0.2, 1), "two"); assert.equal(MB.kind(0.25, 1), "merged"); assert.equal(MB.kind(0.3, 1), "none");
+  assert.equal(MB.kind(0.325, 1.3), "merged");
+});
+
+test("members: the levers are the scenario table's own steps", () => {
+  const L = MB.levers(RAW), S = Object.fromEntries(RAW.members.scenarios.value.map(s => [s.id, s]));
+  close(S.today.k + L.dk, S.squad.k); close(S.today.p - L.dp, S.incentive.p);
+  close(S.today.k + L.dk, S.both.k); close(S.today.p - L.dp, S.both.p);
+});
+
+test("members: contribution per member is zero at the break-even and negative with no extra orders", () => {
+  const b = MB.breakEven(RAW);
+  close(MB.perMember(RAW, {}, b.mid.extraNeeded), 0, 1e-9);
+  close(MB.perMember(RAW, {}, 0), -b.price * b.credit * b.base);
+  close(MB.perMember(RAW, {}, b.extra), b.mid.netPerMember);
+});

@@ -2138,6 +2138,34 @@
       ],
       "source": "assumption, not Chagee data",
       "rationale": "Invented for the break-even (the credit is paid on orders that would have happened anyway); assumption, not Chagee data."
+    },
+    "example_interest": {
+      "value": 0.5,
+      "unit": "interest r of the one customer drawn on slide M1, steps one and two",
+      "range": null,
+      "source": "assumption",
+      "rationale": "Display only: a middling customer, to separate one customer's benefit from the equilibrium curve."
+    },
+    "app_rules": {
+      "value": {
+        "points_own_drink": 10,
+        "points_per_squad_drink": 5,
+        "points_now": 220,
+        "points_next": 300,
+        "tier_now": "Silver",
+        "tier_next": "Gold",
+        "people": [
+          "Mei",
+          "Jun",
+          "Aisha",
+          "Ravi"
+        ],
+        "squad_name": "Lunch squad"
+      },
+      "unit": "illustrative rules and copy for the M2 prototype: points for your own drink, points every member gets for each drink in a group order, the member's points now and for the next tier, tier names, personas",
+      "range": null,
+      "source": "assumption, not Chagee data",
+      "rationale": "Our illustrative rules for the proposed experience, used consistently on slide M2. Not Chagee's membership rules, which are to confirm. The group-order credit is members.group_credit_share. No real messages, purchases or accounts."
     }
   }
 }
