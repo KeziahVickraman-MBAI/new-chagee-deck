@@ -29,6 +29,11 @@
  *                                (same arrival seed and balking rule), same robots.
  *   run(Sim, Store, P, o)        the peak hour -> { served, lost, arrived, times, ... }
  *   grid(Sim, Store, P, o)       every day type x staff x mode, averaged over seeds (deck tables).
+ *   aiLayer(Sim, Store, P, o)    the intelligence layer alone, for one split and sharing rule on one day:
+ *                                without AI = the normal-day roster (forecastDay "none") facing the day's
+ *                                customers; with AI = the day's forecast roster. Same robots, same customers,
+ *                                same sharing rule; only the crew changes. Peak-hour walk-aways and median
+ *                                wait (compare), and the day's cost of the roster that was actually worked.
  */
 (function (root) {
   "use strict";
@@ -246,7 +251,14 @@
     return out;
   }
 
-  const api = { configure, presets, forecastDay, recommendStaff, dayCost, assignFixed, create, run, compare, grid, peakHour, MODES };
+  function aiLayer(Sim, Store, P, o) {
+    const c = configure(P, o.robots), day = o.day ?? P.surgeDefault, people = c.setup !== "all_machine";
+    const side = (staff, rosterDay) => { const r = compare(Sim, Store, P, { ...o, day, staff });
+      return { staff: people ? staff : 0, lostShare: r.lostShare, medianWait: r.medianWait, cost: dayCost(Sim, c.P, c.setup, rosterDay).total }; };
+    return { setup: c.setup, without: side(recommendStaff(Sim, c.P, "none", c.setup), "none"), with: side(recommendStaff(Sim, c.P, day, c.setup), day) };
+  }
+
+  const api = { configure, presets, forecastDay, recommendStaff, dayCost, assignFixed, create, run, compare, grid, aiLayer, peakHour, MODES };
   if (typeof module !== "undefined" && module.exports) module.exports = api;
   else root.ChageeCounter = api;
 })(typeof window !== "undefined" ? window : globalThis);

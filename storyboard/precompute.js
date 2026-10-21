@@ -54,6 +54,19 @@ for (const day of Object.keys(P.surgeMult)) {
   splits[day]._fastest = ok.length ? ok.reduce((a, b) => (b[1].medianWait < a[1].medianWait ? b : a))[0] : null;
 }
 
+// slides 06 and 07, the AI layer alone: for each day, split and sharing rule, the normal-day roster against the
+// day's forecast roster, same robots and customers (counter.aiLayer). The browser reads this; custom splits run live.
+const aiPresets = { ...C.presets(RAW, P), single: { robots: TIERS.tiers.find(t => t.id === "single").replaces } };
+const aiLayer = {};
+for (const day of Object.keys(P.surgeMult)) {
+  aiLayer[day] = {};
+  for (const [key, pr] of Object.entries(aiPresets)) {
+    const rules = C.configure(P, pr.robots).setup === "all_machine" ? [["brigade", {}]] : C.MODES;
+    aiLayer[day][key] = Object.fromEntries(rules.map(([rule, extra]) =>
+      [rule, C.aiLayer(Sim, Store, P, { day, robots: pr.robots, walkBack, seeds, mode: "brigade", ...extra })]));
+  }
+}
+
 // slide 05: the new-store forecast at the slider defaults
 const SM = Site.model(Sim, RAW, GEO), top = SM.candidates[0];
 const hubOf = pt => RAW.sitepick.hubs.value.reduce((a, h) => (Math.hypot(h.x - pt.x, h.y - pt.y) < Math.hypot(a.x - pt.x, a.y - pt.y) ? h : a)).name;
@@ -98,7 +111,7 @@ siteModel.city = { width_km: smCity.width_km, height_km: smCity.height_km, grid_
 const pl = Sim.plan(P, "mixed");
 const data = {
   generated: new Date().toISOString(), seeds,
-  grid, splits, site, ladder, benefit, decisions, siteExt, siteModel,
+  grid, splits, aiLayer, site, ladder, benefit, decisions, siteExt, siteModel,
   counter: {
     peakHour: C.peakHour(P), firstHour: 10, cupsPerDay: Sim.dailyBase(P),
     perWorkerHour: pl.perWorker * 60, handSeconds: pl.W,

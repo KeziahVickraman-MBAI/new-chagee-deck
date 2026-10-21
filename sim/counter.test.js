@@ -106,3 +106,14 @@ test("counter: dayCost uses the cost model's machine formula and the forecast ro
   const c = C.configure(P), d = Sim.simulateDay(c.P, c.setup, { deterministic: true });
   assert.ok(Math.abs(C.dayCost(Sim, c.P, c.setup, "none").labour - d.cost.labour) < 1e-9);
 });
+
+test("counter: the AI layer changes only the crew (normal-day roster vs the day's forecast roster)", () => {
+  for (const robots of [[], RAW.storyboard.split_presets.value.heading.robots]) {
+    const c = C.configure(P, robots), L = C.aiLayer(Sim, St, P, { day: "large", robots, walkBack, seeds: 3 });
+    assert.equal(L.without.staff, C.recommendStaff(Sim, c.P, "none", c.setup));
+    assert.equal(L.with.staff, C.recommendStaff(Sim, c.P, "large", c.setup));
+    assert.equal(L.without.cost, C.dayCost(Sim, c.P, c.setup, "none").total);
+    const N = C.aiLayer(Sim, St, P, { day: "none", robots, walkBack, seeds: 3 });
+    assert.deepEqual(N.without, N.with);                       // on a normal day the forecast is the normal roster
+  }
+});

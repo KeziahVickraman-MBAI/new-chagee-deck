@@ -276,6 +276,37 @@
       };
       if (PRINTING) go(); else o.tm = setTimeout(go, 30);
     }
+    // the AI layer alone (counter.aiLayer): the normal-day roster against the day's forecast roster, each side's robots,
+    // customers and sharing rule held; precomputed for the named splits, run live (and cached) for a custom split
+    const aiCache = {}, band = $(slide, ".vs.ai");
+    const aiKey = o => { const c = conf(o); return [BUS.day, c.robots.join("+"), c.setup === "all_machine" ? "brigade" : o.share].join("|"); };
+    function aiOf(o, live) {
+      const c = conf(o), rule = c.setup === "all_machine" ? "brigade" : o.share, k = presetOf(o);
+      const pre = k && DATA.aiLayer[BUS.day][k] && DATA.aiLayer[BUS.day][k][rule]; if (pre) return pre;
+      const key = aiKey(o); if (!aiCache[key] && live)
+        aiCache[key] = C.aiLayer(Sim, Store, P, { day: BUS.day, robots: c.robots, walkBack: WB, seeds: SEEDS,
+          mode: rule === "brigade" ? "brigade" : "fixed", assign: rule === "fixed_worst" ? "worst" : "best" });
+      return aiCache[key] || null;
+    }
+    const sideName = o => mode === "share" ? SHARE.find(x => x[0] === o.share)[1] : (presetOf(o) ? PRESETS[presetOf(o)].label : "Custom split");
+    const ppl = n => `${n} ${n === 1 ? "person" : "people"}`;
+    const dPts = (a, b) => { const x = Math.round((b - a) * 1000) / 10; return x === 0 ? "no change" : `${x > 0 ? "+" : "−"}${Math.abs(x).toFixed(1)} pts`; };
+    function aiBand(live = PRINTING) {
+      if (!band) return;
+      const L = st.o.map(o => aiOf(o, live));
+      const cell = (o, i, w) => { const x = L[i]; if (!x) return `<b>${"AB"[i]}</b> ${sideName(o)}: running ${SEEDS} peak hours…`;
+        const r = x[w], v = `${x.setup === "all_machine" ? "no one on the line" : ppl(r.staff)} · away <b>${pct(r.lostShare, 1)}</b> · wait ${mmss(r.medianWait)} · ${money(r.cost)}/day`;
+        if (w === "without") return `<b>${"AB"[i]}</b> ${sideName(o)}: ${v}`;
+        const same = x.with.staff === x.without.staff;
+        const why = BUS.day === "none" ? "normal day: same as the normal roster"
+          : x.setup === "all_machine" ? "no crew to set" : same ? "the forecast adds no one here"
+          : `${x.with.staff > x.without.staff ? "+" : "−"}${Math.abs(x.with.staff - x.without.staff)} staff, ${dPts(x.without.lostShare, x.with.lostShare)} away, ${x.with.cost >= x.without.cost ? "+" : "−"}${money(Math.abs(x.with.cost - x.without.cost))}`;
+        return `<b>${"AB"[i]}</b> ${v} <small class="aid">· ${why}</small>`; };
+      $(band, ".ai-without").innerHTML = st.o.map((o, i) => cell(o, i, "without")).join("<br>");
+      $(band, ".ai-with").innerHTML = st.o.map((o, i) => cell(o, i, "with")).join("<br>");
+      $$(slide, ".ai-day").forEach(e => (e.textContent = DAY_LABEL[BUS.day]));
+      if (!live && L.some(x => !x)) { clearTimeout(st.aiTm); st.aiTm = setTimeout(() => aiBand(true), 60); }
+    }
     const minute = S => (S.t - S.measureFrom) / 60;
     const cup = (x, y, c = COL.gold) => `<path d="M${(x - 4).toFixed(1)} ${(y - 5.5).toFixed(1)}h8l-1.3 10.5h-5.4z" fill="${c}" stroke="#fff" stroke-width=".8"/>`;
     const Y0 = 22, RH = 30;
@@ -377,6 +408,7 @@
         if (conf(o).setup === "all_machine") o.staff = 0;
         head(j); fresh(j, toMinute); mean(j); }
       if (i == null || i === 0) table();
+      aiBand();
       st.playing = false; sync();
     }
     // both sides restart together so they keep seeing the same customers

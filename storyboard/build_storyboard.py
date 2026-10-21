@@ -131,6 +131,24 @@ def values(d: dict) -> dict:
     v["r.heading_staff"] = head["staff"]
     v["r.heading_extra"] = head["cost"]["total"] - sp[cheap]["cost"]["total"]
     v["r.heading_wait"] = head["medianWait"]
+    # slides 06 and 07, the AI layer alone (counter.aiLayer via precompute.js): normal-day vs forecast roster,
+    # same robots, customers and sharing rule, on the printed day; A and B as each slide opens
+    AI = d["aiLayer"][day]
+    gA, gB = RAW["storyboard"]["gm_compare_default"]["value"]
+    sides = {"ai6_a": ("today", "brigade"), "ai6_b": ("today", "fixed_best"),
+             "ai7_a": (gA, "fixed_best" if sp[gA]["mode"] == "fixed" else "brigade"),
+             "ai7_b": (gB, "fixed_best" if sp[gB]["mode"] == "fixed" else "brigade")}
+    for nm, (k, rule) in sides.items():
+        for w in ("without", "with"):
+            x = AI[k][rule][w]
+            for f in ("staff", "lostShare", "medianWait", "cost"):
+                v[f"r.{nm}_{w}_{f}"] = x[f]
+    t6 = AI["today"]["brigade"]
+    if (t6["without"]["staff"], t6["with"]["staff"]) != (normal, rec) or \
+       abs(t6["without"]["lostShare"] - v["r.lost_normal_roster"]) > 1e-9 or abs(t6["with"]["lostShare"] - v["r.lost_brigade"]) > 1e-9:
+        raise SystemExit("build: slide 06's AI band no longer matches the walk-away table it quotes; check precompute.js")
+    if v["r.ai7_b_with_staff"] != v["r.ai7_b_without_staff"] or v["r.ai7_a_with_staff"] <= v["r.ai7_a_without_staff"]:
+        raise SystemExit("build: slide 07's notes say the forecast adds people by hand but none on the machine-made drink; rewrite them")
     # slide 05: the new-store forecast at the slider defaults (storyboard/precompute.js)
     st = d["site"]
     v["s.top_hub"] = st["top"]["hub"]

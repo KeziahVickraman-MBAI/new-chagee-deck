@@ -1014,13 +1014,13 @@
     },
     "gm_compare_default": {
       "value": [
-        "today",
+        "all_hand",
         "heading"
       ],
       "unit": "split preset keys, options A and B",
       "range": null,
       "source": "assumption",
-      "rationale": "Opening and printed state of the GM slide."
+      "rationale": "Opening and printed state of the GM slide (user request): A human-only, B machine-made drink. Display default only; no result depends on it."
     },
     "walkaway_target": {
       "value": 0.02,
