@@ -397,7 +397,7 @@ def appendix() -> str:
         f = RAW["facts"][k]
         out.append(f"<p><b>{label}: {short(f['value'])}</b>. {esc(f['rationale'])} <i>[{esc(f['source'])}]</i></p>")
     out.append("<h5>Sources</h5>")
-    for k in ("L-sg-directory", "L-koalagains", "L-yfchuhai", "L-sec20f", "L-unsw", "I-chagee-contact", "I-sg-groundfloor", "I-team-app-first", "L-ester1996", "P-honeycombers", "P-eatbook", "I-team-expansion", "I-team-site-framework", "L-chagee-q2-2026-call", "L-chagee-q1-2025"):
+    for k in ("L-sg-directory", "L-koalagains", "L-yfchuhai", "L-sec20f", "L-unsw", "I-chagee-contact", "I-sg-groundfloor", "I-team-app-first", "L-ester1996", "P-honeycombers", "P-eatbook", "I-team-expansion", "I-team-site-framework", "L-chagee-q2-2026-call", "L-chagee-q1-2025", "P-appstore", "P-vulcanpost-comeback", "L-sec20f-data"):
         out.append(f"<p><b>{k}</b> {esc(RAW['_sources'][k])}</p>")
     out.append("<h5>Assumptions (assumptions.json, illustrative)</h5>")
     for sec, key, label in USED:
