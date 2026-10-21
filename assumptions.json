@@ -1829,5 +1829,104 @@
       "source": "assumption",
       "rationale": "Scenario assumption for the Australian pilot: busy days = weekend days; event days = a guess at local public holidays and events, not counted. Weights the year-average contribution on slide 8C."
     }
+  },
+  "pnl": {
+    "_note": {
+      "value": "Slide 05 P&L view",
+      "unit": "text",
+      "range": null,
+      "source": "assumption",
+      "rationale": "Five-year projection of the same new outlet at two sites (slide 05): beside the existing outlet nearest the selected site, without AI, and the selected site, with AI-assisted site selection. Same opening date, equipment and staffing rule in both, so only the site differs. Illustrative scenarios, not demonstrated causal gains from AI. Nothing here feeds the benefit or any other slide."
+    },
+    "years": {
+      "value": 5,
+      "unit": "years from opening",
+      "range": null,
+      "source": "assumption",
+      "rationale": "Projection horizon; both scenarios open on the same date."
+    },
+    "ramp_up": {
+      "value": [
+        0.85,
+        1,
+        1,
+        1,
+        1
+      ],
+      "unit": "share of steady-state cups in each year from opening",
+      "range": [
+        0.5,
+        1
+      ],
+      "source": "assumption",
+      "rationale": "Scenario assumption, not sourced: the first year runs below steady state while the outlet becomes known. Same in both scenarios. demand.opening_hype_multiplier is opening-week hype, a different effect, and is not used here."
+    },
+    "demand_growth": {
+      "value": 0,
+      "unit": "share a year, applied to both scenarios' cups from year two",
+      "range": [
+        -0.05,
+        0.05
+      ],
+      "source": "assumption",
+      "rationale": "Default no growth: no existing assumption justifies one (benefit.overseas_stores_per_year is held flat for the same reason). Slider for sensitivity."
+    },
+    "cost_inflation": {
+      "value": 0,
+      "unit": "share a year, applied to wage, rent, utilities, maintenance, machine and recurring AI costs from year two",
+      "range": [
+        0,
+        0.05
+      ],
+      "source": "assumption",
+      "rationale": "Default none; price is held flat too, so the default projection is in today's dollars. Slider for sensitivity."
+    },
+    "store_maintenance_per_month": {
+      "value": 800,
+      "unit": "SGD per outlet per month",
+      "range": [
+        300,
+        1500
+      ],
+      "source": "assumption",
+      "rationale": "Scenario assumption, not sourced: premises and non-machine repairs. Machine maintenance is already inside costs.machine_cost_per_unit_per_month, so it is not counted again."
+    },
+    "ai_implementation_cost": {
+      "value": 60000,
+      "unit": "SGD one-off: building the site-selection analysis on Chagee's app logs",
+      "range": [
+        20000,
+        150000
+      ],
+      "source": "assumption",
+      "rationale": "Scenario assumption, not sourced. Treated as an investment at opening (in the payback), not an operating cost."
+    },
+    "ai_recurring_per_year": {
+      "value": 24000,
+      "unit": "SGD a year: data pipeline, cloud and analyst time to rerun it",
+      "range": [
+        6000,
+        60000
+      ],
+      "source": "assumption",
+      "rationale": "Scenario assumption, not sourced. An operating cost in the AI scenario only."
+    },
+    "ai_cost_share_to_outlet": {
+      "value": 1,
+      "unit": "share of the AI costs charged to this one outlet",
+      "range": [
+        0.1,
+        1
+      ],
+      "source": "assumption",
+      "rationale": "Conservative default: the whole AI cost is charged to this outlet. A lower share spreads it over other openings; we assume no number of openings (Chagee's plan is confidential)."
+    },
+    "volume_scenarios": {
+      "value": "store.cups_per_store_per_year range / value",
+      "unit": "multipliers on both sites' cups: low, base, high",
+      "range": null,
+      "source": "assumption",
+      "rationale": "Scenario range from our per-outlet volume range (an assumption), applied to the sold and the displaced cups alike. Not a statistical confidence interval."
+    }
   }
 }

@@ -17,6 +17,7 @@ const Dec = require("../sim/decisions.js");
 const Ext = require("../sim/siteext.js");
 const SMod = require("../sim/sitemodel.js");
 const NM = require("../sim/newmarket.js");
+const PNL = require("../sim/pnl.js");
 
 const RAW = JSON.parse(fs.readFileSync(path.join(__dirname, "..", "assumptions.json"), "utf8"));
 const P = Sim.params(RAW), SB = RAW.storyboard;
@@ -79,6 +80,10 @@ const bj = GEO.outlets.map(([x, y], k) => [Math.hypot(x - top.x, y - top.y), k])
 site.besideTop = { j: bj, km: Math.hypot(GEO.outlets[bj][0] - top.x, GEO.outlets[bj][1] - top.y) * SM.kmpx,
                    ...Site.forecast(SM, { x: GEO.outlets[bj][0] + 3, y: GEO.outlets[bj][1] }) };
 
+// slide 05's P&L view at the defaults: the top site (with AI) against the same store beside its nearest outlet (without)
+const pnlE = PNL.inputs(RAW, P), pnlSites = { wo: { sells: site.besideTop.cups, moved: site.besideTop.cannibal }, wi: { sells: top.f.cups, moved: top.f.cannibal } };
+const pnl = { sites: pnlSites, net: { wo: site.besideTop.netNew, wi: top.f.netNew }, ...PNL.compare({ Sim, C, P }, pnlE, pnlSites.wo, pnlSites.wi) };
+
 // slide 08: the machine ladder at the default outlet, and the volume bands across the per-outlet range
 const ladderAt = { cupsDay: Math.round(Sim.dailyBase(P)), wage: P.wage, unitMonth: P.machineMonth };
 const ladder = { at: ladderAt, rungs: L.evaluate(Sim, C, RAW, P, TIERS, ladderAt), volumes: L.volumes(Sim, C, RAW, P, TIERS, ladderAt) };
@@ -135,7 +140,7 @@ const newMarket = { runs: nmR, score: nmScore, sensitivity: nmSens, pilot: nmPil
 const pl = Sim.plan(P, "mixed");
 const data = {
   generated: new Date().toISOString(), seeds,
-  grid, splits, aiLayer, newMarket, site, ladder, benefit, decisions, siteExt, siteModel,
+  grid, splits, aiLayer, newMarket, pnl, site, ladder, benefit, decisions, siteExt, siteModel,
   counter: {
     peakHour: C.peakHour(P), firstHour: 10, cupsPerDay: Sim.dailyBase(P),
     perWorkerHour: pl.perWorker * 60, handSeconds: pl.W,

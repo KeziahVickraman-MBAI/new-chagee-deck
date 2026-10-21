@@ -349,6 +349,23 @@ def values(d: dict) -> dict:
         raise SystemExit("build: slide 08b says all inputs beat the new-market inputs, which beat the mean; rewrite it")
     v["x.sm_all_mae"], v["x.sm_all_r2"], v["x.sm_nm_mae"], v["x.sm_nm_r2"], v["x.sm_none_mae"] = al["mae"], al["r2"], nm_["mae"], nm_["r2"], no_["mae"]
     v["x.sm_n"] = len(SMd["rows"])
+    # slide 05's P&L view (sim/pnl.js via precompute.js): the same sites as the band, five years, base volume
+    PN = d["pnl"]
+    if abs(PN["net"]["wi"] - v["r.top_net"]) > 1e-9 or abs(PN["net"]["wo"] - v["r.nd_net"]) > 1e-9:
+        raise SystemExit("build: slide 05's P&L view no longer uses the band's two sites; check precompute.js")
+    for k in ("wo", "wi"):
+        b = PN[k]["base"]
+        v[f"r.pnl_{k}_rev5"], v[f"r.pnl_{k}_op5"], v[f"r.pnl_{k}_invest"] = b["total"]["netRev"], b["total"]["opProfit"], b["invest"]
+        v[f"r.pnl_{k}_rev1"], v[f"r.pnl_{k}_op2"] = b["years"][0]["netRev"], b["years"][1]["opProfit"]
+        v[f"r.pnl_{k}_lost5"] = b["total"]["lostContrib"]
+        v[f"r.pnl_{k}_op5_lo"], v[f"r.pnl_{k}_op5_hi"] = PN[k]["low"]["total"]["opProfit"], PN[k]["high"]["total"]["opProfit"]
+    v["r.pnl_up_rev5"], v["r.pnl_up_op5"] = PN["uplift"]["netRev"], PN["uplift"]["opProfit"]
+    if PN["wo"]["base"]["payback"] is not None or PN["wi"]["base"]["payback"] is None or PN["aiPayback"] is None or PN["wo"]["base"]["total"]["opProfit"] >= 0:
+        raise SystemExit("build: slide 05's notes say the baseline site loses money and never pays back while the AI site and the AI cost do; rewrite them")
+    v["r.pnl_wi_payback"], v["r.pnl_ai_payback_m"] = PN["wi"]["base"]["payback"], PN["aiPayback"] * 12
+    PR = RAW["pnl"]
+    v["r.pnl_ai_impl"], v["r.pnl_ai_rec"], v["r.pnl_ramp1"] = PR["ai_implementation_cost"]["value"], PR["ai_recurring_per_year"]["value"], PR["ramp_up"]["value"][0]
+    v["r.pnl_years"] = PR["years"]["value"]
     # slides 8A-8D, the new-market worked example (sim/newmarket.js via precompute.js; A$, scenario assumptions)
     NMd, NMR = d["newMarket"], RAW["new_market"]
     A_ = {a["id"]: a for a in NMR["areas"]["value"]}
@@ -583,6 +600,8 @@ FMT = {
     "km": lambda x: f"{x:.1f}",
     "c2": lambda x: f"{x:.2f}",
     "mn": lambda x: f"{x / 1e6:,.0f} million",
+    "g1": lambda x: f"{x:.1f}",
+    "sgm": lambda x: f"{'−' if x < 0 else ''}S${abs(x) / 1e6:.1f}m",
 }
 
 
@@ -621,7 +640,7 @@ def build() -> Path:
     imgs = images()
     html = re.sub(r"\{img:(\w+)\}", lambda m: imgs[m.group(1)], html)
     html = html.replace("<!--APPENDIX-->", appendix()).replace("<!--NMAPPENDIX-->", nm_appendix()).replace("<!--TIERS-->", tiers_table())
-    js = "\n".join((ROOT / "sim" / f).read_text(encoding="utf-8") for f in ("sim.js", "store.js", "counter.js", "sitepick.js", "ladder.js", "benefit.js", "siteext.js", "sitemodel.js", "newmarket.js"))
+    js = "\n".join((ROOT / "sim" / f).read_text(encoding="utf-8") for f in ("sim.js", "store.js", "counter.js", "sitepick.js", "ladder.js", "benefit.js", "siteext.js", "sitemodel.js", "newmarket.js", "pnl.js"))
     js += "\n" + (HERE / "deck.js").read_text(encoding="utf-8")
     payload = {"RAW": RAW, "DATA": d, "GEO": json.loads((ROOT / "sim" / "sg_geo.json").read_text(encoding="utf-8")),
                "MAP": imgs["sg_map_crop"],

@@ -459,6 +459,104 @@
   }
   $$(document, '.panel[data-kind="compare"]').forEach(compareWidget);
 
+  /* ---------------------------------------------------------------- 05 P&L view and its print companion (sim/pnl.js) */
+  const PNL = window.ChageePnl, PE0 = PNL.inputs(RAW, P), PR = RAW.pnl;
+  const sgd = x => `${x < 0 ? "−" : ""}S$${Math.round(Math.abs(x)).toLocaleString("en-SG")}`;
+  const sgk = x => Math.abs(x) >= 1e6 ? `${x < 0 ? "−" : ""}S$${(Math.abs(x) / 1e6).toFixed(1)}m` : `${x < 0 ? "−" : ""}S$${Math.round(Math.abs(x) / 1e3)}k`;
+  const yrs = x => { if (x == null) return null; const m = Math.max(1, Math.round(x * 12)); return x < 1 ? `${m} month${m === 1 ? "" : "s"}` : `${x.toFixed(1)} years`; };
+  const PMET = { rev: ["Revenue", "Annual incremental revenue to Chagee", r => r.netRev, "S$ a year"],
+                 op: ["Operating profit", "Annual incremental operating profit", r => r.opProfit, "S$ a year"],
+                 cum: ["Cumulative operating profit", "Cumulative incremental operating profit", r => r.cumOp, "S$, cumulative from opening"] };
+  const PLAB = { wo: ["Without AI-assisted", "site selection"], wi: ["With AI-assisted", "site selection"] }, PCOL = { wo: COL.taupe, wi: COL.navy };
+  const VOLS = ["low", "base", "high"];
+  function pnlChart(svg, X, metric) {
+    const W = svg.viewBox.baseVal.width || 760, H = svg.viewBox.baseVal.height || 226, L = 70, Rr = 150, Tp = 10, B = 36, f = PMET[metric][2], n = X.wo.base.years.length;
+    const val = (k, v) => X[k][v].years.map(f), inv = metric === "cum" ? [X.wo.base.invest, X.wi.base.invest] : [];
+    const all = ["wo", "wi"].flatMap(k => VOLS.flatMap(v => val(k, v))).concat(inv);
+    let y0 = Math.min(0, ...all), y1 = Math.max(0, ...all);
+    const step = (() => { const r = (y1 - y0) / 4, m = 10 ** Math.floor(Math.log10(r || 1)); return [1, 2, 2.5, 5, 10].map(q => q * m).find(q => q >= r); })();
+    y0 = Math.floor(y0 / step) * step; y1 = Math.ceil(y1 / step) * step;
+    const X_ = i => L + i / (n - 1) * (W - L - Rr), Y = v => Tp + (y1 - v) / (y1 - y0) * (H - Tp - B);
+    let s = "";
+    for (let v = y0; v <= y1 + 1e-6; v += step) s += `<line x1="${L}" x2="${W - Rr}" y1="${Y(v).toFixed(1)}" y2="${Y(v).toFixed(1)}" stroke="${v === 0 ? COL.ink2 : COL.line}" stroke-width="${v === 0 ? 1.2 : 1}"/>` +
+      T(L - 7, Y(v) + 3.5, sgk(v), `font-size="10.5" fill="${COL.taupe}" text-anchor="end"`);
+    for (let i = 0; i < n; i++) s += T(X_(i), H - B + 16, `Year ${i + 1}`, `font-size="11" fill="${COL.ink2}" text-anchor="middle"`);
+    s += T((L + W - Rr) / 2, H - 4, "Years from opening · same opening date at both sites", `font-size="10.5" fill="${COL.taupe}" text-anchor="middle"`);
+    s += `<text transform="translate(12 ${(Tp + H - B) / 2}) rotate(-90)" font-size="10.5" fill="${COL.taupe}" text-anchor="middle">${PMET[metric][3]}</text>`;
+    if (metric === "cum") { const v = X.wo.base.invest;
+      s += `<line x1="${L}" x2="${W - Rr}" y1="${Y(v)}" y2="${Y(v)}" stroke="${COL.red}" stroke-dasharray="5 4"/>` +
+           T(L + 6, Y(v) - 5, `set-up ${sgk(v)}: above the line, paid back`, `font-size="10.5" fill="${COL.red}"`); }
+    const ends = [];
+    ["wo", "wi"].forEach(k => {
+      const lo = val(k, "low"), hi = val(k, "high"), b = val(k, "base");
+      const up = lo.map((x, i) => Math.max(x, hi[i])), dn = lo.map((x, i) => Math.min(x, hi[i]));
+      s += `<polygon points="${up.map((v, i) => `${X_(i).toFixed(1)},${Y(v).toFixed(1)}`).concat(dn.map((v, i) => `${X_(i).toFixed(1)},${Y(v).toFixed(1)}`).reverse()).join(" ")}" fill="${PCOL[k]}" opacity=".12"/>`;
+      s += `<polyline points="${b.map((v, i) => `${X_(i).toFixed(1)},${Y(v).toFixed(1)}`).join(" ")}" fill="none" stroke="${PCOL[k]}" stroke-width="3"/>` +
+           b.map((v, i) => `<circle cx="${X_(i).toFixed(1)}" cy="${Y(v).toFixed(1)}" r="3.6" fill="${PCOL[k]}"/>`).join("");
+      ends.push({ k, y: Y(b[n - 1]) });
+    });
+    if (Math.abs(ends[0].y - ends[1].y) < 30) { const [a, b] = ends[0].y < ends[1].y ? [ends[0], ends[1]] : [ends[1], ends[0]]; const m = (a.y + b.y) / 2; a.y = m - 15; b.y = m + 15; }
+    ends.forEach(({ k, y }) => (s += T(W - Rr + 10, y - 2, PLAB[k][0], `font-size="11.5" font-weight="700" fill="${PCOL[k]}"`) + T(W - Rr + 10, y + 11, PLAB[k][1], `font-size="11.5" font-weight="700" fill="${PCOL[k]}"`)));
+    for (let i = 0; i < n; i++) s += `<rect class="hz" data-i="${i}" x="${(X_(i) - (W - L - Rr) / (n - 1) / 2).toFixed(1)}" y="${Tp}" width="${((W - L - Rr) / (n - 1)).toFixed(1)}" height="${H - Tp - B}" fill="transparent"/>`;
+    svg.innerHTML = s;
+    svg._pnl = { X, metric, xOf: X_, yOf: Y };
+  }
+  function pnlHover(svg, tip, host) {
+    svg.addEventListener("mousemove", e => {
+      const r = e.target.closest?.(".hz"), d = svg._pnl; if (!r || !d) { tip.style.display = "none"; return; }
+      const i = +r.dataset.i, f = PMET[d.metric][2], a = f(d.X.wo.base.years[i]), b = f(d.X.wi.base.years[i]);
+      const box = host.getBoundingClientRect(), sb = svg.getBoundingClientRect(), k = sb.width / svg.viewBox.baseVal.width, kk = box.width / host.offsetWidth;
+      tip.innerHTML = `<b>Year ${i + 1} · ${PMET[d.metric][1].toLowerCase()}</b><br>Without AI-assisted site selection ${sgd(a)}<br>With AI-assisted site selection ${sgd(b)}<br>Difference <b>${b - a >= 0 ? "+" : "−"}${sgd(Math.abs(b - a)).replace("−", "")}</b>`;
+      tip.style.left = `${(sb.left - box.left + d.xOf(i) * k) / kk}px`; tip.style.top = `${(sb.top - box.top + Math.min(d.yOf(a), d.yOf(b)) * k - 8) / kk}px`; tip.style.display = "block";
+    });
+    svg.addEventListener("mouseleave", () => (tip.style.display = "none"));
+  }
+  function pnlBridge(X, sites) {
+    const a = X.wo.base.total, b = X.wi.base.total, n = X.wo.base.years.length;
+    const rows = [["New-store sales", t => t.revNew], ["− Sales displaced from nearby Chagee outlets", t => -t.revMoved],
+      ["= Net additional network sales (incremental revenue)", t => t.netRev, "tot"],
+      ["− New-store ingredients, packaging and delivery commission", t => -(t.cogs + t.delivery)],
+      ["− New-store labour (same staffing rule)", t => -t.labour], ["− Machines, rent, utilities, maintenance", t => -(t.machine + t.rent + t.utilities + t.maint)],
+      ["+ Nearby outlets' variable costs saved (their rent and staff stay)", t => t.revMoved - t.lostContrib],
+      ["− AI recurring cost (allocated)", t => -t.aiRec],
+      ["= Incremental operating profit, before depreciation, interest and tax", t => t.opProfit, "tot"]];
+    const c = v => `<td class="${v < 0 ? "neg" : ""}">${sgk(v)}</td>`;
+    return `<tr><th>${n} years, base scenario</th><th title="${Math.round(sites.wo.sells)} sold − ${Math.round(sites.wo.moved)} moved a day">Without AI · +${Math.round(sites.wo.sells - sites.wo.moved)}</th><th title="${Math.round(sites.wi.sells)} sold − ${Math.round(sites.wi.moved)} moved a day">With AI · +${Math.round(sites.wi.sells - sites.wi.moved)}</th><th>Difference</th></tr>` +
+      rows.map(([l, f, cls]) => `<tr class="${cls || ""}"><td>${l}</td>${c(f(a))}${c(f(b))}${c(f(b) - f(a))}</tr>`).join("");
+  }
+  function pnlResults(X) {
+    const a = X.wo.base, b = X.wi.base, n = a.years.length;
+    const up = v => X.wi[v].total.opProfit - X.wo[v].total.opProfit;
+    return `<div class="bc pnlres"><div class="k">${n}-year results · base · illustrative</div>
+      <p class="big2"><span>Revenue uplift</span><b>${sgk(b.total.netRev - a.total.netRev)}</b></p>
+      <p class="big2"><span>Operating-profit uplift</span><b>${sgk(b.total.opProfit - a.total.opProfit)}</b></p>
+      <p class="big2"><span>Payback, with AI</span><b>${yrs(b.payback) || `beyond year ${n}`}</b></p>
+      <p class="big2"><span>Payback, without AI</span><b>${yrs(a.payback) || `beyond year ${n}`}</b></p>
+      <p class="rng">Cumulative cash flow after the ${sgk(a.invest)} set-up (AI site ${sgk(b.invest)}). AI cost ${X.aiPayback == null ? `not repaid within ${n} years` : `repaid in ${yrs(X.aiPayback)}`}. Volume range: ${sgk(Math.min(up("low"), up("high")))} to ${sgk(Math.max(up("low"), up("high")))} profit uplift.</p></div>`;
+  }
+  function pnlAssump(E) {
+    const nw = `<span class="nw">new</span>`;
+    return `<div class="bc"><div class="k">Assumptions · S$ · reused unless marked new</div><ul class="pnlas">
+      <li>${E.days} days · S$${E.price.toFixed(2)} a cup, held flat · ingredients and packaging ${pct(1 - E.margin)}</li>
+      <li>delivery ${pct(E.delShare)} of cups at ${pct(E.commission)} · wage S$${E.wage.toFixed(2)} an hour, same staffing rule</li>
+      <li>rent ${sgd(E.rent)}, utilities ${sgd(E.utilities)}, maintenance ${sgd(E.maint)}${nw} a month · same machines</li>
+      <li>year-one ramp-up ${pct(E.ramp[0])}${nw} · growth ${pct(E.growth, 1)}${nw} · cost inflation ${pct(E.inflation, 1)}${nw}</li>
+      <li>AI ${sgk(E.aiImpl)} to build, ${sgk(E.aiRec)} a year, ${pct(E.aiShare)} on this outlet${nw} · set-up ${sgk(E.setup)}, outside operating costs</li></ul></div>`;
+  }
+  function pnlSay(X, sites, who) {
+    const a = X.wo.base.total, b = X.wi.base.total, n = X.wo.base.years.length;
+    return { wo: `Beside the nearest outlet: <b>+${Math.round(sites.wo.sells - sites.wo.moved)}</b> net cups a day → about <b>${sgk(a.netRev)}</b> of network sales over ${n} years, and <b>${sgk(a.opProfit)}</b> operating profit: ${a.opProfit < 0 ? "the contribution lost at its neighbours outweighs what it makes." : "its neighbours lose part of it."}`,
+             wi: `${who}: <b>+${Math.round(sites.wi.sells - sites.wi.moved)}</b> net cups a day → about <b>${sgk(b.netRev)}</b> and <b>${sgk(b.opProfit)}</b> after the AI costs: <b>${sgk(Math.abs(b.opProfit - a.opProfit))}</b> ${b.opProfit >= a.opProfit ? "more" : "less"} profit than the baseline. Illustrative, not a proven causal gain.` };
+  }
+  // the printed companion (appendix): defaults, the suggested site
+  (function pnlCompanion() {
+    const ap = document.getElementById("ap"); if (!ap || !DATA.pnl) return;
+    const X = DATA.pnl, say = pnlSay(X, X.sites, "With AI-assisted site selection");
+    pnlChart($(ap, ".pxa"), X, "rev"); pnlChart($(ap, ".pxc"), X, "cum");
+    $(ap, ".pxb").innerHTML = pnlBridge(X, X.sites);
+    $(ap, ".pxs").innerHTML = pnlResults(X) + pnlAssump(PE0) + `<div class="bc"><div class="k">Takeaway</div><p>${say.wo} ${say.wi}</p></div>`;
+  })();
+
   /* ---------------------------------------------------------------- 05 new-store forecast (sim/sitepick.js) */
   steppers.filter(x => x.p.dataset.kind === "site").forEach(({ p, S }) => {
     const Site = window.ChageeSite, GEO = window.STORY.GEO, SP = RAW.sitepick, svg = $(p, ".msvg");
@@ -495,6 +593,7 @@
     });
     svg.addEventListener("mouseleave", () => (tip.style.display = "none"));
     fc.addEventListener("click", e => {
+      if (e.target.closest("[data-act=pnl]")) { pnlOpen(); return; }
       if (e.target.closest("[data-act=testnew]") && sel != null) {
         const [x, y] = GEO.outlets[sel]; pin = { x: x + 6, y }; userPin = true; sel = null; search.value = ""; goStep4();
       }
@@ -565,7 +664,9 @@
         <div class="big">+${Math.round(f.netNew).toLocaleString("en-SG")}<small>cups a day for Chagee</small></div>
         <div class="why2">The new store sells ${Math.round(f.cups)} a day (${(f.cups / avg).toFixed(1)}× an average outlet). ${Math.round(f.cannibal)} of those move from outlets nearby${f.hit.length ? ":" : "."}</div>
         <dl>${f.hit.slice(0, 2).map(h => `<dt title="${Math.round(M.storeCups[h.j])} → ${Math.round(M.storeCups[h.j] - h.cups)} cups a day">${oname(h.j)}, ${h.km.toFixed(1)} km</dt><dd>−${Math.round(h.cups)}</dd>`).join("")}</dl>
-        <div class="peak">Peak hour ${hourLabel(pf.peak)}: <b>${Math.round(pf.peakCups)} cups</b> → <b>${pf.peakStaff} ${pf.peakStaff === 1 ? "person" : "people"}</b> on today's counter (slides 06–07).</div>`;
+        <div class="peak">Peak hour ${hourLabel(pf.peak)}: <b>${Math.round(pf.peakCups)} cups</b> → <b>${pf.peakStaff} ${pf.peakStaff === 1 ? "person" : "people"}</b> on today's counter (slides 06–07).</div>
+        <button class="btn primary screenonly pnlb" data-act="pnl" title="Five years of this outlet here against beside the nearest outlet">What does this mean for P&amp;L?</button>`;
+      if (pnlOn) pnlRender();
       $$(ctlEl, "[data-v]").forEach(el => { const d = sl.find(x => x[0] === el.dataset.v); el.textContent = d[4](par[d[0]]); });
     }
     ctlEl.addEventListener("input", e => { const k = e.target.dataset.k; if (!k) return; par[k] = +e.target.value;
@@ -618,7 +719,62 @@
       $(cmpv, ".cx").onclick = () => cmpv.classList.remove("open");
       cmpv.classList.add("open");
     }
+    // "What does this mean for P&L?": the map gives way to five years of the same outlet at two sites, in the same panel;
+    // without AI = beside the existing outlet nearest the selected site (as in the band), with AI = the selected site
+    const slideEl = p.closest(".slide"), pside = $(side, ".pnlside"), pctl = $(p, ".pnlctl"), psvg = $(p, ".pnlsvg"), ptitle = $(p, ".ptitle");
+    const bandSpans = $$(slideEl, ".vs > div > span:not(.lab)"), bandOrig = bandSpans.map(x => x.innerHTML), titleOrig = ptitle.textContent;
+    let pnlOn = false, pmet = "rev", pE = { ...PE0, ramp: [...PE0.ramp] };
+    pnlHover(psvg, $(p, ".pnltip"), $(p, ".pnlv"));
+    const PSL = [["ramp1", "Ramp-up, year one", PR.ramp_up.range, 0.05, () => pE.ramp[0], v => pct(v), v => (pE.ramp = [v, ...PE0.ramp.slice(1)])],
+      ["growth", "Demand growth", PR.demand_growth.range, 0.005, () => pE.growth, v => pct(v, 1), v => (pE.growth = v)],
+      ["inflation", "Cost inflation", PR.cost_inflation.range, 0.005, () => pE.inflation, v => pct(v, 1), v => (pE.inflation = v)],
+      ["aiImpl", "AI build cost", PR.ai_implementation_cost.range, 5000, () => pE.aiImpl, v => sgk(v), v => (pE.aiImpl = v)],
+      ["aiRec", "AI a year", PR.ai_recurring_per_year.range, 1000, () => pE.aiRec, v => sgk(v), v => (pE.aiRec = v)],
+      ["aiShare", "AI on this outlet", PR.ai_cost_share_to_outlet.range, 0.05, () => pE.aiShare, v => pct(v), v => (pE.aiShare = v)]];
+    function pnlSitesNow() {
+      const f = Site.forecast(M, pin), j = GEO.outlets.map(([x, y], k) => [Math.hypot(x - pin.x, y - pin.y), k]).sort((a, b) => a[0] - b[0])[0][1];
+      const fN = Site.forecast(M, { x: GEO.outlets[j][0] + 3, y: GEO.outlets[j][1] });
+      return { wo: { sells: fN.cups, moved: fN.cannibal }, wi: { sells: f.cups, moved: f.cannibal }, j };
+    }
+    function pnlRender() {
+      const sites = pnlSitesNow(), X = PNL.compare({ Sim, C, P }, pE, sites.wo, sites.wi), who = userPin ? "Your pin, in place of the AI-suggested site" : "Suggested site 1, with AI-assisted site selection";
+      pnlChart(psvg, X, pmet);
+      $(p, ".pnlbr").innerHTML = pnlBridge(X, sites);
+      $$(pctl, "[data-m]").forEach(b => b.classList.toggle("on", b.dataset.m === pmet));
+      if (!pside.dataset.built) {
+        pside.dataset.built = 1;
+        pside.innerHTML = `<div class="pr"></div><div class="pnltab screenonly"><span class="seg"><button class="btn on" data-t="pa">Assumptions</button><button class="btn" data-t="pt">Test them</button></span></div>` +
+          `<div class="pnlsl pt" style="display:none">` +
+          PSL.map(([k, lab, [lo, hi], st, get, f]) => `<label>${lab}<span class="val" data-v="${k}">${f(get())}</span><input type="range" data-k="${k}" min="${lo}" max="${hi}" step="${st}" value="${get()}"></label>`).join("") +
+          `<button class="btn" data-k="reset" style="grid-column:1/-1;justify-self:start;height:22px;font-size:11px">Reset</button></div><div class="pa"></div>`;
+      }
+      $(pside, ".pr").innerHTML = pnlResults(X);
+      $(pside, ".pa").innerHTML = pnlAssump(pE);
+      PSL.forEach(([k, , , , get, f]) => { const el = $(pside, `.val[data-v="${k}"]`); if (el) el.textContent = f(get()); });
+      const say = pnlSay(X, sites, who);
+      bandSpans[0].innerHTML = `Beside ${oname(sites.j)}, the same outlet: ` + say.wo.replace("Beside the nearest outlet: ", "");
+      bandSpans[1].innerHTML = say.wi;
+    }
+    function pnlOpen() {
+      pnlOn = true; p.classList.add("pnl"); slideEl.classList.add("pnlmode"); cmpv.classList.remove("open");
+      ptitle.textContent = `Five-year P&L · the same new outlet at two sites · illustrative`;
+      pctl.innerHTML = `<span class="seg">${Object.entries(PMET).map(([k, m]) => `<button class="btn" data-m="${k}">${m[0]}</button>`).join("")}</span><button class="btn" data-x="back" title="Back to the map (Esc)">← Back to map</button>`;
+      pnlRender();
+    }
+    function pnlClose() {
+      if (!pnlOn) return; pnlOn = false; p.classList.remove("pnl"); slideEl.classList.remove("pnlmode");
+      ptitle.textContent = titleOrig; bandSpans.forEach((x, i) => (x.innerHTML = bandOrig[i])); $(p, ".pnltip").style.display = "none";
+    }
+    pctl.addEventListener("click", e => { const b = e.target.closest("button"); if (!b) return;
+      if (b.dataset.x === "back") pnlClose(); else if (b.dataset.m) { pmet = b.dataset.m; pnlRender(); } });
+    pside.addEventListener("input", e => { const d = PSL.find(x => x[0] === e.target.dataset?.k); if (!d) return; d[6](+e.target.value); pnlRender(); });
+    pside.addEventListener("click", e => { const t = e.target.closest("[data-t]");
+      if (t) { $$(pside, "[data-t]").forEach(b => b.classList.toggle("on", b === t)); $(pside, ".pa").style.display = t.dataset.t === "pa" ? "" : "none"; $(pside, ".pt").style.display = t.dataset.t === "pt" ? "" : "none"; return; }
+      if (e.target.closest("[data-k=reset]")) { pE = { ...PE0, ramp: [...PE0.ramp] };
+      PSL.forEach(([k, , , , get]) => { const i = $(pside, `input[data-k="${k}"]`); if (i) i.value = get(); }); pnlRender(); } });
+    addEventListener("keydown", e => { if (e.key === "Escape" && pnlOn && slides[cur] === slideEl) { e.preventDefault(); e.stopPropagation(); pnlClose(); } }, true);
     S.hooks.push(k => { step = k; if (M) draw(); });
+    printers.push(() => { pnlClose(); pE = { ...PE0, ramp: [...PE0.ramp] }; pmet = "rev"; $$(pside, "input").forEach(i => { const d = PSL.find(x => x[0] === i.dataset.k); if (d) i.value = d[4](); }); });
     printers.push(() => { cmpv.classList.remove("open"); userPin = false; sel = null; search.value = ""; sl.forEach(([k, , key]) => (par[k] = SP[key].value)); $$(ctlEl, "input").forEach(i => (i.value = par[i.dataset.k])); rebuild(); });
     rebuild();
   });
