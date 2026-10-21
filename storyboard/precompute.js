@@ -16,6 +16,7 @@ const B = require("../sim/benefit.js");
 const Dec = require("../sim/decisions.js");
 const Ext = require("../sim/siteext.js");
 const SMod = require("../sim/sitemodel.js");
+const NM = require("../sim/newmarket.js");
 
 const RAW = JSON.parse(fs.readFileSync(path.join(__dirname, "..", "assumptions.json"), "utf8"));
 const P = Sim.params(RAW), SB = RAW.storyboard;
@@ -108,10 +109,33 @@ const smCity = SMod.city(Sim, RAW, GEO, Site);
 siteModel.city = { width_km: smCity.width_km, height_km: smCity.height_km, grid_km: smCity.grid_km, towns: smCity.towns, dots: smCity.dots.map(d => [+d.x.toFixed(3), +d.y.toFixed(3)]),
                    grid: SMod.cityGrid(smCity, RAW, smD.cap), stores_default: smCity.stores_default, stores_max: smCity.stores_max };
 
+// slides 8A-8D, the new-market worked example (Australia, A$, scenario assumptions): kept apart from every result above
+const nmDeps = { Sim, Store, C, RAW, P }, nmR = NM.runs(nmDeps, seeds), nmE = NM.econ(RAW), nmW = NM.dayWeights(RAW, P);
+const nmScore = NM.score(RAW), nmSens = NM.sensitivity(RAW), nmPilot = nmScore[0].id;
+const nmRent = RAW.new_market.areas.value.find(a => a.id === nmPilot).rent_month;
+const newMarket = { runs: nmR, score: nmScore, sensitivity: nmSens, pilot: nmPilot, cannibal: NM.cannibal(RAW, nmPilot), dayWeights: nmW,
+  breakEven: Object.fromEntries(RAW.new_market.setups.value.map(k => [k, NM.breakEven(nmDeps, nmE, nmRent, k)])),
+  worst: NM.worst(nmR, nmE, nmRent, nmW, P.days), flipMachine: NM.flipMachine(nmR, nmE, nmRent, nmW, P.days),
+  flipWage: NM.flipWage(nmR, nmE, nmRent, nmW, P.days, RAW.new_market.wage_per_hour.range) };
+// the figures slides 8B-8D quote: realised base demand on an event day (the printed state of slide 8C)
+{
+  const nmDay = SB.day_type_default.value, q = { day: nmDay, setups: {} };
+  for (const [k, s] of Object.entries(nmR.setups)) {
+    const at = s.at.base[nmDay], m = r => NM.money(r, nmE, nmRent, s.units, P.days).contribution;
+    q.setups[k] = { units: s.units, without: { ...at.without, contribution: m(at.without) },
+      ai: Object.fromEntries(Object.entries(at.ai).map(([e, r]) => [e, { ...r, contribution: m(r) }])),
+      year: Object.fromEntries(Object.entries(s.at).map(([n, a]) => [n, NM.yearAvg(nmW, d => m(a[d].ai["0"]))])) };
+  }
+  const w = newMarket.worst; q.robust = Object.keys(w).reduce((a, b) => (w[b] > w[a] ? b : a));
+  // the next opening after the pilot: each other area's score is unchanged, its cups lose the cannibalised share
+  q.next = nmScore.filter(o => o.id !== nmPilot).map(o => ({ id: o.id, score: o.score, cannibal: newMarket.cannibal[o.id] }));
+  newMarket.quote = q;
+}
+
 const pl = Sim.plan(P, "mixed");
 const data = {
   generated: new Date().toISOString(), seeds,
-  grid, splits, aiLayer, site, ladder, benefit, decisions, siteExt, siteModel,
+  grid, splits, aiLayer, newMarket, site, ladder, benefit, decisions, siteExt, siteModel,
   counter: {
     peakHour: C.peakHour(P), firstHour: 10, cupsPerDay: Sim.dailyBase(P),
     perWorkerHour: pl.perWorker * 60, handSeconds: pl.W,

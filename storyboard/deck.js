@@ -1202,6 +1202,190 @@
   addEventListener("beforeprint", zoomClose);
   $$(document, "#prev,#next").forEach(b => b.addEventListener("click", zoomClose, true));
 
+  /* ---------------------------------------------------------------- 8A-8D new-market worked example (sim/newmarket.js; A$) */
+  (function newMarket() {
+    const NM = window.ChageeNewMarket, NMD = DATA.newMarket, NMR = RAW.new_market; if (!NM || !NMD) return;
+    const AREAS = NMR.areas.value, FEAT = NMR.features.value, R = NMD.runs, WTS = NMD.dayWeights, ERR = NMR.forecast_error.value;
+    const LAB = { all_hand: "Human-only", heading: "Machine-made drink" }, SETS = NMR.setups.value;
+    const aud = x => `${x < 0 ? "−" : ""}A$${Math.round(Math.abs(x)).toLocaleString("en-AU")}`;
+    const area = id => AREAS.find(a => a.id === id);
+    const errLab = e => (e === 0 ? "exact" : `${e > 0 ? "+" : "−"}${pct(Math.abs(e))}`);
+    const FC = [COL.navy, COL.red, COL.gold, COL.blue, "#2F6B45", COL.taupe, "#9A7FB5"];
+    const NB = { pilot: NMD.pilot, fns: [] };                        // the pilot area, shared by 8B, 8C and 8D
+    const setPilot = id => { if (id === NB.pilot) return; NB.pilot = id; NB.fns.forEach(f => f()); };
+    const stepHook = (id, f) => steppers.filter(x => x.p.closest("#" + id)).forEach(({ S }) => S.hooks.push(f));
+    const fmtF = (k, v) => k === "rent_month" ? aud(v) : k === "transit_index" ? v.toFixed(2) : k.endsWith("_k") ? `${v}k` : `${v}`;
+    const slider = (k, lab, [lo, hi], step, val, f) =>
+      `<label>${lab}<span class="val" data-v="${k}">${f(val)}</span><input type="range" data-k="${k}" min="${lo}" max="${hi}" step="${step}" value="${val}"></label>`;
+
+    // 8A: the profile table, columns revealed step by step
+    const s1 = document.getElementById("n1");
+    if (s1) {
+      const tb = $(s1, ".nmprof");
+      tb.innerHTML = `<tr><th>Feature</th><th class="c1">Stands in for</th>${AREAS.map(a => `<th class="c2" title="${a.name}">${a.id}</th>`).join("")}<th class="c3">A real value would come from</th><th class="c3">Value here</th></tr>` +
+        FEAT.map(f => `<tr><td><b>${f.label}</b></td><td class="c1"><span class="chip px">proxy</span> ${f.proxy_for}</td>${AREAS.map(a => `<td class="c2">${fmtF(f.key, a[f.key])}</td>`).join("")}` +
+          `<td class="c3">${f.planned_source}</td><td class="c3"><span class="chip as">assumption</span></td></tr>`).join("");
+      $(s1, ".nmareas").innerHTML = `<b>Areas (archetypes):</b> ` + AREAS.map(a => `${a.id} ${a.name}`).join(" · ");
+      $(s1, ".nmexcl").innerHTML = NMR.excluded.value.map(x => `<li><b>${x.label}</b>: ${x.why}</li>`).join("");
+      stepHook("n1", k => (tb.dataset.k = k));
+    }
+
+    // 8B: suitability ranking, weights, sensitivity, first or next opening
+    const s2 = document.getElementById("n2");
+    if (s2) {
+      const W0 = NMR.weights.value, st = { w: { ...W0 }, next: false }, svg = $(s2, ".nmbars"), wr = NMR.weights.range;
+      const short = { residents_k: "Residents", workers_k: "Workers", students_k: "Students", income_index: "Income", transit_index: "Transit", competitors: "Competitors", rent_month: "Rent" };
+      $(s2, ".nmw").innerHTML = `<span class="lab" style="grid-column:1/-1">Weights</span>` + FEAT.map(f => slider(f.key, short[f.key], wr, 0.25, st.w[f.key], v => (+v).toFixed(2))).join("") +
+        `<button class="btn" data-k="reset" style="grid-column:1/-1;justify-self:start;height:24px;font-size:11px">Reset weights</button>`;
+      $(s2, ".nmleg").innerHTML = FEAT.map((f, i) => `<span style="white-space:nowrap"><span style="display:inline-block;width:9px;height:9px;border-radius:2px;background:${FC[i]};margin-right:4px"></span>${short[f.key]}</span>`).join(" · ") + ` · bar = score; rank range across the weight check`;
+      const seg = $(s2, ".nmopen");
+      function draw() {
+        const S = NM.score(RAW, st.w), sens = NM.sensitivity(RAW, st.w), pilot = S[0].id, can = NM.cannibal(RAW, st.next ? pilot : null);
+        seg.innerHTML = `<button class="btn${st.next ? "" : " on"}" data-n="0">First opening</button><button class="btn${st.next ? " on" : ""}" data-n="1">Next, after a pilot in ${pilot}</button>`;
+        const x0 = 196, bw = 250, rh = 40;
+        let s = "";
+        S.forEach((o, i) => {
+          const y = 8 + i * rh; let x = x0;
+          s += T(0, y + 14, `${o.id} · ${o.name}`, `font-size="12.5" font-weight="600" fill="${COL.ink}"`);
+          const b = sens.byArea[o.id];
+          s += T(0, y + 28, `rank ${b.best === b.worst ? b.best : `${b.best}–${b.worst}`} across ${sens.variants} weightings · first in ${b.top}`, `font-size="10" fill="${COL.taupe}"`);
+          s += `<rect x="${x0}" y="${y + 6}" width="${bw}" height="18" rx="3" fill="${COL.cream}"/>`;
+          FEAT.forEach((f, j) => { const w = bw * o.parts[f.key] / 100; if (w > 0.2) s += `<rect x="${x.toFixed(1)}" y="${y + 6}" width="${w.toFixed(1)}" height="18" fill="${FC[j]}"/>`; x += w; });
+          s += T(x0 + bw + 8, y + 20, o.score.toFixed(0), `font-size="15" font-weight="700" fill="${COL.ink}"`);
+          const c = can[o.id], tag = c === null ? "the pilot" : `cannibalisation ${pct(c, c > 0 && c < 0.1 ? 1 : 0)}`;
+          s += T(x0 + bw + 40, y + 20, tag, `font-size="10.5" fill="${c ? COL.red : COL.taupe}"${c === null ? ' font-weight="700"' : ""}`);
+        });
+        svg.innerHTML = s;
+        $(s2, ".nmsens").innerHTML = `<div class="k">Weight check · ${sens.variants} weightings</div><p>Each weight dropped, then doubled, one at a time. ` +
+          S.map(o => { const b = sens.byArea[o.id]; return `<b>${o.id}</b> first in ${b.top}`; }).join(", ") + `. ` +
+          (S.filter(o => sens.byArea[o.id].top > 0).length > 1 ? `The top spot is not robust: treat the leaders as a shortlist.` : `${S[0].id} stays first in every weighting.`) + `</p>`;
+        $(s2, ".nmwp").innerHTML = `<div class="k">Weights used</div><p>` + FEAT.map(f => `${short[f.key]} ${(+st.w[f.key]).toFixed(2)}`).join(" · ") + `. Competitors and rent count against.</p>`;
+        setPilot(pilot);
+      }
+      s2.addEventListener("input", e => { const k = e.target.dataset?.k; if (!k || !(k in st.w)) return;
+        st.w[k] = +e.target.value; $(s2, `.val[data-v="${k}"]`).textContent = (+e.target.value).toFixed(2); draw(); });
+      s2.addEventListener("click", e => { const b = e.target.closest("button"); if (!b) return;
+        if (b.dataset.n != null) { st.next = b.dataset.n === "1"; draw(); }
+        if (b.dataset.k === "reset") { st.w = { ...W0 }; $$(s2, ".nmw input").forEach(i => { i.value = st.w[i.dataset.k]; $(s2, `.val[data-v="${i.dataset.k}"]`).textContent = (+i.value).toFixed(2); }); draw(); } });
+      stepHook("n2", k => { if (k < 4 && st.next) { st.next = false; draw(); } });
+      printers.push(() => { st.w = { ...W0 }; st.next = false; $$(s2, ".nmw input").forEach(i => (i.value = st.w[i.dataset.k])); draw(); });
+      draw();
+    }
+
+    // 8C: which setup, demand scenarios through the counter simulation; AI layer in the band
+    const s3 = document.getElementById("n3");
+    const E0 = NM.econ(RAW), cst = { scen: "base", day: DAY0, err: "0", wage: E0.wage, machine: E0.machineMonth };
+    const econ = () => ({ ...E0, wage: cst.wage, machineMonth: cst.machine });
+    const rent = id => area(id || NB.pilot).rent_month;
+    const contrib = (r, k, id) => NM.money(r, econ(), rent(id), R.setups[k].units, P.days).contribution;
+    const beOf = (k, id) => NM.breakEven({ Sim, C, RAW, P }, econ(), rent(id), k);
+    if (s3) {
+      const ctl = $(s3, ".nmctl"), svg = $(s3, ".nmchart"), band = $(s3, ".nmband");
+      const segs = (k, opts) => `<span class="seg">${opts.map(([v, l]) => `<button class="btn" data-f="${k}" data-v="${v}">${l}</button>`).join("")}</span>`;
+      ctl.innerHTML = `<div class="row"><span class="lab">Demand</span>${segs("scen", [["low", "Low"], ["base", "Base"], ["high", "High"]])}</div>` +
+        `<div class="row"><span class="lab">Day</span>${segs("day", DAYS.map(d => [d, DAY_LABEL[d].replace(" day", "")]))}</div>` +
+        `<div class="row"><span class="lab">Forecast</span>${segs("err", ERR.map(e => [String(e), errLab(e)]))}</div>` +
+        slider("wage", "Wage, A$ an hour", NMR.wage_per_hour.range, 0.5, cst.wage, v => `A$${(+v).toFixed(2)}`) +
+        slider("machine", "Machine unit, A$ a month", NMR.machine_cost_per_unit_per_month.range, 50, cst.machine, v => aud(+v));
+      function chart() {
+        const sc = R.setups[SETS[0]].scan.none.map(x => x.ai.cups), W = 600, H = 150, L = 50, Rr = 118, Tp = 10, B = 24;
+        const ys = Object.fromEntries(SETS.map(k => [k, R.setups[k].scan.none.map((_, i) => NM.yearAvg(WTS, d => contrib(R.setups[k].scan[d][i].ai, k)))]));
+        const all = Object.values(ys).flat(), y0 = Math.min(0, ...all), y1 = Math.max(...all);
+        const X = c => L + (c - sc[0]) / (sc[sc.length - 1] - sc[0]) * (W - L - Rr), Y = v => Tp + (y1 - v) / (y1 - y0) * (H - Tp - B);
+        let s = `<line x1="${L}" x2="${W - Rr}" y1="${Y(0)}" y2="${Y(0)}" stroke="${COL.ink2}" stroke-width="1"/>` + T(L - 6, Y(0) + 3.5, "A$0", `font-size="9.5" fill="${COL.taupe}" text-anchor="end"`);
+        [y1].forEach(v => (s += T(L - 6, Y(v) + 3.5, aud(v), `font-size="9.5" fill="${COL.taupe}" text-anchor="end"`)));
+        Object.entries(R.demand).forEach(([n, c]) => { const on = n === cst.scen;
+          s += `<line x1="${X(c)}" x2="${X(c)}" y1="${Tp}" y2="${H - B}" stroke="${on ? COL.red : COL.line}" stroke-dasharray="3 3"/>` +
+               T(X(c), H - B + 12, `${n} · ${Math.round(c)}`, `font-size="9.5" fill="${on ? COL.red : COL.taupe}" text-anchor="middle"${on ? ' font-weight="700"' : ""}`); });
+        s += T((L + W - Rr) / 2, H - 1, "realised cups a day", `font-size="9.5" fill="${COL.taupe}" text-anchor="middle"`);
+        const col = { all_hand: COL.red, heading: COL.navy };
+        SETS.forEach(k => { const pts = sc.map((c, i) => `${X(c).toFixed(1)},${Y(ys[k][i]).toFixed(1)}`).join(" ");
+          s += `<polyline points="${pts}" fill="none" stroke="${col[k]}" stroke-width="2.4"/>` + T(W - Rr + 6, Y(ys[k][ys[k].length - 1]) + 4, LAB[k], `font-size="11" font-weight="600" fill="${col[k]}"`); });
+        // where the preferred setup changes along the demand axis, if it does
+        const d = sc.map((_, i) => ys[SETS[1]][i] - ys[SETS[0]][i]);
+        for (let i = 1; i < d.length; i++) if (d[i - 1] * d[i] < 0) { const c = sc[i - 1] + (sc[i] - sc[i - 1]) * d[i - 1] / (d[i - 1] - d[i]);
+          s += `<circle cx="${X(c)}" cy="${Y(ys[SETS[0]][i])}" r="4" fill="${COL.gold}"/>` + T(X(c), Tp + 8, `switch at about ${Math.round(c)}`, `font-size="10" font-weight="700" fill="${COL.ink}" text-anchor="middle"`); }
+        svg.innerHTML = s;
+        return d;
+      }
+      function table() {
+        const rows = SETS.map(k => { const a = R.setups[k].at[cst.scen][cst.day];
+          const line = (nm, r, on) => `<tr class="${on ? "best" : ""}"><td>${nm}</td><td>${r.staff}</td><td>${mmss(r.medianWait)}</td><td>${pct(r.lostShare, 1)}</td><td>${aud(contrib(r, k))}</td></tr>`;
+          return `<tr class="grp"><td colspan="5">${LAB[k]} · ${R.setups[k].units ? `${R.setups[k].units} machine units` : "no machines"}</td></tr>` +
+            line("Without AI · one crew all day", a.without, false) + ERR.map(e => line(`With AI · forecast ${errLab(e)}`, a.ai[String(e)], String(e) === cst.err)).join(""); }).join("");
+        $(s3, ".nmtab").innerHTML = `<tr><th>${DAY_LABEL[cst.day]}, ${cst.scen} demand (${Math.round(R.demand[cst.scen])} cups)</th><th>Peak crew</th><th>Median wait</th><th>Walk away</th><th>A$ a day</th></tr>` + rows;
+      }
+      function cards(d) {
+        const be = SETS.map(k => ({ k, b: beOf(k) }));
+        $(s3, ".nmbe").innerHTML = `<div class="k">Break-even, cups a day · area ${NB.pilot}</div><p>` +
+          be.map(({ k, b }) => `<b>${LAB[k]}</b> ${b.withAI} with AI, ${Math.round(b.withoutAI)} without`).join("; ") +
+          `. Normal day, no walk-aways; low scenario ${Math.round(R.demand.low)}.</p>`;
+        const w = NM.worst(R, econ(), rent(), WTS, P.days), best = SETS.reduce((a, b) => (w[b] > w[a] ? b : a));
+        const fm = NM.flipMachine(R, econ(), rent(), WTS, P.days), fw = NM.flipWage(R, econ(), rent(), WTS, P.days, NMR.wage_per_hour.range);
+        const win = n => { const ys = SETS.map(k => NM.yearAvg(WTS, dd => contrib(R.setups[k].at[n][dd].ai["0"], k))); return LAB[SETS[ys[1] > ys[0] ? 1 : 0]].toLowerCase(); };
+        $(s3, ".nmpref").innerHTML = `<div class="k">Preferred setup · worst case</div><p>Worst year-average day, any scenario and forecast error: ` +
+          SETS.map(k => `${LAB[k].toLowerCase()} <b>${aud(w[k])}</b>`).join(", ") + `. <b>${LAB[best]}</b> is safer; ` +
+          (fm ? `the two cross at a machine unit of about <b>${aud(fm)}</b> a month (now ${aud(cst.machine)})` : "they do not cross on the machine cost") + `; ` +
+          (fw ? `on the wage, at about A$${fw.toFixed(2)} an hour.` : `they do not cross within the wage range.`) +
+          (() => { const ws = ["low", "base", "high"].map(win); return ws.every(x => x === ws[0]) ? ` With an exact forecast, ${ws[0]} leads at low, base and high demand.`
+            : ` With an exact forecast: low ${ws[0]}, base ${ws[1]}, high ${ws[2]}.`; })() + `</p>`;
+      }
+      function bandFill() {
+        const cell = (k, w) => { const a = R.setups[k].at[cst.scen][cst.day], r = w === "without" ? a.without : a.ai[cst.err];
+          const v = `${r.staff} ${r.staff === 1 ? "person" : "people"} · away <b>${pct(r.lostShare, 1)}</b> · wait ${mmss(r.medianWait)} · ${aud(contrib(r, k))}/day`;
+          if (w === "without") return `<b>${LAB[k]}</b>: ${v}`;
+          const o = a.without, ds = r.staff - o.staff, dc = contrib(r, k) - contrib(o, k);
+          const why = ds === 0 && Math.abs(dc) < 0.5 ? "same crew: the forecast changes nothing here"
+            : `${ds ? `${ds > 0 ? "+" : "−"}${Math.abs(ds)} at the peak, ` : ""}${r.labourHours - o.labourHours >= 0 ? "+" : "−"}${Math.abs(r.labourHours - o.labourHours)} staff hours, ${dc >= 0 ? "+" : "−"}${aud(Math.abs(dc))}`;
+          return `<b>${LAB[k]}</b> (forecast ${errLab(+cst.err)}): ${v} <small class="aid">· ${why}</small>`; };
+        $(band, ".ai-without").innerHTML = SETS.map(k => cell(k, "without")).join("<br>");
+        $(band, ".ai-with").innerHTML = SETS.map(k => cell(k, "with")).join("<br>");
+        $(s3, ".ai-day").textContent = `${DAY_LABEL[cst.day]}, ${cst.scen} demand`;
+        $(s3, ".nmctlp").innerHTML = `<div class="k">Shown</div><p>${DAY_LABEL[cst.day]}, ${cst.scen} demand, forecast ${errLab(+cst.err)} in the band. Wage A$${cst.wage}, machine unit ${aud(cst.machine)} a month, rent ${aud(rent())} a month (${area(NB.pilot).name}).</p>`;
+      }
+      function draw() {
+        $$(ctl, "[data-f]").forEach(b => b.classList.toggle("on", String(cst[b.dataset.f]) === b.dataset.v));
+        cards(chart()); table(); bandFill();
+      }
+      ctl.addEventListener("click", e => { const b = e.target.closest("[data-f]"); if (!b) return; cst[b.dataset.f] = b.dataset.v; draw(); });
+      ctl.addEventListener("input", e => { const k = e.target.dataset?.k; if (!k) return; cst[k] = +e.target.value;
+        $(ctl, `.val[data-v="${k}"]`).textContent = k === "wage" ? `A$${cst.wage.toFixed(2)}` : aud(cst.machine); draw(); });
+      NB.fns.push(draw);
+      printers.push(() => { Object.assign(cst, { scen: "base", day: DAY0, err: "0", wage: E0.wage, machine: E0.machineMonth });
+        $$(ctl, "input").forEach(i => (i.value = cst[i.dataset.k])); draw(); });
+      draw();
+    }
+
+    // 8D: try a pilot result against the evidence rules
+    const s4 = document.getElementById("n4");
+    if (s4) {
+      const Qn = NMD.quote, rb = Qn.robust, D = R.demand, target = SB.walkaway_target.value, weeks = NMR.trigger_weeks.value;
+      const t0 = { cups: Math.round(D.base), away: 0, quote: E0.machineMonth }, tr = { ...t0 };
+      const box = $(s4, ".nmtry");
+      box.innerHTML = `<span class="lab">Try a pilot result · illustrative</span>` +
+        slider("cups", "Cups a day, observed", [Math.round(D.low / 2), Math.round(D.high * 1.2)], 5, tr.cups, v => `${v}`) +
+        slider("away", "Peak-hour walk-aways", [0, 0.2], 0.005, tr.away, v => pct(+v, 1)) +
+        slider("quote", "Machine quote, A$ a unit a month", NMR.machine_cost_per_unit_per_month.range, 50, tr.quote, v => aud(+v));
+      function draw() {
+        const be = beOf(rb).withAI, nx = Qn.next.slice().sort((a, b) => b.score - a.score)[0];
+        const c = NM.cannibal(RAW, NB.pilot)[nx.id] ?? 0, beN = beOf(rb, nx.id).withAI, fm = NM.flipMachine(R, econ(), rent(), WTS, P.days);
+        const T_ = (cls, h, p) => `<p class="t ${cls}"><i></i><span><b>${h}</b> ${p}</span></p>`;
+        const keep = tr.cups >= be, staff = tr.away > target, flip = fm != null && tr.quote > fm, open = keep && tr.cups * (1 - c) >= beN;
+        $(s4, ".nmtrig").innerHTML = `<div class="k">Evidence to act · held ${weeks} weeks in a row</div><p class="printonly" style="font-size:10.5px;color:${COL.taupe}">Example result, illustrative: ${tr.cups} cups a day, ${pct(tr.away, 1)} peak walk-aways, a quote of ${aud(tr.quote)}.</p>` +
+          T_(keep ? "go" : "warn", keep ? "Keep the pilot running." : "Below break-even.", `${tr.cups} cups a day against about ${be} (${LAB[rb].toLowerCase()}, ${area(NB.pilot).name}).`) +
+          T_(staff ? "warn" : "", staff ? "Add staff in the busy hours." : "No extra staff.", `Peak walk-aways ${pct(tr.away, 1)} against the ${pct(target)} limit.`) +
+          T_(flip ? "warn" : "go", flip ? "Revisit the setup: human-only." : `Keep ${LAB[rb].toLowerCase()}.`, `Quote ${aud(tr.quote)} against the flip at about ${fm ? aud(fm) : "–"} a month.`) +
+          T_(open ? "go" : "", open ? `Open the next outlet, ${area(nx.id).name}.` : "Not yet another outlet.", `It keeps ${Math.round(tr.cups * (1 - c))} cups after ${pct(c, 1)} cannibalisation, against about ${beN} to break even.`);
+      }
+      box.addEventListener("input", e => { const k = e.target.dataset?.k; if (!k) return; tr[k] = +e.target.value;
+        $(box, `.val[data-v="${k}"]`).textContent = k === "away" ? pct(tr.away, 1) : k === "quote" ? aud(tr.quote) : `${tr.cups}`; draw(); });
+      stepHook("n4", k => ($(s4, ".nmmeas").dataset.k = k));
+      NB.fns.push(draw);
+      printers.push(() => { Object.assign(tr, t0); $$(box, "input").forEach(i => (i.value = tr[i.dataset.k])); draw(); });
+      draw();
+    }
+  })();
+
   /* ---------------------------------------------------------------- print */
   function preparePrint() {
     PRINTING = true;

@@ -1528,5 +1528,306 @@
       "source": "assumption",
       "rationale": "Slide 08b's new-market proxy: a made-up city, not a real place. Its population dots are generated at Singapore's synthetic density (same dots per unit of town weight and same even background per km2 as the slide 05 events), so the model's inputs mean the same thing in both. With real data, a census population grid and real town centres replace it."
     }
+  },
+  "new_market": {
+    "_note": {
+      "value": "Slides 8A-8D",
+      "unit": "text",
+      "range": null,
+      "source": "assumption",
+      "rationale": "Australia worked example, kept separate from every other section: nothing here feeds slides 01-11 and nothing in them is changed. Every Australian input is a scenario assumption; no Australian data has been retrieved for this deck. Archetype areas stand in for real suburbs until Census and market data are pulled."
+    },
+    "currency": {
+      "value": "AUD",
+      "unit": "text",
+      "range": null,
+      "source": "assumption",
+      "rationale": "Every money figure on slides 8A-8D is in Australian dollars (A$). No exchange rate is applied to any Singapore figure."
+    },
+    "market_status": {
+      "value": "no local Chagee operating history (assumed for this worked example)",
+      "unit": "text",
+      "range": null,
+      "source": "assumption",
+      "rationale": "Treated as a market with no Chagee outlet, app history or delivery history in the catchments; to confirm before use."
+    },
+    "areas": {
+      "value": [
+        {
+          "id": "A",
+          "name": "CBD office core",
+          "x_km": 0,
+          "y_km": 0,
+          "residents_k": 12,
+          "workers_k": 90,
+          "students_k": 15,
+          "income_index": 115,
+          "transit_index": 0.95,
+          "competitors": 9,
+          "rent_month": 22000
+        },
+        {
+          "id": "B",
+          "name": "University precinct",
+          "x_km": 2.5,
+          "y_km": 1.5,
+          "residents_k": 18,
+          "workers_k": 20,
+          "students_k": 40,
+          "income_index": 80,
+          "transit_index": 0.75,
+          "competitors": 6,
+          "rent_month": 12000
+        },
+        {
+          "id": "C",
+          "name": "Suburban rail interchange",
+          "x_km": 9,
+          "y_km": -4,
+          "residents_k": 25,
+          "workers_k": 12,
+          "students_k": 5,
+          "income_index": 95,
+          "transit_index": 0.7,
+          "competitors": 4,
+          "rent_month": 10000
+        },
+        {
+          "id": "D",
+          "name": "Outer-suburb shopping centre",
+          "x_km": 18,
+          "y_km": 6,
+          "residents_k": 20,
+          "workers_k": 5,
+          "students_k": 2,
+          "income_index": 90,
+          "transit_index": 0.35,
+          "competitors": 2,
+          "rent_month": 8000
+        }
+      ],
+      "unit": "archetype candidate areas in one Australian state capital; people within 1 km (thousands), income index (city = 100), transit index (0-1), bubble-tea and cafe competitors within 500 m, rent A$ a month for one counter outlet; x, y schematic km",
+      "range": null,
+      "source": "assumption",
+      "rationale": "Scenario assumptions, not observations: illustrative archetypes chosen to differ on every feature so the ranking has something to rank. Replace with real suburbs and the sourced values listed in features.planned_source before any decision."
+    },
+    "features": {
+      "value": [
+        {
+          "key": "residents_k",
+          "label": "Residents within 1 km",
+          "proxy_for": "walk-in demand from people living nearby",
+          "planned_source": "national census, usual residents by small area",
+          "dir": 1
+        },
+        {
+          "key": "workers_k",
+          "label": "Workers within 1 km",
+          "proxy_for": "weekday lunch and after-work demand",
+          "planned_source": "census place-of-work counts",
+          "dir": 1
+        },
+        {
+          "key": "students_k",
+          "label": "Tertiary students within 1 km",
+          "proxy_for": "the young, app-first customer base",
+          "planned_source": "university and TAFE enrolment by campus",
+          "dir": 1
+        },
+        {
+          "key": "income_index",
+          "label": "Household income index",
+          "proxy_for": "willingness to pay for a premium tea",
+          "planned_source": "census median household income",
+          "dir": 1
+        },
+        {
+          "key": "transit_index",
+          "label": "Transit access",
+          "proxy_for": "footfall past the counter",
+          "planned_source": "public-transport timetable data, services per hour at the nearest stops",
+          "dir": 1
+        },
+        {
+          "key": "competitors",
+          "label": "Competitors within 500 m",
+          "proxy_for": "rival bubble-tea and cafe supply (lowers the score)",
+          "planned_source": "business listings or a map-places count",
+          "dir": -1
+        },
+        {
+          "key": "rent_month",
+          "label": "Rent, A$ a month",
+          "proxy_for": "local cost (lowers the score)",
+          "planned_source": "retail lease listings or an agent quote",
+          "dir": -1
+        }
+      ],
+      "unit": "candidate-area features: key, label, what it stands in for, where a real value would come from, direction in the score (+1 raises, -1 lowers)",
+      "range": null,
+      "source": "assumption",
+      "rationale": "Only features a market with no Chagee history can measure. planned_source names the kind of public data; none of it has been retrieved, so every value is a scenario assumption on the slides."
+    },
+    "excluded": {
+      "value": [
+        {
+          "label": "Chagee app searches nearby",
+          "why": "needs Chagee app users in the market"
+        },
+        {
+          "label": "Delivery orders from the area",
+          "why": "needs Chagee on the local delivery platforms"
+        },
+        {
+          "label": "Distance to the nearest Chagee outlet",
+          "why": "there is none yet"
+        },
+        {
+          "label": "Sales of existing Chagee outlets nearby",
+          "why": "there are none yet"
+        }
+      ],
+      "unit": "features left out of the profile",
+      "range": null,
+      "source": "assumption",
+      "rationale": "They need existing Chagee activity. Missing is unknown, not zero: they are left out, never set to zero, so no area is marked down for a gap every area shares."
+    },
+    "weights": {
+      "value": {
+        "residents_k": 1,
+        "workers_k": 1,
+        "students_k": 1,
+        "income_index": 0.5,
+        "transit_index": 1,
+        "competitors": 0.5,
+        "rent_month": 0.5
+      },
+      "unit": "relative weight per feature in the suitability score (0-2)",
+      "range": [
+        0,
+        2
+      ],
+      "source": "assumption",
+      "rationale": "Our judgement, illustrative. Slide 8B lets you move each; the sensitivity check re-ranks with each weight set to zero and doubled."
+    },
+    "sensitivity": {
+      "value": {
+        "low": 0,
+        "high": 2
+      },
+      "unit": "multipliers applied to one weight at a time",
+      "range": null,
+      "source": "assumption",
+      "rationale": "One-at-a-time sensitivity: each weight times zero (dropped) and times two; the rank range is reported per area."
+    },
+    "demand_scenarios": {
+      "value": "store.cups_per_store_per_year range and value / store.open_days_per_year",
+      "unit": "cups a day: low, base, high",
+      "range": null,
+      "source": "assumption",
+      "rationale": "Placeholder scale only: the Singapore per-outlet volume assumption (itself an assumption, not Chagee data) reused for every Australian area. The score does not set cups: without a calibration from real outlets, every area faces the same range."
+    },
+    "forecast_error": {
+      "value": [
+        -0.3,
+        0,
+        0.3
+      ],
+      "unit": "share by which the pre-opening forecast misses realised cups a day",
+      "range": [
+        -0.5,
+        0.5
+      ],
+      "source": "assumption",
+      "rationale": "Scenario assumption: before opening, the forecast cannot know actual demand. Under-forecast, exact, over-forecast."
+    },
+    "wage_per_hour": {
+      "value": 36,
+      "unit": "AUD per hour worked, fully loaded",
+      "range": [
+        30,
+        45
+      ],
+      "source": "assumption",
+      "rationale": "Scenario assumption, not sourced. Replace with the applicable award rate plus on-costs before use."
+    },
+    "machine_cost_per_unit_per_month": {
+      "value": 2000,
+      "unit": "AUD per station machine unit per month",
+      "range": [
+        700,
+        4000
+      ],
+      "source": "assumption",
+      "rationale": "Scenario assumption, not sourced; the Singapore figure is also an assumption and no exchange rate is applied."
+    },
+    "price_per_cup": {
+      "value": 8.5,
+      "unit": "AUD per cup, in store",
+      "range": [
+        7,
+        10
+      ],
+      "source": "assumption",
+      "rationale": "Scenario assumption, not sourced. Check menu prices in the pilot city."
+    },
+    "utilities_per_month": {
+      "value": 3000,
+      "unit": "AUD per outlet per month",
+      "range": [
+        2000,
+        4500
+      ],
+      "source": "assumption",
+      "rationale": "Scenario assumption, not sourced."
+    },
+    "setups": {
+      "value": [
+        "all_hand",
+        "heading"
+      ],
+      "unit": "storyboard.split_presets keys compared",
+      "range": null,
+      "source": "assumption",
+      "rationale": "Human-only against machine-made drink, as on slide 07; same station speeds and staffing rule (sim/counter.js)."
+    },
+    "cannibalisation": {
+      "value": {
+        "overlap_km": 5,
+        "max_share": 0.3
+      },
+      "unit": "for a second opening: share of a new outlet's cups taken from the pilot, falling linearly to zero at overlap_km",
+      "range": null,
+      "source": "assumption",
+      "rationale": "Scenario assumption. Zero for the first opening: no Chagee outlet is in any catchment."
+    },
+    "scan": {
+      "value": {
+        "from": 0.4,
+        "to": 1.6,
+        "step": 0.1
+      },
+      "unit": "realised cups a day as multiples of the base scenario",
+      "range": null,
+      "source": "assumption",
+      "rationale": "Range of the contribution chart on slide 8C."
+    },
+    "trigger_weeks": {
+      "value": 4,
+      "unit": "consecutive weeks a pilot signal must hold before acting",
+      "range": null,
+      "source": "assumption",
+      "rationale": "Our judgement, illustrative."
+    },
+    "day_mix": {
+      "value": {
+        "moderate": 104,
+        "large": 12
+      },
+      "unit": "busy and event days a year; the rest of store.open_days_per_year are normal days",
+      "range": null,
+      "source": "assumption",
+      "rationale": "Scenario assumption for the Australian pilot: busy days = weekend days; event days = a guess at local public holidays and events, not counted. Weights the year-average contribution on slide 8C."
+    }
   }
 }

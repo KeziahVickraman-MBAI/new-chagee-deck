@@ -349,6 +349,53 @@ def values(d: dict) -> dict:
         raise SystemExit("build: slide 08b says all inputs beat the new-market inputs, which beat the mean; rewrite it")
     v["x.sm_all_mae"], v["x.sm_all_r2"], v["x.sm_nm_mae"], v["x.sm_nm_r2"], v["x.sm_none_mae"] = al["mae"], al["r2"], nm_["mae"], nm_["r2"], no_["mae"]
     v["x.sm_n"] = len(SMd["rows"])
+    # slides 8A-8D, the new-market worked example (sim/newmarket.js via precompute.js; A$, scenario assumptions)
+    NMd, NMR = d["newMarket"], RAW["new_market"]
+    A_ = {a["id"]: a for a in NMR["areas"]["value"]}
+    sc = NMd["score"]; sens = NMd["sensitivity"]
+    contenders = [o["id"] for o in sc if sens["byArea"][o["id"]]["top"] > 0]
+    if len(contenders) < 2:
+        raise SystemExit("build: slide 8B says the top area changes with the weights; it no longer does, rewrite it")
+    last = sc[-1]["id"]
+    if sens["byArea"][last]["best"] != len(sc):
+        raise SystemExit("build: slide 8B says the last area trails under every weight setting; rewrite it")
+    v["s.nm_top"], v["s.nm_top_name"] = sc[0]["id"], sc[0]["name"]
+    v["s.nm_contenders"] = ", ".join(contenders[:-1]) + " and " + contenders[-1]
+    v["s.nm_last"], v["s.nm_last_name"] = last, A_[last]["name"]
+    v["x.nm_variants"], v["x.nm_top_count"] = sens["variants"], sens["byArea"][sc[0]["id"]]["top"]
+    v["x.nm_areas"] = len(sc)
+    v["x.nm_score_top"], v["x.nm_score_last"] = sc[0]["score"], sc[-1]["score"]
+    Dm = NMd["runs"]["demand"]
+    v["x.nm_d_low"], v["x.nm_d_base"], v["x.nm_d_high"] = Dm["low"], Dm["base"], Dm["high"]
+    E_ = NMR["forecast_error"]["value"]
+    v["x.nm_err"] = max(abs(e) for e in E_)
+    v["x.nm_wage"], v["x.nm_machine"], v["x.nm_price"] = NMR["wage_per_hour"]["value"], NMR["machine_cost_per_unit_per_month"]["value"], NMR["price_per_cup"]["value"]
+    v["x.nm_wage_lo"], v["x.nm_wage_hi"] = NMR["wage_per_hour"]["range"]
+    v["x.nm_rent"] = A_[NMd["pilot"]]["rent_month"]
+    v["x.nm_weeks"] = NMR["trigger_weeks"]["value"]
+    v["x.nm_overlap_km"], v["x.nm_cann_max"] = NMR["cannibalisation"]["value"]["overlap_km"], NMR["cannibalisation"]["value"]["max_share"]
+    Q = NMd["quote"]; rb = Q["robust"]; other = [k for k in Q["setups"] if k != rb][0]
+    lab = {"all_hand": "human-only", "heading": "machine-made drink"}
+    v["s.nm_robust"], v["s.nm_other"] = lab[rb], lab[other]
+    v["s.nm_pilot"], v["s.nm_pilot_name"] = NMd["pilot"], A_[NMd["pilot"]]["name"]
+    if NMd["flipMachine"] is None or rb != "heading":
+        raise SystemExit("build: slides 8C-8D say machine-made drink is the safer start until a machine unit costs about A$X a month; rewrite them")
+    v["x.nm_flip_machine"] = NMd["flipMachine"]
+    if NMd["flipWage"] is not None:
+        raise SystemExit("build: slide 8C says machine-made drink stays ahead across the whole wage range; it no longer does, rewrite it")
+    for k, nm in (("all_hand", "hand"), ("heading", "mdd")):
+        S_ = Q["setups"][k]; be = NMd["breakEven"][k]
+        v[f"x.nm_be_{nm}"], v[f"x.nm_be_{nm}_wo"] = be["withAI"], be["withoutAI"]
+        v[f"x.nm_worst_{nm}"] = NMd["worst"][k]
+        for w_, r in (("wo", S_["without"]), ("ai", S_["ai"]["0"]), ("aim", S_["ai"][str(min(E_))]), ("aip", S_["ai"][str(max(E_))])):
+            v[f"x.nm_{nm}_{w_}_staff"], v[f"x.nm_{nm}_{w_}_lost"], v[f"x.nm_{nm}_{w_}_wait"], v[f"x.nm_{nm}_{w_}_c"] = r["staff"], r["lostShare"], r["medianWait"], r["contribution"]
+        for n_ in ("low", "base", "high"):
+            v[f"x.nm_{nm}_year_{n_}"] = S_["year"][n_]
+    hs = Q["setups"]["all_hand"]
+    if not (hs["ai"]["0"]["lostShare"] < hs["without"]["lostShare"] and hs["ai"][str(min(E_))]["lostShare"] > hs["ai"]["0"]["lostShare"]):
+        raise SystemExit("build: slide 8C notes say AI staffing cuts human-only walk-aways and an under-forecast gives some back; rewrite them")
+    nx = sorted(Q["next"], key=lambda o: -o["score"])[0]
+    v["s.nm_next"], v["s.nm_next_name"], v["x.nm_next_cann"] = nx["id"], A_[nx["id"]]["name"], nx["cannibal"]
     return v
 
 
@@ -433,6 +480,43 @@ def appendix() -> str:
     return "\n".join(out)
 
 
+def nm_appendix() -> str:
+    """Appendix for slides 8A-8D: every new_market input, the method, and what we do not claim."""
+    esc = lambda s: str(s).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+    N = RAW["new_market"]
+    out = ["<h5>Status</h5>", f"<p>{esc(N['_note']['rationale'])} Market status: {esc(N['market_status']['value'])}.</p>",
+           "<h5>Candidate areas (archetypes, scenario assumptions)</h5>"]
+    F = N["features"]["value"]
+    for a in N["areas"]["value"]:
+        out.append(f"<p><b>{esc(a['id'])} · {esc(a['name'])}</b>: " + ", ".join(f"{esc(f['label'].lower())} {short(a[f['key']])}" for f in F) + "</p>")
+    out.append("<h5>Features and where real values would come from (none retrieved)</h5>")
+    for f in F:
+        out.append(f"<p><b>{esc(f['label'])}</b>: stands in for {esc(f['proxy_for'])}; source to pull: {esc(f['planned_source'])}.</p>")
+    out.append("<p><b>Left out</b>: " + "; ".join(f"{esc(x['label'].lower())} ({esc(x['why'])})" for x in N["excluded"]["value"]) +
+               f". {esc(N['excluded']['rationale'])}</p>")
+    out.append("<h5>Inputs (assumptions.json new_market)</h5>")
+    for k in ("weights", "sensitivity", "demand_scenarios", "forecast_error", "day_mix", "wage_per_hour", "machine_cost_per_unit_per_month",
+              "price_per_cup", "utilities_per_month", "setups", "cannibalisation", "trigger_weeks", "currency"):
+        o = N[k]; unit = "" if o.get("unit") == "text" else o.get("unit", "")
+        rng = f" (range {short(o['range'])})" if o.get("range") else ""
+        out.append(f"<p><b>{esc(k.replace('_', ' '))}</b>: {esc(short(o['value']))} {esc(unit)}{esc(rng)}. {esc(o['rationale'])}</p>")
+    out.append("<p><b>Reused from the Singapore sections, labelled where used</b>: gross margin per cup (storyboard), the per-outlet volume range "
+               "(store) as the placeholder demand scale, open hours and days, the hourly demand shape, day-type multipliers, station seconds, "
+               "staffing rule and minimum crews (sim/counter.js, unchanged).</p>")
+    out.append("<h5>Method (sim/newmarket.js)</h5>")
+    out.append("<p><b>Score</b>: each feature min-max scaled across the areas (turned round for competitors and rent), weighted mean out of 100. "
+               "<b>Sensitivity</b>: each weight dropped, then doubled, one at a time. <b>Counter</b>: equipment sized for the base scenario; "
+               "realised demand reaches the peak hour as a multiplier on the base arrivals; without AI, one crew all day, set for a normal day's "
+               "planned peak; with AI, the forecast roster for the day type, the forecast missing realised demand by the stated error. "
+               "<b>Contribution</b>: served cups x price x margin, less labour, machine units, rent and utilities, a day; the peak-hour walk-away "
+               "share is applied to the busiest hours, other hours assumed served. <b>Worst case</b>: the lowest year-average contribution over "
+               "demand scenarios and forecast errors, with AI staffing.</p>")
+    out.append("<h5>Claims we did not make</h5>")
+    out.append("<p>No Australian data and no Chagee data are used. The areas are archetypes, not suburbs. The score is not a sales forecast; "
+               "the slide 08b model is not validated for Australia. No figure on slides 8A to 8D feeds slides 01 to 11 or the benefit.</p>")
+    return "\n".join(out)
+
+
 # ---------------------------------------------------------------------------- appendix: machine tiers (slide 08)
 STEP = {"ticket": "Order and tag", "cup_ice": "Cup and ice", "tea_milk": "Tea and milk", "topping_finish": "Toppings",
         "shake_seal": "Shake and seal", "handover": "Hand-over"}
@@ -511,14 +595,14 @@ def fill(text: str, vals: dict) -> str:
     return re.sub(r"\{\{([a-zA-Z_][\w.]*)(?:\|(\w+))?\}\}", rep, text)
 
 
-ALLOWED = re.compile(r"\b(?:19|20)\d\d\b|OPIM\s?639|Topic \d|\bT\d\b|\b0[1-9]b?\b|\b1\d(?= ·)|\bslides? 1\d\b|Week \d|\b1 (?=company|counter)|Group \d|Form 20-F")
+ALLOWED = re.compile(r"\b8[A-D]\b|\b(?:19|20)\d\d\b|OPIM\s?639|Topic \d|\bT\d\b|\b0[1-9]b?\b|\b1\d(?= ·)|\bslides? 1\d\b|Week \d|\b1 (?=company|counter)|Group \d|Form 20-F")
 
 
 def digit_check(tpl: str) -> None:
     body = tpl.split("<body", 1)[1]
     body = re.sub(r"<script[\s\S]*?</script>|<style[\s\S]*?</style>|<!--[\s\S]*?-->", " ", body)
     body = re.sub(r'<span class="(?:n|num)">\d</span>', " ", body)              # step numbers
-    body = re.sub(r'<span class="no">\d\d</span>', " ", body)                   # agenda chapter numbers
+    body = re.sub(r'<span class="no">(?:\d\d|8[A-D])</span>', " ", body)        # agenda chapter numbers
     body = re.sub(r"\{\{[^}]*\}\}|\{img:[\w]+\}|<[^>]*>", " ", body)        # placeholders, tags (with attributes)
     bad = [m for m in re.finditer(r"\d", ALLOWED.sub(" ", body))]
     if bad:
@@ -536,8 +620,8 @@ def build() -> Path:
     html = fill(tpl, vals)
     imgs = images()
     html = re.sub(r"\{img:(\w+)\}", lambda m: imgs[m.group(1)], html)
-    html = html.replace("<!--APPENDIX-->", appendix()).replace("<!--TIERS-->", tiers_table())
-    js = "\n".join((ROOT / "sim" / f).read_text(encoding="utf-8") for f in ("sim.js", "store.js", "counter.js", "sitepick.js", "ladder.js", "benefit.js", "siteext.js", "sitemodel.js"))
+    html = html.replace("<!--APPENDIX-->", appendix()).replace("<!--NMAPPENDIX-->", nm_appendix()).replace("<!--TIERS-->", tiers_table())
+    js = "\n".join((ROOT / "sim" / f).read_text(encoding="utf-8") for f in ("sim.js", "store.js", "counter.js", "sitepick.js", "ladder.js", "benefit.js", "siteext.js", "sitemodel.js", "newmarket.js"))
     js += "\n" + (HERE / "deck.js").read_text(encoding="utf-8")
     payload = {"RAW": RAW, "DATA": d, "GEO": json.loads((ROOT / "sim" / "sg_geo.json").read_text(encoding="utf-8")),
                "MAP": imgs["sg_map_crop"],
