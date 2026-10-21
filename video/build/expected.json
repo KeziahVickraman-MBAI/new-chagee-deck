@@ -1,0 +1,15 @@
+{
+  "day": "large",
+  "seed": 639,
+  "minutes": 20,
+  "A": {
+    "served": 24,
+    "queue": 7,
+    "walkedAway": 31
+  },
+  "B": {
+    "served": 58,
+    "queue": 0,
+    "walkedAway": 0
+  }
+}

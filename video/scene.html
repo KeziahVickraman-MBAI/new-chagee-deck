@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Counter Video</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@500;600&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root { --bg:#E7E3DC; --ink:#262626; --taupe:#9A9387; }
+  html,body { margin:0; height:100%; background:var(--bg); color:var(--ink); font-family:Roboto,system-ui,sans-serif; }
+  body { display:flex; flex-direction:column; align-items:center; justify-content:center; }
+  canvas { display:block; width:min(100vw, calc((100vh - 40px) * 16 / 9)); aspect-ratio:16/9; background:#F6F3ED; }
+  .bar { height:40px; display:flex; gap:12px; align-items:center; font-size:13px; color:var(--taupe); }
+  .bar button { font:inherit; padding:4px 10px; border:1px solid #CFC6B5; background:#fff; border-radius:6px; cursor:pointer; }
+  body.capture .bar { display:none; }
+  body.capture canvas { width:1920px; height:1080px; }
+  @media print { .bar { display:none; } canvas { width:100%; } }
+</style>
+</head>
+<body>
+<canvas id="c" width="1920" height="1080"></canvas>
+<div class="bar"><button id="pp">❚❚ Pause</button><span>Space: play / pause · ← →: step one second</span></div>
+<script src="build/trace.js"></script>
+<script src="scene.js"></script>
+</body>
+</html>
