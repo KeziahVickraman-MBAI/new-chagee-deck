@@ -664,7 +664,7 @@
         <div class="big">+${Math.round(f.netNew).toLocaleString("en-SG")}<small>cups a day for Chagee</small></div>
         <div class="why2">The new store sells ${Math.round(f.cups)} a day (${(f.cups / avg).toFixed(1)}× an average outlet). ${Math.round(f.cannibal)} of those move from outlets nearby${f.hit.length ? ":" : "."}</div>
         <dl>${f.hit.slice(0, 2).map(h => `<dt title="${Math.round(M.storeCups[h.j])} → ${Math.round(M.storeCups[h.j] - h.cups)} cups a day">${oname(h.j)}, ${h.km.toFixed(1)} km</dt><dd>−${Math.round(h.cups)}</dd>`).join("")}</dl>
-        <div class="peak">Peak hour ${hourLabel(pf.peak)}: <b>${Math.round(pf.peakCups)} cups</b> → <b>${pf.peakStaff} ${pf.peakStaff === 1 ? "person" : "people"}</b> on today's counter (slides 06–07).</div>
+        <div class="peak">Peak hour ${hourLabel(pf.peak)}: <b>${Math.round(pf.peakCups)} cups</b> → <b>${pf.peakStaff} ${pf.peakStaff === 1 ? "person" : "people"}</b> on today's counter (slides 08–09).</div>
         <button class="btn primary screenonly pnlb" data-act="pnl" title="Five years of this outlet here against beside the nearest outlet">What does this mean for P&amp;L?</button>`;
       if (pnlOn) pnlRender();
       $$(ctlEl, "[data-v]").forEach(el => { const d = sl.find(x => x[0] === el.dataset.v); el.textContent = d[4](par[d[0]]); });
@@ -1175,8 +1175,8 @@
         `<label class="screenonly" style="display:grid;grid-template-columns:1fr auto;font:11px var(--sans);color:${COL.ink2}">Stores to place<span class="val">${K}</span><input type="range" data-k="K" min="1" max="${CT.stores_max}" step="1" value="${K}" style="grid-column:1/-1;accent-color:${COL.navy}"></label>` +
         `<ol>${picks.map(row).join("")}</ol>` + pr +
         (stuck.length ? `<p class="warn">${stuck.map(k => F.find(x => x.key === k).label).join(", ")}: the city has none, so these inputs push the forecast outside what the model learned. Switch ${stuck.length > 1 ? "them" : "it"} off.</p>` : "") +
-        `<p style="font:10.5px/1.35 var(--sans);color:${COL.taupe};margin:3px 0 0">Cups a day, forecast ± average miss. Break-even ≈ ${n(beCups)} at Singapore costs (slide 09), a stand-in. Picks ≥ ${RING} km apart.</p>` +
-        `<button class="btn use screenonly" data-act="use">Send site 1 to slide 09 →</button>`;
+        `<p style="font:10.5px/1.35 var(--sans);color:${COL.taupe};margin:3px 0 0">Cups a day, forecast ± average miss. Break-even ≈ ${n(beCups)} at Singapore costs (the pin-to-profit slide), a stand-in. Picks ≥ ${RING} km apart.</p>` +
+        `<button class="btn use screenonly" data-act="use">Send site 1 to pin to profit →</button>`;
     }
     $(sl, ".smcity").addEventListener("click", ev => {
       const svg = ev.currentTarget, mp = svg._map, pt = svg.createSVGPoint(); pt.x = ev.clientX; pt.y = ev.clientY;
@@ -1266,7 +1266,7 @@
 
     // slide 09: sliders on the decision inputs, a live waterfall and the call
     const ctl = $(s9, ".xctl"), svg9 = $(s9, ".xwf"), rec = $(s9, ".xrec"), rangeP = $(s9, ".xrange");
-    const IN = [["cups", "Cups a day (slide 11's range)", Math.round(e0.cups.lo), Math.round(e0.cups.hi), 1, v => `${Math.round(v)}`],
+    const IN = [["cups", "Cups a day (the benefit slide's range)", Math.round(e0.cups.lo), Math.round(e0.cups.hi), 1, v => `${Math.round(v)}`],
                 ["rent", "Rent a month", ...X.rent_per_month.range, 500, v => sm(v)],
                 ["deliveryShare", "Share of cups via delivery apps", ...X.delivery_share_of_cups.range, 0.01, v => pct(v)],
                 ["setup", "Set-up cost (one-off)", ...X.setup_cost.range, 5000, v => sm(v)]];
@@ -1302,7 +1302,7 @@
         : `positive at ${Math.round(st.cups)} cups a day, negative at ${Math.round(e0.cups.lo)}, the low end: test it before a full lease`;
       ["open", "pilot", "skip"].forEach(k => rec.classList.toggle(k, k === A.rec));
       rec.innerHTML = `<div class="k">Step 6 · Recommendation</div><div class="call">${A.rec[0].toUpperCase() + A.rec.slice(1)}</div><div>${why}.</div>` +
-        `<dl><dt>Site score</dt><dd>${Math.round(score())} / 100 (slide 08)</dd>` +
+        `<dl><dt>Site score</dt><dd>${Math.round(score())} / 100 (four scores)</dd>` +
         `<dt>Payback</dt><dd>${A.payback ? `≈ ${Math.round(A.payback.base)} months on ${sm(st.setup)}` : "none: not profitable"}</dd></dl>`;
     }
     fns.push(profit);
@@ -1688,7 +1688,7 @@
         s += T(L, 11, "without squads", `font-size="10" fill="${COL.taupe}"`) + T(L + 84, 11, "with squads", `font-size="10" font-weight="700" fill="${COL.navy}"`) + T(W - R, 11, `effort ${f2(pw)}`, `font-size="10" fill="${COL.red}" text-anchor="end"`);
         svg.innerHTML = s;
         const tp = e => (e ? pct(e.low) : "none (stalls)");
-        $(m2, ".mbtake .t").innerHTML = `At M1's effort of <b>${f2(p)}</b>, squads (assumed k ${f2(k)} → ${f2(kw)})${inc.checked ? ` plus a launch incentive (effort → ${f2(pw)})` : ""} would move the tipping point from <b>${tp(e0)}</b> to <b>${tp(e1)}</b>` +
+        $(m2, ".mbtake .t").innerHTML = `At slide 05's effort of <b>${f2(p)}</b>, squads (assumed k ${f2(k)} → ${f2(kw)})${inc.checked ? ` plus a launch incentive (effort → ${f2(pw)})` : ""} would move the tipping point from <b>${tp(e0)}</b> to <b>${tp(e1)}</b>` +
           (!e0 && e1 ? `: without squads the app never takes off; with them it can.` : e0 && e1 ? `: fewer friends need to be on before joining feels worth it.` : `.`) + ` Assumptions to test, not measured effects.`;
       }
       inc.addEventListener("change", model);

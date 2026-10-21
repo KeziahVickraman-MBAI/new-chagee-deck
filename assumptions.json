@@ -46,7 +46,7 @@
     "I-sg-groundfloor": "INFORMAL - quote in the team's ideation doc (Chagee Singapore's Lee: 'Whenever you see a Chagee, it's always on the first floor'; kiosk-style outlets in basements and MRT stations at entry in 2019). The article is not named in the doc; confirm the source before quoting.",
     "I-team-automation": "INFORMAL - team research (Oct 2026): Chagee's counters are heading towards machines making the drink while people tag the order and hand it over; consistent with I-leeyen's 'push towards app-to-machine automation, sub-one-minute fulfilment'. Source to be added before it is cited on a slide.",
     "I-team-app-first": "INFORMAL - team observation in the ideation doc: Chagee Singapore sells mainly through its app, with minimal order kiosks in outlets. Confirm before citing. SUPERSEDED on slide 01 (22 Oct 2026) by P-appstore, P-vulcanpost-comeback and L-sec20f-data; the app's share of orders stays to confirm.",
-    "L-ester1996": "Ester, M., Kriegel, H.-P., Sander, J. and Xu, X. (1996). A density-based algorithm for discovering clusters in large spatial databases with noise. Proceedings of the Second International Conference on Knowledge Discovery and Data Mining (KDD-96), 226-231. The DBSCAN algorithm used on slide 05.",
+    "L-ester1996": "Ester, M., Kriegel, H.-P., Sander, J. and Xu, X. (1996). A density-based algorithm for discovering clusters in large spatial databases with noise. Proceedings of the Second International Conference on Knowledge Discovery and Data Mining (KDD-96), 226-231. The DBSCAN algorithm used on slide 10.",
     "I-chagee-contact": "CHAGEE SOURCE, ANONYMOUS (Oct 2026): a Chagee source who asked not to be named; do not identify them. Four points only: whether Singapore outlets are owned, a joint venture or franchised does not matter for this work, because the data sits in one system; Singapore outlets run under one company and one data system; all delivery is via third-party apps; people are deployed on local expertise: the GM and outlet teams make the staffing calls.",
     "P-honeycombers": "PRESS - in-store sightings, indicative. Honeycombers (Feb 2026), https://thehoneycombers.com/singapore/china-bubble-tea-brand-singapore/ : Chagee price sightings in Singapore; not a current full menu.",
     "P-eatbook": "PRESS - in-store sightings, indicative. Eatbook (Aug 2024), https://eatbook.sg/?p=168476 : Chagee price sightings in Singapore; not a current full menu, and older than the deck.",
@@ -1050,7 +1050,7 @@
         6.9
       ],
       "source": "P-honeycombers, P-eatbook",
-      "rationale": "Honeycombers (Feb 2026) and Eatbook (Aug 2024) in-store sightings; indicative, not a current full menu. Slide 10 only: revenue of an order not lost."
+      "rationale": "Honeycombers (Feb 2026) and Eatbook (Aug 2024) in-store sightings; indicative, not a current full menu. The GM's playbook only: revenue of an order not lost."
     },
     "gross_margin_per_cup": {
       "value": 0.6,
@@ -1060,25 +1060,25 @@
         0.7
       ],
       "source": "assumption",
-      "rationale": "Our assumption; Chagee does not disclose; 70% is a team estimate, unsourced. Low 0.50, base 0.60, high 0.70. Slide 10 only."
+      "rationale": "Our assumption; Chagee does not disclose; 70% is a team estimate, unsourced. Low 0.50, base 0.60, high 0.70. The GM's playbook only."
     },
     "busy_days_per_year": {
       "value": 104,
       "unit": "busy days a year (day type 'moderate')",
       "range": null,
       "source": "assumption",
-      "rationale": "Illustrative definition, to confirm with Chagee: busy days = weekend days (52 x 2). An input on slide 10, not a measured count."
+      "rationale": "Illustrative definition, to confirm with Chagee: busy days = weekend days (52 x 2). An input on the GM's playbook, not a measured count."
     },
     "event_days_per_year": {
       "value": 11,
       "unit": "event days a year (day type 'large')",
       "range": null,
       "source": "assumption",
-      "rationale": "Illustrative definition, to confirm with Chagee: event days = Singapore public holidays. An input on slide 10, not a measured count."
+      "rationale": "Illustrative definition, to confirm with Chagee: event days = Singapore public holidays. An input on the GM's playbook, not a measured count."
     }
   },
   "sitepick": {
-    "_note": "Slide 05 new-store forecast only (sim/sitepick.js). SYNTHETIC app demand on the team's Singapore map (sim/sg_geo.json, image pixels). Never feeds the cost model. Hub positions are the map's place labels; weights are illustrative, not population data.",
+    "_note": "Slide 10 new-store forecast only (sim/sitepick.js). SYNTHETIC app demand on the team's Singapore map (sim/sg_geo.json, image pixels). Never feeds the cost model. Hub positions are the map's place labels; weights are illustrative, not population data.",
     "km_per_px": {
       "value": 0.033,
       "unit": "km per map pixel",
@@ -1349,11 +1349,11 @@
       "unit": "toy points in a 600 x 330 box",
       "range": null,
       "source": "assumption",
-      "rationale": "Explainer only: a small made-up point set for the 'How it works' walkthrough on slide 05 and the appendix figure, so each DBSCAN step is visible. Not used by any forecast."
+      "rationale": "Explainer only: a small made-up point set for the 'How it works' walkthrough on slide 10 and the appendix figure, so each DBSCAN step is visible. Not used by any forecast."
     }
   },
   "site_ext": {
-    "_note": "Slides 08 and 09 only (extension: Jin's site-selection framework, I-team-site-framework). Singapore only. Illustrative, synthetic data, not Chagee data. Never feeds the benefit (slide 11), the cost model or any decision check. Cups a day, price and margin are NOT here: they are the benefit slide's inputs (store.cups_per_store_per_year, storyboard.price_per_cup, storyboard.gross_margin_per_cup), and the build fails if slide 09 shows other values.",
+    "_note": "The four-scores and pin-to-profit slides only (things to consider: Jin's site-selection framework, I-team-site-framework). Singapore only. Illustrative, synthetic data, not Chagee data. Never feeds the benefit, the cost model or any decision check. Cups a day, price and margin are NOT here: they are the benefit slide's inputs (store.cups_per_store_per_year, storyboard.price_per_cup, storyboard.gross_margin_per_cup), and the build fails if slide 09 shows other values.",
     "scores": {
       "value": {
         "demand": 84,
@@ -1455,14 +1455,14 @@
       "unit": "text",
       "range": null,
       "source": "assumption",
-      "rationale": "Anonymised display labels for look-alike outlets on slide 09. Not real outlets; the look-alike step is not run here."
+      "rationale": "Anonymised display labels for look-alike outlets on the pin-to-profit slide. Not real outlets; the look-alike step is not run here."
     },
     "recommendation_rule": {
       "value": "open if net monthly profit to Chagee is positive at the low end of the cups-a-day range; pilot if positive at the default but not at the low end; skip if not positive at the default",
       "unit": "text",
       "range": null,
       "source": "assumption",
-      "rationale": "Derives slide 09's recommendation from the computed numbers."
+      "rationale": "Derives the pin-to-profit slide's recommendation from the computed numbers."
     },
     "model": {
       "value": {
@@ -1473,14 +1473,14 @@
       "unit": "ridge penalty on standardised features; delivery radius km; cap on distance to the nearest outlet km",
       "range": null,
       "source": "assumption",
-      "rationale": "Slide 08b's supervised model (sim/sitemodel.js): ridge regression trained on the slide 05 engine's synthetic outlet cups a day, tested by leave-one-out. A small penalty keeps the fit stable with few outlets. Illustrative; not trained on Chagee data."
+      "rationale": "The supervised site model (sim/sitemodel.js): ridge regression trained on the slide 10 engine's synthetic outlet cups a day, tested by leave-one-out. A small penalty keeps the fit stable with few outlets. Illustrative; not trained on Chagee data."
     },
     "new_market_inputs": {
       "value": [
         "pop",
         "hubKm"
       ],
-      "unit": "feature keys a market with no Chagee history would have (preset on slide 08b)",
+      "unit": "feature keys a market with no Chagee history would have (preset on the supervised site model)",
       "range": null,
       "source": "assumption",
       "rationale": "Our assumption: population and town-centre distance exist anywhere; delivery-area demand depends on platform data (to confirm); app searches and the outlet network do not exist before Chagee opens."
@@ -1529,23 +1529,23 @@
       "unit": "a hypothetical city: km, town centres and weights; grid spacing km; stores to place (default and maximum)",
       "range": null,
       "source": "assumption",
-      "rationale": "Slide 08b's new-market proxy: a made-up city, not a real place. Its population dots are generated at Singapore's synthetic density (same dots per unit of town weight and same even background per km2 as the slide 05 events), so the model's inputs mean the same thing in both. With real data, a census population grid and real town centres replace it."
+      "rationale": "The supervised site model's proxy for a new market: a made-up city, not a real place. Its population dots are generated at Singapore's synthetic density (same dots per unit of town weight and same even background per km2 as the slide 10 events), so the model's inputs mean the same thing in both. With real data, a census population grid and real town centres replace it."
     }
   },
   "new_market": {
     "_note": {
-      "value": "Slides 8A-8D",
+      "value": "New-market slides (things to consider)",
       "unit": "text",
       "range": null,
       "source": "assumption",
-      "rationale": "Australia worked example, kept separate from every other section: nothing here feeds slides 01-11 and nothing in them is changed. Every Australian input is a scenario assumption; no Australian data has been retrieved for this deck. Archetype areas stand in for real suburbs until Census and market data are pulled."
+      "rationale": "Australia worked example, kept separate from every other section: nothing here feeds the main story (slides 01 to 10) or the benefit and nothing in them is changed. Every Australian input is a scenario assumption; no Australian data has been retrieved for this deck. Archetype areas stand in for real suburbs until Census and market data are pulled."
     },
     "currency": {
       "value": "AUD",
       "unit": "text",
       "range": null,
       "source": "assumption",
-      "rationale": "Every money figure on slides 8A-8D is in Australian dollars (A$). No exchange rate is applied to any Singapore figure."
+      "rationale": "Every money figure on the new-market slides and the new-market pilot slide is in Australian dollars (A$). No exchange rate is applied to any Singapore figure."
     },
     "market_status": {
       "value": "no local Chagee operating history (assumed for this worked example)",
@@ -1711,7 +1711,7 @@
         2
       ],
       "source": "assumption",
-      "rationale": "Our judgement, illustrative. Slide 8B lets you move each; the sensitivity check re-ranks with each weight set to zero and doubled."
+      "rationale": "Our judgement, illustrative. The new-market ranking slide lets you move each; the sensitivity check re-ranks with each weight set to zero and doubled."
     },
     "sensitivity": {
       "value": {
@@ -1792,7 +1792,7 @@
       "unit": "storyboard.split_presets keys compared",
       "range": null,
       "source": "assumption",
-      "rationale": "Human-only against machine-made drink, as on slide 07; same station speeds and staffing rule (sim/counter.js)."
+      "rationale": "Human-only against machine-made drink, as on slide 09; same station speeds and staffing rule (sim/counter.js)."
     },
     "cannibalisation": {
       "value": {
@@ -1813,7 +1813,7 @@
       "unit": "realised cups a day as multiples of the base scenario",
       "range": null,
       "source": "assumption",
-      "rationale": "Range of the contribution chart on slide 8C."
+      "rationale": "Range of the contribution chart on the new-market setup slide."
     },
     "trigger_weeks": {
       "value": 4,
@@ -1830,16 +1830,16 @@
       "unit": "busy and event days a year; the rest of store.open_days_per_year are normal days",
       "range": null,
       "source": "assumption",
-      "rationale": "Scenario assumption for the Australian pilot: busy days = weekend days; event days = a guess at local public holidays and events, not counted. Weights the year-average contribution on slide 8C."
+      "rationale": "Scenario assumption for the Australian pilot: busy days = weekend days; event days = a guess at local public holidays and events, not counted. Weights the year-average contribution on the new-market setup slide."
     }
   },
   "pnl": {
     "_note": {
-      "value": "Slide 05 P&L view",
+      "value": "The GM's playbook P&L view",
       "unit": "text",
       "range": null,
       "source": "assumption",
-      "rationale": "Five-year projection of the same new outlet at two sites (slide 05): beside the existing outlet nearest the selected site, without AI, and the selected site, with AI-assisted site selection. Same opening date, equipment and staffing rule in both, so only the site differs. Illustrative scenarios, not demonstrated causal gains from AI. Nothing here feeds the benefit or any other slide."
+      "rationale": "Five-year projection of the same new outlet at two sites (slide 10): beside the existing outlet nearest the selected site, without AI, and the selected site, with AI-assisted site selection. Same opening date, equipment and staffing rule in both, so only the site differs. Illustrative scenarios, not demonstrated causal gains from AI. Nothing here feeds the benefit or any other slide."
     },
     "years": {
       "value": 5,
@@ -1934,7 +1934,7 @@
   },
   "members": {
     "_note": {
-      "value": "Slides M1-M3, candidate chapter",
+      "value": "Slides 10-09, part one: grow demand",
       "unit": "text",
       "range": null,
       "source": "assumption",
@@ -1964,7 +1964,7 @@
           "excerpt": "downward pressure downward pressure upward pressure unstable equilibrium (critical point / tipping point) stable equilibrium The value z′ is the hump the firm must get over in order to succeed."
         }
       ],
-      "unit": "verbatim quotes on slide M1, each with the source text it was checked against (excerpt)",
+      "unit": "verbatim quotes on slide 05, each with the source text it was checked against (excerpt)",
       "range": null,
       "source": "see source_id",
       "rationale": "Tests require each quote to be an exact substring of its excerpt. Dropped: the Q1 2026 'active members' quote, which we could not check against a source we hold."
@@ -2059,7 +2059,7 @@
         "incentive": 0.0,
         "z0": 0.35
       },
-      "unit": "opening state of slide M2's sliders",
+      "unit": "opening state of slide 06's sliders",
       "range": null,
       "source": "assumption",
       "rationale": "Display only."
@@ -2141,7 +2141,7 @@
     },
     "example_interest": {
       "value": 0.5,
-      "unit": "interest r of the one customer drawn on slide M1, steps one and two",
+      "unit": "interest r of the one customer drawn on slide 05, steps one and two",
       "range": null,
       "source": "assumption",
       "rationale": "Display only: a middling customer, to separate one customer's benefit from the equilibrium curve."
@@ -2165,7 +2165,7 @@
       "unit": "illustrative rules and copy for the M2 prototype: points for your own drink, points every member gets for each drink in a group order, the member's points now and for the next tier, tier names, personas",
       "range": null,
       "source": "assumption, not Chagee data",
-      "rationale": "Our illustrative rules for the proposed experience, used consistently on slide M2. Not Chagee's membership rules, which are to confirm. The group-order credit is members.group_credit_share. No real messages, purchases or accounts."
+      "rationale": "Our illustrative rules for the proposed experience, used consistently on slide 06. Not Chagee's membership rules, which are to confirm. The group-order credit is members.group_credit_share. No real messages, purchases or accounts."
     }
   }
 }

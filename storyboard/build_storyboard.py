@@ -467,7 +467,7 @@ USED = [  # (section, key, label) shown in the appendix: every input the storybo
     ("costs", "machine_cost_per_unit_per_month", "Robot cost per station unit per month (SGD)"),
     ("people", "all_machine_attendant_per_open_hour", "Attendant hours, all-robot counter"),
     ("storyboard", "walkaway_target", "Walk-away limit for the GM's split table"),
-    ("sitepick", "events", "Synthetic app-intent dots (slide 05)"),
+    ("sitepick", "events", "Synthetic app-intent dots (slide 10)"),
     ("sitepick", "walk_km", "Walking distance to collect"),
     ("sitepick", "decay_share", "Distance decay, share of the walking distance"),
     ("sitepick", "outside_option", "Pull of not buying"),
@@ -475,18 +475,18 @@ USED = [  # (section, key, label) shown in the appendix: every input the storybo
     ("sitepick", "dbscan_min_points", "DBSCAN minimum searches"),
     ("sitepick", "km_per_px", "Map scale"),
     ("service", "target_wait_minutes", "Wait at which a customer walks away"),
-    ("storyboard", "price_per_cup", "Price per cup, in store (slides 09, 11)"),
-    ("storyboard", "gross_margin_per_cup", "Margin per cup, share of price (slides 09, 11)"),
-    ("storyboard", "busy_days_per_year", "Busy days a year (slide 11, illustrative)"),
-    ("storyboard", "event_days_per_year", "Event days a year (slide 11, illustrative)"),
+    ("storyboard", "price_per_cup", "Price per cup, in store (pin to profit, the benefit slide)"),
+    ("storyboard", "gross_margin_per_cup", "Margin per cup, share of price (pin to profit, the benefit slide)"),
+    ("storyboard", "busy_days_per_year", "Busy days a year (the benefit slide, illustrative)"),
+    ("storyboard", "event_days_per_year", "Event days a year (the benefit slide, illustrative)"),
     ("illustration", "walk_back_speed", "Walking-back speed (Week 5 units)"),
-    ("site_ext", "scores", "Site scores, hand-set (slides 08, 09, illustrative)"),
-    ("site_ext", "score_weights", "Site score weights (slide 09, illustrative)"),
-    ("site_ext", "rent_per_month", "Rent per outlet per month (slide 09, assumption, not Chagee data)"),
-    ("site_ext", "utilities_per_month", "Utilities per outlet per month (slide 09, assumption)"),
-    ("site_ext", "delivery_share_of_cups", "Share of cups via delivery apps (slide 09, assumption)"),
-    ("site_ext", "delivery_commission_share", "Delivery platform commission (slide 09, assumption)"),
-    ("site_ext", "setup_cost", "Set-up cost per new outlet (slide 09, assumption, not Chagee data)"),
+    ("site_ext", "scores", "Site scores, hand-set (four scores, pin to profit, illustrative)"),
+    ("site_ext", "score_weights", "Site score weights (pin to profit, illustrative)"),
+    ("site_ext", "rent_per_month", "Rent per outlet per month (pin to profit, assumption, not Chagee data)"),
+    ("site_ext", "utilities_per_month", "Utilities per outlet per month (pin to profit, assumption)"),
+    ("site_ext", "delivery_share_of_cups", "Share of cups via delivery apps (pin to profit, assumption)"),
+    ("site_ext", "delivery_commission_share", "Delivery platform commission (pin to profit, assumption)"),
+    ("site_ext", "setup_cost", "Set-up cost per new outlet (pin to profit, assumption, not Chagee data)"),
 ]
 
 
@@ -524,12 +524,12 @@ def appendix() -> str:
     out.append("<p>We make no claim about: <b>Singapore ownership structure</b> (an anonymous Chagee source says outlets run under one company and "
                "one data system, and that the ownership form does not matter here; I-chagee-contact); <b>delivery profit by channel</b>; "
                "<b>Chagee's own equipment cost</b> (not public); <b>gross margin per cup</b> (our assumption); "
-               "<b>Chagee's current rostering</b> beyond what an anonymous Chagee source told us (people are deployed on local expertise by the GM and outlet teams; slide 11's baseline is ours).</p>")
+               "<b>Chagee's current rostering</b> beyond what an anonymous Chagee source told us (people are deployed on local expertise by the GM and outlet teams; the benefit slide's baseline is ours).</p>")
     return "\n".join(out)
 
 
 def mb_appendix(d: dict) -> tuple:
-    """Appendix for slides M1-M3: derivation and parameters, scenario table; network check; break-even and inputs."""
+    """Appendix for slides 05-07 (members): derivation and parameters, scenario table; network check; break-even and inputs."""
     M, D = RAW["members"], d["members"]
     pc = lambda x: "none" if x is None else f"{round(100 * x)}%"
     gap = lambda n: "" if n["closed"] is None or n["sim"] is None else f"{100 * (n['sim'] - n['closed']):+.1f}"
@@ -572,7 +572,7 @@ def mb_appendix(d: dict) -> tuple:
 
 
 def nm_appendix() -> str:
-    """Appendix for slides 8A-8D: every new_market input, the method, and what we do not claim."""
+    """Appendix for the new-market slides (things to consider): every new_market input, the method, and what we do not claim."""
     esc = lambda s: str(s).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
     N = RAW["new_market"]
     out = ["<h5>Status</h5>", f"<p>{esc(N['_note']['rationale'])} Market status: {esc(N['market_status']['value'])}.</p>",
@@ -604,7 +604,7 @@ def nm_appendix() -> str:
                "demand scenarios and forecast errors, with AI staffing.</p>")
     out.append("<h5>Claims we did not make</h5>")
     out.append("<p>No Australian data and no Chagee data are used. The areas are archetypes, not suburbs. The score is not a sales forecast; "
-               "the slide 08b model is not validated for Australia. No figure on slides 8A to 8D feeds slides 01 to 11 or the benefit.</p>")
+               "the supervised site model is not validated for Australia. No figure on the new-market slides feeds the main story or the benefit.</p>")
     return "\n".join(out)
 
 
@@ -644,7 +644,7 @@ def tiers_table() -> str:
     for i, t in enumerate(T["tiers"], 1):
         if t["id"] == "arm":                                   # the baseline sits where it does on the slide ladder
             rows.append(f'<tr class="base"><td>–</td><td><b>{esc(base["label"])}</b></td>'
-                        f'<td><b>{", ".join(STEP[s] for s in mixed)}</b>. A scenario of ours (slides 06 and 07), not Chagee\'s disclosed setup</td>'
+                        f'<td><b>{", ".join(STEP[s] for s in mixed)}</b>. A scenario of ours (slides 08 and 09), not Chagee\'s disclosed setup</td>'
                         f'<td>Model: S${RAW["costs"]["machine_cost_per_unit_per_month"]["value"]:,.0f} a month per station unit</td>'
                         f'<td></td><td>{tag(base["reliability"])}</td><td>assumptions.json</td></tr>')
         n = len(t["examples"])
