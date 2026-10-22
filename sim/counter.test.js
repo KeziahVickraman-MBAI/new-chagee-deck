@@ -117,3 +117,14 @@ test("counter: the AI layer changes only the crew (normal-day roster vs the day'
     assert.deepEqual(N.without, N.with);                       // on a normal day the forecast is the normal roster
   }
 });
+
+test("counter: forecastError at zero error is the forecast roster; a lower forecast never adds people", () => {
+  const o = { day: "moderate", walkBack: 1, seeds: 2, mode: "brigade", errors: [-0.3, 0, 0.3], price: 6, margin: 0.6 };
+  const [lo, mid, hi] = C.forecastError(Sim, St, P, o), F = C.forecastDay(Sim, P, "moderate");
+  assert.equal(mid.staff, F.peakStaff);
+  assert.equal(mid.labourHours, F.staff.reduce((a, b) => a + b, 0));
+  assert.ok(lo.staff <= mid.staff && mid.staff <= hi.staff && lo.labourHours <= hi.labourHours);
+  const r = C.compare(Sim, St, P, { ...o, staff: mid.staff });       // same customers as the day's own run
+  assert.equal(mid.lostShare, r.lostShare);
+  assert.ok(RAW.storyboard.forecast_error_scenarios.value.includes(0));
+});

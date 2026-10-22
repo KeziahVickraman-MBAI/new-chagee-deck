@@ -89,3 +89,12 @@ test("members: contribution per member is zero at the break-even and negative wi
   close(MB.perMember(RAW, {}, 0), -b.price * b.credit * b.base);
   close(MB.perMember(RAW, {}, b.extra), b.mid.netPerMember);
 });
+
+test("members: the AI cost moves the break-even by exactly the personalisation hurdle", () => {
+  const a = RAW.members.ai_cost_per_member_month.value, b0 = MB.breakEven(RAW), b1 = MB.breakEven(RAW, { ai: a });
+  close(b1.mid.extraNeeded - b0.mid.extraNeeded, MB.aiHurdle(RAW, { ai: a }));
+  close(MB.perMember(RAW, { ai: a }, b1.mid.extraNeeded), 0, 1e-9);
+  close(MB.perMember(RAW, { ai: a }, 1) - MB.perMember(RAW, {}, 1), -a);
+  assert.equal(MB.aiHurdle(RAW, { ai: 0 }), 0);
+  assert.equal(MB.aiHurdle(RAW, { ai: a, credit: 0.7 }), null);
+});

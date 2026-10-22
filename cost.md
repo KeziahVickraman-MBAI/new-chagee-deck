@@ -132,8 +132,13 @@ These come out of the models. Quote them as "in our model".
 | 10 P&L · five years, without AI | net extra network sales / operating profit | S$2,228,403 / −S$630,386 |
 | 10 P&L · five years, with AI site selection | net extra network sales / operating profit / payback | S$7,525,983 / S$1,864,635 / 1.4 years |
 | 10 P&L · uplift | sales / operating profit over five years | S$5,297,581 / S$2,495,021 |
-| 08 · event day, walk-aways at the forecast roster | brigade / fixed best / fixed worst | 1.2% / 4.1% / 34.9% |
-| 08 · normal-day roster on an event day | walk-aways | 54% |
+| 08b · event day, walk-aways at the forecast roster | brigade / fixed best / fixed worst | 1.2% / 4.1% / 34.9% |
+| 08b · normal-day roster on an event day | walk-aways | 54% |
+| 08 · busy day, forecast too low by the step shown | error / peak crew (exact) / walk-aways (exact) | 15% low / 1 (2) / 21% (0.0%) |
+| 08 · event day, forecast too high | extra S$ a day | about S$15 |
+| 07 · break-even extra orders per member a month | squads alone / with personalised suggestions / personalisation's own hurdle | 0.18 / 0.20 / 0.02 (AI cost S$0.05 a member a month) |
+| 10b · customer access | share of cups from people with no outlet within walking distance: cluster site / beside an outlet | 98% / 47% |
+| 10b · downside, cluster site, low volume | five-year operating profit | S$32,255 |
 | 09 · one tea-and-milk machine vs today's split | S$ a day, range across day types | S$305–335 vs S$372–402 |
 | 09 · machine unit cost at which that flips | S$ a month | about S$905 |
 | To consider · pin to profit, site A, a month | net profit to Chagee / payback | S$16,011 / 25 months |
@@ -200,7 +205,7 @@ Every input in `assumptions.json`. **Key** is the path to change; **Range** is w
 | `demand.opening_hype_weeks` | 2 | weeks | [1, 6] | assumption | How long the hype lasts before demand settles. Illustrative. |
 | `demand.uncertainty_sweep` | {"from": 0.0, "to": 0.6, "step": 0.05} | half-width, share of base |  | assumption | x-axis of the crossover chart. Covers strong-signal to no-signal bands from slide 2. |
 
-### surge · used on: busy and event days: slides 08, 09 and the benefit slide
+### surge · used on: busy and event days: slides 08 to 09b and the benefit slide
 
 | Key | Value | Unit | Range | Status | Notes |
 |---|---|---|---|---|---|
@@ -208,7 +213,7 @@ Every input in `assumptions.json`. **Key** is the path to change; **Range** is w
 | `surge.surge_hours` | 2 | busiest forecast hours that get the surge |  | assumption | This number was only in the surge_multiplier rationale; it now has its own field so the code reads it from here. With the default curve these are 12:00-14:00 (ties go to the earlier hour). |
 | `surge.surge_default` | moderate | text |  | assumption | Default toggle position and printed state. |
 
-### stations · used on: counter replica: slides 08, 09
+### stations · used on: counter replica: slides 08b, 09, 09b
 
 | Key | Value | Unit | Range | Status | Notes |
 |---|---|---|---|---|---|
@@ -332,7 +337,7 @@ Every input in `assumptions.json`. **Key** is the path to change; **Range** is w
 | `validation.crossover_stability` | {"seeds": 20, "min_seeds_with_crossover": 18, "max_spread_pct_points": 10} | mixed |  | assumption | Pass if a crossover exists in at least 18 of 20 seeds and the crossover u differs by at most 10 percentage points across them. If it fails, the slide shows a crossover zone or none, not a single point. |
 | `validation.sensitivity` | one-at-a-time: each parameter with a non-null range set to its low then high value, all others at default; report crossover u (or none) and cost/cup at the slide 2 default u | text |  | assumption | Shows which assumptions decide the headline; feeds the 'what could shift the balance' panel and Q&A. No pass/fail. |
 
-### storyboard · used on: price, margin, day types, split table: slides 08-10 and things to consider
+### storyboard · used on: price, margin, day types, split table, forecast-error steps: slides 08-10b and things to consider
 
 | Key | Value | Unit | Range | Status | Notes |
 |---|---|---|---|---|---|
@@ -349,8 +354,9 @@ Every input in `assumptions.json`. **Key** is the path to change; **Range** is w
 | `storyboard.gross_margin_per_cup` | 0.6 | share of price (contribution per avoided order: price minus ingredients and packaging) | [0.5, 0.7] | assumption | Our assumption; Chagee does not disclose; 70% is a team estimate, unsourced. Low 0.50, base 0.60, high 0.70. The GM's playbook only. |
 | `storyboard.busy_days_per_year` | 104 | busy days a year (day type 'moderate') |  | assumption | Illustrative definition, to confirm with Chagee: busy days = weekend days (52 x 2). An input on the GM's playbook, not a measured count. |
 | `storyboard.event_days_per_year` | 11 | event days a year (day type 'large') |  | assumption | Illustrative definition, to confirm with Chagee: event days = Singapore public holidays. An input on the GM's playbook, not a measured count. |
+| `storyboard.forecast_error_scenarios` | [-0.3, -0.15, 0, 0.15, 0.3] | share by which the forecast misses the day's cups (negative = too low) | [-0.3, 0.3] | assumption | Slide 08 sensitivity only. Scenario steps, not a measured forecast accuracy: Chagee's forecast error is unknown. The roster is set from the wrong forecast; the customers are the day's actual ones. |
 
-### sitepick · used on: slide 10 site forecast
+### sitepick · used on: slides 10 and 10b site forecast
 
 | Key | Value | Unit | Range | Status | Notes |
 |---|---|---|---|---|---|
@@ -416,7 +422,7 @@ Every input in `assumptions.json`. **Key** is the path to change; **Range** is w
 | `new_market.trigger_weeks` | 4 | consecutive weeks a pilot signal must hold before acting |  | assumption | Our judgement, illustrative. |
 | `new_market.day_mix` | {"moderate": 104, "large": 12} | busy and event days a year; the rest of store.open_days_per_year are normal days |  | assumption | Scenario assumption for the Australian pilot: busy days = weekend days; event days = a guess at local public holidays and events, not counted. Weights the year-average contribution on the new-market setup slide. |
 
-### pnl · used on: slide 10 P&L view and its appendix page
+### pnl · used on: slide 10 P&L view, slide 10b criteria and the appendix page
 
 > Five-year projection of the same new outlet at two sites (slide 10): beside the existing outlet nearest the selected site, without AI, and the selected site, with AI-assisted site selection. Same opening date, equipment and staffing rule in both, so only the site differs. Illustrative scenarios, not demonstrated causal gains from AI. Nothing here feeds the benefit or any other slide.
 
@@ -432,7 +438,7 @@ Every input in `assumptions.json`. **Key** is the path to change; **Range** is w
 | `pnl.ai_cost_share_to_outlet` | 1 | share of the AI costs charged to this one outlet | [0.1, 1] | assumption | Conservative default: the whole AI cost is charged to this outlet. A lower share spreads it over other openings; we assume no number of openings (Chagee's plan is confidential). |
 | `pnl.volume_scenarios` | store.cups_per_store_per_year range / value | multipliers on both sites' cups: low, base, high |  | assumption | Scenario range from our per-outlet volume range (an assumption), applied to the sold and the displaced cups alike. Not a statistical confidence interval. |
 
-### members · used on: slides 05-07, part one: grow demand
+### members · used on: slides 05-07, part one: grow demand (07: reward and AI cost)
 
 > Members: squad tiers. An analytics model (Topic 8 network effects), not AI. Every parameter is illustrative, not Chagee data; the model shows direction and what to pilot, not effect sizes. Nothing here feeds the benefit or any other slide.
 
@@ -451,6 +457,7 @@ Every input in `assumptions.json`. **Key** is the path to change; **Range** is w
 | `members.base_group_orders_per_member_month` | 2 | group orders a squad member would place a month anyway, which also earn the credit | [0, 6] | assumption | Invented for the break-even (the credit is paid on orders that would have happened anyway); assumption, not Chagee data. |
 | `members.example_interest` | 0.5 | interest r of the one customer drawn on slide 05, steps one and two |  | assumption | Display only: a middling customer, to separate one customer's benefit from the equilibrium curve. |
 | `members.app_rules` | {"points_own_drink": 10, "points_per_squad_drink": 5, "points_now": 220, "points_next": 300, "tier_now": "Silver", "tier_next": "Gold", "people": ["Mei", "Jun", "Aisha", "Ravi"], "squad_name": "Lunch squad", "prefs": {"Mei": {"usual": "Jasmine milk tea · 50% sugar", "suggest": "Oolong milk tea · 50% sugar", "why": "you often pick floral teas at lunch and rated an oolong highly"}, "Jun": {"usual": "Black milk tea · less ice", "suggest": "Black milk tea · 25% sugar", "why": "you switched to less sugar in your last few orders", "gift_options": ["Black milk tea · 25% sugar", "Oolong milk tea · less ice", "Fresh fruit tea"]}, "Aisha": {"usual": "Fresh fruit tea", "suggest": "Jasmine milk tea · no ice", "why": "you liked jasmine teas when ordering for yourself"}, "Ravi": {"usual": "Oolong milk tea", "suggest": "Oolong milk tea · less sugar", "why": "close to your usual, with the sugar level you picked last week"}}} | illustrative rules and copy for the M2 prototype: points for your own drink, points every member gets for each drink in a group order, the member's points now and for the next tier, tier names, personas; each persona's usual drink, a suggested alternative with its reason, and gift options for the recipient |  | assumption | Our illustrative rules for the proposed experience, used consistently on slide 06. Not Chagee's membership rules, which are to confirm. The group-order credit is members.group_credit_share. Preferences and suggestions are illustrative data, not learned from anyone. Recalling the last order is the baseline; the proposed AI part ranks alternatives from each member's own choices, acceptances and dismissals. No real messages, purchases or accounts. |
+| `members.ai_cost_per_member_month` | 0.05 | S$ per participating member a month | [0, 0.3] | assumption | Illustrative placeholder, not sourced: the running cost of personalised suggestions per participating member, allocated. Replace with a quoted cost before any decision. Used only on slide 07 to show what personalisation must add on top of squads. |
 
 ### squadcast
 

@@ -164,6 +164,7 @@ def values(d: dict) -> dict:
             v[f"sp.{k}"] = o["value"]
     v["r.hubs"] = len(SP["hubs"]["value"])
     v["r.unmet_share"] = st["unmetShare"]
+    v["r.top_unmet"] = st["top"]["fromUnmet"] / st["top"]["cups"]          # slides 10b and 11: customer access
     v["r.clusters"] = st["clusters"]
     v["r.decay_km"] = SP["walk_km"]["value"] * SP["decay_share"]["value"]
     v["r.avg_cups"] = RAW["store"]["cups_per_store_per_year"]["value"] / RAW["store"]["open_days_per_year"]["value"]
@@ -242,6 +243,9 @@ def values(d: dict) -> dict:
     GEO_ = json.loads((ROOT / "sim" / "sg_geo.json").read_text())
     v["s.bt_outlet"] = f'{GEO_["numbers"][nd["j"]]} · {GEO_["names"][nd["j"]]}'
     v["r.nd_cups"], v["r.nd_net"], v["r.nd_moved"], v["r.bt_km"] = nd["cups"], nd["netNew"], nd["cannibal"] / nd["cups"], nd["km"]
+    v["r.nd_unmet"] = nd["fromUnmet"] / nd["cups"]                            # slide 10b: customer access at the baseline site
+    if not v["r.top_unmet"] > v["r.nd_unmet"]:
+        raise SystemExit("build: slide 10b says the cluster site serves more customers without access than the site beside an outlet; rewrite it")
     if not st["top"]["netNew"] > nd["netNew"]:
         raise SystemExit("build: slide 05 band says the app-search site adds more than a store beside an outlet; rewrite it")
     L_ = d["splits"][day]; hand, ch = L_["all_hand"], L_[L_["_cheapest"]]
@@ -362,6 +366,8 @@ def values(d: dict) -> dict:
     v["r.pnl_up_rev5"], v["r.pnl_up_op5"] = PN["uplift"]["netRev"], PN["uplift"]["opProfit"]
     if PN["wo"]["base"]["payback"] is not None or PN["wi"]["base"]["payback"] is None or PN["aiPayback"] is None or PN["wo"]["base"]["total"]["opProfit"] >= 0:
         raise SystemExit("build: slide 05's notes say the baseline site loses money and never pays back while the AI site and the AI cost do; rewrite them")
+    if PN["wi"]["low"]["payback"] is not None:
+        raise SystemExit("build: slide 10b says the cluster site does not pay back within the horizon at low volume; it now does, rewrite it")
     v["r.pnl_wi_payback"], v["r.pnl_ai_payback_m"] = PN["wi"]["base"]["payback"], PN["aiPayback"] * 12
     PR = RAW["pnl"]
     v["r.pnl_ai_impl"], v["r.pnl_ai_rec"], v["r.pnl_ramp1"] = PR["ai_implementation_cost"]["value"], PR["ai_recurring_per_year"]["value"], PR["ramp_up"]["value"][0]
@@ -397,6 +403,21 @@ def values(d: dict) -> dict:
     v["x.mb_credit"], v["x.mb_base"], v["x.mb_extra"], v["x.mb_price"] = BE["credit"], BE["base"], BE["extra"], BE["price"]
     for k_ in ("low", "mid", "high"):
         v[f"x.mb_be_{k_}"], v[f"x.mb_marg_{k_}"], v[f"x.mb_net_{k_}"] = BE[k_]["extraNeeded"], BE[k_]["margin"], BE[k_]["netPerMember"]
+    # slide 07, the CRM manager's decision: personalisation's running cost moves the break-even by its own hurdle
+    v["x.mb_ai"], v["x.mb_be_ai"], v["x.mb_ai_hurdle"] = MBd["breakEvenAi"]["ai"], MBd["breakEvenAi"]["mid"]["extraNeeded"], MBd["aiHurdle"]
+    if abs(v["x.mb_be_ai"] - v["x.mb_be_mid"] - v["x.mb_ai_hurdle"]) > 1e-9:
+        raise SystemExit("build: slide 07 says personalisation's hurdle is the gap between the two break-evens; check sim/members.js")
+    # slide 08, the operations problem (counter.forecastError via precompute.js): the notes and slide 09's strip say a busy-day
+    # forecast that is too low drops the peak crew and raises walk-aways, and that too high costs little on an event day
+    FE = d["forecastErr"]
+    bz = {r["e"]: r for r in FE["moderate"]}; ev_ = {r["e"]: r for r in FE["large"]}
+    lo_e = max(e for e in bz if e < 0 and bz[e]["staff"] < bz[0]["staff"])
+    hi_e = min(e for e in ev_ if e > 0 and ev_[e]["staff"] > ev_[0]["staff"])
+    if not (bz[lo_e]["lostShare"] > bz[0]["lostShare"] + 0.05 and 0 < ev_[hi_e]["cost"] - ev_[0]["cost"] < 100):
+        raise SystemExit("build: slide 08 says under-forecasting a busy day costs walk-aways and over-forecasting an event day costs little; rewrite it")
+    v["r.fe_bz_err"], v["r.fe_bz_lo_staff"], v["r.fe_bz_0_staff"] = abs(lo_e), bz[lo_e]["staff"], bz[0]["staff"]
+    v["r.fe_bz_lo_lost"], v["r.fe_bz_0_lost"] = bz[lo_e]["lostShare"], bz[0]["lostShare"]
+    v["r.fe_ev_hi_extra"] = round(ev_[hi_e]["cost"] - ev_[0]["cost"])
     # slide 06b (sim/squadcast.js via precompute.js): synthetic; the notes quote the default-share evaluation
     SQd, SQR = d["squadcast"], RAW["squadcast"]
     ev = SQd["eval"][str(SQR["social_share"]["value"])]
@@ -571,10 +592,12 @@ def mb_appendix(d: dict) -> tuple:
     c = ["<h5>Break-even of the group-order credit</h5>",
          f"<p>Contribution per member a month = price x (margin x E - credit x (B + E)), with E extra orders and B group orders a member would place anyway. "
          f"Break-even E* = credit x B / (margin - credit); none if the credit reaches the margin. Price S${BE['price']:.2f}, credit {BE['credit']:.0%}, B {BE['base']:g}, E {BE['extra']:g}.</p>",
-         "<table class='res mbt'><tr><th>Gross margin</th><th>Extra orders needed a month</th><th>Contribution a member a month at E</th></tr>" +
-         "".join(f"<tr><td>{BE[q]['margin']:.0%}</td><td>{need(BE[q])}</td><td>S${BE[q]['netPerMember']:.2f}</td></tr>" for q in ("low", "mid", "high")) + "</table>",
+         "<table class='res mbt'><tr><th>Gross margin</th><th>Extra orders needed a month</th><th>With AI cost (slide 07)</th><th>Contribution a member a month at E</th></tr>" +
+         "".join(f"<tr><td>{BE[q]['margin']:.0%}</td><td>{need(BE[q])}</td><td>{need(D['breakEvenAi'][q])}</td><td>S${BE[q]['netPerMember']:.2f}</td></tr>" for q in ("low", "mid", "high")) + "</table>",
+         f"<p>With personalised suggestions (slide 07) a flat AI cost a of S${D['breakEvenAi']['ai']:.2f} a member a month is added: E* = (credit x B + a / price) / (margin - credit). "
+         f"Personalisation must add a / (price x (margin - credit)) = {D['aiHurdle']:.2f} orders a month on top of squads alone at the base margin.</p>",
          "<h5>New inputs (assumptions.json members; assumption, not Chagee data)</h5>"]
-    for k in ("group_credit_share", "extra_orders_per_member_month", "base_group_orders_per_member_month", "squad_size", "example_interest", "app_rules", "network"):
+    for k in ("group_credit_share", "extra_orders_per_member_month", "base_group_orders_per_member_month", "ai_cost_per_member_month", "squad_size", "example_interest", "app_rules", "network"):
         o = M[k]; rng = f" (range {short(o['range'])})" if o.get("range") else ""
         c.append(f"<p><b>{k.replace('_', ' ')}</b>: {short(o['value'])}{rng}. {o['rationale']}</p>")
     return "\n".join(a), "\n".join(b), "\n".join(c)
@@ -716,6 +739,7 @@ FMT = {
     "mn": lambda x: f"{x / 1e6:,.0f} million",
     "g1": lambda x: f"{x:.1f}",
     "sgm": lambda x: f"{'−' if x < 0 else ''}S${abs(x) / 1e6:.1f}m",
+    "sgm2": lambda x: f"{'−' if x < 0 else ''}S${abs(x) / 1e6:.2f}m",
 }
 
 
@@ -728,7 +752,7 @@ def fill(text: str, vals: dict) -> str:
     return re.sub(r"\{\{([a-zA-Z_][\w.]*)(?:\|(\w+))?\}\}", rep, text)
 
 
-ALLOWED = re.compile(r"\bM[1-3]\b|Item 3\.D|\bslides? 3\d\b|\b8[A-D]\b|\b(?:19|20)\d\d\b|OPIM\s?639|Topic \d|\bT\d\b|\b0[1-9]b?\b|\b1\d(?= ·)|\bslides? 1\d\b|Week \d|\b1 (?=company|counter)|Group \d|Form 20-F")
+ALLOWED = re.compile(r"\bM[1-3]\b|Item 3\.D|\bslides? 3\d\b|\b8[A-D]\b|\b(?:19|20)\d\d\b|OPIM\s?639|Topic \d|\bT\d\b|\b0[1-9]b?\b|\b10b\b|\b1\d(?= ·)|\bslides? 1\d\b|Week \d|\b1 (?=company|counter)|Group \d|Form 20-F")
 
 
 def digit_check(tpl: str) -> None:

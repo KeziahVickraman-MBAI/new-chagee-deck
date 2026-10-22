@@ -26,4 +26,4 @@ if (file && fs.existsSync(file)) {
     fail.push("data.json decisions differ from a fresh run of sim/: re-run storyboard/precompute.js");
 }
 if (fail.length) { console.error("check_decisions: FAILED\n  " + fail.join("\n  ")); process.exit(1); }
-console.log("check_decisions: all four GM decisions hold");
+console.log("check_decisions: all four modelled decisions hold");

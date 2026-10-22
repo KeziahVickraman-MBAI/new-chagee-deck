@@ -16,9 +16,12 @@
  *                               of the seeded runs does not collapse (ends above takeoff_share): the simulated tipping point
  *   kind(p, k)                  'two' crossings, 'merged' at the hump's peak (4p = k), or 'none'
  *   levers(RAW)                 squads' k step and the incentive's p step, read from members.scenarios
- *   perMember(RAW, o, E, m)     contribution per member a month at E extra orders, after credits (S$)
- *   breakEven(RAW, o)           extra orders a squad member must place a month for the group-order credit to pay for
- *                               itself, at the low, base and high gross margin
+ *   perMember(RAW, o, E, m)     contribution per member a month at E extra orders, after credits and, if o.ai is given,
+ *                               the AI personalisation cost per member a month (S$)
+ *   breakEven(RAW, o)           extra orders a squad member must place a month for the group-order credit (and o.ai) to pay
+ *                               for itself, at the low, base and high gross margin
+ *   aiHurdle(RAW, o, m)         the extra orders a month personalisation must add on top of squads alone to cover its own
+ *                               cost: o.ai / (price x (margin - credit)); null if the credit reaches the margin
  */
 (function (root) {
   "use strict";
@@ -72,11 +75,12 @@
 
   function breakEven(RAW, o = {}) {
     const c = o.credit ?? M(RAW, "group_credit_share"), B = o.base ?? M(RAW, "base_group_orders_per_member_month"), E = o.extra ?? M(RAW, "extra_orders_per_member_month");
-    const price = RAW.storyboard.price_per_cup.value, g = RAW.storyboard.gross_margin_per_cup, [gLo, gHi] = g.range;
-    // the credit is paid on every group order, old and new: c x price x (B + E); the extra orders earn margin x price x E.
-    // break-even E* solves margin x E = c x (B + E), so E* = c B / (margin - c)
-    const at = m => ({ margin: m, extraNeeded: m > c ? c * B / (m - c) : null, netPerMember: price * (m * E - c * (B + E)) });
-    return { credit: c, base: B, extra: E, price, low: at(gLo), mid: at(g.value), high: at(gHi) };
+    const price = RAW.storyboard.price_per_cup.value, g = RAW.storyboard.gross_margin_per_cup, [gLo, gHi] = g.range, a = o.ai ?? 0;
+    // the credit is paid on every group order, old and new: c x price x (B + E); the extra orders earn margin x price x E;
+    // the AI cost a is a flat S$ per member a month. Break-even E* solves price (margin E - c (B + E)) = a,
+    // so E* = (c B + a / price) / (margin - c); with a = 0 this is c B / (margin - c)
+    const at = m => ({ margin: m, extraNeeded: m > c ? (c * B + a / price) / (m - c) : null, netPerMember: price * (m * E - c * (B + E)) - a });
+    return { credit: c, base: B, extra: E, ai: a, price, low: at(gLo), mid: at(g.value), high: at(gHi) };
   }
 
   // what kind of crossing the effort line makes with the hump: two points, one (they merge at the peak), or none
@@ -92,10 +96,15 @@
   // contribution per squad member a month at E extra orders, after the credit on every group order (old and new)
   function perMember(RAW, o, E, margin) {
     const b = breakEven(RAW, o), m = margin ?? b.mid.margin;
-    return b.price * (m * E - b.credit * (b.base + E));
+    return b.price * (m * E - b.credit * (b.base + E)) - b.ai;
   }
 
-  const api = { equilibria, next, rounds, table, network, tipping, breakEven, kind, levers, perMember };
+  function aiHurdle(RAW, o = {}, margin) {
+    const b = breakEven(RAW, o), m = margin ?? b.mid.margin;
+    return m > b.credit ? b.ai / (b.price * (m - b.credit)) : null;
+  }
+
+  const api = { equilibria, next, rounds, table, network, tipping, breakEven, kind, levers, perMember, aiHurdle };
   if (typeof module !== "undefined" && module.exports) module.exports = api;
   else root.ChageeMembers = api;
 })(typeof window !== "undefined" ? window : globalThis);

@@ -18,7 +18,7 @@
   const hourLabel = h => `${String(DATA.counter.firstHour + h).padStart(2, "0")}:00`;
   const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
   const COL = { red: css("--red"), navy: css("--navy"), gold: css("--gold"), taupe: css("--taupe"), ink: css("--ink"),
-                ink2: css("--ink2"), cream: css("--cream"), line: css("--line"), blue: css("--blue") };
+                ink2: css("--ink2"), cream: css("--cream"), line: css("--line"), blue: css("--blue"), ice: css("--ice") };
   const T = (x, y, s, a = "") => `<text x="${(+x).toFixed(1)}" y="${(+y).toFixed(1)}" ${a}>${s}</text>`;
   const BUS = { day: DAY0, fns: [] };                       // the day type, shared by the forecast and counter slides
   const setDay = d => { BUS.day = d; BUS.fns.forEach(f => f(d)); };
@@ -1726,54 +1726,60 @@
       screen(2); model();
     }
 
-    // M3: contribution per member a month against extra orders, after credits
+    // M3, the CRM manager's decision: contribution per member a month against extra orders, after the reward (credit) and,
+    // from step 4, personalisation's running cost (members.ai_cost_per_member_month)
     const m3 = document.getElementById("m3");
     if (m3) {
-      const S = m3.querySelector(".panel")?.closest(".slide")._stepper, ctl = $(m3, ".mbpctl"), svg = $(m3, ".mbpay");
-      const o0 = { credit: MR.group_credit_share.value, base: MR.base_group_orders_per_member_month.value }, o = { ...o0 };
-      const Er = MR.extra_orders_per_member_month.range, mg = RAW.storyboard.gross_margin_per_cup, Edef = MR.extra_orders_per_member_month.value;
-      let step = S ? S.cur : 3;
-      const SL = [["credit", "Credit rate, share of price", MR.group_credit_share.range, 0.005, v => pct(v, 1), "big"], ["base", "Group orders a month anyway", MR.base_group_orders_per_member_month.range, 0.5, v => v.toFixed(1), ""]];
-      ctl.innerHTML = `<span class="lab">The credit</span>` + SL.map(([k, lab, [lo, hi], st, f, cls], i) => (i ? `<div class="sep"></div>` : "") +
+      const S = m3._stepper, ctl = $(m3, ".mbpctl"), svg = $(m3, ".mbpay");
+      const o0 = { credit: MR.group_credit_share.value, base: MR.base_group_orders_per_member_month.value, ai: MR.ai_cost_per_member_month.value }, o = { ...o0 };
+      const Er = MR.extra_orders_per_member_month.range, mg = RAW.storyboard.gross_margin_per_cup;
+      let step = S ? S.cur : 4;
+      const SL = [["credit", "Reward: group-order credit, share of price", MR.group_credit_share.range, 0.005, v => pct(v, 1), "big"],
+                  ["base", "Group orders a month anyway", MR.base_group_orders_per_member_month.range, 0.5, v => v.toFixed(1), ""],
+                  ["ai", "AI cost per member a month", MR.ai_cost_per_member_month.range, 0.01, v => `S$${v.toFixed(2)}`, ""]];
+      ctl.innerHTML = `<span class="lab">Reward level and costs</span>` + SL.map(([k, lab, [lo, hi], st, f, cls], i) => (i ? `<div class="sep"></div>` : "") +
         `<label class="${cls}">${lab}<span class="val" data-v="${k}">${f(o[k])}</span><input type="range" data-k="${k}" min="${lo}" max="${hi}" step="${st}" value="${o[k]}"></label>`).join("") +
         `<button class="btn" data-k="reset" style="height:24px;font-size:11px">Reset</button>`;
       ctl.classList.add("mbctl");
       function draw() {
-        const b = MB.breakEven(RAW, o), W = 640, H = 270, L = 58, R = 20, Tp = 16, B = 34, xm = Er[1];
-        const f = (E, m) => MB.perMember(RAW, o, E, m), ys = [mg.range[0], mg.value, mg.range[1]].flatMap(m => [f(0, m), f(xm, m)]);
+        const sq = { credit: o.credit, base: o.base }, b = MB.breakEven(RAW, sq), bA = MB.breakEven(RAW, o), hur = MB.aiHurdle(RAW, o);
+        const W = 640, H = 214, L = 58, R = 20, Tp = 16, B = 34, top = Math.max(b.mid.extraNeeded ?? Infinity, step >= 4 ? bA.mid.extraNeeded ?? Infinity : 0);
+        const xm = isFinite(top) ? Math.min(Er[1], Math.max(1, Math.ceil(top * 2.5 * 2) / 2)) : Er[1], dx = xm <= 1.5 ? 0.25 : 0.5;   // zoom to the break-even
+        const f = (E, m) => MB.perMember(RAW, sq, E, m), fA = (E, m) => MB.perMember(RAW, o, E, m);
+        const ys = [mg.range[0], mg.value, mg.range[1]].flatMap(m => [f(0, m), f(xm, m), fA(0, m)]);
         let y0 = Math.min(0, ...ys), y1 = Math.max(0, ...ys); const pad = (y1 - y0) * 0.08; y0 -= pad; y1 += pad;
         const X = E => L + E / xm * (W - L - R), Y = v => Tp + (y1 - v) / (y1 - y0) * (H - Tp - B);
         let s = "";
         const st = (() => { const r = (y1 - y0) / 5, m = 10 ** Math.floor(Math.log10(r)); return [1, 2, 2.5, 5, 10].map(q => q * m).find(q => q >= r); })();
         for (let v = Math.ceil(y0 / st) * st; v <= y1; v += st) s += `<line x1="${L}" x2="${W - R}" y1="${Y(v)}" y2="${Y(v)}" stroke="${Math.abs(v) < 1e-9 ? COL.ink2 : COL.line}" stroke-width="${Math.abs(v) < 1e-9 ? 1.6 : 1}"/>` +
           T(L - 6, Y(v) + 3.5, `${v < 0 ? "−" : ""}S$${Math.abs(v).toFixed(2)}`, `font-size="10.5" fill="${COL.taupe}" text-anchor="end"`);
-        for (let E = 0; E <= xm + 1e-9; E += 0.5) s += T(X(E), H - B + 15, E.toFixed(1), `font-size="10.5" fill="${COL.taupe}" text-anchor="middle"`);
+        for (let E = 0; E <= xm + 1e-9; E += dx) s += T(X(E), H - B + 15, dx < 0.5 ? E.toFixed(2) : E.toFixed(1), `font-size="10.5" fill="${COL.taupe}" text-anchor="middle"`);
         s += T((L + W - R) / 2, H - 3, "additional orders per member per month", `font-size="10.5" fill="${COL.taupe}" text-anchor="middle"`) +
              `<text transform="translate(13 ${(Tp + H - B) / 2}) rotate(-90)" font-size="10.5" fill="${COL.taupe}" text-anchor="middle">S$ per member a month</text>` +
              T(W - R, Y(0) - 5, "zero contribution", `font-size="10" fill="${COL.ink2}" text-anchor="end"`);
         if (step >= 2) s += `<polygon points="${[[0, mg.range[1]], [xm, mg.range[1]], [xm, mg.range[0]], [0, mg.range[0]]].map(([E, m]) => `${X(E)},${Y(f(E, m))}`).join(" ")}" fill="${COL.navy}" opacity=".1"/>`;
         s += `<line x1="${X(0)}" y1="${Y(f(0))}" x2="${X(step >= 2 ? xm : 0.0001)}" y2="${Y(f(step >= 2 ? xm : 0.0001))}" stroke="${COL.navy}" stroke-width="3"/>` +
-             `<circle cx="${X(0)}" cy="${Y(f(0))}" r="5" fill="${COL.red}"/>` + T(X(0) + 9, Y(f(0)) + 15, `credits on orders members place anyway: −S$${Math.abs(f(0)).toFixed(2)}`, `font-size="11" font-weight="600" fill="${COL.red}"`);
-        if (step >= 2) s += T(X(xm) - 4, Y(f(xm)) - 8, `${pct(mg.value)} margin; band ${pct(mg.range[0])}–${pct(mg.range[1])}`, `font-size="10.5" fill="${COL.navy}" text-anchor="end"`);
-        const Es = b.mid.extraNeeded;
-        if (step >= 3) s += Es == null ? T((L + W - R) / 2, Tp + 14, "credit at or above the margin: the line never reaches zero, no break-even", `font-size="12" font-weight="700" fill="${COL.red}" text-anchor="middle"`)
-          : Es > xm ? T(W - R, Tp + 14, `break-even beyond ${xm} extra orders a month`, `font-size="12" font-weight="700" fill="${COL.red}" text-anchor="end"`)
-          : `<line x1="${X(Es)}" x2="${X(Es)}" y1="${Y(0)}" y2="${H - B}" stroke="${GREEN}" stroke-dasharray="3 3"/><circle cx="${X(Es)}" cy="${Y(0)}" r="6.5" fill="${GREEN}" stroke="#fff" stroke-width="2"/>` +
-            T(X(Es) + 10, Y(0) - 10, `break-even: about ${Es.toFixed(2)} extra orders a month`, `font-size="12" font-weight="700" fill="${GREEN}"`);
+             `<circle cx="${X(0)}" cy="${Y(f(0))}" r="5" fill="${COL.red}"/>` + T(X(0) + 9, Y(f(0)) + 15, `credits on orders members place anyway: −S$${Math.abs(f(0)).toFixed(2)}`, `font-size="11" font-weight="600" fill="${COL.red}" stroke="${COL.cream}" stroke-width="4" paint-order="stroke"`);
+        if (step >= 2) s += T(X(xm) - 4, Y(f(xm)) - 8, `squads alone · ${pct(mg.value)} margin; band ${pct(mg.range[0])}–${pct(mg.range[1])}`, `font-size="10.5" fill="${COL.navy}" text-anchor="end"`);
+        if (step >= 4) s += `<line x1="${X(0)}" y1="${Y(fA(0))}" x2="${X(xm)}" y2="${Y(fA(xm))}" stroke="${COL.gold}" stroke-width="3" stroke-dasharray="7 4"/>` +
+             T(X(xm) - 4, Y(fA(xm)) + 16, `squads with personalised suggestions, after S$${o.ai.toFixed(2)} AI cost`, `font-size="10.5" fill="#8A6416" text-anchor="end" stroke="${COL.cream}" stroke-width="4" paint-order="stroke"`);
+        const mark = (Es, col, lab, dy) => Es == null ? T((L + W - R) / 2, Tp + 14 + dy, "credit at or above the margin: the line never reaches zero, no break-even", `font-size="12" font-weight="700" fill="${COL.red}" text-anchor="middle"`)
+          : Es > xm ? T(W - R, Tp + 14 + dy, `${lab} beyond ${xm} extra orders a month`, `font-size="12" font-weight="700" fill="${COL.red}" text-anchor="end"`)
+          : `<line x1="${X(Es)}" x2="${X(Es)}" y1="${Y(0)}" y2="${H - B}" stroke="${col}" stroke-dasharray="3 3"/><circle cx="${X(Es)}" cy="${Y(0)}" r="6" fill="${col}" stroke="#fff" stroke-width="2"/>` +
+            T(X(Es) + 9, Y(0) + dy, `${lab}: ${Es.toFixed(2)}`, `font-size="11.5" font-weight="700" fill="${col}" stroke="${COL.cream}" stroke-width="4" paint-order="stroke"`);
+        if (step >= 3) s += mark(b.mid.extraNeeded, GREEN, "break-even, squads alone", step >= 4 ? -30 : -10);
+        if (step >= 4 && bA.mid.extraNeeded != null) s += mark(bA.mid.extraNeeded, "#8A6416", "break-even, squads with AI", -12);
         svg.innerHTML = s;
-        const lo = b.high.extraNeeded, hi = b.low.extraNeeded;
-        const slope = b.price * (mg.value - o.credit);
-        $(m3, ".mbtake .t").innerHTML = step < 2 ? `With no extra orders, a <b>${pct(o.credit, 1)}</b> credit costs about <b>S$${Math.abs(f(0)).toFixed(2)}</b> a member a month, paid on the ${o.base.toFixed(1)} group orders they would place anyway.`
-          : step < 3 ? `Each extra order adds about <b>S$${slope.toFixed(2)}</b>: the ${pct(mg.value)} margin less its own ${pct(o.credit, 1)} credit, on a S$${b.price.toFixed(2)} cup.`
-          : Es == null ? `At a credit of <b>${pct(o.credit, 1)}</b>, at or above the margin, the credit never pays for itself.`
-          : `At a <b>${pct(o.credit, 1)}</b> credit, each squad member must add about <b>${Es.toFixed(2)}</b> orders a month before it pays for itself (${lo == null ? "–" : lo.toFixed(2)} to ${hi == null ? "none" : hi.toFixed(2)} across the margin range), because ${o.base.toFixed(1)} orders a month would earn the credit anyway. How many orders squads add is what the pilot must measure.`;
-        $(m3, ".mbpctlp").innerHTML = `<div class="k">Shown</div><p>Credit ${pct(o.credit, 1)} of the S$${b.price.toFixed(2)} price; ${o.base.toFixed(1)} group orders a month anyway; margin ${pct(mg.value)} (band ${pct(mg.range[0])}–${pct(mg.range[1])}).</p>`;
+        const Es = b.mid.extraNeeded, EA = bA.mid.extraNeeded;
+        $(m3, ".mbact").innerHTML = Es == null ? `At a <b>${pct(o.credit, 1)}</b> credit, at or above the margin, the reward never pays for itself: lower it before any pilot.`
+          : `Pilot the three arms at a <b>${pct(o.credit, 1)}</b> credit. Squads must add about <b>${Es.toFixed(2)}</b> orders per member a month to cover the reward; personalisation about <b>${hur.toFixed(2)}</b> more to cover its S$${o.ai.toFixed(2)} cost (<b>${EA.toFixed(2)}</b> in all).`;
+        $(m3, ".mbpctlp").innerHTML = `<div class="k">Shown</div><p>Credit ${pct(o.credit, 1)} of the S$${b.price.toFixed(2)} price; ${o.base.toFixed(1)} group orders a month anyway; AI cost S$${o.ai.toFixed(2)} a member a month; margin ${pct(mg.value)} (band ${pct(mg.range[0])}–${pct(mg.range[1])}).</p>`;
         $$(ctl, "input").forEach(i => { i.value = o[i.dataset.k]; $(ctl, `.val[data-v="${i.dataset.k}"]`).textContent = SL.find(x => x[0] === i.dataset.k)[4](o[i.dataset.k]); });
       }
-      ctl.addEventListener("input", e => { const k = e.target.dataset?.k; if (!k) return; o[k] = +e.target.value; draw(); });
+      ctl.addEventListener("input", e => { const k = e.target.dataset?.k; if (!k) return; o[k] = +e.target.value; if (k === "ai" && S && S.cur < 4) S.go(4); else draw(); });
       ctl.addEventListener("click", e => { if (e.target.closest("[data-k=reset]")) { Object.assign(o, o0); draw(); } });
       if (S) S.hooks.push(k => { step = k; draw(); });
-      printers.push(() => { Object.assign(o, o0); step = 3; draw(); });
+      printers.push(() => { Object.assign(o, o0); step = 4; draw(); });
       draw();
     }
 
@@ -1868,6 +1874,90 @@
       if (k === "s") { st.s = +e.target.value; st.reveal = false; rebuild(); } else st.t = +e.target.value; draw(); });
     printers.push(() => { stop(); Object.assign(st, { day: 1, s: E0.s, t: -10, reveal: true }); rebuild(); last = {}; draw(); });
     rebuild(); st.t = -30; draw();
+  })();
+
+  /* ---------------------------------------------------------------- 08 demand by the hour against the roster (counter.js) */
+  (function opsProblem() {
+    const sl = document.getElementById("o1"), FE = DATA.forecastErr; if (!sl || !FE) return;
+    const S = sl._stepper, GREEN = "#2F6B45", ERR = SB.forecast_error_scenarios.value, pl = Sim.plan(P, "mixed");
+    const per = pl.perWorker * 60 / P.margin;                     // cups an hour one person serves within the staffing rule's margin
+    const rosterOf = (cups, e) => cups.map(x => Math.max(P.minStaff.mixed, Math.ceil(x * (1 + e) / 60 * P.margin / pl.perWorker - 1e-9)));
+    const st = { day: "moderate", e: 0 }; let step = S ? S.cur : 4;
+    const errLab = e => (e === 0 ? "exact" : `${e > 0 ? "+" : "−"}${pct(Math.abs(e))}${e > 0 ? " high" : " low"}`);
+    $(sl, ".opseg").innerHTML = DAYS.map(d => `<button class="btn" data-d="${d}">${DAY_LABEL[d]}</button>`).join("");
+    const ctl = $(sl, ".opctl");
+    ctl.innerHTML = `<label class="big">Forecast error<span class="val" data-v="e"></span><input type="range" data-k="e" min="${ERR[0]}" max="${ERR[ERR.length - 1]}" step="${ERR[1] - ERR[0]}" value="0"></label>` +
+      `<p class="lnote" style="margin:2px 0 0">The roster follows the forecast; the customers are the day's actual ones.</p>`;
+    function draw() {
+      const F = C.forecastDay(Sim, P, st.day), cups = F.cups, n = cups.length, norm = rosterOf(C.forecastDay(Sim, P, "none").cups, 0);
+      const fc = rosterOf(cups, step >= 4 ? st.e : 0), act = step >= 3 ? fc : norm;
+      const W = 700, H = 192, L = 44, R = 132, Tp = 14, B = 30, ym = Math.ceil(Math.max(...cups, ...act.map(k => k * per), ...norm.map(k => k * per)) * 1.1 / 25) * 25;
+      const bw = (W - L - R) / n, X = h => L + h * bw, Y = v => Tp + (1 - v / ym) * (H - Tp - B);
+      let s = "";
+      for (let v = 0; v <= ym; v += 25) s += `<line x1="${L}" x2="${W - R}" y1="${Y(v)}" y2="${Y(v)}" stroke="${v ? COL.line : COL.ink2}"/>` + T(L - 6, Y(v) + 3.5, v, `font-size="10" fill="${COL.taupe}" text-anchor="end"`);
+      cups.forEach((c, h) => { s += `<rect x="${X(h) + 5}" y="${Y(c)}" width="${bw - 10}" height="${Y(0) - Y(c)}" rx="2" fill="${COL.ice}" stroke="${COL.blue}" stroke-width=".8"/>`;
+        if (h % 2 === 0) s += T(X(h) + bw / 2, H - B + 14, hourLabel(h), `font-size="10" fill="${COL.taupe}" text-anchor="middle"`); });
+      s += `<text transform="translate(12 ${(Tp + H - B) / 2}) rotate(-90)" font-size="10" fill="${COL.taupe}" text-anchor="middle">cups an hour</text>`;
+      let short = 0, maxShort = 0, idleH = 0;
+      if (step >= 2) act.forEach((k, h) => { const cap = k * per, c = cups[h];
+        if (c > cap) { short++; maxShort = Math.max(maxShort, c - cap); s += `<rect x="${X(h) + 5}" y="${Y(c)}" width="${bw - 10}" height="${Y(cap) - Y(c)}" fill="${COL.red}" opacity=".75"/>`; }
+        else { if (c < cap / 2) idleH++; s += `<rect x="${X(h) + 5}" y="${Y(cap)}" width="${bw - 10}" height="${Y(c) - Y(cap)}" fill="#B9B2A6" opacity=".35"/>`; } });
+      const line = (ks, col, dash, w) => `<path d="${ks.map((k, h) => `${h ? "L" : "M"}${X(h)} ${Y(k * per)} H${X(h + 1)}`).join(" ")}" fill="none" stroke="${col}" stroke-width="${w}"${dash ? ` stroke-dasharray="${dash}"` : ""}/>`;
+      const crew = (ks, col, dy) => ks.map((k, h) => (h === 0 || k !== ks[h - 1] ? T(X(h) + 4, Y(k * per) + dy, `${k}`, `font-size="10" font-weight="700" fill="${col}"`) : "")).join("");
+      if (step >= 2) s += line(norm, COL.taupe, "5 4", 2) + (step < 3 ? crew(norm, COL.ink2, -4) : "");
+      if (step >= 3) s += line(fc, GREEN, "", 2.6) + crew(fc, GREEN, -4);
+      const lx = W - R + 10; let ly = Tp + 8;
+      const key = (sw, txt) => { const o = sw + T(lx + 22, ly + 4, txt, `font-size="10.5" fill="${COL.ink2}"`); ly += 18; return o; };
+      s += key(`<rect x="${lx}" y="${ly - 5}" width="16" height="10" rx="2" fill="${COL.ice}" stroke="${COL.blue}"/>`, `forecast cups`);
+      if (step >= 2) { s += key(`<line x1="${lx}" x2="${lx + 16}" y1="${ly}" y2="${ly}" stroke="${COL.taupe}" stroke-width="2" stroke-dasharray="5 4"/>`, "normal-day roster");
+        if (step >= 3) s += key(`<line x1="${lx}" x2="${lx + 16}" y1="${ly}" y2="${ly}" stroke="${GREEN}" stroke-width="2.6"/>`, step >= 4 && st.e ? `roster, forecast ${errLab(st.e)}` : "forecast roster");
+        s += key(`<rect x="${lx}" y="${ly - 5}" width="16" height="10" fill="${COL.red}" opacity=".75"/>`, "short: queue") + key(`<rect x="${lx}" y="${ly - 5}" width="16" height="10" fill="#B9B2A6" opacity=".5"/>`, "idle capacity");
+        s += T(lx, ly + 8, "numbers on the lines:", `font-size="9.5" fill="${COL.taupe}"`) + T(lx, ly + 20, "people on shift", `font-size="9.5" fill="${COL.taupe}"`); }
+      $(sl, ".opsvg").innerHTML = s;
+      // the sensitivity table: the day's precomputed runs (counter.forecastError)
+      const rows = FE[st.day], z = rows.find(r => r.e === 0), cur = rows.find(r => Math.abs(r.e - st.e) < 1e-9);
+      $(sl, ".fetab").innerHTML = `<tr><th>Forecast</th><th>Crew</th><th>Away</th><th>Wait</th><th>S$/day</th><th>Cups/pp</th></tr>` +
+        rows.map(r => `<tr class="${step >= 4 && r === cur ? "on" : ""}${r.e === 0 ? " z" : ""}"><td>${errLab(r.e)}</td><td>${r.staff}</td><td>${pct(r.lostShare, 1)}</td><td>${mmss(r.medianWait)}</td><td>${Math.round(r.cost)}</td><td>${r.perPerson == null ? "–" : Math.round(r.perPerson)}</td></tr>`).join("");
+      $$(sl, ".opday").forEach(e => (e.textContent = DAY_LABEL[st.day]));
+      $$(sl, ".opseg button").forEach(b => b.classList.toggle("on", b.dataset.d === st.day));
+      $(ctl, "input").value = st.e; $(ctl, '[data-v="e"]').textContent = errLab(st.e);
+      const pk = cups.indexOf(Math.max(...cups));
+      $(sl, ".optake .t").innerHTML = step < 2 ? `${DAY_LABEL[st.day]}: the forecast peaks at <b>${Math.round(cups[pk])}</b> cups at ${hourLabel(pk)}, about ${(cups[pk] / Math.min(...cups)).toFixed(1)}× the quietest hour.`
+        : step < 3 ? (short ? `With the normal-day roster, <b>${short}</b> hour${short > 1 ? "s run" : " runs"} short by up to <b>${Math.round(maxShort)}</b> cups, while ${idleH} hours use less than half the crew's capacity.`
+                            : `On a ${DAY_LABEL[st.day].toLowerCase()} the normal-day roster covers the peak, but ${idleH} hours use less than half the crew's capacity.`)
+        : step < 4 ? `The forecast roster puts <b>${fc[pk]}</b> on at ${hourLabel(pk)}. Forecasting estimates the capacity needed; 08b and 09 compare ways of providing it.`
+        : st.e === 0 ? `Exact forecast: <b>${z.staff}</b> at the peak, <b>${pct(z.lostShare, 1)}</b> walk away, S$${Math.round(z.cost)} a day. Move the forecast error to see what a wrong forecast costs.`
+        : `Forecast ${errLab(st.e)}: <b>${cur.staff}</b> at the peak, <b>${pct(cur.lostShare, 1)}</b> walk away, S$${Math.round(cur.cost)} a day; peak-hour contribution <b>S$${Math.round(cur.contribution)}</b> against S$${Math.round(z.contribution)} with an exact forecast.`;
+      $(sl, ".opctlp").innerHTML = `<div class="k">Shown</div><p>${DAY_LABEL[st.day]}, today's split, forecast ${errLab(st.e)}. Other days: the deck's interactive version.</p>`;
+    }
+    sl.addEventListener("click", e => { const b = e.target.closest(".opseg button"); if (b) { st.day = b.dataset.d; draw(); } });
+    ctl.addEventListener("input", e => { if (e.target.dataset?.k !== "e") return; st.e = Math.round(+e.target.value * 100) / 100; if (S && S.cur < 4) S.go(4); else draw(); });
+    if (S) S.hooks.push(k => { step = k; draw(); });
+    printers.push(() => { Object.assign(st, { day: "moderate", e: ERR.find(e => e < 0 && e > ERR[0]) ?? 0 }); step = 4; draw(); });
+    draw();
+  })();
+
+  /* ---------------------------------------------------------------- 09b the operations manager's decision (counter.aiLayer) */
+  (function opsDecision() {
+    const sl = document.getElementById("o2"), AL = DATA.aiLayer; if (!sl || !AL) return;
+    const price = SB.price_per_cup.value, gm = SB.gross_margin_per_cup.value;
+    $(sl, ".dslot").replaceWith(daySeg(setDay));
+    // one lever per column: the forecast changes only the crew, the machine only the equipment
+    const COLS = [["Today", "normal-day roster · today's split", d => AL[d].today, "without"],
+                  ["+ forecast", "forecast roster · today's split", d => AL[d].today, "with"],
+                  ["+ one machine", "forecast roster · tea-and-milk machine", d => AL[d].single, "with"]];
+    function draw() {
+      const d = BUS.day, cols = COLS.map(([h, sub, f, k]) => ({ h, sub, r: f(d).brigade[k], fb: f(d).fixed_best?.[k], fw: f(d).fixed_worst?.[k] }));
+      const contrib = r => r.served * price * gm - r.staff * P.wage;
+      const ROWS = [["Crew at the peak", r => `${r.staff}`], ["Median wait", r => mmss(r.medianWait)], ["Walk-aways", r => pct(r.lostShare, 1)],
+                    ["Cups served per person, peak hour", r => (r.staff ? Math.round(r.served / r.staff) : "–")],
+                    ["Peak-hour contribution", r => `S$${Math.round(contrib(r))}`], ["Cost a day: roster and machines", r => `S$${Math.round(r.cost)}`]];
+      $(sl, ".o2tab").innerHTML = `<tr><th>Criterion</th>${cols.map(c => `<th>${c.h}<br><small style="text-transform:none;letter-spacing:0">${c.sub}</small></th>`).join("")}</tr>` +
+        ROWS.map(([lab, f]) => `<tr><td>${lab}</td>${cols.map(c => `<td>${f(c.r)}</td>`).join("")}</tr>`).join("") +
+        `<tr><td>Walk-aways with fixed posts instead: well / badly assigned</td>${cols.map(c => `<td>${c.fb ? `${pct(c.fb.lostShare, 1)} / ${pct(c.fw.lostShare, 1)}` : "–"}</td>`).join("")}</tr>`;
+      $$(sl, ".o2day").forEach(e => (e.textContent = DAY_LABEL[d]));
+    }
+    BUS.fns.push(draw); printers.push(draw); draw();
   })();
 
   /* ---------------------------------------------------------------- print */

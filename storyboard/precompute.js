@@ -71,6 +71,13 @@ for (const day of Object.keys(P.surgeMult)) {
   }
 }
 
+// slide 08, the operations problem: the roster set from a forecast that misses the day's cups by e, today's split,
+// bucket brigade, the day's actual customers (counter.forecastError)
+const forecastErr = {};
+for (const day of Object.keys(P.surgeMult))
+  forecastErr[day] = C.forecastError(Sim, Store, P, { day, walkBack, seeds, mode: "brigade", errors: SB.forecast_error_scenarios.value,
+    price: SB.price_per_cup.value, margin: SB.gross_margin_per_cup.value });
+
 // slide 05: the new-store forecast at the slider defaults
 const SM = Site.model(Sim, RAW, GEO), top = SM.candidates[0];
 const hubOf = pt => RAW.sitepick.hubs.value.reduce((a, h) => (Math.hypot(h.x - pt.x, h.y - pt.y) < Math.hypot(a.x - pt.x, a.y - pt.y) ? h : a)).name;
@@ -140,7 +147,8 @@ const newMarket = { runs: nmR, score: nmScore, sensitivity: nmSens, pilot: nmPil
 }
 
 // slides M1-M3 (candidate chapter): the closed-form table, and the friend-network check of each tipping point
-const members = { table: MB.table(RAW), breakEven: MB.breakEven(RAW), levers: MB.levers(RAW) };
+const mbAi = { ai: RAW.members.ai_cost_per_member_month.value };
+const members = { table: MB.table(RAW), breakEven: MB.breakEven(RAW), breakEvenAi: MB.breakEven(RAW, mbAi), aiHurdle: MB.aiHurdle(RAW, mbAi), levers: MB.levers(RAW) };
 members.network = members.table.map(s => ({ id: s.id, closed: s.eq ? s.eq.low : null, sim: MB.tipping(RAW, s.p, s.k, Sim) }));
 
 // slide 06b (synthetic demonstration): the two forecasts compared over synthetic windows, at several squad shares
@@ -150,7 +158,7 @@ for (const s of [0, 0.15, sqE.s, 0.45]) { const E = { ...sqE, s }; squadcast.eva
 const pl = Sim.plan(P, "mixed");
 const data = {
   generated: new Date().toISOString(), seeds,
-  grid, splits, aiLayer, newMarket, pnl, members, squadcast, site, ladder, benefit, decisions, siteExt, siteModel,
+  grid, splits, aiLayer, forecastErr, newMarket, pnl, members, squadcast, site, ladder, benefit, decisions, siteExt, siteModel,
   counter: {
     peakHour: C.peakHour(P), firstHour: 10, cupsPerDay: Sim.dailyBase(P),
     perWorkerHour: pl.perWorker * 60, handSeconds: pl.W,

@@ -33,7 +33,13 @@
  *                                without AI = the normal-day roster (forecastDay "none") facing the day's
  *                                customers; with AI = the day's forecast roster. Same robots, same customers,
  *                                same sharing rule; only the crew changes. Peak-hour walk-aways and median
- *                                wait (compare), and the day's cost of the roster that was actually worked.
+ *                                wait (compare), peak-hour cups served and arriving, and the day's cost and labour hours
+ *                                of the roster that was actually worked.
+ *   forecastError(Sim, Store, P, o)  slide 08's sensitivity: the roster is set from a forecast that misses the day's
+ *                                cups by e (o.errors, e.g. -0.15 = forecast 15% too low), while the customers are the
+ *                                day's actual ones. Per e: peak crew, labour hours, the day's cost, peak-hour walk-aways,
+ *                                median wait, cups served per person at the peak, and the peak hour's contribution
+ *                                (served x o.price x o.margin - crew x wage). Same robots and sharing rule throughout.
  */
 (function (root) {
   "use strict";
@@ -253,12 +259,26 @@
 
   function aiLayer(Sim, Store, P, o) {
     const c = configure(P, o.robots), day = o.day ?? P.surgeDefault, people = c.setup !== "all_machine";
-    const side = (staff, rosterDay) => { const r = compare(Sim, Store, P, { ...o, day, staff });
-      return { staff: people ? staff : 0, lostShare: r.lostShare, medianWait: r.medianWait, cost: dayCost(Sim, c.P, c.setup, rosterDay).total }; };
+    const side = (staff, rosterDay) => { const r = compare(Sim, Store, P, { ...o, day, staff }), dc = dayCost(Sim, c.P, c.setup, rosterDay);
+      return { staff: people ? staff : 0, lostShare: r.lostShare, medianWait: r.medianWait, cost: dc.total, labourHours: dc.labourHours,
+               served: r.served, arrived: r.arrived }; };
     return { setup: c.setup, without: side(recommendStaff(Sim, c.P, "none", c.setup), "none"), with: side(recommendStaff(Sim, c.P, day, c.setup), day) };
   }
 
-  const api = { configure, presets, forecastDay, recommendStaff, dayCost, assignFixed, create, run, compare, grid, aiLayer, peakHour, MODES };
+  function forecastError(Sim, Store, P, o) {
+    const c = configure(P, o.robots), day = o.day ?? P.surgeDefault, F = forecastDay(Sim, c.P, day, c.setup), pl = Sim.plan(c.P, c.setup);
+    const machine = pl.machineUnits * P.machineMonth * 12 / P.days;
+    return o.errors.map(e => {
+      const roster = F.cups.map(x => c.setup === "all_machine" ? 0 : Math.max(P.minStaff[c.setup], Math.ceil(x * (1 + e) / 60 * P.margin / pl.perWorker - 1e-9)));
+      const staff = roster[F.peak], r = compare(Sim, Store, P, { ...o, day, staff });
+      const labourHours = c.setup === "all_machine" ? P.attendant * P.hours : roster.reduce((a, b) => a + b, 0);
+      return { e, staff, labourHours, cost: labourHours * P.wage + machine, lostShare: r.lostShare, medianWait: r.medianWait,
+               served: r.served, arrived: r.arrived, perPerson: staff ? r.served / staff : null,
+               contribution: r.served * o.price * o.margin - staff * P.wage };
+    });
+  }
+
+  const api = { configure, presets, forecastDay, recommendStaff, dayCost, assignFixed, create, run, compare, grid, aiLayer, forecastError, peakHour, MODES };
   if (typeof module !== "undefined" && module.exports) module.exports = api;
   else root.ChageeCounter = api;
 })(typeof window !== "undefined" ? window : globalThis);
