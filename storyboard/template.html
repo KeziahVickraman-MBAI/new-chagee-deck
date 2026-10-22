@@ -44,6 +44,7 @@ html,body{margin:0;background:#E7E3DC;color:var(--ink);font-family:var(--sans);-
 .caps li .n,.num{flex:none;display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;background:var(--red);color:#fff;font:600 11px/1 var(--sans);margin-top:1px}
 [data-s]{transition:opacity .35s ease, filter .35s ease}
 .stepper [data-s]:not(.on){opacity:.16;filter:grayscale(1)}
+.bh{opacity:0!important;pointer-events:none;transition:opacity .3s ease}
 .cards{display:flex;flex-direction:column;gap:16px;min-height:0}
 .card{position:relative;padding-left:20px}
 .card:before{content:"";position:absolute;left:0;top:6px;width:9px;height:9px;border-radius:50%;background:var(--red)}
@@ -812,7 +813,7 @@ aside.notes{display:none}
   #deck{position:static;transform:none!important;width:auto;height:auto}
   #toolbar,#toast,#notes{display:none!important}
   .slide{display:block!important;position:relative;page-break-after:always;break-after:page}
-  .stepper [data-s]{opacity:1!important;filter:none!important}
+  .stepper [data-s]{opacity:1!important;filter:none!important} .bh{opacity:1!important}
   .caps{display:none}
   .mx .rowg.dim>*{opacity:.4}
   .screenonly{display:none!important}

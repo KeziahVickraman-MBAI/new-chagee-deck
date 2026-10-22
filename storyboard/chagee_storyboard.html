@@ -44,6 +44,7 @@ html,body{margin:0;background:#E7E3DC;color:var(--ink);font-family:var(--sans);-
 .caps li .n,.num{flex:none;display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;background:var(--red);color:#fff;font:600 11px/1 var(--sans);margin-top:1px}
 [data-s]{transition:opacity .35s ease, filter .35s ease}
 .stepper [data-s]:not(.on){opacity:.16;filter:grayscale(1)}
+.bh{opacity:0!important;pointer-events:none;transition:opacity .3s ease}
 .cards{display:flex;flex-direction:column;gap:16px;min-height:0}
 .card{position:relative;padding-left:20px}
 .card:before{content:"";position:absolute;left:0;top:6px;width:9px;height:9px;border-radius:50%;background:var(--red)}
@@ -812,7 +813,7 @@ aside.notes{display:none}
   #deck{position:static;transform:none!important;width:auto;height:auto}
   #toolbar,#toast,#notes{display:none!important}
   .slide{display:block!important;position:relative;page-break-after:always;break-after:page}
-  .stepper [data-s]{opacity:1!important;filter:none!important}
+  .stepper [data-s]{opacity:1!important;filter:none!important} .bh{opacity:1!important}
   .caps{display:none}
   .mx .rowg.dim>*{opacity:.4}
   .screenonly{display:none!important}
@@ -4486,8 +4487,7 @@ aside.notes{display:none}
   function show(i, fromEnd = false) {
     cur = Math.max(0, Math.min(slides.length - 1, i));
     slides.forEach((s, k) => s.classList.toggle("active", k === cur));
-    const st = slides[cur]._stepper; if (st) st.go(fromEnd || revealAll ? st.N : 1, true);
-    const rv = $(slides[cur], ".vs.clickrev"); if (rv) setRev(rv, fromEnd || revealAll ? 2 : 0);
+    buildTo(slides[cur], fromEnd || revealAll || editingNow() ? Infinity : -1);
     const gt = $(document, "#goto"); if (document.activeElement !== gt) gt.value = cur + 1; $(document, "#count .tot").textContent = `/ ${slides.length}`;
     const n = $(slides[cur], "aside.notes");
     $(document, "#notes .nb").innerHTML = n ? n.innerHTML : "";
@@ -4497,11 +4497,60 @@ aside.notes{display:none}
   // a band revealed by click (.vs.clickrev, slide 05): 0 hidden, 1 Without AI, 2 both; arrows step it after the panel's steps
   function setRev(el, r) { el._r = r; el.classList.toggle("r1", r >= 1); el.classList.toggle("r2", r >= 2); }
   $$(document, ".vs.clickrev").forEach(el => { setRev(el, 2); el.addEventListener("click", ev => { if (!ev.target.closest(".vsb")) setRev(el, Math.min(2, (el._r || 0) + 1)); }); });
-  const revOf = () => { const el = $(slides[cur], ".vs.clickrev"); return el && !revealAll && !editingNow() ? el : null; };
-  function next() { const st = slides[cur]._stepper, rv = revOf();
-    if (st && st.cur < st.N && !revealAll && !editingNow()) st.go(st.cur + 1); else if (rv && rv._r < 2) setRev(rv, rv._r + 1); else if (cur < slides.length - 1) show(cur + 1); }
-  function prev() { const st = slides[cur]._stepper, rv = revOf();
-    if (rv && rv._r > 0) setRev(rv, rv._r - 1); else if (st && st.cur > 1 && !revealAll && !editingNow()) st.go(st.cur - 1); else if (cur > 0) show(cur - 1, true); }
+  /* slide build, one-by-one mode: the kicker and headline open the slide; each Next brings in the next block in reading
+     order (business problem, the explainer panel and its own steps, each card, the reveal band, takeaway or decision
+     strip, transition line). A slide-level stepper (.inner.stepper) keeps driving its own [data-s] elements as one block. */
+  const KEEP = ".kicker,.head,.sub,.revctl,.leafart";
+  function unitsOf(sl) {
+    if (sl._units) return sl._units;
+    const U = [], inner = $(sl, ".inner"), ss = sl.classList.contains("content") && sl.dataset.chapter !== "Appendix" && inner;
+    if (ss) {
+      const slideStep = inner.classList.contains("stepper") ? sl._stepper : null;
+      let pend = [];                                                // keys and labels that belong to the next block (.aikey)
+      const add = (els, o = {}) => { U.push({ els: [...pend, ...els], ...o }); pend = []; };
+      const kids = [...inner.children].filter(c => !c.matches(KEEP) && !c.matches("aside"));
+      if (slideStep) {                                              // blocks before the first stepped element, then the stepper
+        const i = kids.findIndex(c => c.matches("[data-s]") || c.querySelector("[data-s]"));
+        kids.slice(0, i < 0 ? kids.length : i).forEach(c => add([c]));
+        if (i >= 0) add(kids.slice(i), { S: slideStep, rv: $(inner, ".vs.clickrev") });
+      } else kids.forEach(c => {
+        if (c.matches(".aikey")) { pend.push(c); return; }
+        if (c.matches(".body")) {
+          let panelU = null;
+          [...c.children].forEach(b => {
+            if (b.matches(".panel")) { add([b], { S: b.matches(".stepper") ? b._S : null }); panelU = U[U.length - 1]; }
+            else if (b.matches(".cards")) [...b.children].forEach(k => {
+              if (panelU && k.matches(".cset,.screenonly,.printonly,.pnlside")) panelU.els.push(k);     // the panel's own controls
+              else add([k]);
+            });
+            else add([b]);
+          });
+        } else if (c.matches(".rec3")) [...c.children].forEach(k => add([k]));
+        else add([c], { rv: c.matches(".vs.clickrev") ? c : null });
+      });
+    }
+    return (sl._units = U);
+  }
+  // show the first n + 1 blocks (n = -1: headline only; Infinity: everything, steps and bands complete)
+  function buildTo(sl, n) {
+    const U = unitsOf(sl), all = n === Infinity; sl._b = Math.min(n, U.length - 1);
+    U.forEach((u, k) => { u.els.forEach(e => e.classList.toggle("bh", k > sl._b));
+      if (u.S) u.S.go(all ? u.S.N : 1, true); if (u.rv) setRev(u.rv, all ? 2 : 0); });
+    if (!U.length) { const st = sl._stepper; if (st) st.go(all ? st.N : 1, true); }
+  }
+  const stepping = () => !revealAll && !editingNow();
+  function next() { const sl = slides[cur], U = unitsOf(sl), u = U[sl._b];
+    if (!stepping() || !U.length) { const st = sl._stepper; if (stepping() && st && st.cur < st.N) return st.go(st.cur + 1); return cur < slides.length - 1 && show(cur + 1); }
+    if (u && u.S && u.S.cur < u.S.N) return u.S.go(u.S.cur + 1);
+    if (u && u.rv && u.rv._r < 2) return setRev(u.rv, u.rv._r + 1);
+    if (sl._b < U.length - 1) { sl._b++; U[sl._b].els.forEach(e => e.classList.remove("bh")); return; }
+    if (cur < slides.length - 1) show(cur + 1); }
+  function prev() { const sl = slides[cur], U = unitsOf(sl), u = U[sl._b];
+    if (!stepping() || !U.length) { const st = sl._stepper; if (stepping() && st && st.cur > 1) return st.go(st.cur - 1); return cur > 0 && show(cur - 1, true); }
+    if (u && u.rv && u.rv._r > 0) return setRev(u.rv, u.rv._r - 1);
+    if (u && u.S && u.S.cur > 1) return u.S.go(u.S.cur - 1);
+    if (sl._b >= 0) { u.els.forEach(e => e.classList.add("bh")); sl._b--; return; }
+    if (cur > 0) show(cur - 1, true); }
   /* ---------------------------------------------------------------- toolbar (as in the previous deck) */
   const toast = m => { const t = $(document, "#toast"); t.textContent = m; t.classList.add("on"); clearTimeout(toast.h); toast.h = setTimeout(() => t.classList.remove("on"), 2200); };
   const MODE_KEY = "opim639-storyboard-reveal";
@@ -4510,9 +4559,8 @@ aside.notes{display:none}
   function setReveal(all, say) {
     revealAll = all; try { localStorage.setItem(MODE_KEY, all ? "all" : "one"); } catch (e) {}
     const b = $(document, "#modeb"); b.textContent = all ? "Reveal: all at once" : "Reveal: one by one"; b.classList.toggle("on", all);
-    const st = slides[cur]._stepper; if (st) st.go(all ? st.N : st.cur, true);
-    const rv = $(slides[cur], ".vs.clickrev"); if (rv && all) setRev(rv, 2);
-    if (say) toast((all ? "Every step shown" : "Step through each panel") + " · every slide");
+    if (all) buildTo(slides[cur], Infinity);
+    if (say) toast((all ? "Every block and step shown" : "One block at a time: Next brings in each part") + " · every slide");
   }
   const toggleFull = () => { try { const p = document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen?.(); p && p.catch && p.catch(() => {}); } catch (e) {} };
   const toggleNotes = () => { document.body.classList.toggle("shownotes"); $(document, "#notesb").classList.toggle("on", document.body.classList.contains("shownotes")); fit(); };
@@ -4551,8 +4599,7 @@ aside.notes{display:none}
     document.body.classList.toggle("editing", on); $(document, "#editb").classList.toggle("on", on);
     $$(document, "[data-ek]").forEach(el => (on ? el.setAttribute("contenteditable", "true") : el.removeAttribute("contenteditable")));
     if (!on && document.activeElement?.blur) document.activeElement.blur();
-    steppers.forEach(({ S }) => S.go(on || revealAll ? S.N : S.cur, true));            // edit mode shows every step
-    if (on) $$(document, ".vs.clickrev").forEach(el => setRev(el, 2));
+    if (on) slides.forEach(sl => buildTo(sl, Infinity));                                // edit mode shows every block and step
     toast(on ? "Edit mode: click any text to change it" : "Edits saved in this browser");
   }
   $(document, "#editb").onclick = () => setEditing(!editingNow());
@@ -4616,6 +4663,7 @@ aside.notes{display:none}
       if (k === "play") play(); else { stop(); S.go(k === "prev" ? S.cur - 1 : k === "next" ? S.cur + 1 : N); } };
     S.stop = stop;
     panel.closest(".slide")._stepper = S;
+    panel._S = S;
     return S;
   }
   const steppers = $$(document, ".panel.stepper, .inner.stepper").map(p => ({ p, S: stepper(p) }));
@@ -6409,7 +6457,7 @@ aside.notes{display:none}
   function preparePrint() {
     PRINTING = true;
     if (BUS.day !== DAY0) setDay(DAY0);
-    steppers.forEach(({ S }) => { S.stop(); S.go(S.N, true); });
+    steppers.forEach(({ S }) => S.stop()); slides.forEach(sl => buildTo(sl, Infinity));
     printers.forEach(f => f());
   }
   addEventListener("beforeprint", preparePrint);
