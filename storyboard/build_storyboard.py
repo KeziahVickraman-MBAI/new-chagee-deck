@@ -783,6 +783,14 @@ def build() -> Path:
     vals = values(d)
     html = fill(tpl, vals)
     imgs = images()
+    # slide 09's video: the WebM (VP9) is embedded so the deck plays it anywhere, including VS Code's preview,
+    # which lacks H.264; the MP4 in media/ is the second source. Poster: the render's last sim frame.
+    VOUT = ROOT / "video" / "out"
+    for f in ("counter_comparison.webm", "counter_comparison.mp4", "poster.png"):
+        if not (VOUT / f).exists():
+            raise SystemExit(f"build: slide 09's video needs video/out/{f}; run node video/render.js (--webm for the WebM only)")
+    imgs["counter_poster"] = "data:image/png;base64," + base64.b64encode((VOUT / "poster.png").read_bytes()).decode()
+    html = html.replace("{media:counter_webm}", "data:video/webm;base64," + base64.b64encode((VOUT / "counter_comparison.webm").read_bytes()).decode())
     html = re.sub(r"\{img:(\w+)\}", lambda m: imgs[m.group(1)], html)
     mx = mb_appendix(d)
     html = html.replace("<!--SQAPPX-->", sq_appendix(d))

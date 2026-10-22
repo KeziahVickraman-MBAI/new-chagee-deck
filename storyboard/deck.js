@@ -1941,6 +1941,8 @@
   (function counterVideo() {
     const sl = document.getElementById("c7"), seg = sl && $(sl, ".vidseg"); if (!seg) return;
     const panel = seg.closest(".panel"), vid = $(panel, "video");
+    // neither source plays (the last <source> errors): say so, instead of an empty player
+    $$(vid, "source").pop().addEventListener("error", () => { if (!vid.currentSrc || vid.networkState === 3) $(panel, ".vidv").classList.add("fail"); });
     const mode = m => { panel.classList.toggle("vidmode", m === "vid"); $$(seg, "button").forEach(b => b.classList.toggle("on", b.dataset.v === m));
       if (m === "vid") { vid.currentTime = 0; vid.play().catch(() => {}); } else vid.pause(); };
     seg.addEventListener("click", e => { const b = e.target.closest("button[data-v]"); if (b) mode(b.dataset.v); });

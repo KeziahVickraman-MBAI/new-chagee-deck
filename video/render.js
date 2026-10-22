@@ -1,10 +1,12 @@
 // render.js - npm run render:video
 // Records the trace (build_trace.js), renders every frame of video/scene.html in headless Chromium
-// (Playwright) and encodes the MP4 with ffmpeg (H.264, yuv420p), then a 10-second looping GIF of each panel.
+// (Playwright) and encodes the MP4 with ffmpeg (H.264, yuv420p), a WebM copy (VP9: plays in VS Code and other
+// Electron previews, which lack H.264), then a 10-second looping GIF of each panel.
 // Fails (exit 1, no video kept) if the cups-served and queue values on the last sim frame differ from what
 // the slide 07 panels show for the same seed and minutes (computed separately by build_trace.js).
 //   node video/render.js                 full render -> video/out/
 //   node video/render.js --stills 0,360  PNG stills only -> video/out/stills/
+//   node video/render.js --webm          the WebM copy only, from the existing MP4
 const fs = require("fs");
 const path = require("path");
 const { spawn } = require("child_process");
@@ -13,7 +15,7 @@ const FFMPEG = require("ffmpeg-static");
 const { build } = require("./build_trace.js");
 
 const OUT = path.join(__dirname, "out");
-const MP4 = path.join(OUT, "counter_comparison.mp4");
+const MP4 = path.join(OUT, "counter_comparison.mp4"), WEBM = path.join(OUT, "counter_comparison.webm");
 const GIF = { A: path.join(OUT, "panel_A_humans_fixed_posts.gif"), B: path.join(OUT, "panel_B_machine_brigade.gif") };
 const PANEL_CROP = { A: "920:794:30:150", B: "920:794:970:150" };       // scene.js PANELS plus the counters underneath
 const GIF_FROM = 14, GIF_SEC = 10;
@@ -24,6 +26,9 @@ const run = (args, input) => new Promise((ok, no) => {
   p.on("close", c => (c === 0 ? ok() : no(new Error(`ffmpeg exited ${c}\n${err.slice(-2000)}`))));
   if (input) input(p);
 });
+// VP9 at 1280 wide: the deck shows the video at most full-screen on a laptop
+const webm = () => run(["-y", "-i", MP4, "-vf", "scale=1280:-2", "-c:v", "libvpx-vp9", "-crf", "33", "-b:v", "0",
+  "-row-mt", "1", "-deadline", "good", "-cpu-used", "4", "-an", WEBM]);
 function check(hud, expected, where) {
   const bad = ["A", "B"].flatMap(k => ["served", "queue"].filter(m => hud[k][m] !== expected[k][m])
     .map(m => `${k} ${m}: video ${hud[k][m]}, slide 07 ${expected[k][m]}`));
@@ -32,6 +37,7 @@ function check(hud, expected, where) {
 const ranges = fr => fr.reduce((a, f) => { const l = a.at(-1); if (l && f === l[1] + 1) l[1] = f; else a.push([f, f]); return a; }, []);
 
 (async () => {
+  if (process.argv.includes("--webm")) { await webm(); console.log("wrote", path.relative(process.cwd(), WEBM)); return; }
   const { trace, expected } = build();
   fs.mkdirSync(OUT, { recursive: true });
   const browser = await chromium.launch();
@@ -78,6 +84,7 @@ const ranges = fr => fr.reduce((a, f) => { const l = a.at(-1); if (l && f === l[
   const diag = await page.evaluate(() => SCENE.diag());
   await browser.close();
 
+  await webm();
   for (const k of ["A", "B"])
     await run(["-y", "-ss", String(GIF_FROM), "-t", String(GIF_SEC), "-i", MP4, "-filter_complex",
       `[0:v]crop=${PANEL_CROP[k]},fps=15,scale=640:-1:flags=lanczos,split[a][b];[a]palettegen=stats_mode=diff[p];[b][p]paletteuse=dither=bayer:bayer_scale=4`,

@@ -553,6 +553,7 @@ html,body{margin:0;background:#E7E3DC;color:var(--ink);font-family:var(--sans);-
 .panel.vidmode .vidseg{margin-left:auto}
 .vidv{display:none;flex:1;min-height:0;flex-direction:column;gap:5px;margin-top:6px}
 .vidv video{flex:1;min-height:0;width:100%;object-fit:contain;background:#F5F1EA;border-radius:9px}
+.vidfail{display:none;margin:0;padding:6px 10px;background:#FBEDEC;border-radius:7px;font:12px/1.35 var(--sans);color:var(--red)} .vidv.fail .vidfail{display:block}
 .panel.vidmode .cmp,.panel.vidmode .legend,.panel.vidmode .cctl{display:none} .panel.vidmode .vidv{display:flex}
 /* the three chapters: stage tracker, business problem, manager's decision, transition */
 .stg{display:inline-flex;align-items:center;margin-left:14px;vertical-align:1px;border:1.5px solid var(--blue);border-radius:999px;overflow:hidden;font:600 10.5px/1.2 var(--sans);letter-spacing:.02em;text-transform:none}
@@ -1448,7 +1449,8 @@ aside.notes{display:none}
         <div class="ptop"><span class="ptitle">Peak hour</span><span class="seg vidseg screenonly"><button class="btn on" data-v="sim" title="The live counter simulation">Simulation</button><button class="btn" data-v="vid" title="The same counter model, rendered as a video">▶ Visual</button></span><span class="ctl screenonly cctl"></span></div>
         <div class="cmp"><div class="opt" data-o="0"></div><div class="opt" data-o="1"></div></div>
         <div class="legend">Navy = robot, white = by hand (click to switch) · red circle = a person · faded = walking · red cup = waiting for a person.</div>
-        <div class="vidv screenonly"><video src="media/counter_comparison.mp4" poster="media/counter_poster.png" controls muted playsinline preload="metadata" aria-label="Video: the two counters side by side at the peak"></video>
+        <div class="vidv screenonly"><video poster="{img:counter_poster}" controls muted playsinline preload="auto" aria-label="Video: the two counters side by side at the peak"><source src="{media:counter_webm}" type="video/webm"><source src="media/counter_comparison.mp4" type="video/mp4"></video>
+          <p class="vidfail">This viewer cannot play the video. Open the deck in Chrome, Edge or Safari, or play the counter comparison video in the video/out folder directly.</p>
           <p class="lnote">Visual representation, rendered from the same counter model: event day, same customers on both counters, {{x.vid_staff}} people each, the first {{x.vid_min}} minutes at ×{{x.vid_speed}}. <b>A</b> humans only, fixed posts · <b>B</b> machine-made drink, bucket brigade. Illustrative, not Chagee data. Switch back to Simulation to change the setup.</p></div>
       </div>
       <div class="cards" style="gap:10px">
