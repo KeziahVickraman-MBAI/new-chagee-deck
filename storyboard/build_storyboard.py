@@ -21,7 +21,7 @@ from __future__ import annotations
 
 import base64
 import io
-import json
+import json, shutil
 import re
 import subprocess
 import sys
@@ -403,6 +403,13 @@ def values(d: dict) -> dict:
     v["x.mb_credit"], v["x.mb_base"], v["x.mb_extra"], v["x.mb_price"] = BE["credit"], BE["base"], BE["extra"], BE["price"]
     for k_ in ("low", "mid", "high"):
         v[f"x.mb_be_{k_}"], v[f"x.mb_marg_{k_}"], v[f"x.mb_net_{k_}"] = BE[k_]["extraNeeded"], BE[k_]["margin"], BE[k_]["netPerMember"]
+    # slide 09's video caption: the render's own report (video/out/report.json)
+    VR = json.loads((ROOT / "video" / "out" / "report.json").read_text())
+    v["x.vid_min"], v["x.vid_speed"] = VR["simMinutes"], VR["speed"]
+    TR = json.loads(re.sub(r"^\s*window\.TRACE\s*=\s*|;\s*$", "", (ROOT / "video" / "build" / "trace.js").read_text()))
+    v["x.vid_staff"] = TR["staff"]
+    if TR["day"] != RAW["storyboard"]["day_type_default"]["value"] or TR["video"]["minutes"] != VR["simMinutes"]:
+        raise SystemExit("build: slide 09's video caption says event day and the report's minutes; re-render the video")
     # slide 07, the CRM manager's decision: personalisation's running cost moves the break-even by its own hurdle
     v["x.mb_ai"], v["x.mb_be_ai"], v["x.mb_ai_hurdle"] = MBd["breakEvenAi"]["ai"], MBd["breakEvenAi"]["mid"]["extraNeeded"], MBd["aiHurdle"]
     if abs(v["x.mb_be_ai"] - v["x.mb_be_mid"] - v["x.mb_ai_hurdle"]) > 1e-9:
@@ -789,6 +796,12 @@ def build() -> Path:
     html = html.replace("/*__DATA__*/", "window.STORY=" + json.dumps(payload, ensure_ascii=False).replace("</", "<\\/") + ";")
     html = html.replace("/*__JS__*/", js.replace("</script", "<\\/script"))
     OUT.write_text(html, encoding="utf-8")
+    # slide 09's Visual toggle plays the rendered counter video; it is served next to the deck, not embedded
+    MEDIA = HERE / "media"; MEDIA.mkdir(exist_ok=True)
+    for src, dst in ((ROOT / "video" / "out" / "counter_comparison.mp4", "counter_comparison.mp4"), (ROOT / "video" / "out" / "poster.png", "counter_poster.png")):
+        if not src.exists():
+            raise SystemExit(f"build: slide 09's video needs {src.relative_to(ROOT)}; render it with video/render.js")
+        shutil.copyfile(src, MEDIA / dst)
     print(f"wrote {OUT.relative_to(ROOT)} ({OUT.stat().st_size / 1e6:.1f} MB)")
     return OUT
 

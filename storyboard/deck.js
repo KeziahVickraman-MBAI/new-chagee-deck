@@ -1937,6 +1937,17 @@
     draw();
   })();
 
+  /* ---------------------------------------------------------------- 09 Simulation / Visual: the rendered counter video */
+  (function counterVideo() {
+    const sl = document.getElementById("c7"), seg = sl && $(sl, ".vidseg"); if (!seg) return;
+    const panel = seg.closest(".panel"), vid = $(panel, "video");
+    const mode = m => { panel.classList.toggle("vidmode", m === "vid"); $$(seg, "button").forEach(b => b.classList.toggle("on", b.dataset.v === m));
+      if (m === "vid") { vid.currentTime = 0; vid.play().catch(() => {}); } else vid.pause(); };
+    seg.addEventListener("click", e => { const b = e.target.closest("button[data-v]"); if (b) mode(b.dataset.v); });
+    new MutationObserver(() => { if (!sl.classList.contains("active")) vid.pause(); }).observe(sl, { attributes: true, attributeFilter: ["class"] });
+    printers.push(() => mode("sim"));
+  })();
+
   /* ---------------------------------------------------------------- 09b the operations manager's decision (counter.aiLayer) */
   (function opsDecision() {
     const sl = document.getElementById("o2"), AL = DATA.aiLayer; if (!sl || !AL) return;
