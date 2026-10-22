@@ -60,7 +60,9 @@
     "P-appstore": "CHAGEE app, App Store listing (team research, Oct 2026; no link supplied, not checked by us): 'Order and pay digitally', 'Order for self-pickup ahead of time', 'Locate our outlets and their operating hours'. The listing seen was the Saudi storefront; its privacy-policy URL includes 'SGMY' (our reading: Singapore and Malaysia, an inference). Privacy label: Precise Location under 'Data Not Linked to You'; search history not listed.",
     "L-sec20f-member": "Chagee Holdings Form 20-F for FY2025 (same filing as L-sec20f), Item 3.D risk factor 'We may not be successful in expanding our membership and our ability to take advantage of our membership program may be limited.' Both quoted sentences checked word for word by us against the SEC EDGAR filing, 22 Oct 2026.",
     "C-topic8": "OPIM639 course slides, Topic 8 (slides08 Service Platforms), slides 30-36: the economy with network effects, r(x) = 1 - x, f(z) = z, equilibria z' and z''. Slide 34 quoted word for word, checked by us against the course file, 22 Oct 2026.",
-    "I-chagee-contact-tiers": "Informal source, anonymised, to confirm: a Chagee staff member, paraphrased, not quoted. The barrier to levelling up is not outlet operations; it is whether customers think the effort of tiering up is worth it."
+    "I-chagee-contact-tiers": "Informal source, anonymised, to confirm: a Chagee staff member, paraphrased, not quoted. The barrier to levelling up is not outlet operations; it is whether customers think the effort of tiering up is worth it.",
+    "C-topic1": "OPIM639 course slides, Topic 1 (slides01 Online Retailing): slide 12, online retailers 'can capture demand data, not just sales data'; slide 13, they 'can provide personalized service'; slide 21, integrating online and offline channels. Checked by us against the course file, 22 Oct 2026.",
+    "C-topic2": "OPIM639 course slides, Topic 2 (slides02 Online Marketplaces), slide 17: the operator that provides fulfilment 'owns all the detailed data' on demand, behaviour and trends. Checked by us against the course file, 22 Oct 2026."
   },
   "facts": {
     "_note": "Chagee facts quoted on slides. Not assumptions: each carries its ledger source and appears with that source in the speaker notes.",
@@ -2160,12 +2162,176 @@
           "Aisha",
           "Ravi"
         ],
-        "squad_name": "Lunch squad"
+        "squad_name": "Lunch squad",
+        "prefs": {
+          "Mei": {
+            "usual": "Jasmine milk tea · 50% sugar",
+            "suggest": "Oolong milk tea · 50% sugar",
+            "why": "you often pick floral teas at lunch and rated an oolong highly"
+          },
+          "Jun": {
+            "usual": "Black milk tea · less ice",
+            "suggest": "Black milk tea · 25% sugar",
+            "why": "you switched to less sugar in your last few orders",
+            "gift_options": [
+              "Black milk tea · 25% sugar",
+              "Oolong milk tea · less ice",
+              "Fresh fruit tea"
+            ]
+          },
+          "Aisha": {
+            "usual": "Fresh fruit tea",
+            "suggest": "Jasmine milk tea · no ice",
+            "why": "you liked jasmine teas when ordering for yourself"
+          },
+          "Ravi": {
+            "usual": "Oolong milk tea",
+            "suggest": "Oolong milk tea · less sugar",
+            "why": "close to your usual, with the sugar level you picked last week"
+          }
+        }
       },
-      "unit": "illustrative rules and copy for the M2 prototype: points for your own drink, points every member gets for each drink in a group order, the member's points now and for the next tier, tier names, personas",
+      "unit": "illustrative rules and copy for the M2 prototype: points for your own drink, points every member gets for each drink in a group order, the member's points now and for the next tier, tier names, personas; each persona's usual drink, a suggested alternative with its reason, and gift options for the recipient",
       "range": null,
       "source": "assumption, not Chagee data",
-      "rationale": "Our illustrative rules for the proposed experience, used consistently on slide 06. Not Chagee's membership rules, which are to confirm. The group-order credit is members.group_credit_share. No real messages, purchases or accounts."
+      "rationale": "Our illustrative rules for the proposed experience, used consistently on slide 06. Not Chagee's membership rules, which are to confirm. The group-order credit is members.group_credit_share. Preferences and suggestions are illustrative data, not learned from anyone. Recalling the last order is the baseline; the proposed AI part ranks alternatives from each member's own choices, acceptances and dismissals. No real messages, purchases or accounts."
+    }
+  },
+  "squadcast": {
+    "_note": {
+      "value": "Slide 06b: group orders to forecasts",
+      "unit": "text",
+      "range": null,
+      "source": "assumption",
+      "rationale": "A synthetic demonstration of the mechanics only: one outlet's peak half-hour pickup window, with squad signals generated by our assumptions. The enhanced forecast can only help to the extent we assume the signals carry information, so this shows how the forecast would work, not measured accuracy. Nothing here feeds any other slide."
+    },
+    "window_minutes": {
+      "value": 30,
+      "unit": "minutes in the pickup window",
+      "range": null,
+      "source": "assumption, synthetic, not Chagee data",
+      "rationale": "The window is the peak hour's first half (store.hourly_demand_share), so its calendar baseline is the deck's own volume: cups a day x the peak hour's share / 2."
+    },
+    "lead_minutes": {
+      "value": 120,
+      "unit": "minutes before the window that the playback starts",
+      "range": null,
+      "source": "assumption, synthetic, not Chagee data",
+      "rationale": "Display and simulation horizon."
+    },
+    "social_share": {
+      "value": 0.3,
+      "unit": "share of the window's cups that come through squad group orders and gifts, on average",
+      "range": [
+        0,
+        0.5
+      ],
+      "source": "assumption, synthetic, not Chagee data",
+      "rationale": "Hypothesis to test; zero means no squad signals, and the enhanced forecast then equals the baseline."
+    },
+    "invites_per_basket": {
+      "value": 4,
+      "unit": "people invited to a group basket, on average (squad size 2 to 6)",
+      "range": [
+        2,
+        6
+      ],
+      "source": "assumption, synthetic, not Chagee data",
+      "rationale": "Illustrative."
+    },
+    "member_conversion": {
+      "value": 0.75,
+      "unit": "share of invited members who confirm a drink",
+      "range": [
+        0.3,
+        1
+      ],
+      "source": "assumption, synthetic, not Chagee data",
+      "rationale": "Illustrative; the forecast does not know it and estimates it from synthetic history."
+    },
+    "confirm_delay_minutes": {
+      "value": 8,
+      "unit": "average minutes from a basket opening to a member confirming",
+      "range": null,
+      "source": "assumption, synthetic, not Chagee data",
+      "rationale": "Illustrative."
+    },
+    "gifts_per_window": {
+      "value": 1.5,
+      "unit": "gifts sent for this window, on average, at the default squad share (scales with the squad share)",
+      "range": null,
+      "source": "assumption, synthetic, not Chagee data",
+      "rationale": "Illustrative."
+    },
+    "gift_redeem_share": {
+      "value": 0.6,
+      "unit": "share of gifts redeemed for this window",
+      "range": null,
+      "source": "assumption, synthetic, not Chagee data",
+      "rationale": "Illustrative; an unredeemed gift is never counted as a drink."
+    },
+    "gift_redeem_delay_minutes": {
+      "value": 30,
+      "unit": "average minutes from sending a gift to its redemption",
+      "range": null,
+      "source": "assumption, synthetic, not Chagee data",
+      "rationale": "Illustrative."
+    },
+    "day_shock_sd": {
+      "value": 0.2,
+      "unit": "spread of the day's demand around the calendar baseline (both walk-in and squad cups move with it)",
+      "range": null,
+      "source": "assumption, synthetic, not Chagee data",
+      "rationale": "Illustrative: why the calendar baseline misses on any one day."
+    },
+    "history_windows": {
+      "value": 400,
+      "unit": "past synthetic windows the enhanced forecast learns its conversion and late-arrival rates from",
+      "range": null,
+      "source": "assumption, synthetic, not Chagee data",
+      "rationale": "Synthetic history, same generator, different seeds."
+    },
+    "eval_windows": {
+      "value": 400,
+      "unit": "synthetic windows used to compare the two forecasts (appendix)",
+      "range": null,
+      "source": "assumption, synthetic, not Chagee data",
+      "rationale": "Different seeds from the history."
+    },
+    "eval_leads": {
+      "value": [
+        120,
+        60,
+        30,
+        10
+      ],
+      "unit": "minutes before the window at which the forecasts are compared",
+      "range": null,
+      "source": "assumption, synthetic, not Chagee data",
+      "rationale": "Appendix table."
+    },
+    "day_picks": {
+      "value": [
+        0.8,
+        1.0,
+        1.25
+      ],
+      "unit": "actual cups against the calendar baseline for the three example days on the slide (quiet, typical, busy)",
+      "range": null,
+      "source": "assumption, synthetic, not Chagee data",
+      "rationale": "Display: the example days are the seeds whose actual cups, as a share of the baseline, are closest to these."
+    },
+    "drink_mix": {
+      "value": {
+        "Jasmine milk tea": 0.35,
+        "Oolong milk tea": 0.3,
+        "Black milk tea": 0.2,
+        "Fresh fruit tea": 0.15
+      },
+      "unit": "share of cups by drink, for predicted cups not yet chosen",
+      "range": null,
+      "source": "assumption, synthetic, not Chagee data",
+      "rationale": "Illustrative generic drinks, not Chagee's menu or sales mix."
     }
   }
 }

@@ -397,6 +397,15 @@ def values(d: dict) -> dict:
     v["x.mb_credit"], v["x.mb_base"], v["x.mb_extra"], v["x.mb_price"] = BE["credit"], BE["base"], BE["extra"], BE["price"]
     for k_ in ("low", "mid", "high"):
         v[f"x.mb_be_{k_}"], v[f"x.mb_marg_{k_}"], v[f"x.mb_net_{k_}"] = BE[k_]["extraNeeded"], BE[k_]["margin"], BE[k_]["netPerMember"]
+    # slide 06b (sim/squadcast.js via precompute.js): synthetic; the notes quote the default-share evaluation
+    SQd, SQR = d["squadcast"], RAW["squadcast"]
+    ev = SQd["eval"][str(SQR["social_share"]["value"])]
+    v["x.sq_neval"] = SQR["eval_windows"]["value"]
+    v["x.sq_mae_b"] = ev[0]["maeBaseline"]
+    v["x.sq_mae_e10"] = next(r["maeEnhanced"] for r in ev if r["lead"] == 10)
+    z = SQd["eval"]["0"]
+    if any(abs(r["maeBaseline"] - r["maeEnhanced"]) > 1e-9 for r in z):
+        raise SystemExit("build: slide 06b's notes say the two forecasts are identical with no squad share; they are not, check sim/squadcast.js")
     # slides 8A-8D, the new-market worked example (sim/newmarket.js via precompute.js; A$, scenario assumptions)
     NMd, NMR = d["newMarket"], RAW["new_market"]
     A_ = {a["id"]: a for a in NMR["areas"]["value"]}
@@ -510,7 +519,7 @@ def appendix() -> str:
         f = RAW["facts"][k]
         out.append(f"<p><b>{label}: {short(f['value'])}</b>. {esc(f['rationale'])} <i>[{esc(f['source'])}]</i></p>")
     out.append("<h5>Sources</h5>")
-    for k in ("L-sg-directory", "L-koalagains", "L-yfchuhai", "L-sec20f", "L-unsw", "I-chagee-contact", "I-sg-groundfloor", "I-team-app-first", "L-ester1996", "P-honeycombers", "P-eatbook", "I-team-expansion", "I-team-site-framework", "L-chagee-q2-2026-call", "L-chagee-q1-2025", "P-appstore", "P-vulcanpost-comeback", "L-sec20f-data", "L-sec20f-member", "C-topic8", "I-chagee-contact-tiers"):
+    for k in ("L-sg-directory", "L-koalagains", "L-yfchuhai", "L-sec20f", "L-unsw", "I-chagee-contact", "I-sg-groundfloor", "I-team-app-first", "L-ester1996", "P-honeycombers", "P-eatbook", "I-team-expansion", "I-team-site-framework", "L-chagee-q2-2026-call", "L-chagee-q1-2025", "P-appstore", "P-vulcanpost-comeback", "L-sec20f-data", "L-sec20f-member", "C-topic8", "I-chagee-contact-tiers", "C-topic1", "C-topic2"):
         out.append(f"<p><b>{k}</b> {esc(RAW['_sources'][k])}</p>")
     out.append("<h5>Assumptions (assumptions.json, illustrative)</h5>")
     for sec, key, label in USED:
@@ -569,6 +578,37 @@ def mb_appendix(d: dict) -> tuple:
         o = M[k]; rng = f" (range {short(o['range'])})" if o.get("range") else ""
         c.append(f"<p><b>{k.replace('_', ' ')}</b>: {short(o['value'])}{rng}. {o['rationale']}</p>")
     return "\n".join(a), "\n".join(b), "\n".join(c)
+
+
+def sq_appendix(d: dict) -> str:
+    """Appendix for slide 06b: the synthetic forecast comparison, where each signal comes from, and every input."""
+    Q, S = d["squadcast"], RAW["squadcast"]
+    out = ["<h5>What this is</h5>", f"<p>{S['_note']['rationale']}</p>",
+           "<h5>The forecasts</h5>",
+           "<p><b>Baseline</b>: the calendar expectation for the window, cups a day x the peak hour's share x half an hour. "
+           "<b>Enhanced</b>: the baseline's non-squad part, plus cups confirmed so far, plus predicted cups not yet confirmed: open baskets' unconfirmed "
+           "invitees x the chance learned from synthetic history that they still confirm by then, unredeemed gifts x the learned chance of redemption, and "
+           "the squad cups history says arrive from baskets and gifts not yet started. Each forecast uses only signals up to its time; a confirmed cup is "
+           "counted once; an invitation or an unredeemed gift is never a confirmed drink.</p>",
+           f"<h5>Mean absolute error, cups, over {S['eval_windows']['value']} synthetic windows</h5>",
+           "<table class='res mbt'><tr><th>Squad share</th>" + "".join(f"<th>{r['lead']} min before: baseline / enhanced</th>" for r in Q["eval"]["0"]) + "</tr>" +
+           "".join(f"<tr><td>{float(k):.0%}</td>" + "".join(f"<td>{r['maeBaseline']:.2f} / {r['maeEnhanced']:.2f}</td>" for r in v) + "</tr>" for k, v in Q["eval"].items()) + "</table>",
+           "<p>With no squad share the two are identical. The enhanced forecast improves only because the synthetic squad signals were generated to move "
+           "with demand; on single days it can be worse, when walk-in demand moves and squads cannot see it. Not measured accuracy.</p>",
+           "<h5>Signals and where they stand</h5>",
+           "<p><b>Documented</b>: completed purchases (Chagee's Form 20-F: the business generates personal, transactional and other data; L-sec20f-data); "
+           "in-app ordering at a chosen outlet (Vulcan Post, P-vulcanpost-comeback; App Store listing, P-appstore, not checked by us). "
+           "<b>To confirm</b>: drink customisations and the pickup time chosen, in Chagee's Singapore app. "
+           "<b>Proposed, needing collection and consent</b>: group size and confirmed quantities, suggestion accepted, edited or dismissed, gifts sent and redeemed, open baskets and invitations.</p>",
+           "<h5>Inputs (assumptions.json squadcast; assumption, synthetic, not Chagee data)</h5>"]
+    for k, o in S.items():
+        if k == "_note":
+            continue
+        rng = f" (range {short(o['range'])})" if o.get("range") else ""
+        out.append(f"<p><b>{k.replace('_', ' ')}</b>: {short(o['value'])} {o.get('unit', '')}{rng}. {o['rationale']}</p>")
+    out.append("<p><b>Course link</b>: OPIM639 Topic 1, slide 12 (capture demand data, not just sales data) and slide 13 (personalised service); "
+               "Topic 2, slide 17 (the operator that provides fulfilment holds the detailed data). C-topic1, C-topic2.</p>")
+    return "\n".join(out)
 
 
 def nm_appendix() -> str:
@@ -714,9 +754,10 @@ def build() -> Path:
     imgs = images()
     html = re.sub(r"\{img:(\w+)\}", lambda m: imgs[m.group(1)], html)
     mx = mb_appendix(d)
+    html = html.replace("<!--SQAPPX-->", sq_appendix(d))
     html = html.replace("<!--MBAPPX1-->", mx[0]).replace("<!--MBAPPX2-->", mx[1]).replace("<!--MBAPPX3-->", mx[2])
     html = html.replace("<!--APPENDIX-->", appendix()).replace("<!--NMAPPENDIX-->", nm_appendix()).replace("<!--TIERS-->", tiers_table())
-    js = "\n".join((ROOT / "sim" / f).read_text(encoding="utf-8") for f in ("sim.js", "store.js", "counter.js", "sitepick.js", "ladder.js", "benefit.js", "siteext.js", "sitemodel.js", "newmarket.js", "pnl.js", "members.js"))
+    js = "\n".join((ROOT / "sim" / f).read_text(encoding="utf-8") for f in ("sim.js", "store.js", "counter.js", "sitepick.js", "ladder.js", "benefit.js", "siteext.js", "sitemodel.js", "newmarket.js", "pnl.js", "members.js", "squadcast.js"))
     js += "\n" + (HERE / "deck.js").read_text(encoding="utf-8")
     payload = {"RAW": RAW, "DATA": d, "GEO": json.loads((ROOT / "sim" / "sg_geo.json").read_text(encoding="utf-8")),
                "MAP": imgs["sg_map_crop"],

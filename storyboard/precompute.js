@@ -19,6 +19,7 @@ const SMod = require("../sim/sitemodel.js");
 const NM = require("../sim/newmarket.js");
 const PNL = require("../sim/pnl.js");
 const MB = require("../sim/members.js");
+const SQ = require("../sim/squadcast.js");
 
 const RAW = JSON.parse(fs.readFileSync(path.join(__dirname, "..", "assumptions.json"), "utf8"));
 const P = Sim.params(RAW), SB = RAW.storyboard;
@@ -142,10 +143,14 @@ const newMarket = { runs: nmR, score: nmScore, sensitivity: nmSens, pilot: nmPil
 const members = { table: MB.table(RAW), breakEven: MB.breakEven(RAW), levers: MB.levers(RAW) };
 members.network = members.table.map(s => ({ id: s.id, closed: s.eq ? s.eq.low : null, sim: MB.tipping(RAW, s.p, s.k, Sim) }));
 
+// slide 06b (synthetic demonstration): the two forecasts compared over synthetic windows, at several squad shares
+const sqE = SQ.inputs(RAW, P), squadcast = { base: sqE.base, hour: sqE.hour, days: SQ.pickDays(sqE, Sim, RAW.squadcast.day_picks.value), eval: {} };
+for (const s of [0, 0.15, sqE.s, 0.45]) { const E = { ...sqE, s }; squadcast.eval[s] = SQ.evaluate(E, SQ.learn(E, Sim), Sim); }
+
 const pl = Sim.plan(P, "mixed");
 const data = {
   generated: new Date().toISOString(), seeds,
-  grid, splits, aiLayer, newMarket, pnl, members, site, ladder, benefit, decisions, siteExt, siteModel,
+  grid, splits, aiLayer, newMarket, pnl, members, squadcast, site, ladder, benefit, decisions, siteExt, siteModel,
   counter: {
     peakHour: C.peakHour(P), firstHour: 10, cupsPerDay: Sim.dailyBase(P),
     perWorkerHour: pl.perWorker * 60, handSeconds: pl.W,

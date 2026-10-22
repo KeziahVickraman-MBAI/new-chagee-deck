@@ -1639,28 +1639,49 @@
       const av = (i, off) => `<span class="av${off ? " off" : ""}" style="background:${AVC[i]}">${PPL[i][0]}</span>`;
       const bar = (a, b, sq) => `<div class="prog"><i class="${sq ? "sq" : ""}" style="width:${Math.min(100, 100 * a / b)}%"></i></div>`;
       const top = (t, h) => `<div class="bar"><span>9:41</span><span>●●●</span></div><div class="hd"><small>${t}</small><h3>${h}</h3></div>`;
-      const JR = ["See your progress and start a squad", "Invite friends from the share sheet", "Friends join and add to a group order", "Collect the order: everyone's progress moves", "Gift a drink to a friend"];
+      const PR = AR.prefs, me = PPL[0], gift = PPL[1];
+      // the member's own choice on screen 3 (accept, customise or dismiss the suggestion) and one feedback tag; Aisha confirms last
+      const ch = { pick: null, fb: null, sugar: "50%", ice: "Regular", aisha: false };
+      const myDrink = () => ch.pick === "accept" ? PR[me].suggest : ch.pick === "custom" ? `${PR[me].suggest.split(" · ")[0]} · ${ch.sugar} sugar · ${ch.ice.toLowerCase()} ice` : PR[me].usual;
+      const JR = ["See your progress and start a squad", "Invite friends from the share sheet", "Choose your drink: your usual, or a suggestion", "Each friend confirms their own drink", "Collect the order: everyone's progress moves", "Send a friend a drink", "The friend picks from suggestions made for them"];
+      const opt = (k, v, cur) => `<button class="chip${cur === v ? " on" : ""}" data-${k}="${v}">${v}</button>`;
       const SCR = [
         () => top("Members · illustrative", `${AR.tier_now} member`) + `<div class="bd"><div class="crd"><h5>${AR.points_now} / ${AR.points_next} points to ${AR.tier_next}</h5>${bar(AR.points_now, AR.points_next)}<p>${AR.points_own_drink} points for each drink you buy.</p></div>
           <div class="crd"><h5>Start a squad</h5><p>Squads of ${sqLo} to ${sqHi}. Every drink in a squad's group order earns <b>${AR.points_per_squad_drink} points for every member</b>, and ${pct(credit)} back as credit.</p><button class="cta" data-go="1">Create a squad</button></div></div>`,
         () => top(`${AR.squad_name} · 1 of ${sqHi}`, "Invite your friends") + `<div class="bd"><div class="crd"><h5>${AR.squad_name}</h5><div class="avs">${PPL.map((_, i) => av(i, i > 0)).join("")}</div><p>Only you so far.</p></div></div>
           <div class="sheet"><div class="grab"></div><b>Share invite to ${AR.squad_name}</b><div class="apps"><span><i>✉</i>Messages</span><span><i>⧉</i>Copy link</span><span><i>@</i>Email</span><span><i>…</i>More</span></div>
           <button class="cta" data-go="2">Send invite</button><span class="sim">Simulated: no message is sent.</span></div>`,
-        () => top(`${AR.squad_name} · ${n} members`, "Group order") + `<div class="bd"><div class="crd"><div class="avs">${PPL.map((_, i) => av(i)).join("")}</div><p><span class="ok">✓</span> ${PPL.slice(1).join(", ")} joined</p></div>
-          <div class="crd">${PPL.map((p, i) => `<div class="row"><span>${p} · ${DR[i]}</span><span>S$${price.toFixed(2)}</span></div>`).join("")}<p style="margin-top:4px">${n} drinks · each earns ${AR.points_per_squad_drink} points for all ${n} of you</p>
-          <button class="cta" data-go="3">Place group order</button><span class="sim">Simulated: no payment is taken.</span></div></div>`,
+        () => top(`${AR.squad_name} · group order`, "Your drink") + `<div class="bd">
+          <div class="crd usual${ch.pick === "dismiss" ? " sel" : ""}"><small class="tag">Your usual</small> <b>${PR[me].usual}</b></div>
+          <div class="crd sug${ch.pick === "accept" || ch.pick === "custom" ? " sel" : ""}"><small class="tag ai">Suggested for you</small><h5 style="margin-top:2px">${PR[me].suggest}</h5><p>Because ${PR[me].why}.</p>
+            <div class="acts"><button class="mini${ch.pick === "accept" ? " on" : ""}" data-pick="accept">Accept</button><button class="mini${ch.pick === "custom" ? " on" : ""}" data-pick="custom">Customise</button><button class="mini${ch.pick === "dismiss" ? " on" : ""}" data-pick="dismiss">Dismiss</button></div>
+            ${ch.pick === "custom" ? `<div class="cust">Sugar ${["25%", "50%", "70%"].map(v => opt("sugar", v, ch.sugar)).join("")}<br>Ice ${["Less", "Regular", "No"].map(v => opt("ice", v, ch.ice)).join("")}</div>` : ""}
+            <div class="fbk">${["More like this", "Not for me", "Buying for someone else"].map(v => opt("fb", v, ch.fb)).join("")}</div></div>
+          <button class="cta" data-go="3"${ch.pick ? "" : " disabled"}>${ch.pick ? `Confirm: ${myDrink().split(" · ")[0]}` : "Choose a drink first"}</button></div>`,
+        () => top(`${AR.squad_name} · shared basket`, "Each friend confirms") + `<div class="bd"><div class="crd">
+          ${PPL.map((p, i) => { const d = i === 0 ? myDrink() : PR[p].usual, wait = p === "Aisha" && !ch.aisha;
+            return `<div class="row"><span>${av(i, wait)} <b>${p}</b> · ${wait ? "<i>still choosing</i>" : d.split(" · ")[0]}</span><span>${wait ? `<button class="mini" data-aisha="1">confirm</button>` : `<span class="ok">✓</span>`}</span></div>`; }).join("")}
+          <p style="margin-top:4px">${ch.aisha ? n : n - 1} confirmed · only confirmed drinks enter the basket. ${me} pays; each preference is saved to the friend who chose it, not the payer.</p></div>
+          <button class="cta" data-go="4"${ch.aisha ? "" : " disabled"}>${ch.aisha ? "Place group order" : "Waiting for Aisha"}</button><span class="sim">Simulated: no payment is taken.</span></div>`,
         () => top("Order collected · simulated", "Everyone moved up") + `<div class="bd"><div class="crd"><h5>You: ${after} / ${AR.points_next} points</h5>${bar(after, AR.points_next)}<p>+${AR.points_own_drink} for your drink, +${n * AR.points_per_squad_drink} from the squad's ${n} drinks.</p></div>
           <div class="crd"><h5>Each friend: +${mine} points too</h5><div class="avs">${PPL.map((_, i) => av(i)).join("")}</div></div>
-          <div class="crd"><h5>S$${cr.toFixed(2)} credit each</h5><p>${pct(credit)} of each drink in the group order, for your next order.</p></div><button class="cta ghost" data-go="4">Next: gift a drink</button></div>`,
-        () => top(AR.squad_name, "Gift a drink") + `<div class="bd"><div class="crd"><h5>Send ${PPL[1]} a drink</h5><div class="avs">${av(1)}</div><p>${PPL[1]} gets a voucher for one drink. When ${PPL[1]} collects it, it counts as a squad drink: ${AR.points_per_squad_drink} points for every member.</p>
-          <button class="cta" data-go="0">Send gift</button><span class="sim">Simulated: nothing is bought or sent.</span></div></div>`];
+          <div class="crd"><h5>S$${cr.toFixed(2)} credit each</h5><p>${pct(credit)} of each drink in the group order, for your next order.</p></div><button class="cta ghost" data-go="5">Next: gift a drink</button></div>`,
+        () => top(AR.squad_name, "Gift a drink") + `<div class="bd"><div class="crd"><h5>Send ${gift} a drink</h5><div class="avs">${av(1)}</div><p>${gift} chooses from suggestions made for ${gift}. You will not see ${gift}'s order history, only whether the gift was collected.</p>
+          <button class="cta" data-go="6">Send gift</button><span class="sim">Simulated: nothing is bought or sent.</span></div></div>`,
+        () => top(`${gift}'s app · a gift from ${me}`, "Picked for you") + `<div class="bd"><div class="crd">${PR[gift].gift_options.map((d, i) => `<div class="row"><span>${i ? "○" : "●"} ${d}</span></div>`).join("")}
+          <p style="margin-top:4px">Ranked from ${gift}'s own past choices. ${me} sees none of them.</p></div>
+          <div class="crd"><p>When ${gift} collects it, it counts as a squad drink: ${AR.points_per_squad_drink} points for every member.</p></div>
+          <button class="cta" data-go="0">Redeem for pickup</button><span class="sim">Simulated: no drink is ordered.</span></div>`];
       const WHY = [
         ["Shared", "Nothing yet: you see your own progress."], ["Shared", "An invite link to the squad, only to the friends you pick."],
-        ["Shared", "Who is in the squad and the group order. Each pays for their own drink."], ["Progress", `Everyone in the squad: your drink gives you ${AR.points_own_drink}; each drink in the order gives every member ${AR.points_per_squad_drink}.`],
-        ["Reward", "A gifted drink counts as a squad drink when collected, so it moves the whole squad."]];
+        ["Baseline and AI", "Recalling your last order is the baseline. The proposed AI part ranks other drinks from your own choices, acceptances and dismissals. Your feedback teaches it; \"Buying for someone else\" keeps that drink out of your profile."],
+        ["Shared", "Who is in the squad and what each confirmed. Private order history stays private."], ["Progress", `Everyone in the squad: your drink gives you ${AR.points_own_drink}; each drink in the order gives every member ${AR.points_per_squad_drink}.`],
+        ["Privacy", `The sender never sees the recipient's history.`], ["Reward", "A gifted drink counts as a squad drink when collected, so it moves the whole squad."]];
       const WHY2 = ["Your progress is yours; the squad is how friends' orders start to count for you.", "Joining is one tap for a friend: the effort, p, the squad has to keep low.",
-        "This is where friends' value, k, comes from: their drinks move your tier.", `The reward: ${AR.points_per_squad_drink} points a squad drink to every member, and ${pct(credit)} credit on each group-order drink.`, "Gifting brings a friend in without asking them to set anything up."];
-      let cur2 = 3;
+        "Easier choices may lower the effort, p, further. A hypothesis to test, like k.", "A drink counts only once its chooser confirms it: that is the confirmed demand slide 06b forecasts from.",
+        `The reward: ${AR.points_per_squad_drink} points a squad drink to every member, and ${pct(credit)} credit on each group-order drink.`, "Gifting brings a friend in without asking them to set anything up.",
+        "An unredeemed gift is not a drink yet; only redemption confirms it."];
+      let cur2 = 2;
       const scr = $(m2, ".scr"), jour = $(m2, ".mbjour"), why = $(m2, ".mbwhy"), nav = $(m2, ".mbnav");
       jour.innerHTML = JR.map((t, i) => `<li data-i="${i}"><span class="n">${i + 1}</span><span>${t}</span></li>`).join("");
       nav.innerHTML = `<button class="btn" data-d="-1" aria-label="Previous screen">◀</button><button class="btn" data-d="1" aria-label="Next screen">▶</button>`;
@@ -1668,9 +1689,17 @@
         cur2 = (i + SCR.length) % SCR.length; scr.innerHTML = SCR[cur2]();
         $$(jour, "li").forEach((li, j) => li.classList.toggle("on", j === cur2));
         why.innerHTML = `<div class="bc"><div class="k">${WHY[cur2][0]}</div><p>${WHY[cur2][1]}</p></div><div class="bc"><div class="k">Why it matters</div><p>${WHY2[cur2]}</p></div>` +
-          `<p class="lnote">Our illustrative rules, used throughout this chapter; not Chagee's membership rules, which are to confirm.</p>`;
+          `<p class="lnote">Proposed experience with illustrative data and rules, not Chagee's; nothing is learned from real customers.</p>`;
       }
-      scr.addEventListener("click", e => { const b = e.target.closest("[data-go]"); if (b) screen(+b.dataset.go); });
+      scr.addEventListener("click", e => {
+        const b = e.target.closest("button"); if (!b || b.disabled) return;
+        if (b.dataset.pick) { ch.pick = b.dataset.pick; if (ch.pick === "dismiss") ch.fb = ch.fb || "Not for me"; return screen(cur2); }
+        if (b.dataset.fb) { ch.fb = ch.fb === b.dataset.fb ? null : b.dataset.fb; return screen(cur2); }
+        if (b.dataset.sugar) { ch.sugar = b.dataset.sugar; return screen(cur2); }
+        if (b.dataset.ice) { ch.ice = b.dataset.ice; return screen(cur2); }
+        if (b.dataset.aisha) { ch.aisha = true; return screen(cur2); }
+        if (b.dataset.go != null) screen(+b.dataset.go);
+      });
       jour.addEventListener("click", e => { const li = e.target.closest("li"); if (li) screen(+li.dataset.i); });
       nav.addEventListener("click", e => { const b = e.target.closest("[data-d]"); if (b) screen(cur2 + +b.dataset.d); });
       const inc = $(m2, ".mbinc input");
@@ -1693,8 +1722,8 @@
       }
       inc.addEventListener("change", model);
       MBS.fns.push(model);
-      printers.push(() => { inc.checked = false; screen(3); model(); });
-      screen(3); model();
+      printers.push(() => { inc.checked = false; Object.assign(ch, { pick: "accept", fb: "More like this", sugar: "50%", ice: "Regular", aisha: false }); screen(2); model(); });
+      screen(2); model();
     }
 
     // M3: contribution per member a month against extra orders, after credits
@@ -1760,6 +1789,85 @@
       s += T(W - R, 126, "● formula · ○ simulation", `font-size="9.5" fill="${COL.taupe}" text-anchor="end"`);
       svg.innerHTML = s;
     }
+  })();
+
+  /* ---------------------------------------------------------------- 06b group orders to forecasts (sim/squadcast.js, synthetic) */
+  (function squadcast() {
+    const sl = document.getElementById("m2b"), Q = window.ChageeSquadcast, D = DATA.squadcast; if (!sl || !Q || !D) return;
+    const SR = RAW.squadcast, E0 = Q.inputs(RAW, P), GREEN = "#2F6B45", DAYN = ["Quiet day", "Typical day", "Busy day"];
+    const t0 = DATA.counter.firstHour + E0.hour, win = `${String(t0).padStart(2, "0")}:00 to ${String(t0).padStart(2, "0")}:${String(E0.W).padStart(2, "0")}`;
+    $$(sl, ".sqwin").forEach(e => (e.textContent = win));
+    // what the experience records: documented today, to confirm, or proposed (needs collection and consent)
+    const SIG = [["Completed purchases", "documented", "doc"], ["Selected outlet and in-app order", "documented", "doc"], ["Drinks and customisations", "to confirm", "cf"],
+                 ["Pickup time chosen", "to confirm", "cf"], ["Group size, confirmed quantities", "proposed", "pr"], ["Suggestion accepted, edited, dismissed", "proposed", "pr"], ["Gift sent and redeemed", "proposed", "pr"]];
+    $(sl, ".sqsig").innerHTML = SIG.map(([l, t, c]) => `<li><span>${l}</span><span class="tg ${c}">${t}</span></li>`).join("");
+    const pl = Sim.plan(P, "mixed"), make = P.stations.reduce((a, s) => a + (P.mixedMachine.includes(s) ? P.machineSec[s] : P.humanSec[s]), 0) / 60;
+    const st = { day: 1, s: E0.s, t: -E0.lead, reveal: false, timer: null };
+    let E, H, w, last = {};
+    const rebuild = () => { E = { ...E0, s: st.s }; H = Q.learn(E, Sim); w = Q.simulate(E, D.days[st.day], Sim); };
+    const ctl = $(sl, ".sqctl");
+    ctl.innerHTML = `<span class="lab">Example day · synthetic</span><span class="seg">${DAYN.map((d, i) => `<button class="btn" data-day="${i}">${d}</button>`).join("")}</span>` +
+      `<label>Squad share of the window's cups<span class="val" data-v="s"></span><input type="range" data-k="s" min="${SR.social_share.range[0]}" max="${SR.social_share.range[1]}" step="0.05" value="${st.s}"></label>` +
+      `<label>Minutes before pickup<span class="val" data-v="t"></span><input type="range" data-k="t" min="${-E0.lead}" max="0" step="1" value="${st.t}"></label>` +
+      `<span style="display:flex;gap:6px"><button class="btn primary" data-x="play">▶ Play</button><button class="btn" data-x="reveal">Reveal actual</button><button class="btn" data-x="reset">Reset</button></span>`;
+    function act(f) {
+      const F = f.enhanced, drinks = Object.keys(E.mix), cnt = Object.fromEntries(drinks.map(d => [d, 0]));
+      f.drinks.forEach(d => cnt[d]++);
+      drinks.forEach(d => (cnt[d] += Math.max(0, F - f.confirmed) * E.mix[d]));
+      const top = drinks.sort((a, b) => cnt[b] - cnt[a]).slice(0, 3).map(d => `${d.split(" ")[0]} ${Math.round(cnt[d])}`).join(" · ");
+      const rate = F / E.W, k = Math.max(P.minStaff.mixed, Math.ceil(rate * P.margin / pl.perWorker - 1e-9)), rho = rate / (k * pl.perWorker);
+      const wait = make / (1 - Math.min(rho, 0.95));
+      const out = { prep: top, staff: `${k} ${k === 1 ? "person" : "people"}, ${win}`, counter: `${k > 1 ? `a bucket brigade of ${k}` : "one person"}, machines on tea and milk · load ${pct(rho)}`, pickup: `ready in about ${Math.max(1, Math.round(wait))} min` };
+      $(sl, ".sqact").innerHTML = [["prep", "Prepare", "drinks to have ready"], ["staff", "Staff", "the window's crew"], ["counter", "Counter", "how the line is run"], ["pickup", "Pickup estimate", "shown to customers (rough)"]]
+        .map(([k2, h, sub]) => `<div class="o${last[k2] !== undefined && last[k2] !== out[k2] ? " pulse" : ""}"><b>${h}</b>${out[k2]}<br><small style="color:${COL.taupe}">${sub}</small></div>`).join("");
+      last = out; setTimeout(() => $$(sl, ".sqact .o.pulse").forEach(o => o.classList.remove("pulse")), 650);
+    }
+    function draw() {
+      const f = Q.forecast(E, H, w, st.t), L = 44, Rr = 120, Tp = 22, B = 34, W = 760, Hh = 178, x1 = 15;
+      const path = []; for (let t = -E.lead; t <= st.t; t++) path.push([t, Q.forecast(E, H, w, t).enhanced]);
+      const ym = Math.max(E.base, w.actual, ...path.map(p => p[1])) * 1.2, X = t => L + (t + E.lead) / (E.lead + x1) * (W - L - Rr), Y = v => Tp + (1 - v / ym) * (Hh - Tp - B);
+      let s = `<rect x="${X(0)}" y="${Tp}" width="${X(x1) - X(0)}" height="${Y(0) - Tp}" fill="${COL.cream}"/>` + T((X(0) + X(x1)) / 2, Tp + 11, "window", `font-size="10" fill="${COL.taupe}" text-anchor="middle"`);
+      for (let v = 0; v <= ym; v += 10) s += `<line x1="${L}" x2="${X(x1)}" y1="${Y(v)}" y2="${Y(v)}" stroke="${v ? COL.line : COL.ink2}"/>` + T(L - 6, Y(v) + 3.5, v, `font-size="10" fill="${COL.taupe}" text-anchor="end"`);
+      for (let t = -E.lead; t <= 0; t += 30) s += T(X(t), Hh - B + 13, t ? `${t} min` : "pickup", `font-size="10" fill="${COL.taupe}" text-anchor="middle"`);
+      s += `<text transform="translate(12 ${(Tp + Hh - B) / 2}) rotate(-90)" font-size="10" fill="${COL.taupe}" text-anchor="middle">cups in the window</text>`;
+      // signals as they arrive (below the axis)
+      const yS = Hh - B + 22, mk = { open: (x) => `<circle cx="${x}" cy="${yS}" r="3.2" fill="none" stroke="${COL.navy}" stroke-width="1.4"/>`, confirm: x => `<circle cx="${x}" cy="${yS}" r="2.6" fill="${GREEN}"/>`,
+        gift: x => `<rect x="${x - 3}" y="${yS - 3}" width="6" height="6" fill="none" stroke="${COL.gold}" stroke-width="1.4"/>`, redeem: x => `<rect x="${x - 3}" y="${yS - 3}" width="6" height="6" fill="${COL.gold}"/>` };
+      w.events.filter(e => e.t <= st.t).forEach(e => (s += mk[e.kind](X(e.t).toFixed(1))));
+      s += `<line x1="${L}" x2="${X(x1)}" y1="${Y(E.base)}" y2="${Y(E.base)}" stroke="${COL.taupe}" stroke-width="2" stroke-dasharray="6 4"/>`;
+      s += `<polyline points="${path.map(([t, v]) => `${X(t).toFixed(1)},${Y(v).toFixed(1)}`).join(" ")}" fill="none" stroke="${COL.navy}" stroke-width="2.6"/>` +
+           `<circle cx="${X(st.t)}" cy="${Y(f.enhanced)}" r="4.5" fill="${COL.navy}"/><line x1="${X(st.t)}" x2="${X(st.t)}" y1="${Tp}" y2="${Y(0)}" stroke="${COL.navy}" stroke-dasharray="2 3" opacity=".5"/>`;
+      if (st.reveal) s += `<line x1="${X(0)}" x2="${X(x1)}" y1="${Y(w.actual)}" y2="${Y(w.actual)}" stroke="${COL.red}" stroke-width="3"/>` + T((X(0) + X(x1)) / 2, Y(w.actual) - 6, `actual ${w.actual}`, `font-size="11" font-weight="700" fill="${COL.red}" text-anchor="middle"`);
+      const ly = 12;
+      s += `<line x1="${L}" x2="${L + 22}" y1="${ly - 4}" y2="${ly - 4}" stroke="${COL.taupe}" stroke-width="2" stroke-dasharray="6 4"/>` + T(L + 27, ly, "Baseline: history and calendar", `font-size="10.5" fill="${COL.ink2}"`) +
+           `<line x1="${L + 200}" x2="${L + 222}" y1="${ly - 4}" y2="${ly - 4}" stroke="${COL.navy}" stroke-width="2.6"/>` + T(L + 227, ly, "Enhanced: plus squad signals", `font-size="10.5" fill="${COL.ink2}"`) +
+           T(L + 400, ly, "○ basket opened · ● drink confirmed · □ gift sent · ■ gift redeemed", `font-size="10" fill="${COL.taupe}"`);
+      s += T(X(x1) + 6, Y(E.base) + 4, `baseline ${E.base.toFixed(0)}`, `font-size="10.5" fill="${COL.taupe}"`) + T(X(x1) + 6, Y(f.enhanced) - 6, `enhanced ${f.enhanced.toFixed(0)}`, `font-size="10.5" font-weight="700" fill="${COL.navy}"`);
+      $(sl, ".sqsvg").innerHTML = s;
+      // predict box
+      const tot = f.enhanced, seg = (v, c, lab) => v > 0.05 ? `<i style="width:${(100 * v / tot).toFixed(1)}%;background:${c}"><span>${lab}</span></i>` : "";
+      $(sl, ".sqbar").innerHTML = seg(f.nonSquad, COL.taupe, `${f.nonSquad.toFixed(0)} usual`) + seg(f.confirmed, GREEN, `${f.confirmed} confirmed`) + seg(f.predicted, COL.gold, `${f.predicted.toFixed(1)} predicted`);
+      $(sl, ".sqpred").innerHTML = `At ${st.t} min: ${f.baskets} baskets open, ${f.pending} invitees not yet confirmed × ${pct(f.pc)} learned chance; ${f.unredeemed} gifts unredeemed × ${pct(f.pr)}; ${f.late.toFixed(1)} cups expected from baskets not yet opened. Usual = calendar baseline less its squad share.`;
+      act(f);
+      $(ctl, '[data-v="s"]').textContent = pct(st.s); $(ctl, '[data-v="t"]').textContent = `${st.t} min`;
+      $(ctl, 'input[data-k="s"]').value = st.s; $(ctl, 'input[data-k="t"]').value = st.t;
+      $$(ctl, "[data-day]").forEach(b => b.classList.toggle("on", +b.dataset.day === st.day));
+      $(sl, ".mbtake .t").innerHTML = st.reveal
+        ? `${DAYN[st.day]}: actual <b>${w.actual}</b> cups. At ${st.t} min the baseline was off by <b>${Math.abs(E.base - w.actual).toFixed(1)}</b>, the enhanced forecast by <b>${Math.abs(f.enhanced - w.actual).toFixed(1)}</b>${Math.abs(f.enhanced - w.actual) > Math.abs(E.base - w.actual) ? ": worse today, because walk-in demand moved and squads cannot see it" : ""}. One synthetic day; averages are in the appendix.`
+        : `Better social experience → richer customer signals → better demand forecasts → better service.`;
+      $(sl, ".sqctlp").innerHTML = `<div class="k">Shown</div><p>${DAYN[st.day]} (synthetic), squad share ${pct(st.s)}, forecast at ${st.t} min, actual revealed. Window ${win}.</p>`;
+    }
+    const stop = () => { clearInterval(st.timer); st.timer = null; $(ctl, '[data-x="play"]').textContent = "▶ Play"; };
+    ctl.addEventListener("click", e => { const b = e.target.closest("button"); if (!b) return;
+      if (b.dataset.day) { stop(); st.day = +b.dataset.day; st.reveal = false; rebuild(); draw(); }
+      if (b.dataset.x === "reveal") { stop(); st.reveal = true; draw(); }
+      if (b.dataset.x === "reset") { stop(); Object.assign(st, { s: E0.s, t: -E0.lead, reveal: false }); rebuild(); draw(); }
+      if (b.dataset.x === "play") { if (st.timer) return stop(); if (st.t >= 0) st.t = -E0.lead; st.reveal = false; b.textContent = "❚❚ Pause";
+        st.timer = setInterval(() => { st.t = Math.min(0, st.t + 2); draw(); if (st.t >= 0) { stop(); setTimeout(() => { st.reveal = true; draw(); }, 600); } }, reduce ? 160 : 90); } });
+    ctl.addEventListener("input", e => { const k = e.target.dataset?.k; if (!k) return; stop();
+      if (k === "s") { st.s = +e.target.value; st.reveal = false; rebuild(); } else st.t = +e.target.value; draw(); });
+    printers.push(() => { stop(); Object.assign(st, { day: 1, s: E0.s, t: -10, reveal: true }); rebuild(); last = {}; draw(); });
+    rebuild(); st.t = -30; draw();
   })();
 
   /* ---------------------------------------------------------------- print */
