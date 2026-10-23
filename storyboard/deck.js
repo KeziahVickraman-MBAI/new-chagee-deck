@@ -1885,10 +1885,10 @@
       const f = Q.forecast(E, H, w, st.t), L = 44, Rr = 120, Tp = 22, B = 34, W = 760, Hh = 178, x1 = 15;
       const path = []; for (let t = -E.lead; t <= st.t; t++) path.push([t, Q.forecast(E, H, w, t).enhanced]);
       const ym = Math.max(E.base, w.actual, ...path.map(p => p[1])) * 1.2, X = t => L + (t + E.lead) / (E.lead + x1) * (W - L - Rr), Y = v => Tp + (1 - v / ym) * (Hh - Tp - B);
-      let s = `<rect x="${X(0)}" y="${Tp}" width="${X(x1) - X(0)}" height="${Y(0) - Tp}" fill="${COL.cream}"/>` + T((X(0) + X(x1)) / 2, Tp + 11, "window", `font-size="10" fill="${COL.taupe}" text-anchor="middle"`);
+      let s = `<rect x="${X(0)}" y="${Tp}" width="${X(x1) - X(0)}" height="${Y(0) - Tp}" fill="${COL.cream}"/>` + T((X(0) + X(x1)) / 2, Tp + 11, "pickups", `font-size="10" fill="${COL.taupe}" text-anchor="middle"`);
       for (let v = 0; v <= ym; v += 10) s += `<line x1="${L}" x2="${X(x1)}" y1="${Y(v)}" y2="${Y(v)}" stroke="${v ? COL.line : COL.ink2}"/>` + T(L - 6, Y(v) + 3.5, v, `font-size="10" fill="${COL.taupe}" text-anchor="end"`);
       for (let t = -E.lead; t <= 0; t += 30) s += T(X(t), Hh - B + 13, t ? `${t} min` : "pickup", `font-size="10" fill="${COL.taupe}" text-anchor="middle"`);
-      s += `<text transform="translate(12 ${(Tp + Hh - B) / 2}) rotate(-90)" font-size="10" fill="${COL.taupe}" text-anchor="middle">cups in the window</text>`;
+      s += `<text transform="translate(12 ${(Tp + Hh - B) / 2}) rotate(-90)" font-size="10" fill="${COL.taupe}" text-anchor="middle">forecast cups</text>`;
       // signals as they arrive (below the axis)
       const yS = Hh - B + 22, mk = { open: (x) => `<circle cx="${x}" cy="${yS}" r="3.2" fill="none" stroke="${COL.navy}" stroke-width="1.4"/>`, confirm: x => `<circle cx="${x}" cy="${yS}" r="2.6" fill="${GREEN}"/>`,
         gift: x => `<rect x="${x - 3}" y="${yS - 3}" width="6" height="6" fill="none" stroke="${COL.gold}" stroke-width="1.4"/>`, redeem: x => `<rect x="${x - 3}" y="${yS - 3}" width="6" height="6" fill="${COL.gold}"/>` };
@@ -1898,21 +1898,24 @@
            `<circle cx="${X(st.t)}" cy="${Y(f.enhanced)}" r="4.5" fill="${COL.navy}"/><line x1="${X(st.t)}" x2="${X(st.t)}" y1="${Tp}" y2="${Y(0)}" stroke="${COL.navy}" stroke-dasharray="2 3" opacity=".5"/>`;
       if (st.reveal) s += `<line x1="${X(0)}" x2="${X(x1)}" y1="${Y(w.actual)}" y2="${Y(w.actual)}" stroke="${COL.red}" stroke-width="3"/>` + T((X(0) + X(x1)) / 2, Y(w.actual) - 6, `actual ${w.actual}`, `font-size="11" font-weight="700" fill="${COL.red}" text-anchor="middle"`);
       const ly = 12;
-      s += `<line x1="${L}" x2="${L + 22}" y1="${ly - 4}" y2="${ly - 4}" stroke="${COL.taupe}" stroke-width="2" stroke-dasharray="6 4"/>` + T(L + 27, ly, "Baseline: history and calendar", `font-size="10.5" fill="${COL.ink2}"`) +
-           `<line x1="${L + 200}" x2="${L + 222}" y1="${ly - 4}" y2="${ly - 4}" stroke="${COL.navy}" stroke-width="2.6"/>` + T(L + 227, ly, "Enhanced: plus squad signals", `font-size="10.5" fill="${COL.ink2}"`) +
-           T(L + 400, ly, "○ basket opened · ● drink confirmed · □ gift sent · ■ gift redeemed", `font-size="10" fill="${COL.taupe}"`);
-      s += T(X(x1) + 6, Y(E.base) + 4, `baseline ${E.base.toFixed(0)}`, `font-size="10.5" fill="${COL.taupe}"`) + T(X(x1) + 6, Y(f.enhanced) - 6, `enhanced ${f.enhanced.toFixed(0)}`, `font-size="10.5" font-weight="700" fill="${COL.navy}"`);
+      s += `<line x1="${L}" x2="${L + 22}" y1="${ly - 4}" y2="${ly - 4}" stroke="${COL.taupe}" stroke-width="2" stroke-dasharray="6 4"/>` + T(L + 27, ly, "History only (calendar)", `font-size="11" fill="${COL.ink2}"`) +
+           `<line x1="${L + 168}" x2="${L + 190}" y1="${ly - 4}" y2="${ly - 4}" stroke="${COL.navy}" stroke-width="2.6"/>` + T(L + 195, ly, "Updated with squad signals", `font-size="11" font-weight="600" fill="${COL.navy}"`) +
+           T(L + 372, ly, "○ basket opened · ● drink confirmed · □ gift sent · ■ redeemed", `font-size="10" fill="${COL.taupe}"`);
+      s += T(X(x1) + 6, Y(E.base) + 4, `history ${E.base.toFixed(0)}`, `font-size="11" fill="${COL.taupe}"`) + T(X(x1) + 6, Y(f.enhanced) - 6, `with squads ${f.enhanced.toFixed(0)}`, `font-size="11" font-weight="700" fill="${COL.navy}"`);
       $(sl, ".sqsvg").innerHTML = s;
       // predict box
-      const tot = f.enhanced, seg = (v, c, lab) => v > 0.05 ? `<i style="width:${(100 * v / tot).toFixed(1)}%;background:${c}"><span>${lab}</span></i>` : "";
-      $(sl, ".sqbar").innerHTML = seg(f.nonSquad, COL.taupe, `${f.nonSquad.toFixed(0)} usual`) + seg(f.confirmed, GREEN, `${f.confirmed} confirmed`) + seg(f.predicted, COL.gold, `${f.predicted.toFixed(1)} predicted`);
-      $(sl, ".sqpred").innerHTML = `At ${st.t} min: ${f.baskets} baskets open, ${f.pending} invitees not yet confirmed × ${pct(f.pc)} learned chance; ${f.unredeemed} gifts unredeemed × ${pct(f.pr)}; ${f.late.toFixed(1)} cups expected from baskets not yet opened. Usual = calendar baseline less its squad share.`;
+      const tot = f.enhanced, seg = (v, c) => v > 0.05 ? `<i style="width:${(100 * v / tot).toFixed(1)}%;background:${c}"></i>` : "";
+      $(sl, ".sqbar").innerHTML = seg(f.nonSquad, COL.taupe) + seg(f.confirmed, GREEN) + seg(f.predicted, COL.gold);
+      const key = (c, v, lab) => `<span class="sqk"><i style="background:${c}"></i><b>${v}</b> ${lab}</span>`;
+      $(sl, ".sqsum").innerHTML = `<b class="sqtot">${tot.toFixed(0)} cups</b> expected at ${st.t} min = ` +
+        key(COL.taupe, f.nonSquad.toFixed(0), "usual, from history") + " + " + key(GREEN, f.confirmed, "confirmed in squads") + " + " + key(COL.gold, f.predicted.toFixed(1), "likely");
+      $(sl, ".sqpred").innerHTML = `<b>Likely</b>: invites not yet confirmed and gifts not yet redeemed, each counted at the chance it converted in past windows (${pct(f.pc)} and ${pct(f.pr)}), plus baskets not yet opened.`;
       act(f);
       $(ctl, '[data-v="s"]').textContent = pct(st.s); $(ctl, '[data-v="t"]').textContent = `${st.t} min`;
       $(ctl, 'input[data-k="s"]').value = st.s; $(ctl, 'input[data-k="t"]').value = st.t;
       $$(ctl, "[data-day]").forEach(b => b.classList.toggle("on", +b.dataset.day === st.day));
       $(sl, ".mbtake .t").innerHTML = st.reveal
-        ? `${DAYN[st.day]}: actual <b>${w.actual}</b> cups. At ${st.t} min the baseline was off by <b>${Math.abs(E.base - w.actual).toFixed(1)}</b>, the enhanced forecast by <b>${Math.abs(f.enhanced - w.actual).toFixed(1)}</b>${Math.abs(f.enhanced - w.actual) > Math.abs(E.base - w.actual) ? ": worse today, because walk-in demand moved and squads cannot see it" : ""}. One synthetic day; averages are in the appendix.`
+        ? `${DAYN[st.day]}: actual <b>${w.actual}</b> cups. At ${st.t} min the history-only forecast was off by <b>${Math.abs(E.base - w.actual).toFixed(1)}</b>, the squad forecast by <b>${Math.abs(f.enhanced - w.actual).toFixed(1)}</b>${Math.abs(f.enhanced - w.actual) > Math.abs(E.base - w.actual) ? ": worse today, because walk-in demand moved and squads cannot see it" : ""}. One synthetic day; averages are in the appendix.`
         : `Better social experience → richer customer signals → better demand forecasts → better service.`;
       $(sl, ".sqctlp").innerHTML = `<div class="k">Shown</div><p>${DAYN[st.day]} (synthetic), squad share ${pct(st.s)}, forecast at ${st.t} min, actual revealed. Window ${win}.</p>`;
     }
