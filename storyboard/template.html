@@ -573,6 +573,10 @@ html,body{margin:0;background:#E7E3DC;color:var(--ink);font-family:var(--sans);-
 .s3p h5{margin:4px 0 0;font:500 30px/1.15 var(--serif);color:var(--ink)} .s3p .what{margin:0;font:18px/1.4 var(--sans);color:var(--ink2)}
 .s3p .who{margin:auto 0 0;min-height:5.4em;box-sizing:border-box;background:#EEF5F0;border-left:4px solid #2F6B45;border-radius:8px;padding:10px 14px;font:16px/1.4 var(--sans);color:var(--ink)}
 .s3p .who b{display:block;font:600 11px/1.4 var(--sans);letter-spacing:.14em;text-transform:uppercase;color:#2F6B45;margin-bottom:2px}
+.o2tab{font-size:15.5px} .o2tab td{padding:8px 14px;white-space:nowrap} .o2tab th{padding:6px 14px;vertical-align:bottom} .o2tab th small{font-size:10.5px} .o2tab td:first-child{white-space:normal;width:40%}
+.o2tab .pick{background:#EEF5F0;color:#1F4D31;font-weight:600;border-left:2px solid #2F6B45;border-right:2px solid #2F6B45}
+.o2tab tr:last-child .pick{border-bottom:2px solid #2F6B45} .o2tab th.pick{border-top:2px solid #2F6B45;color:#2F6B45}
+.o2tab .rtag{display:block;width:fit-content;margin:0 0 5px auto;padding:2px 8px;border-radius:10px;background:#2F6B45;color:#fff;font:600 10.5px/1.4 var(--sans);letter-spacing:.1em}
 .s3v{flex:1;display:flex;align-items:center;justify-content:center;min-height:0} .s3v svg{width:100%;max-height:132px}
 .s3p .where{margin:0;font:600 12px/1.3 var(--sans);color:var(--red)} .s3a{display:grid;place-items:center;font:28px var(--serif);color:var(--gold)}
 /* 07: the demand-data demonstration, readable sizes */
@@ -1368,10 +1372,10 @@ aside.notes{display:none}
       <div class="panel" data-kind="opdec">
         <div class="ptop"><span class="ptitle">One lever per column · peak hour · bucket brigade · <span class="o2day"></span> · mean of {{a.seeds}} runs</span></div>
         <table class="res o2tab"></table>
-        <p class="lnote" style="margin-top:8px">The forecast changes only the crew; the machine changes only the equipment; the last row swaps the brigade for fixed posts. Illustrative simulation.</p>
       </div>
       <div class="cards" style="gap:8px">
         <div class="cset screenonly" style="flex-direction:row;align-items:center;gap:10px;padding:7px 12px"><span class="lab">Day</span><span class="dslot"></span></div>
+        <div class="bc"><div class="k">Reading the table</div><p><b style="color:#2F6B45">Green</b> is the proposed pilot. Each column adds one lever: the forecast changes only the crew, the machine only the equipment. The last row swaps the brigade for fixed posts. Illustrative simulation.</p></div>
         <div class="bc warn"><div class="k">If the forecast is off</div><p>A busy-day forecast {{r.fe_bz_err|pct}} too low leaves about <b>{{r.fe_bz_lo_lost|pct}}</b> walking away (slide 09).</p></div>
       </div>
     </div>

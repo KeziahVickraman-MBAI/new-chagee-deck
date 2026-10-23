@@ -2018,9 +2018,11 @@
       const ROWS = [["Crew at the peak", r => `${r.staff}`], ["Median wait", r => mmss(r.medianWait)], ["Walk-aways", r => pct(r.lostShare, 1)],
                     ["Cups served per person, peak hour", r => (r.staff ? Math.round(r.served / r.staff) : "–")],
                     ["Peak-hour contribution", r => `S$${Math.round(contrib(r))}`], ["Cost a day: roster and machines", r => `S$${Math.round(r.cost)}`]];
-      $(sl, ".o2tab").innerHTML = `<tr><th>Criterion</th>${cols.map(c => `<th>${c.h}<br><small style="text-transform:none;letter-spacing:0">${c.sub}</small></th>`).join("")}</tr>` +
-        ROWS.map(([lab, f]) => `<tr><td>${lab}</td>${cols.map(c => `<td>${f(c.r)}</td>`).join("")}</tr>`).join("") +
-        `<tr><td>Walk-aways with fixed posts instead: well / badly assigned</td>${cols.map(c => `<td>${c.fb ? `${pct(c.fb.lostShare, 1)} / ${pct(c.fw.lostShare, 1)}` : "–"}</td>`).join("")}</tr>`;
+      // the last column is the proposed pilot: forecast roster, brigade, one tea-and-milk machine
+      const rc = i => (i === cols.length - 1 ? ` class="pick"` : "");
+      $(sl, ".o2tab").innerHTML = `<tr><th>Criterion</th>${cols.map((c, i) => `<th${rc(i)}>${i === cols.length - 1 ? `<span class="rtag">Proposed pilot</span>` : ""}${c.h}<br><small style="text-transform:none;letter-spacing:0">${c.sub}</small></th>`).join("")}</tr>` +
+        ROWS.map(([lab, f]) => `<tr><td>${lab}</td>${cols.map((c, i) => `<td${rc(i)}>${f(c.r)}</td>`).join("")}</tr>`).join("") +
+        `<tr><td>Walk-aways with fixed posts: well / badly assigned</td>${cols.map((c, i) => `<td${rc(i)}>${c.fb ? `${pct(c.fb.lostShare, 1)} / ${pct(c.fw.lostShare, 1)}` : "–"}</td>`).join("")}</tr>`;
       $$(sl, ".o2day").forEach(e => (e.textContent = DAY_LABEL[d]));
     }
     BUS.fns.push(draw); printers.push(draw); draw();
