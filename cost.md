@@ -479,6 +479,7 @@ Every input in `assumptions.json`. **Key** is the path to change; **Range** is w
 | `squadcast.eval_windows` | 400 | synthetic windows used to compare the two forecasts (appendix) |  | assumption | Different seeds from the history. |
 | `squadcast.eval_leads` | [120, 60, 30, 10] | minutes before the window at which the forecasts are compared |  | assumption | Appendix table. |
 | `squadcast.day_picks` | [0.8, 1.0, 1.25] | actual cups against the calendar baseline for the three example days on the slide (quiet, typical, busy) |  | assumption | Display: the example days are the seeds whose actual cups, as a share of the baseline, are closest to these. |
+| `squadcast.success_pick` | 1.45 | actual cups against the calendar baseline for the fourth example day on slide 07 (squad rush) |  | assumption | Display: a success case chosen by rule, not by hand. Among the same 300 synthetic windows, only those where the squad forecast is closer than the history-only forecast at the slide's default minute; of those, the one whose actual cups are closest to this share of the baseline. The slide also states the share of all windows where the squad forecast was closer, so the case is not presented as typical of every day. |
 | `squadcast.drink_mix` | {"Jasmine milk tea": 0.35, "Oolong milk tea": 0.3, "Black milk tea": 0.2, "Fresh fruit tea": 0.15} | share of cups by drink, for predicted cups not yet chosen |  | assumption | Illustrative generic drinks, not Chagee's menu or sales mix. |
 
 ## 6. Sourced facts (quoted on the slides)

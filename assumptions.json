@@ -2347,6 +2347,13 @@
       "source": "assumption, synthetic, not Chagee data",
       "rationale": "Display: the example days are the seeds whose actual cups, as a share of the baseline, are closest to these."
     },
+    "success_pick": {
+      "value": 1.45,
+      "unit": "actual cups against the calendar baseline for the fourth example day on slide 07 (squad rush)",
+      "range": null,
+      "source": "assumption, synthetic, not Chagee data",
+      "rationale": "Display: a success case chosen by rule, not by hand. Among the same 300 synthetic windows, only those where the squad forecast is closer than the history-only forecast at the slide's default minute; of those, the one whose actual cups are closest to this share of the baseline. The slide also states the share of all windows where the squad forecast was closer, so the case is not presented as typical of every day."
+    },
     "drink_mix": {
       "value": {
         "Jasmine milk tea": 0.35,

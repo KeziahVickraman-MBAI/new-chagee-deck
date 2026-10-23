@@ -21,6 +21,7 @@
  *                               invitation or an unredeemed gift is never a confirmed drink
  *   evaluate(E, H, Sim)         mean absolute error of both forecasts at each of eval_leads, over eval_windows
  *   pickDays(E, Sim, targets)   the seeds of the slide's quiet, typical and busy example days (actual / baseline)
+ *   pickSuccess(E, H, Sim, r, t) a squad-rush day where the squad forecast is closer at minute t, and how often that holds
  */
 (function (root) {
   "use strict";
@@ -117,7 +118,15 @@
     return targets.map(r => W.reduce((a, w) => (Math.abs(w.actual / E.base - r) < Math.abs(a.actual / E.base - r) ? w : a)).seed);
   }
 
-  const api = { inputs, simulate, state, learn, forecast, evaluate, pickDays };
+  // a success case, by rule: among the same seeds, those where the squad forecast is closer at minute t; of those,
+  // the one whose actual cups are closest to target × baseline. Also the share of all seeds where it is closer.
+  function pickSuccess(E, H, Sim, target, t) {
+    const W = Array.from({ length: 300 }, (_, k) => simulate(E, k, Sim)), closer = w => { const f = forecast(E, H, w, t); return Math.abs(f.enhanced - w.actual) < Math.abs(f.baseline - w.actual); };
+    const win = W.filter(closer);
+    return { seed: win.reduce((a, w) => (Math.abs(w.actual / E.base - target) < Math.abs(a.actual / E.base - target) ? w : a)).seed, winShare: win.length / W.length, n: W.length };
+  }
+
+  const api = { inputs, simulate, state, learn, forecast, evaluate, pickDays, pickSuccess };
   if (typeof module !== "undefined" && module.exports) module.exports = api;
   else root.ChageeSquadcast = api;
 })(typeof window !== "undefined" ? window : globalThis);

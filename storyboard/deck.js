@@ -1861,7 +1861,7 @@
   /* ---------------------------------------------------------------- 06b group orders to forecasts (sim/squadcast.js, synthetic) */
   (function squadcast() {
     const sl = document.getElementById("m2b"), Q = window.ChageeSquadcast, D = DATA.squadcast; if (!sl || !Q || !D) return;
-    const SR = RAW.squadcast, E0 = Q.inputs(RAW, P), GREEN = "#2F6B45", DAYN = ["Quiet day", "Typical day", "Busy day"];
+    const SR = RAW.squadcast, E0 = Q.inputs(RAW, P), GREEN = "#2F6B45", DAYN = ["Quiet day", "Typical day", "Busy day", "Squad rush"], RUSH = 3;
     const t0 = DATA.counter.firstHour + E0.hour, win = `${String(t0).padStart(2, "0")}:00 to ${String(t0).padStart(2, "0")}:${String(E0.W).padStart(2, "0")}`;
     $$(sl, ".sqwin").forEach(e => (e.textContent = win));
     // what the experience records: documented today, to confirm, or proposed (needs collection and consent)
@@ -1869,7 +1869,7 @@
                  ["Pickup time chosen", "to confirm", "cf"], ["Group size, confirmed quantities", "proposed", "pr"], ["Suggestion accepted, edited, dismissed", "proposed", "pr"], ["Gift sent and redeemed", "proposed", "pr"]];
     $(sl, ".sqsig").innerHTML = SIG.map(([l, t, c]) => `<li><span>${l}</span><span class="tg ${c}">${t}</span></li>`).join("");
     const pl = Sim.plan(P, "mixed"), make = P.stations.reduce((a, s) => a + (P.mixedMachine.includes(s) ? P.machineSec[s] : P.humanSec[s]), 0) / 60;
-    const st = { day: 1, s: E0.s, t: -E0.lead, reveal: false, timer: null };
+    const st = { day: RUSH, s: E0.s, t: -E0.lead, reveal: false, timer: null };
     let E, H, w, last = {};
     const rebuild = () => { E = { ...E0, s: st.s }; H = Q.learn(E, Sim); w = Q.simulate(E, D.days[st.day], Sim); };
     const ctl = $(sl, ".sqctl");
@@ -1922,8 +1922,10 @@
       $(ctl, '[data-v="s"]').textContent = pct(st.s); $(ctl, '[data-v="t"]').textContent = `${st.t} min`;
       $(ctl, 'input[data-k="s"]').value = st.s; $(ctl, 'input[data-k="t"]').value = st.t;
       $$(ctl, "[data-day]").forEach(b => b.classList.toggle("on", +b.dataset.day === st.day));
+      const eB = Math.abs(E.base - w.actual), eS = Math.abs(f.enhanced - w.actual), often = `Across ${D.nWin} synthetic windows the squad forecast was closer on ${pct(D.winShare)} of them.`;
       $(sl, ".mbtake .t").innerHTML = st.reveal
-        ? `${DAYN[st.day]}: actual <b>${w.actual}</b> cups. At ${st.t} min the history-only forecast was off by <b>${Math.abs(E.base - w.actual).toFixed(1)}</b>, the squad forecast by <b>${Math.abs(f.enhanced - w.actual).toFixed(1)}</b>${Math.abs(f.enhanced - w.actual) > Math.abs(E.base - w.actual) ? ": worse today, because walk-in demand moved and squads cannot see it" : ""}. One synthetic day; averages are in the appendix.`
+        ? `${DAYN[st.day]}: actual <b>${w.actual}</b> cups. At ${st.t} min the history-only forecast was off by <b>${eB.toFixed(1)}</b>, the squad forecast by <b>${eS.toFixed(1)}</b>` +
+          (eS > eB ? `: worse today, because walk-in demand moved and squads cannot see it. ${often}` : `: ${st.day === RUSH ? "squad orders showed the rush coming before history could" : "closer"}. ${often}`)
         : `Better social experience → richer customer signals → better demand forecasts → better service.`;
       $(sl, ".sqctlp").innerHTML = `<div class="k">Shown</div><p>${DAYN[st.day]} (synthetic), squad share ${pct(st.s)}, forecast at ${st.t} min, actual revealed. Window ${win}.</p>`;
     }
@@ -1936,7 +1938,7 @@
         st.timer = setInterval(() => { st.t = Math.min(0, st.t + 2); draw(); if (st.t >= 0) { stop(); setTimeout(() => { st.reveal = true; draw(); }, 600); } }, reduce ? 160 : 90); } });
     ctl.addEventListener("input", e => { const k = e.target.dataset?.k; if (!k) return; stop();
       if (k === "s") { st.s = +e.target.value; st.reveal = false; rebuild(); } else st.t = +e.target.value; draw(); });
-    printers.push(() => { stop(); Object.assign(st, { day: 1, s: E0.s, t: -10, reveal: true }); rebuild(); last = {}; draw(); });
+    printers.push(() => { stop(); Object.assign(st, { day: RUSH, s: E0.s, t: -30, reveal: true }); rebuild(); last = {}; draw(); });
     rebuild(); st.t = -30; draw();
   })();
 

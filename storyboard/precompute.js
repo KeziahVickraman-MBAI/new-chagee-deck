@@ -153,6 +153,7 @@ members.network = members.table.map(s => ({ id: s.id, closed: s.eq ? s.eq.low : 
 
 // slide 06b (synthetic demonstration): the two forecasts compared over synthetic windows, at several squad shares
 const sqE = SQ.inputs(RAW, P), squadcast = { base: sqE.base, hour: sqE.hour, days: SQ.pickDays(sqE, Sim, RAW.squadcast.day_picks.value), eval: {} };
+{ const sc = SQ.pickSuccess(sqE, SQ.learn(sqE, Sim), Sim, RAW.squadcast.success_pick.value, -30); squadcast.days.push(sc.seed); squadcast.winShare = sc.winShare; squadcast.nWin = sc.n; }
 for (const s of [0, 0.15, sqE.s, 0.45]) { const E = { ...sqE, s }; squadcast.eval[s] = SQ.evaluate(E, SQ.learn(E, Sim), Sim); }
 
 const pl = Sim.plan(P, "mixed");
