@@ -582,6 +582,8 @@ html,body{margin:0;background:#E7E3DC;color:var(--ink);font-family:var(--sans);-
 .sqsum{margin:2px 0 6px;font:13.5px/1.5 var(--sans);color:var(--ink2)} .sqsum .sqtot{font:600 17px var(--sans);color:var(--navy)}
 .sqk{white-space:nowrap} .sqk i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:4px;vertical-align:-1px}
 .sqhow ol{margin:4px 0 0;padding-left:18px;font:13px/1.45 var(--sans);color:var(--ink2)} .sqhow li{margin-bottom:4px}
+.wcn{margin:4px 0 0;padding:0;list-style:none;counter-reset:wc} .wcn li{position:relative;padding-left:26px;margin-bottom:7px;font:13.5px/1.45 var(--sans);color:var(--ink2);counter-increment:wc}
+.wcn li::before{content:counter(wc);position:absolute;left:0;top:1px;width:18px;height:18px;border-radius:50%;background:var(--red);color:#fff;font:600 11px/18px var(--sans);text-align:center}
 .s3v{flex:1;display:flex;align-items:center;justify-content:center;min-height:0} .s3v svg{width:100%;max-height:132px}
 .s3p .where{margin:0;font:600 12px/1.3 var(--sans);color:var(--red)} .s3a{display:grid;place-items:center;font:28px var(--serif);color:var(--gold)}
 /* 07: the demand-data demonstration, readable sizes */
@@ -964,7 +966,7 @@ aside.notes{display:none}
       </div>
       <div class="cards" style="gap:12px">
         <div class="card"><h4>Chagee-App</h4><p>An <b>order-ahead, self-pickup app</b>; in Singapore, <b>in-app ordering and delivery</b> followed the reopening queues. Chagee <b>collects personal and transactional data</b>.</p><p style="margin-top:4px"><i>To confirm:</i> the app's share of Singapore orders; whether searches or location are logged.</p><ul class="srcl"><li>CHAGEE App Store listing</li><li>Vulcan Post, Oct 2024</li><li>Chagee Form 20-F, FY 2025</li></ul></div>
-        <div class="card"><h4>Why Chagee?</h4><p><b>One company, one data system</b> (Chagee source, anonymous), with <b>lots of data</b> from its reliance on the Chagee app. <span class="golink" data-go="adata">Data collection: appendix</span></p><p style="margin-top:6px">A <b>fast-growing, playful</b> brand with <b>heavy app use</b>. Likely to have <b>rich order data</b> and <b>room for AI</b> to enhance the business.</p><p style="margin-top:6px">We also <b>interviewed an internal staff member</b> <span class="src tip" tabindex="0" style="display:inline" data-tip="A Chagee staff member in the Membership Operations APAC team, who declined to be cited openly.">(anonymous <span class="ti screenonly">ⓘ</span>)</span> about the problems they actually face.</p></div>
+        <div class="card"><h4>Why Chagee?</h4><ol class="wcn"><li><b>One company, one data system</b> (Chagee source, anonymous), with <b>lots of data</b> from its reliance on the Chagee app. <span class="golink" data-go="adata">Data collection: appendix</span></li><li>A <b>fast-growing, playful</b> brand with <b>heavy app use</b>. Likely to have <b>rich order data</b> and <b>room for AI</b> to enhance the business.</li><li>We also <b>interviewed an internal staff member</b> <span class="src tip" tabindex="0" style="display:inline" data-tip="A Chagee staff member in the Membership Operations APAC team, who declined to be cited openly.">(anonymous <span class="ti screenonly">ⓘ</span>)</span> about the problems they actually face.</li></ol></div>
       </div>
     </div>
     <div class="takeaway"><span class="lab">TAKEAWAY</span><span>Whatever the channel, every order ends at one counter. Peak hour is where an outlet wins or loses.</span></div>
