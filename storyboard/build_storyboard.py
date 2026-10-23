@@ -540,14 +540,14 @@ def short(v) -> str:
 def appendix() -> str:
     esc = lambda s: str(s).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
     out = ["<h5>Facts quoted</h5>"]
-    for k, label in (("sg_outlets", "Outlets in Singapore"), ("revenue_share_franchise_fy2025", "Franchise share of FY2025 net revenue"),
-                     ("revenue_share_company_owned_fy2025", "Company-owned share of FY2025 net revenue"),
+    for k, label in (("sg_outlets", "Outlets in Singapore"), ("revenue_share_franchise_fy2025", "Global context, group-wide, not Singapore: franchise share of FY2025 net revenue"),
+                     ("revenue_share_company_owned_fy2025", "Global context, group-wide, not Singapore: company-owned share of FY2025 net revenue"),
                      ("registered_members_jun2026", "Registered members, group-wide, end of June 2026"),
                      ("repeat_member_order_share", "Orders from members with two or more purchases, group-wide (more than)")):
         f = RAW["facts"][k]
         out.append(f"<p><b>{label}: {short(f['value'])}</b>. {esc(f['rationale'])} <i>[{esc(f['source'])}]</i></p>")
     out.append("<h5>Sources</h5>")
-    for k in ("L-sg-directory", "L-koalagains", "L-yfchuhai", "L-sec20f", "L-unsw", "I-chagee-contact", "I-sg-groundfloor", "I-team-app-first", "L-ester1996", "P-honeycombers", "P-eatbook", "I-team-expansion", "I-team-site-framework", "L-chagee-q2-2026-call", "L-chagee-q1-2025", "P-appstore", "P-vulcanpost-comeback", "L-sec20f-data", "L-sec20f-member", "C-topic8", "I-chagee-contact-tiers", "C-topic1", "C-topic2"):
+    for k in ("L-sg-directory", "I-sg-owned", "L-koalagains", "L-yfchuhai", "L-sec20f", "L-unsw", "I-chagee-contact", "I-sg-groundfloor", "I-team-app-first", "L-ester1996", "P-honeycombers", "P-eatbook", "I-team-expansion", "I-team-site-framework", "L-chagee-q2-2026-call", "L-chagee-q1-2025", "P-appstore", "P-vulcanpost-comeback", "L-sec20f-data", "L-sec20f-member", "C-topic8", "I-chagee-contact-tiers", "C-topic1", "C-topic2"):
         out.append(f"<p><b>{k}</b> {esc(RAW['_sources'][k])}</p>")
     out.append("<h5>Assumptions (assumptions.json, illustrative)</h5>")
     for sec, key, label in USED:
@@ -558,8 +558,10 @@ def appendix() -> str:
     out.append("<p>No Chagee sales, staffing or wait-time data is used; the forecast is not a trained model. "
                "We do not claim the bucket brigade always beats fixed stations: with spare staff, a well-assigned "
                "fixed line is as good or slightly faster. Machine breakdowns, breaks and order mix are not modelled.</p>")
-    out.append("<p>We make no claim about: <b>Singapore ownership structure</b> (an anonymous Chagee source says outlets run under one company and "
-               "one data system, and that the ownership form does not matter here; I-chagee-contact); <b>delivery profit by channel</b>; "
+    out.append("<p><b>Singapore ownership:</b> Chagee Singapore operates a company-owned model, not a franchise model, as confirmed by the "
+               "project owner (I-sg-owned). That outlets run under one company and one data system is from an anonymous Chagee source "
+               "(I-chagee-contact). Group-wide franchise revenue shares are global context only and are not applied to Singapore.</p>")
+    out.append("<p>We make no claim about: <b>delivery profit by channel</b>; "
                "<b>Chagee's own equipment cost</b> (not public); <b>gross margin per cup</b> (our assumption); "
                "<b>Chagee's current rostering</b> beyond what an anonymous Chagee source told us (people are deployed on local expertise by the GM and outlet teams; the benefit slide's baseline is ours).</p>")
     return "\n".join(out)

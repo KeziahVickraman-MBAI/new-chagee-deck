@@ -42,12 +42,12 @@
     "L-yfchuhai": "YF Chuhai, https://www.yfchuhai.com/article/9751.html: Chagee's leaf supply chain is in China; it sources only two ingredients locally, fresh milk and fruit. Taken from the team's ideation doc (OPIM 639_ Ideation Process), not re-checked for this deck.",
     "L-sec20f": "Chagee Holdings Form 20-F for FY2025, SEC EDGAR, https://www.sec.gov/Archives/edgar/data/2013649/000110465926050766/cha-20251231x20f.htm: separate centralized and regional warehouses to lower storage and logistics costs. Taken from the team's ideation doc (OPIM 639_ Ideation Process), not re-checked for this deck.",
     "L-sg-directory": "Chagee Singapore store directory, mapped by the team (44 locations, checked 15 Oct 2026); Mothership, Sep 2026, https://mothership.sg/2026/09/chagee-more-heartland-stores-singapore-eugene-lee/ gives the same count. Taken from the team's ideation doc (OPIM 639_ Ideation Process), not re-checked for this deck.",
-    "I-sg-owned": "SUPERSEDED (Oct 2026) by I-chagee-contact; not used on any slide. Was: INFORMAL - team check recorded as a comment in the ideation doc: Singapore is company-owned and run by Chagee corporate, usual for new-entry and smaller markets. The underlying source is not named; confirm before presenting.",
+    "I-sg-owned": "PROJECT OWNER CONFIRMATION (23 Oct 2026): Chagee Singapore operates a company-owned model, not a franchise model. Confirmed by the project owner; not from the anonymous Chagee contact and not an external citation. Used on slide 01 (headline, step 1, card, notes). Supersedes the earlier 'ownership not claimed' framing. It does not change the group-wide revenue shares, which stay global context only.",
     "I-sg-groundfloor": "INFORMAL - quote in the team's ideation doc (Chagee Singapore's Lee: 'Whenever you see a Chagee, it's always on the first floor'; kiosk-style outlets in basements and MRT stations at entry in 2019). The article is not named in the doc; confirm the source before quoting.",
     "I-team-automation": "INFORMAL - team research (Oct 2026): Chagee's counters are heading towards machines making the drink while people tag the order and hand it over; consistent with I-leeyen's 'push towards app-to-machine automation, sub-one-minute fulfilment'. Source to be added before it is cited on a slide.",
     "I-team-app-first": "INFORMAL - team observation in the ideation doc: Chagee Singapore sells mainly through its app, with minimal order kiosks in outlets. Confirm before citing. SUPERSEDED on slide 01 (22 Oct 2026) by P-appstore, P-vulcanpost-comeback and L-sec20f-data; the app's share of orders stays to confirm.",
     "L-ester1996": "Ester, M., Kriegel, H.-P., Sander, J. and Xu, X. (1996). A density-based algorithm for discovering clusters in large spatial databases with noise. Proceedings of the Second International Conference on Knowledge Discovery and Data Mining (KDD-96), 226-231. The DBSCAN algorithm used on slide 10.",
-    "I-chagee-contact": "CHAGEE SOURCE, ANONYMOUS (Oct 2026): a Chagee source who asked not to be named; do not identify them. Four points only: whether Singapore outlets are owned, a joint venture or franchised does not matter for this work, because the data sits in one system; Singapore outlets run under one company and one data system; all delivery is via third-party apps; people are deployed on local expertise: the GM and outlet teams make the staffing calls.",
+    "I-chagee-contact": "CHAGEE SOURCE, ANONYMOUS (Oct 2026): a Chagee source who asked not to be named; do not identify them. Four points only: whether Singapore outlets are owned, a joint venture or franchised does not matter for this work, because the data sits in one system; Singapore outlets run under one company and one data system; all delivery is via third-party apps; people are deployed on local expertise: the GM and outlet teams make the staffing calls. Ownership itself is not attributed to this source: see I-sg-owned (project owner confirmation).",
     "P-honeycombers": "PRESS - in-store sightings, indicative. Honeycombers (Feb 2026), https://thehoneycombers.com/singapore/china-bubble-tea-brand-singapore/ : Chagee price sightings in Singapore; not a current full menu.",
     "P-eatbook": "PRESS - in-store sightings, indicative. Eatbook (Aug 2024), https://eatbook.sg/?p=168476 : Chagee price sightings in Singapore; not a current full menu, and older than the deck.",
     "I-team-expansion": "INFORMAL - team research (Oct 2026): Chagee is looking to expand rapidly in Singapore; how many stores it is going for is confidential. Singapore only. Confirm before citing.",
@@ -118,13 +118,13 @@
       "value": 0.88,
       "unit": "share of FY2025 net revenue",
       "source": "L-koalagains",
-      "rationale": "Secondary source; flagged wherever shown."
+      "rationale": "Secondary source; flagged wherever shown. GROUP-WIDE: global context only, never applied to Singapore (Singapore is company-owned, I-sg-owned)."
     },
     "revenue_share_company_owned_fy2025": {
       "value": 0.12,
       "unit": "share of FY2025 net revenue",
       "source": "L-koalagains",
-      "rationale": "Secondary source; flagged wherever shown."
+      "rationale": "Secondary source; flagged wherever shown. GROUP-WIDE: global context only, never applied to Singapore (Singapore is company-owned, I-sg-owned)."
     },
     "sg_outlets_press_range": {
       "value": [
