@@ -1807,25 +1807,33 @@
         for (let v = Math.ceil(y0 / st) * st; v <= y1; v += st) s += `<line x1="${L}" x2="${W - R}" y1="${Y(v)}" y2="${Y(v)}" stroke="${Math.abs(v) < 1e-9 ? COL.ink2 : COL.line}" stroke-width="${Math.abs(v) < 1e-9 ? 1.6 : 1}"/>` +
           T(L - 6, Y(v) + 3.5, `${v < 0 ? "−" : ""}S$${Math.abs(v).toFixed(2)}`, `font-size="10.5" fill="${COL.taupe}" text-anchor="end"`);
         for (let E = 0; E <= xm + 1e-9; E += dx) s += T(X(E), H - B + 15, dx < 0.5 ? E.toFixed(2) : E.toFixed(1), `font-size="10.5" fill="${COL.taupe}" text-anchor="middle"`);
-        s += T((L + W - R) / 2, H - 3, "additional orders per member per month", `font-size="10.5" fill="${COL.taupe}" text-anchor="middle"`) +
-             `<text transform="translate(13 ${(Tp + H - B) / 2}) rotate(-90)" font-size="10.5" fill="${COL.taupe}" text-anchor="middle">S$ per member a month</text>` +
-             T(W - R, Y(0) - 5, "zero contribution", `font-size="10" fill="${COL.ink2}" text-anchor="end"`);
+        // shaded zones: above zero the reward pays for itself, below it costs more than it earns
+        s = `<rect x="${L}" y="${Tp}" width="${W - R - L}" height="${Y(0) - Tp}" fill="${GREEN}" opacity=".06"/><rect x="${L}" y="${Y(0)}" width="${W - R - L}" height="${H - B - Y(0)}" fill="${COL.red}" opacity=".06"/>` + s +
+             T(L + 8, Tp + 13, "reward pays for itself", `font-size="11" font-weight="600" fill="${GREEN}"`) + T(W - R - 6, H - B - 7, "reward costs more than it earns", `font-size="11" font-weight="600" fill="${COL.red}" text-anchor="end"`);
+        s += T((L + W - R) / 2, H - 3, "extra orders per member a month that squads create", `font-size="10.5" fill="${COL.taupe}" text-anchor="middle"`) +
+             `<text transform="translate(13 ${(Tp + H - B) / 2}) rotate(-90)" font-size="10.5" fill="${COL.taupe}" text-anchor="middle">S$ gained or lost per member a month</text>`;
         if (step >= 2) s += `<polygon points="${[[0, mg.range[1]], [xm, mg.range[1]], [xm, mg.range[0]], [0, mg.range[0]]].map(([E, m]) => `${X(E)},${Y(f(E, m))}`).join(" ")}" fill="${COL.navy}" opacity=".1"/>`;
         s += `<line x1="${X(0)}" y1="${Y(f(0))}" x2="${X(step >= 2 ? xm : 0.0001)}" y2="${Y(f(step >= 2 ? xm : 0.0001))}" stroke="${COL.navy}" stroke-width="3"/>` +
-             `<circle cx="${X(0)}" cy="${Y(f(0))}" r="5" fill="${COL.red}"/>` + T(X(0) + 9, Y(f(0)) + 15, `credits on orders members place anyway: −S$${Math.abs(f(0)).toFixed(2)}`, `font-size="11" font-weight="600" fill="${COL.red}" stroke="${COL.cream}" stroke-width="4" paint-order="stroke"`);
-        if (step >= 2) s += T(X(xm) - 4, Y(f(xm)) - 8, `squads alone · ${pct(mg.value)} margin; band ${pct(mg.range[0])}–${pct(mg.range[1])}`, `font-size="10.5" fill="${COL.navy}" text-anchor="end"`);
+             `<circle cx="${X(0)}" cy="${Y(f(0))}" r="5" fill="${COL.red}"/>` + T(X(0) + 9, Y(f(0)) + 15, `no extra orders: −S$${Math.abs(f(0)).toFixed(2)}, credit on orders they place anyway`, `font-size="11" font-weight="600" fill="${COL.red}" stroke="${COL.cream}" stroke-width="4" paint-order="stroke"`);
+        if (step >= 2) s += T(X(xm) - 4, Y(f(xm)) - 10, "squads alone", `font-size="11.5" font-weight="600" fill="${COL.navy}" text-anchor="end" stroke="#fff" stroke-width="4" paint-order="stroke"`);
         if (step >= 4) s += `<line x1="${X(0)}" y1="${Y(fA(0))}" x2="${X(xm)}" y2="${Y(fA(xm))}" stroke="${COL.gold}" stroke-width="3" stroke-dasharray="7 4"/>` +
-             T(X(xm) - 4, Y(fA(xm)) + 16, `squads with personalised suggestions, after S$${o.ai.toFixed(2)} AI cost`, `font-size="10.5" fill="#8A6416" text-anchor="end" stroke="${COL.cream}" stroke-width="4" paint-order="stroke"`);
-        const mark = (Es, col, lab, dy) => Es == null ? T((L + W - R) / 2, Tp + 14 + dy, "credit at or above the margin: the line never reaches zero, no break-even", `font-size="12" font-weight="700" fill="${COL.red}" text-anchor="middle"`)
+             T(X(xm) - 4, Y(fA(xm)) + 18, `squads + personalised suggestions (AI)`, `font-size="11.5" font-weight="600" fill="#8A6416" text-anchor="end" stroke="#fff" stroke-width="4" paint-order="stroke"`);
+        const mark = (Es, col, lab, dy, left) => Es == null ? T((L + W - R) / 2, Tp + 14 + dy, "credit at or above the margin: the line never reaches zero, no break-even", `font-size="12" font-weight="700" fill="${COL.red}" text-anchor="middle"`)
           : Es > xm ? T(W - R, Tp + 14 + dy, `${lab} beyond ${xm} extra orders a month`, `font-size="12" font-weight="700" fill="${COL.red}" text-anchor="end"`)
           : `<line x1="${X(Es)}" x2="${X(Es)}" y1="${Y(0)}" y2="${H - B}" stroke="${col}" stroke-dasharray="3 3"/><circle cx="${X(Es)}" cy="${Y(0)}" r="6" fill="${col}" stroke="#fff" stroke-width="2"/>` +
-            T(X(Es) + 9, Y(0) + dy, `${lab}: ${Es.toFixed(2)}`, `font-size="11.5" font-weight="700" fill="${col}" stroke="${COL.cream}" stroke-width="4" paint-order="stroke"`);
-        if (step >= 3) s += mark(b.mid.extraNeeded, GREEN, "break-even, squads alone", step >= 4 ? -30 : -10);
-        if (step >= 4 && bA.mid.extraNeeded != null) s += mark(bA.mid.extraNeeded, "#8A6416", "break-even, squads with AI", -12);
+            T(X(Es) + (left ? -10 : 10), Y(0) + dy, `${lab}: ${Es.toFixed(2)}`, `font-size="11.5" font-weight="700" fill="${col}" text-anchor="${left ? "end" : "start"}" stroke="#fff" stroke-width="4" paint-order="stroke"`);
+        if (step >= 3) s += mark(b.mid.extraNeeded, GREEN, "break-even, squads alone", -34);
+        if (step >= 4 && bA.mid.extraNeeded != null) s += mark(bA.mid.extraNeeded, "#8A6416", "with AI", 20);
         svg.innerHTML = s;
         const Es = b.mid.extraNeeded, EA = bA.mid.extraNeeded;
         $(m3, ".mbact").innerHTML = Es == null ? `At a <b>${pct(o.credit, 1)}</b> credit, at or above the margin, the reward never pays for itself: lower it before any pilot.`
           : `Three arms in Singapore (today's membership, squads, squads with suggestions) at a <b>${pct(o.credit, 1)}</b> credit: squads must add <b>${Es.toFixed(2)}</b> orders a member a month, suggestions <b>${hur.toFixed(2)}</b> more.`;
+        $(m3, ".mbhow").innerHTML = `<div class="k">How to read it</div><ol>` +
+          `<li><b>Start</b>: no extra orders costs <b>S$${Math.abs(f(0)).toFixed(2)}</b> a member a month, the credit on orders placed anyway.</li>` +
+          `<li><b>Rise</b>: each extra order earns its margin (band: ${pct(mg.range[0])}–${pct(mg.range[1])}).</li>` +
+          (Es == null ? `<li><b>No break-even</b>: at this credit the line never reaches zero.</li>`
+            : `<li><b>Break-even</b>: <b>${Es.toFixed(2)}</b> extra orders a member a month, about one every ${Math.max(1, Math.round(1 / Es))} months.</li>`) +
+          (EA == null ? "" : `<li><b>AI</b> adds S$${o.ai.toFixed(2)} a month, so <b>${hur.toFixed(2)}</b> more.</li>`) + `</ol>`;
         $(m3, ".mbpctlp").innerHTML = `<div class="k">Shown</div><p>Credit ${pct(o.credit, 1)} of the S$${b.price.toFixed(2)} price; ${o.base.toFixed(1)} group orders a month anyway; AI cost S$${o.ai.toFixed(2)} a member a month; margin ${pct(mg.value)} (band ${pct(mg.range[0])}–${pct(mg.range[1])}).</p>`;
         $$(ctl, "input").forEach(i => { i.value = o[i.dataset.k]; $(ctl, `.val[data-v="${i.dataset.k}"]`).textContent = SL.find(x => x[0] === i.dataset.k)[4](o[i.dataset.k]); });
       }
