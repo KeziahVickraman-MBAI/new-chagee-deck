@@ -111,7 +111,7 @@ From `sim/counter.js` `dayCost`: the forecast roster for that day type, machine 
 | All robots | ticket, cup_ice, tea_milk, topping_finish, shake_seal, handover | Busy day | 0 | 12 | S$181 | 6 | S$382 | S$562 |
 | All robots | ticket, cup_ice, tea_milk, topping_finish, shake_seal, handover | Event day | 0 | 12 | S$181 | 6 | S$382 | S$562 |
 
-The split table on slide 09 adds people above this roster where needed to keep peak walk-aways within 2%; its costs per day:
+The split table on slide 11 adds people above this roster where needed to keep peak walk-aways within 2%; its costs per day:
 
 | Split | Normal day | Busy day | Event day |
 |---|---|---|---|
@@ -127,26 +127,26 @@ These come out of the models. Quote them as "in our model".
 
 | Slide | What | Value |
 |---|---|---|
-| 10 · new outlet, suggested site | cups a day sold / moved from nearby / net for Chagee | 837 / 106 / +731 |
-| 10 · same outlet beside the nearest existing outlet | cups a day sold / net for Chagee | 604 / +216 (64% moved) |
-| 10 P&L · five years, without AI | net extra network sales / operating profit | S$2,228,403 / −S$630,386 |
-| 10 P&L · five years, with AI site selection | net extra network sales / operating profit / payback | S$7,525,983 / S$1,864,635 / 1.4 years |
-| 10 P&L · uplift | sales / operating profit over five years | S$5,297,581 / S$2,495,021 |
-| 08b · event day, walk-aways at the forecast roster | brigade / fixed best / fixed worst | 1.2% / 4.1% / 34.9% |
-| 08b · normal-day roster on an event day | walk-aways | 54% |
-| 08 · busy day, forecast too low by the step shown | error / peak crew (exact) / walk-aways (exact) | 15% low / 1 (2) / 21% (0.0%) |
-| 08 · event day, forecast too high | extra S$ a day | about S$15 |
-| 07 · break-even extra orders per member a month | squads alone / with personalised suggestions / personalisation's own hurdle | 0.18 / 0.20 / 0.02 (AI cost S$0.05 a member a month) |
-| 10b · customer access | share of cups from people with no outlet within walking distance: cluster site / beside an outlet | 98% / 47% |
-| 10b · downside, cluster site, low volume | five-year operating profit | S$32,255 |
-| 09 · one tea-and-milk machine vs today's split | S$ a day, range across day types | S$305–335 vs S$372–402 |
-| 09 · machine unit cost at which that flips | S$ a month | about S$905 |
-| To consider · pin to profit, site A, a month | net profit to Chagee / payback | S$16,011 / 25 months |
-| To consider · benefit per outlet (TBC) | orders kept a year / their revenue / total yearly benefit (mostly counter labour saved, so larger than the revenue) | 1,278 / S$7,539 / S$24,660 |
-| To consider · Australia, worst-case year-average day (A$) | machine-made drink / human-only | A$276 / A$108 |
-| To consider · Australia, machine unit cost at which human-only wins (A$) | A$ a month | about A$3,258 |
-| To consider · Australia, break-even cups a day (A$ costs) | machine-made drink / human-only | 236 / 268 |
-| 07 · group-order credit break-even | extra orders per member a month at 50 / 60 / 70% margin | 0.22 / 0.18 / 0.15 |
+| 13 · new outlet, suggested site | cups a day sold / moved from nearby / net for Chagee | 837 / 106 / +731 |
+| 13 · same outlet beside the nearest existing outlet | cups a day sold / net for Chagee | 604 / +216 (64% moved) |
+| 13 P&L · five years, without AI | net extra network sales / operating profit | S$2,228,403 / −S$630,386 |
+| 13 P&L · five years, with AI site selection | net extra network sales / operating profit / payback | S$7,525,983 / S$1,864,635 / 1.4 years |
+| 13 P&L · uplift | sales / operating profit over five years | S$5,297,581 / S$2,495,021 |
+| 10 · event day, walk-aways at the forecast roster | brigade / fixed best / fixed worst | 1.2% / 4.1% / 34.9% |
+| 10 · normal-day roster on an event day | walk-aways | 54% |
+| 09 · busy day, forecast too low by the step shown | error / peak crew (exact) / walk-aways (exact) | 15% low / 1 (2) / 21% (0.0%) |
+| 09 · event day, forecast too high | extra S$ a day | about S$15 |
+| 08 · break-even extra orders per member a month | squads alone / with personalised suggestions / personalisation's own hurdle | 0.18 / 0.20 / 0.02 (AI cost S$0.05 a member a month) |
+| 14 · customer access | share of cups from people with no outlet within walking distance: cluster site / beside an outlet | 98% / 47% |
+| 14 · downside, cluster site, low volume | five-year operating profit | S$32,255 |
+| 11 · one tea-and-milk machine vs today's split | S$ a day, range across day types | S$305–335 vs S$372–402 |
+| 11 · machine unit cost at which that flips | S$ a month | about S$905 |
+| Appendix · pin to profit, site A, a month | net profit to Chagee / payback | S$16,011 / 25 months |
+| Appendix · benefit per outlet (TBC) | orders kept a year / their revenue / total yearly benefit (mostly counter labour saved, so larger than the revenue) | 1,278 / S$7,539 / S$24,660 |
+| Extension · Australia, worst-case year-average day (A$) | machine-made drink / human-only | A$276 / A$108 |
+| Extension · Australia, machine unit cost at which human-only wins (A$) | A$ a month | about A$3,258 |
+| Extension · Australia, break-even cups a day (A$ costs) | machine-made drink / human-only | 236 / 268 |
+| 08 · group-order credit break-even | extra orders per member a month at 50 / 60 / 70% margin | 0.22 / 0.18 / 0.15 |
 
 ### Slide 10 P&L, year by year (S$, base scenario)
 
@@ -183,7 +183,7 @@ Every input in `assumptions.json`. **Key** is the path to change; **Range** is w
 |---|---|---|---|---|---|
 | `predict_toggles.remove_hype_default` | True | boolean |  | assumption | APPROVED (user, after step 4 rework). Slide 2 starts with opening-week hype removed, so slides 3-5 receive the steady-demand band by default. The hype band stays visible on the chart for comparison. |
 
-### store · used on: every counter and benefit slide; slide 10 volume
+### store · used on: every counter and benefit slide; slide 13 volume
 
 | Key | Value | Unit | Range | Status | Notes |
 |---|---|---|---|---|---|
@@ -205,7 +205,7 @@ Every input in `assumptions.json`. **Key** is the path to change; **Range** is w
 | `demand.opening_hype_weeks` | 2 | weeks | [1, 6] | assumption | How long the hype lasts before demand settles. Illustrative. |
 | `demand.uncertainty_sweep` | {"from": 0.0, "to": 0.6, "step": 0.05} | half-width, share of base |  | assumption | x-axis of the crossover chart. Covers strong-signal to no-signal bands from slide 2. |
 
-### surge · used on: busy and event days: slides 08 to 09b and the benefit slide
+### surge · used on: busy and event days: slides 09 to 12 and the benefit slide
 
 | Key | Value | Unit | Range | Status | Notes |
 |---|---|---|---|---|---|
@@ -213,7 +213,7 @@ Every input in `assumptions.json`. **Key** is the path to change; **Range** is w
 | `surge.surge_hours` | 2 | busiest forecast hours that get the surge |  | assumption | This number was only in the surge_multiplier rationale; it now has its own field so the code reads it from here. With the default curve these are 12:00-14:00 (ties go to the earlier hour). |
 | `surge.surge_default` | moderate | text |  | assumption | Default toggle position and printed state. |
 
-### stations · used on: counter replica: slides 08b, 09, 09b
+### stations · used on: counter replica: slides 10 to 12
 
 | Key | Value | Unit | Range | Status | Notes |
 |---|---|---|---|---|---|
@@ -337,7 +337,7 @@ Every input in `assumptions.json`. **Key** is the path to change; **Range** is w
 | `validation.crossover_stability` | {"seeds": 20, "min_seeds_with_crossover": 18, "max_spread_pct_points": 10} | mixed |  | assumption | Pass if a crossover exists in at least 18 of 20 seeds and the crossover u differs by at most 10 percentage points across them. If it fails, the slide shows a crossover zone or none, not a single point. |
 | `validation.sensitivity` | one-at-a-time: each parameter with a non-null range set to its low then high value, all others at default; report crossover u (or none) and cost/cup at the slide 2 default u | text |  | assumption | Shows which assumptions decide the headline; feeds the 'what could shift the balance' panel and Q&A. No pass/fail. |
 
-### storyboard · used on: price, margin, day types, split table, forecast-error steps: slides 08-10b and things to consider
+### storyboard · used on: price, margin, day types, split table, forecast-error steps: slides 09-14 and the appendix
 
 | Key | Value | Unit | Range | Status | Notes |
 |---|---|---|---|---|---|
@@ -354,9 +354,9 @@ Every input in `assumptions.json`. **Key** is the path to change; **Range** is w
 | `storyboard.gross_margin_per_cup` | 0.6 | share of price (contribution per avoided order: price minus ingredients and packaging) | [0.5, 0.7] | assumption | Our assumption; Chagee does not disclose; 70% is a team estimate, unsourced. Low 0.50, base 0.60, high 0.70. The GM's playbook only. |
 | `storyboard.busy_days_per_year` | 104 | busy days a year (day type 'moderate') |  | assumption | Illustrative definition, to confirm with Chagee: busy days = weekend days (52 x 2). An input on the GM's playbook, not a measured count. |
 | `storyboard.event_days_per_year` | 11 | event days a year (day type 'large') |  | assumption | Illustrative definition, to confirm with Chagee: event days = Singapore public holidays. An input on the GM's playbook, not a measured count. |
-| `storyboard.forecast_error_scenarios` | [-0.3, -0.15, 0, 0.15, 0.3] | share by which the forecast misses the day's cups (negative = too low) | [-0.3, 0.3] | assumption | Slide 08 sensitivity only. Scenario steps, not a measured forecast accuracy: Chagee's forecast error is unknown. The roster is set from the wrong forecast; the customers are the day's actual ones. |
+| `storyboard.forecast_error_scenarios` | [-0.3, -0.15, 0, 0.15, 0.3] | share by which the forecast misses the day's cups (negative = too low) | [-0.3, 0.3] | assumption | Slide 09 sensitivity only. Scenario steps, not a measured forecast accuracy: Chagee's forecast error is unknown. The roster is set from the wrong forecast; the customers are the day's actual ones. |
 
-### sitepick · used on: slides 10 and 10b site forecast
+### sitepick · used on: slides 13 and 14 site forecast
 
 | Key | Value | Unit | Range | Status | Notes |
 |---|---|---|---|---|---|
@@ -375,7 +375,7 @@ Every input in `assumptions.json`. **Key** is the path to change; **Range** is w
 | `sitepick.calibration_cups_per_outlet` | store.cups_per_store_per_year / store.open_days_per_year | cups/day |  | assumption | The dot weight is set so the average existing outlet sells the deck's cups per day. A pin's forecast is then in the same units. |
 | `sitepick.candidates_shown` | 3 | suggested pins |  | assumption | Top clusters by net new cups. |
 | `sitepick.verdict` | {"strong_new_share": 0.6, "weak_new_share": 0.4} | share of the new store's cups that are new to Chagee |  | assumption | The GM's read of a pin: at or above strong_new_share it is a strong site (it mostly adds cups); below weak_new_share it mostly moves cups from existing outlets; in between, mixed. Illustrative cut-offs. |
-| `sitepick.toy_demo` | {"width": 600, "height": 330, "blobs": [{"x": 175, "y": 175, "n": 17, "sd": 36}, {"x": 440, "y": 120, "n": 11, "sd": 28}, {"x": 450, "y": 255, "n": 5, "sd": 40}], "noise": 9, "eps": 46, "min_points": 4, "seed_offset": 47} | toy points in a 600 x 330 box |  | assumption | Explainer only: a small made-up point set for the 'How it works' walkthrough on slide 10 and the appendix figure, so each DBSCAN step is visible. Not used by any forecast. |
+| `sitepick.toy_demo` | {"width": 600, "height": 330, "blobs": [{"x": 175, "y": 175, "n": 17, "sd": 36}, {"x": 440, "y": 120, "n": 11, "sd": 28}, {"x": 450, "y": 255, "n": 5, "sd": 40}], "noise": 9, "eps": 46, "min_points": 4, "seed_offset": 47} | toy points in a 600 x 330 box |  | assumption | Explainer only: a small made-up point set for the 'How it works' walkthrough on slide 13 and the appendix figure, so each DBSCAN step is visible. Not used by any forecast. |
 
 ### site_ext · used on: four scores, supervised site model, pin to profit (things to consider)
 
@@ -393,13 +393,13 @@ Every input in `assumptions.json`. **Key** is the path to change; **Range** is w
 | `site_ext.setup_cost` | 400,000 | SGD per new outlet, one-off (fit-out, equipment, deposits, opening) | [250000, 600000] | assumption | Illustrative. Payback = set-up cost / net monthly profit to Chagee. |
 | `site_ext.lookalike_labels` | ["Outlet 12", "Outlet 27"] | text |  | assumption | Anonymised display labels for look-alike outlets on the pin-to-profit slide. Not real outlets; the look-alike step is not run here. |
 | `site_ext.recommendation_rule` | open if net monthly profit to Chagee is positive at the low end of the cups-a-day range; pilot if positive at the default but not at the low end; skip if not positive at the default | text |  | assumption | Derives the pin-to-profit slide's recommendation from the computed numbers. |
-| `site_ext.model` | {"ridge_lambda": 1, "delivery_km": 3, "nearest_cap_km": 5} | ridge penalty on standardised features; delivery radius km; cap on distance to the nearest outlet km |  | assumption | The supervised site model (sim/sitemodel.js): ridge regression trained on the slide 10 engine's synthetic outlet cups a day, tested by leave-one-out. A small penalty keeps the fit stable with few outlets. Illustrative; not trained on Chagee data. |
+| `site_ext.model` | {"ridge_lambda": 1, "delivery_km": 3, "nearest_cap_km": 5} | ridge penalty on standardised features; delivery radius km; cap on distance to the nearest outlet km |  | assumption | The supervised site model (sim/sitemodel.js): ridge regression trained on the slide 13 engine's synthetic outlet cups a day, tested by leave-one-out. A small penalty keeps the fit stable with few outlets. Illustrative; not trained on Chagee data. |
 | `site_ext.new_market_inputs` | ["pop", "hubKm"] | feature keys a market with no Chagee history would have (preset on the supervised site model) |  | assumption | Our assumption: population and town-centre distance exist anywhere; delivery-area demand depends on platform data (to confirm); app searches and the outlet network do not exist before Chagee opens. |
-| `site_ext.new_city` | {"width_km": 20, "height_km": 12, "grid_km": 1, "seed_offset": 53, "stores_default": 3, "stores_max": 6, "towns": [{"name": "Town A", "x": 5, "y": 4, "weight": 1.4}, {"name": "Town B", "x": 13, "y": 3.5, "weight": 1.0}, {"name": "Town C", "x": 9, "y": 8.5, "weight": 0.8}, {"name": "Town D", "x": 16.5, "y": 9, "weight": 0.7}, {"name": "Town E", "x": 3, "y": 9.5, "weight": 0.5}]} | a hypothetical city: km, town centres and weights; grid spacing km; stores to place (default and maximum) |  | assumption | The supervised site model's proxy for a new market: a made-up city, not a real place. Its population dots are generated at Singapore's synthetic density (same dots per unit of town weight and same even background per km2 as the slide 10 events), so the model's inputs mean the same thing in both. With real data, a census population grid and real town centres replace it. |
+| `site_ext.new_city` | {"width_km": 20, "height_km": 12, "grid_km": 1, "seed_offset": 53, "stores_default": 3, "stores_max": 6, "towns": [{"name": "Town A", "x": 5, "y": 4, "weight": 1.4}, {"name": "Town B", "x": 13, "y": 3.5, "weight": 1.0}, {"name": "Town C", "x": 9, "y": 8.5, "weight": 0.8}, {"name": "Town D", "x": 16.5, "y": 9, "weight": 0.7}, {"name": "Town E", "x": 3, "y": 9.5, "weight": 0.5}]} | a hypothetical city: km, town centres and weights; grid spacing km; stores to place (default and maximum) |  | assumption | The supervised site model's proxy for a new market: a made-up city, not a real place. Its population dots are generated at Singapore's synthetic density (same dots per unit of town weight and same even background per km2 as the slide 13 events), so the model's inputs mean the same thing in both. With real data, a census population grid and real town centres replace it. |
 
 ### new_market · used on: new-market slides, Australia (A$; things to consider)
 
-> Australia worked example, kept separate from every other section: nothing here feeds the main story (slides 01 to 10) or the benefit and nothing in them is changed. Every Australian input is a scenario assumption; no Australian data has been retrieved for this deck. Archetype areas stand in for real suburbs until Census and market data are pulled.
+> Australia worked example, kept separate from every other section: nothing here feeds the main story (slides 01 to 15) or the benefit and nothing in them is changed. Every Australian input is a scenario assumption; no Australian data has been retrieved for this deck. Archetype areas stand in for real suburbs until Census and market data are pulled.
 
 | Key | Value | Unit | Range | Status | Notes |
 |---|---|---|---|---|---|
@@ -416,15 +416,15 @@ Every input in `assumptions.json`. **Key** is the path to change; **Range** is w
 | `new_market.machine_cost_per_unit_per_month` | 2,000 | AUD per station machine unit per month | [700, 4000] | assumption | Scenario assumption, not sourced; the Singapore figure is also an assumption and no exchange rate is applied. |
 | `new_market.price_per_cup` | 8.5 | AUD per cup, in store | [7, 10] | assumption | Scenario assumption, not sourced. Check menu prices in the pilot city. |
 | `new_market.utilities_per_month` | 3,000 | AUD per outlet per month | [2000, 4500] | assumption | Scenario assumption, not sourced. |
-| `new_market.setups` | ["all_hand", "heading"] | storyboard.split_presets keys compared |  | assumption | Human-only against machine-made drink, as on slide 09; same station speeds and staffing rule (sim/counter.js). |
+| `new_market.setups` | ["all_hand", "heading"] | storyboard.split_presets keys compared |  | assumption | Human-only against machine-made drink, as on slide 11; same station speeds and staffing rule (sim/counter.js). |
 | `new_market.cannibalisation` | {"overlap_km": 5, "max_share": 0.3} | for a second opening: share of a new outlet's cups taken from the pilot, falling linearly to zero at overlap_km |  | assumption | Scenario assumption. Zero for the first opening: no Chagee outlet is in any catchment. |
 | `new_market.scan` | {"from": 0.4, "to": 1.6, "step": 0.1} | realised cups a day as multiples of the base scenario |  | assumption | Range of the contribution chart on the new-market setup slide. |
 | `new_market.trigger_weeks` | 4 | consecutive weeks a pilot signal must hold before acting |  | assumption | Our judgement, illustrative. |
 | `new_market.day_mix` | {"moderate": 104, "large": 12} | busy and event days a year; the rest of store.open_days_per_year are normal days |  | assumption | Scenario assumption for the Australian pilot: busy days = weekend days; event days = a guess at local public holidays and events, not counted. Weights the year-average contribution on the new-market setup slide. |
 
-### pnl · used on: slide 10 P&L view, slide 10b criteria and the appendix page
+### pnl · used on: slide 13 P&L view, slide 14 criteria and the appendix page
 
-> Five-year projection of the same new outlet at two sites (slide 10): beside the existing outlet nearest the selected site, without AI, and the selected site, with AI-assisted site selection. Same opening date, equipment and staffing rule in both, so only the site differs. Illustrative scenarios, not demonstrated causal gains from AI. Nothing here feeds the benefit or any other slide.
+> Five-year projection of the same new outlet at two sites (slide 13): beside the existing outlet nearest the selected site, without AI, and the selected site, with AI-assisted site selection. Same opening date, equipment and staffing rule in both, so only the site differs. Illustrative scenarios, not demonstrated causal gains from AI. Nothing here feeds the benefit or any other slide.
 
 | Key | Value | Unit | Range | Status | Notes |
 |---|---|---|---|---|---|
@@ -438,7 +438,7 @@ Every input in `assumptions.json`. **Key** is the path to change; **Range** is w
 | `pnl.ai_cost_share_to_outlet` | 1 | share of the AI costs charged to this one outlet | [0.1, 1] | assumption | Conservative default: the whole AI cost is charged to this outlet. A lower share spreads it over other openings; we assume no number of openings (Chagee's plan is confidential). |
 | `pnl.volume_scenarios` | store.cups_per_store_per_year range / value | multipliers on both sites' cups: low, base, high |  | assumption | Scenario range from our per-outlet volume range (an assumption), applied to the sold and the displaced cups alike. Not a statistical confidence interval. |
 
-### members · used on: slides 05-07, part one: grow demand (07: reward and AI cost)
+### members · used on: slides 05-08, part one: grow demand (08: reward and AI cost)
 
 > Members: squad tiers. An analytics model (Topic 8 network effects), not AI. Every parameter is illustrative, not Chagee data; the model shows direction and what to pilot, not effect sizes. Nothing here feeds the benefit or any other slide.
 
@@ -457,7 +457,7 @@ Every input in `assumptions.json`. **Key** is the path to change; **Range** is w
 | `members.base_group_orders_per_member_month` | 2 | group orders a squad member would place a month anyway, which also earn the credit | [0, 6] | assumption | Invented for the break-even (the credit is paid on orders that would have happened anyway); assumption, not Chagee data. |
 | `members.example_interest` | 0.5 | interest r of the one customer drawn on slide 05, steps one and two |  | assumption | Display only: a middling customer, to separate one customer's benefit from the equilibrium curve. |
 | `members.app_rules` | {"points_own_drink": 10, "points_per_squad_drink": 5, "points_now": 220, "points_next": 300, "tier_now": "Silver", "tier_next": "Gold", "people": ["Mei", "Jun", "Aisha", "Ravi"], "squad_name": "Lunch squad", "prefs": {"Mei": {"usual": "Jasmine milk tea · 50% sugar", "suggest": "Oolong milk tea · 50% sugar", "why": "you often pick floral teas at lunch and rated an oolong highly"}, "Jun": {"usual": "Black milk tea · less ice", "suggest": "Black milk tea · 25% sugar", "why": "you switched to less sugar in your last few orders", "gift_options": ["Black milk tea · 25% sugar", "Oolong milk tea · less ice", "Fresh fruit tea"]}, "Aisha": {"usual": "Fresh fruit tea", "suggest": "Jasmine milk tea · no ice", "why": "you liked jasmine teas when ordering for yourself"}, "Ravi": {"usual": "Oolong milk tea", "suggest": "Oolong milk tea · less sugar", "why": "close to your usual, with the sugar level you picked last week"}}} | illustrative rules and copy for the M2 prototype: points for your own drink, points every member gets for each drink in a group order, the member's points now and for the next tier, tier names, personas; each persona's usual drink, a suggested alternative with its reason, and gift options for the recipient |  | assumption | Our illustrative rules for the proposed experience, used consistently on slide 06. Not Chagee's membership rules, which are to confirm. The group-order credit is members.group_credit_share. Preferences and suggestions are illustrative data, not learned from anyone. Recalling the last order is the baseline; the proposed AI part ranks alternatives from each member's own choices, acceptances and dismissals. No real messages, purchases or accounts. |
-| `members.ai_cost_per_member_month` | 0.05 | S$ per participating member a month | [0, 0.3] | assumption | Illustrative placeholder, not sourced: the running cost of personalised suggestions per participating member, allocated. Replace with a quoted cost before any decision. Used only on slide 07 to show what personalisation must add on top of squads. |
+| `members.ai_cost_per_member_month` | 0.05 | S$ per participating member a month | [0, 0.3] | assumption | Illustrative placeholder, not sourced: the running cost of personalised suggestions per participating member, allocated. Replace with a quoted cost before any decision. Used only on slide 08 to show what personalisation must add on top of squads. |
 
 ### squadcast
 
@@ -529,13 +529,13 @@ Every input in `assumptions.json`. **Key** is the path to change; **Range** is w
 - **I-sg-groundfloor**: INFORMAL - quote in the team's ideation doc (Chagee Singapore's Lee: 'Whenever you see a Chagee, it's always on the first floor'; kiosk-style outlets in basements and MRT stations at entry in 2019). The article is not named in the doc; confirm the source before quoting.
 - **I-team-automation**: INFORMAL - team research (Oct 2026): Chagee's counters are heading towards machines making the drink while people tag the order and hand it over; consistent with I-leeyen's 'push towards app-to-machine automation, sub-one-minute fulfilment'. Source to be added before it is cited on a slide.
 - **I-team-app-first**: INFORMAL - team observation in the ideation doc: Chagee Singapore sells mainly through its app, with minimal order kiosks in outlets. Confirm before citing. SUPERSEDED on slide 01 (22 Oct 2026) by P-appstore, P-vulcanpost-comeback and L-sec20f-data; the app's share of orders stays to confirm.
-- **L-ester1996**: Ester, M., Kriegel, H.-P., Sander, J. and Xu, X. (1996). A density-based algorithm for discovering clusters in large spatial databases with noise. Proceedings of the Second International Conference on Knowledge Discovery and Data Mining (KDD-96), 226-231. The DBSCAN algorithm used on slide 10.
+- **L-ester1996**: Ester, M., Kriegel, H.-P., Sander, J. and Xu, X. (1996). A density-based algorithm for discovering clusters in large spatial databases with noise. Proceedings of the Second International Conference on Knowledge Discovery and Data Mining (KDD-96), 226-231. The DBSCAN algorithm used on slide 13.
 - **I-chagee-contact**: CHAGEE SOURCE, ANONYMOUS (Oct 2026): a Chagee source who asked not to be named; do not identify them. Four points only: whether Singapore outlets are owned, a joint venture or franchised does not matter for this work, because the data sits in one system; Singapore outlets run under one company and one data system; all delivery is via third-party apps; people are deployed on local expertise: the GM and outlet teams make the staffing calls. Ownership itself is not attributed to this source: see I-sg-owned (project owner confirmation).
 - **P-honeycombers**: PRESS - in-store sightings, indicative. Honeycombers (Feb 2026), https://thehoneycombers.com/singapore/china-bubble-tea-brand-singapore/ : Chagee price sightings in Singapore; not a current full menu.
 - **P-eatbook**: PRESS - in-store sightings, indicative. Eatbook (Aug 2024), https://eatbook.sg/?p=168476 : Chagee price sightings in Singapore; not a current full menu, and older than the deck.
 - **I-team-expansion**: INFORMAL - team research (Oct 2026): Chagee is looking to expand rapidly in Singapore; how many stores it is going for is confidential. Singapore only. Confirm before citing.
 - **I-team-press-outlets**: INFORMAL - team note (Oct 2026): press reports give between 44 and 46 Singapore outlets. Specific articles to be added before citing.
-- **I-team-site-framework**: TEAM WORK (Oct 2026): Jin's site-selection framework, two team slides ('Four Scores for Every Location', 'From Pin to Profit Forecast'): four scores per pin, six steps from a pin to a go / no-go on profit net to Chagee. Used for slides 08 and 09 (extension). Its example values and outlet names are not used; ours are illustrative.
+- **I-team-site-framework**: TEAM WORK (Oct 2026): Jin's site-selection framework, two team slides ('Four Scores for Every Location', 'From Pin to Profit Forecast'): four scores per pin, six steps from a pin to a go / no-go on profit net to Chagee. Used for the appendix pin-to-profit page (earlier extension). Its example values and outlet names are not used; ours are illustrative.
 - **L-chagee-q2-2026-call**: Chagee (CHA) Q2 2026 Earnings Call, full transcript, TradingKey, 29 Aug 2026 (local copy: 'Chagee (CHA) Q2 2026 Earnings Call_ Profit Margin Improves as Overseas GMV Doubles.pdf', supplied by the team). COO's remarks, interpreted: 'As of the end of June, our total registered members reached 257 million. The repurchase rate among active members remain above 43%, while members who made 2 or more purchases accounted for more than 78% of total orders.' Group-wide, not Singapore. The page's AI summary is not used; the quote is from the transcript.
 - **L-chagee-q1-2025**: Chagee Holdings, 'Chagee Announces First Quarter 2025 Unaudited Financial Results', GlobeNewswire, 30 May 2025 (local copy supplied by the team; the team's link https://investor.chagee.com/node/6736/pdf blocks automated access, so not checked by us). 'Chagee's Mobile Mini Program had a total of 192.4 million registered members as of March 31, 2025'; active members = registered members who placed an order at least once in a period. Shows that membership sits on Chagee's ordering app. Group-wide.
 - **P-vulcanpost-comeback**: PRESS - Vulcan Post, Jayme Teo, 2 Oct 2024, https://vulcanpost.com/872176/chagee-singapore-comeback-after-sudden-exit/ : after the reopening, with some customers 'waiting for as long as an hour to receive their orders', 'the brand rolled out in-app ordering and delivery and constantly upgraded the ordering process.' Its 'kiosks' are a store format ('pivoting from their takeaway kiosks for comfortable dine-in, sit-down tea bars'), not ordering kiosks. Quotes checked by us, 22 Oct 2026.
@@ -554,6 +554,6 @@ Every input in `assumptions.json`. **Key** is the path to change; **Range** is w
 - Gross margin per cup: our assumption (50 to 70%).
 - Delivery share of cups and platform commission: assumptions, not sourced.
 - Australian inputs (new-market slides): all scenario assumptions in A$; no Australian data has been retrieved.
-- AI implementation and recurring costs (slide 10 P&L): assumptions, all charged to one outlet by default.
-- Members (slides 05 to 07): every parameter is an illustrative index, not Chagee data; the extra orders squads would bring is what a pilot must measure.
+- AI implementation and recurring costs (slide 13 P&L): assumptions, all charged to one outlet by default.
+- Members (slides 05 to 08): every parameter is an illustrative index, not Chagee data; the extra orders squads would bring is what a pilot must measure.
 - How many stores Chagee plans to open: confidential; nothing in the deck assumes a number.

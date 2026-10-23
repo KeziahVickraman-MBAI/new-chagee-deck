@@ -103,7 +103,7 @@
     const U = unitsOf(sl), all = n === Infinity; sl._b = Math.min(n, U.length - 1);
     U.forEach((u, k) => { u.els.forEach(e => e.classList.toggle("bh", k > sl._b));
       if (u.S) u.S.go(all ? u.S.N : 1, true); if (u.rv) setRev(u.rv, all ? 2 : 0); });
-    if (!U.length) { const st = sl._stepper; if (st) st.go(all ? st.N : 1, true); }
+    if (!U.length) { const st = sl._stepper; if (st) st.go(all || sl.dataset.chapter === "Appendix" ? st.N : 1, true); }   // appendix pages open complete
   }
   const stepping = () => !revealAll && !editingNow();
   function next() { const sl = slides[cur], U = unitsOf(sl), u = U[sl._b];
@@ -389,7 +389,7 @@
         (S.mode === "brigade" && S.workers.length > 1 ? `<span>hand-overs <b>${S.handovers.length}</b></span>` : "");
     }
     function table() {
-      const tb = $(side, ".res");
+      const tb = $(slide, ".res");
       if (mode === "share") {
         const k = Math.max(SMIN, Math.min(SMAX, st.o[0].staff || SMIN)), row = DATA.grid[BUS.day].staff[k];
         const best = SHARE.map(r => r[0]).reduce((a, x) => (row[x].lostShare < row[a].lostShare - 1e-9 || (Math.abs(row[x].lostShare - row[a].lostShare) < 1e-9 && row[x].medianWait < row[a].medianWait) ? x : a));
@@ -402,8 +402,14 @@
             return `<tr class="${k === best ? "best pick" : ""}"><td>${PRESETS[k].label}</td><td>${r.setup === "all_machine" ? "–" : r.meets ? `${r.staff}${r.mode === "fixed" ? " fixed" : ""}` : "over limit"}</td>` +
                    `<td>${r.meets ? pct(r.lostShare, 1) : "–"}</td><td>${r.meets ? mmss(r.medianWait) : "–"}</td><td>${money(r.cost.total)}</td></tr>`; }).join("") +
           `<tr><td colspan="5" style="text-align:left;color:${COL.taupe};font-size:11px">✓ cheapest within the limit · fastest: ${D[D._fastest] ? PRESETS[D._fastest].label : "–"}</td></tr>`;
+        // the readable comparison beside the counter: cost a day, cheapest first; faded = misses the walk-away limit
+        const sb = $(slide, ".sbars");
+        if (sb) { const ks = Object.keys(PRESETS).sort((a, b) => SPLITROW(BUS.day, a).cost.total - SPLITROW(BUS.day, b).cost.total), mx = Math.max(...ks.map(k => SPLITROW(BUS.day, k).cost.total));
+          sb.innerHTML = ks.map(k => { const r = SPLITROW(BUS.day, k);
+            return `<div class="r${k === best ? " best" : ""}${r.meets ? "" : " miss"}"><span>${PRESETS[k].label}${k === best ? " ✓" : ""}</span><b>${money(r.cost.total)}</b><span class="bar" style="width:${(r.cost.total / mx * 100).toFixed(0)}%"></span></div>`; }).join("") +
+            `<p class="note">✓ cheapest that keeps walk-aways within ${pct(SB.walkaway_target.value)}${ks.some(k => !SPLITROW(BUS.day, k).meets) ? "; faded: misses the limit" : ""}. Full table: Numbers.</p>`; }
         // the normal day as well, so the headline's "on a normal day, people are still cheaper" is on the page
-        const nd = $(side, ".normday"), NB = DATA.decisions.automate.perDay.none.cheapest, ks = Object.keys(PRESETS).filter(k => SPLITROW("none", k).meets);
+        const nd = $(slide, ".normday"), NB = DATA.decisions.automate.perDay.none.cheapest, ks = Object.keys(PRESETS).filter(k => SPLITROW("none", k).meets);
         if (nd) nd.innerHTML = BUS.day === "none" ? "" : `<b>${DAY_LABEL.none}, cost a day:</b> ` +
           ks.sort((a, b) => SPLITROW("none", a).cost.total - SPLITROW("none", b).cost.total).map(k => `${PRESETS[k].label} ${money(SPLITROW("none", k).cost.total)}${k === NB ? " (cheapest)" : ""}`).join(" · ") + `.`;
       }
@@ -711,7 +717,7 @@
         <div class="big">+${Math.round(f.netNew).toLocaleString("en-SG")}<small>cups a day for Chagee</small></div>
         <div class="why2">The new store sells ${Math.round(f.cups)} a day (${(f.cups / avg).toFixed(1)}× an average outlet). ${Math.round(f.cannibal)} of those move from outlets nearby${f.hit.length ? ":" : "."}</div>
         <dl>${f.hit.slice(0, 2).map(h => `<dt title="${Math.round(M.storeCups[h.j])} → ${Math.round(M.storeCups[h.j] - h.cups)} cups a day">${oname(h.j)}, ${h.km.toFixed(1)} km</dt><dd>−${Math.round(h.cups)}</dd>`).join("")}</dl>
-        <div class="peak">Peak hour ${hourLabel(pf.peak)}: <b>${Math.round(pf.peakCups)} cups</b> → <b>${pf.peakStaff} ${pf.peakStaff === 1 ? "person" : "people"}</b> on today's counter (slides 08–09).</div>
+        <div class="peak">Peak hour ${hourLabel(pf.peak)}: <b>${Math.round(pf.peakCups)} cups</b> → <b>${pf.peakStaff} ${pf.peakStaff === 1 ? "person" : "people"}</b> on today's counter (slides 09 to 11).</div>
         <button class="btn primary screenonly pnlb" data-act="pnl" title="Five years of this outlet here against beside the nearest outlet">What does this mean for P&amp;L?</button>`;
       if (pnlOn) pnlRender();
       $$(ctlEl, "[data-v]").forEach(el => { const d = sl.find(x => x[0] === el.dataset.v); el.textContent = d[4](par[d[0]]); });
@@ -729,7 +735,7 @@
     // Without AI / With AI on the map, side by side: the site that sells most (a store beside the median outlet,
     // as in the band) against the top app-search site. Live from the same model, so it matches the band at the defaults.
     const cmpv = document.createElement("div"); cmpv.className = "cmpv"; $(p, ".visual").append(cmpv);
-    const wi = $(p.closest(".slide"), ".vs .wi");
+    const wi = $(p.closest(".slide"), ".takeaway");                   // the button sits on the takeaway that names both sites
     if (wi) { const b = document.createElement("button"); b.className = "btn vsb screenonly"; b.innerHTML = "◧ See it on the map";
       b.title = "Show both sites side by side on the map"; b.onclick = () => (cmpv.classList.contains("open") ? cmpv.classList.remove("open") : openCmp()); wi.append(b); }
     function sideSvg(pp, f, accent, fr) {
@@ -1725,7 +1731,7 @@
         ["Shared", "Who is in the squad and what each confirmed. Private order history stays private."], ["Progress", `Everyone in the squad: your drink gives you ${AR.points_own_drink}; each drink in the order gives every member ${AR.points_per_squad_drink}.`],
         ["Privacy", `The sender never sees the recipient's history.`], ["Reward", "A gifted drink counts as a squad drink when collected, so it moves the whole squad."]];
       const WHY2 = ["Your progress is yours; the squad is how friends' orders start to count for you.", "Joining is one tap for a friend: the effort, p, the squad has to keep low.",
-        "Easier choices may lower the effort, p, further. A hypothesis to test, like k.", "A drink counts only once its chooser confirms it: that is the confirmed demand slide 06b forecasts from.",
+        "Easier choices may lower the effort, p, further. A hypothesis to test, like k.", "A drink counts only once its chooser confirms it: that is the confirmed demand slide 07 forecasts from.",
         `The reward: ${AR.points_per_squad_drink} points a squad drink to every member, and ${pct(credit)} credit on each group-order drink.`, "Gifting brings a friend in without asking them to set anything up.",
         "An unredeemed gift is not a drink yet; only redemption confirms it."];
       let cur2 = 2;
@@ -1819,7 +1825,7 @@
         svg.innerHTML = s;
         const Es = b.mid.extraNeeded, EA = bA.mid.extraNeeded;
         $(m3, ".mbact").innerHTML = Es == null ? `At a <b>${pct(o.credit, 1)}</b> credit, at or above the margin, the reward never pays for itself: lower it before any pilot.`
-          : `Pilot the three arms at a <b>${pct(o.credit, 1)}</b> credit. Squads must add about <b>${Es.toFixed(2)}</b> orders per member a month to cover the reward; personalisation about <b>${hur.toFixed(2)}</b> more to cover its S$${o.ai.toFixed(2)} cost (<b>${EA.toFixed(2)}</b> in all).`;
+          : `Three arms in Singapore (today's membership, squads, squads with suggestions) at a <b>${pct(o.credit, 1)}</b> credit: squads must add <b>${Es.toFixed(2)}</b> orders a member a month, suggestions <b>${hur.toFixed(2)}</b> more.`;
         $(m3, ".mbpctlp").innerHTML = `<div class="k">Shown</div><p>Credit ${pct(o.credit, 1)} of the S$${b.price.toFixed(2)} price; ${o.base.toFixed(1)} group orders a month anyway; AI cost S$${o.ai.toFixed(2)} a member a month; margin ${pct(mg.value)} (band ${pct(mg.range[0])}–${pct(mg.range[1])}).</p>`;
         $$(ctl, "input").forEach(i => { i.value = o[i.dataset.k]; $(ctl, `.val[data-v="${i.dataset.k}"]`).textContent = SL.find(x => x[0] === i.dataset.k)[4](o[i.dataset.k]); });
       }
@@ -1938,7 +1944,7 @@
     function draw() {
       const F = C.forecastDay(Sim, P, st.day), cups = F.cups, n = cups.length, norm = rosterOf(C.forecastDay(Sim, P, "none").cups, 0);
       const fc = rosterOf(cups, step >= 4 ? st.e : 0), act = step >= 3 ? fc : norm;
-      const W = 700, H = 192, L = 44, R = 132, Tp = 14, B = 30, ym = Math.ceil(Math.max(...cups, ...act.map(k => k * per), ...norm.map(k => k * per)) * 1.1 / 25) * 25;
+      const W = 700, H = 240, L = 44, R = 132, Tp = 14, B = 30, ym = Math.ceil(Math.max(...cups, ...act.map(k => k * per), ...norm.map(k => k * per)) * 1.1 / 25) * 25;
       const bw = (W - L - R) / n, X = h => L + h * bw, Y = v => Tp + (1 - v / ym) * (H - Tp - B);
       let s = "";
       for (let v = 0; v <= ym; v += 25) s += `<line x1="${L}" x2="${W - R}" y1="${Y(v)}" y2="${Y(v)}" stroke="${v ? COL.line : COL.ink2}"/>` + T(L - 6, Y(v) + 3.5, v, `font-size="10" fill="${COL.taupe}" text-anchor="end"`);
@@ -2019,6 +2025,22 @@
     }
     BUS.fns.push(draw); printers.push(draw); draw();
   })();
+
+  /* ---------------------------------------------------------------- "How it works" / "Numbers" panels: [data-hiw] opens the
+     .hiw with that name in the same panel; ✕, Escape or leaving the slide closes it */
+  (function hiw() {
+    const closeAll = () => $$(document, ".hiw.open").forEach(h => h.classList.remove("open"));
+    document.addEventListener("click", e => {
+      const b = e.target.closest("[data-hiw]");
+      if (b) { const h = $(b.closest(".panel"), `.hiw[data-name="${b.dataset.hiw}"]`); const was = h.classList.contains("open"); closeAll(); h.classList.toggle("open", !was); return; }
+      if (e.target.closest("[data-hiwx]")) closeAll();
+    });
+    addEventListener("keydown", e => { if (e.key === "Escape") closeAll(); });
+    const mo = new MutationObserver(closeAll); slides.forEach(sl => mo.observe(sl, { attributes: true, attributeFilter: ["class"] }));   // a slide change
+    printers.push(closeAll);
+  })();
+  // appendix contents: each line jumps to its page
+  $$(document, ".apxix li[data-go]").forEach(li => (li.onclick = () => show(slides.indexOf(document.getElementById(li.dataset.go)))));
 
   /* ---------------------------------------------------------------- print */
   function preparePrint() {

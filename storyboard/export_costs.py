@@ -25,13 +25,13 @@ OUT = ROOT / "cost.md"
 
 # where each section is used on the slides (for the team's orientation)
 USED_ON = {
-    "store": "every counter and benefit slide; slide 10 volume", "demand": "forecast uncertainty (engine; not on current slides)",
-    "surge": "busy and event days: slides 08 to 09b and the benefit slide", "stations": "counter replica: slides 08b, 09, 09b", "people": "counter replica and staffing rule",
+    "store": "every counter and benefit slide; slide 13 volume", "demand": "forecast uncertainty (engine; not on current slides)",
+    "surge": "busy and event days: slides 09 to 12 and the benefit slide", "stations": "counter replica: slides 10 to 12", "people": "counter replica and staffing rule",
     "costs": "labour and machine cost everywhere in Singapore", "service": "walk-away rule", "provision": "milk stock (engine)",
     "benefit": "the benefit slide (things to consider, TBC)", "business_case": "AI platform cost in the business case (engine)", "staffing": "roster rules (engine)",
     "simulation": "seeds and draws", "triggers": "volume trigger (engine)", "illustration": "bucket-brigade animation", "validation": "tests and checks",
-    "storyboard": "price, margin, day types, split table, forecast-error steps: slides 08-10b and things to consider", "sitepick": "slides 10 and 10b site forecast", "site_ext": "four scores, supervised site model, pin to profit (things to consider)",
-    "new_market": "new-market slides, Australia (A$; things to consider)", "pnl": "slide 10 P&L view, slide 10b criteria and the appendix page", "members": "slides 05-07, part one: grow demand (07: reward and AI cost)",
+    "storyboard": "price, margin, day types, split table, forecast-error steps: slides 09-14 and the appendix", "sitepick": "slides 13 and 14 site forecast", "site_ext": "four scores, supervised site model, pin to profit (things to consider)",
+    "new_market": "new-market slides, Australia (A$; things to consider)", "pnl": "slide 13 P&L view, slide 14 criteria and the appendix page", "members": "slides 05-08, part one: grow demand (08: reward and AI cost)",
     "predict": "forecast toggle (engine)", "predict_toggles": "forecast toggle (engine)",
 }
 
@@ -223,7 +223,7 @@ def main() -> None:
             x = CC[k]["days"][d]
             w(f"| {CC[k]['label']} | {', '.join(CC[k]['robots']) or 'none'} | {DL[d]} | {x['peakStaff']} | {x['labourHours']} | {money(x['labour'])} | {x['units']} | {money(x['machine'])} | {money(x['total'])} |")
     w("")
-    w("The split table on slide 09 adds people above this roster where needed to keep peak walk-aways within "
+    w("The split table on slide 11 adds people above this roster where needed to keep peak walk-aways within "
       f"{A('storyboard', 'walkaway_target'):.0%}; its costs per day:")
     w("")
     w("| Split | " + " | ".join(DL[d] for d in ("none", "moderate", "large")) + " |")
@@ -247,26 +247,26 @@ def main() -> None:
     pc = lambda x: f"{x:.0%}"
     pc1 = lambda x: f"{x:.1%}"
     S = [
-        ("10 · new outlet, suggested site", "cups a day sold / moved from nearby / net for Chagee", f"{q('r.top_cups')} / {V['r.top_cups'] - V['r.top_net']:,.0f} / +{q('r.top_net')}"),
-        ("10 · same outlet beside the nearest existing outlet", "cups a day sold / net for Chagee", f"{q('r.nd_cups')} / +{q('r.nd_net')} ({pc(V['r.nd_moved'])} moved)"),
-        ("10 P&L · five years, without AI", "net extra network sales / operating profit", f"{money(V['r.pnl_wo_rev5'])} / {money(V['r.pnl_wo_op5'])}"),
-        ("10 P&L · five years, with AI site selection", "net extra network sales / operating profit / payback", f"{money(V['r.pnl_wi_rev5'])} / {money(V['r.pnl_wi_op5'])} / {V['r.pnl_wi_payback']:.1f} years"),
-        ("10 P&L · uplift", "sales / operating profit over five years", f"{money(V['r.pnl_up_rev5'])} / {money(V['r.pnl_up_op5'])}"),
-        ("08b · event day, walk-aways at the forecast roster", "brigade / fixed best / fixed worst", f"{pc1(V['r.lost_brigade'])} / {pc1(V['r.lost_fixed_best'])} / {pc1(V['r.lost_fixed_worst'])}"),
-        ("08b · normal-day roster on an event day", "walk-aways", pc(V["r.lost_normal_roster"])),
-        ("08 · busy day, forecast too low by the step shown", "error / peak crew (exact) / walk-aways (exact)", f"{pc(V['r.fe_bz_err'])} low / {V['r.fe_bz_lo_staff']} ({V['r.fe_bz_0_staff']}) / {pc(V['r.fe_bz_lo_lost'])} ({pc1(V['r.fe_bz_0_lost'])})"),
-        ("08 · event day, forecast too high", "extra S$ a day", f"about S${V['r.fe_ev_hi_extra']:,.0f}"),
-        ("07 · break-even extra orders per member a month", "squads alone / with personalised suggestions / personalisation's own hurdle", f"{V['x.mb_be_mid']:.2f} / {V['x.mb_be_ai']:.2f} / {V['x.mb_ai_hurdle']:.2f} (AI cost S${V['x.mb_ai']:.2f} a member a month)"),
-        ("10b · customer access", "share of cups from people with no outlet within walking distance: cluster site / beside an outlet", f"{pc(V['r.top_unmet'])} / {pc(V['r.nd_unmet'])}"),
-        ("10b · downside, cluster site, low volume", "five-year operating profit", money(V['r.pnl_wi_op5_lo'])),
-        ("09 · one tea-and-milk machine vs today's split", "S$ a day, range across day types", f"S${V['r.dec_single_lo']:,.0f}–{V['r.dec_single_hi']:,.0f} vs S${V['r.dec_today_lo']:,.0f}–{V['r.dec_today_hi']:,.0f}"),
-        ("09 · machine unit cost at which that flips", "S$ a month", f"about {money(V['r.dec_be'])}"),
-        ("To consider · pin to profit, site A, a month", "net profit to Chagee / payback", f"{money(D['siteExt']['month']['net'])} / {D['siteExt']['payback']['base']:.0f} months"),
-        ("To consider · benefit per outlet (TBC)", "orders kept a year / their revenue / total yearly benefit (mostly counter labour saved, so larger than the revenue)", f"{q('r.ben_orders')} / {money(V['r.ben_year_rev'])} / {money(V['r.ben_profit'])}"),
-        ("To consider · Australia, worst-case year-average day (A$)", "machine-made drink / human-only", f"A${V['x.nm_worst_mdd']:,.0f} / A${V['x.nm_worst_hand']:,.0f}"),
-        ("To consider · Australia, machine unit cost at which human-only wins (A$)", "A$ a month", f"about A${V['x.nm_flip_machine']:,.0f}"),
-        ("To consider · Australia, break-even cups a day (A$ costs)", "machine-made drink / human-only", f"{q('x.nm_be_mdd')} / {q('x.nm_be_hand')}"),
-        ("07 · group-order credit break-even", "extra orders per member a month at 50 / 60 / 70% margin",
+        ("13 · new outlet, suggested site", "cups a day sold / moved from nearby / net for Chagee", f"{q('r.top_cups')} / {V['r.top_cups'] - V['r.top_net']:,.0f} / +{q('r.top_net')}"),
+        ("13 · same outlet beside the nearest existing outlet", "cups a day sold / net for Chagee", f"{q('r.nd_cups')} / +{q('r.nd_net')} ({pc(V['r.nd_moved'])} moved)"),
+        ("13 P&L · five years, without AI", "net extra network sales / operating profit", f"{money(V['r.pnl_wo_rev5'])} / {money(V['r.pnl_wo_op5'])}"),
+        ("13 P&L · five years, with AI site selection", "net extra network sales / operating profit / payback", f"{money(V['r.pnl_wi_rev5'])} / {money(V['r.pnl_wi_op5'])} / {V['r.pnl_wi_payback']:.1f} years"),
+        ("13 P&L · uplift", "sales / operating profit over five years", f"{money(V['r.pnl_up_rev5'])} / {money(V['r.pnl_up_op5'])}"),
+        ("10 · event day, walk-aways at the forecast roster", "brigade / fixed best / fixed worst", f"{pc1(V['r.lost_brigade'])} / {pc1(V['r.lost_fixed_best'])} / {pc1(V['r.lost_fixed_worst'])}"),
+        ("10 · normal-day roster on an event day", "walk-aways", pc(V["r.lost_normal_roster"])),
+        ("09 · busy day, forecast too low by the step shown", "error / peak crew (exact) / walk-aways (exact)", f"{pc(V['r.fe_bz_err'])} low / {V['r.fe_bz_lo_staff']} ({V['r.fe_bz_0_staff']}) / {pc(V['r.fe_bz_lo_lost'])} ({pc1(V['r.fe_bz_0_lost'])})"),
+        ("09 · event day, forecast too high", "extra S$ a day", f"about S${V['r.fe_ev_hi_extra']:,.0f}"),
+        ("08 · break-even extra orders per member a month", "squads alone / with personalised suggestions / personalisation's own hurdle", f"{V['x.mb_be_mid']:.2f} / {V['x.mb_be_ai']:.2f} / {V['x.mb_ai_hurdle']:.2f} (AI cost S${V['x.mb_ai']:.2f} a member a month)"),
+        ("14 · customer access", "share of cups from people with no outlet within walking distance: cluster site / beside an outlet", f"{pc(V['r.top_unmet'])} / {pc(V['r.nd_unmet'])}"),
+        ("14 · downside, cluster site, low volume", "five-year operating profit", money(V['r.pnl_wi_op5_lo'])),
+        ("11 · one tea-and-milk machine vs today's split", "S$ a day, range across day types", f"S${V['r.dec_single_lo']:,.0f}–{V['r.dec_single_hi']:,.0f} vs S${V['r.dec_today_lo']:,.0f}–{V['r.dec_today_hi']:,.0f}"),
+        ("11 · machine unit cost at which that flips", "S$ a month", f"about {money(V['r.dec_be'])}"),
+        ("Appendix · pin to profit, site A, a month", "net profit to Chagee / payback", f"{money(D['siteExt']['month']['net'])} / {D['siteExt']['payback']['base']:.0f} months"),
+        ("Appendix · benefit per outlet (TBC)", "orders kept a year / their revenue / total yearly benefit (mostly counter labour saved, so larger than the revenue)", f"{q('r.ben_orders')} / {money(V['r.ben_year_rev'])} / {money(V['r.ben_profit'])}"),
+        ("Extension · Australia, worst-case year-average day (A$)", "machine-made drink / human-only", f"A${V['x.nm_worst_mdd']:,.0f} / A${V['x.nm_worst_hand']:,.0f}"),
+        ("Extension · Australia, machine unit cost at which human-only wins (A$)", "A$ a month", f"about A${V['x.nm_flip_machine']:,.0f}"),
+        ("Extension · Australia, break-even cups a day (A$ costs)", "machine-made drink / human-only", f"{q('x.nm_be_mdd')} / {q('x.nm_be_hand')}"),
+        ("08 · group-order credit break-even", "extra orders per member a month at 50 / 60 / 70% margin",
          f"{V['x.mb_be_low']:.2f} / {V['x.mb_be_mid']:.2f} / {V['x.mb_be_high']:.2f}"),
     ]
     w("| Slide | What | Value |")
@@ -345,8 +345,8 @@ def main() -> None:
               "Gross margin per cup: our assumption (50 to 70%).",
               "Delivery share of cups and platform commission: assumptions, not sourced.",
               "Australian inputs (new-market slides): all scenario assumptions in A$; no Australian data has been retrieved.",
-              "AI implementation and recurring costs (slide 10 P&L): assumptions, all charged to one outlet by default.",
-              "Members (slides 05 to 07): every parameter is an illustrative index, not Chagee data; the extra orders squads would bring is what a pilot must measure.",
+              "AI implementation and recurring costs (slide 13 P&L): assumptions, all charged to one outlet by default.",
+              "Members (slides 05 to 08): every parameter is an illustrative index, not Chagee data; the extra orders squads would bring is what a pilot must measure.",
               "How many stores Chagee plans to open: confidential; nothing in the deck assumes a number."):
         w(f"- {t}")
     w("")

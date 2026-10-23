@@ -46,13 +46,13 @@
     "I-sg-groundfloor": "INFORMAL - quote in the team's ideation doc (Chagee Singapore's Lee: 'Whenever you see a Chagee, it's always on the first floor'; kiosk-style outlets in basements and MRT stations at entry in 2019). The article is not named in the doc; confirm the source before quoting.",
     "I-team-automation": "INFORMAL - team research (Oct 2026): Chagee's counters are heading towards machines making the drink while people tag the order and hand it over; consistent with I-leeyen's 'push towards app-to-machine automation, sub-one-minute fulfilment'. Source to be added before it is cited on a slide.",
     "I-team-app-first": "INFORMAL - team observation in the ideation doc: Chagee Singapore sells mainly through its app, with minimal order kiosks in outlets. Confirm before citing. SUPERSEDED on slide 01 (22 Oct 2026) by P-appstore, P-vulcanpost-comeback and L-sec20f-data; the app's share of orders stays to confirm.",
-    "L-ester1996": "Ester, M., Kriegel, H.-P., Sander, J. and Xu, X. (1996). A density-based algorithm for discovering clusters in large spatial databases with noise. Proceedings of the Second International Conference on Knowledge Discovery and Data Mining (KDD-96), 226-231. The DBSCAN algorithm used on slide 10.",
+    "L-ester1996": "Ester, M., Kriegel, H.-P., Sander, J. and Xu, X. (1996). A density-based algorithm for discovering clusters in large spatial databases with noise. Proceedings of the Second International Conference on Knowledge Discovery and Data Mining (KDD-96), 226-231. The DBSCAN algorithm used on slide 13.",
     "I-chagee-contact": "CHAGEE SOURCE, ANONYMOUS (Oct 2026): a Chagee source who asked not to be named; do not identify them. Four points only: whether Singapore outlets are owned, a joint venture or franchised does not matter for this work, because the data sits in one system; Singapore outlets run under one company and one data system; all delivery is via third-party apps; people are deployed on local expertise: the GM and outlet teams make the staffing calls. Ownership itself is not attributed to this source: see I-sg-owned (project owner confirmation).",
     "P-honeycombers": "PRESS - in-store sightings, indicative. Honeycombers (Feb 2026), https://thehoneycombers.com/singapore/china-bubble-tea-brand-singapore/ : Chagee price sightings in Singapore; not a current full menu.",
     "P-eatbook": "PRESS - in-store sightings, indicative. Eatbook (Aug 2024), https://eatbook.sg/?p=168476 : Chagee price sightings in Singapore; not a current full menu, and older than the deck.",
     "I-team-expansion": "INFORMAL - team research (Oct 2026): Chagee is looking to expand rapidly in Singapore; how many stores it is going for is confidential. Singapore only. Confirm before citing.",
     "I-team-press-outlets": "INFORMAL - team note (Oct 2026): press reports give between 44 and 46 Singapore outlets. Specific articles to be added before citing.",
-    "I-team-site-framework": "TEAM WORK (Oct 2026): Jin's site-selection framework, two team slides ('Four Scores for Every Location', 'From Pin to Profit Forecast'): four scores per pin, six steps from a pin to a go / no-go on profit net to Chagee. Used for slides 08 and 09 (extension). Its example values and outlet names are not used; ours are illustrative.",
+    "I-team-site-framework": "TEAM WORK (Oct 2026): Jin's site-selection framework, two team slides ('Four Scores for Every Location', 'From Pin to Profit Forecast'): four scores per pin, six steps from a pin to a go / no-go on profit net to Chagee. Used for the appendix pin-to-profit page (earlier extension). Its example values and outlet names are not used; ours are illustrative.",
     "L-chagee-q2-2026-call": "Chagee (CHA) Q2 2026 Earnings Call, full transcript, TradingKey, 29 Aug 2026 (local copy: 'Chagee (CHA) Q2 2026 Earnings Call_ Profit Margin Improves as Overseas GMV Doubles.pdf', supplied by the team). COO's remarks, interpreted: 'As of the end of June, our total registered members reached 257 million. The repurchase rate among active members remain above 43%, while members who made 2 or more purchases accounted for more than 78% of total orders.' Group-wide, not Singapore. The page's AI summary is not used; the quote is from the transcript.",
     "L-chagee-q1-2025": "Chagee Holdings, 'Chagee Announces First Quarter 2025 Unaudited Financial Results', GlobeNewswire, 30 May 2025 (local copy supplied by the team; the team's link https://investor.chagee.com/node/6736/pdf blocks automated access, so not checked by us). 'Chagee's Mobile Mini Program had a total of 192.4 million registered members as of March 31, 2025'; active members = registered members who placed an order at least once in a period. Shows that membership sits on Chagee's ordering app. Group-wide.",
     "P-vulcanpost-comeback": "PRESS - Vulcan Post, Jayme Teo, 2 Oct 2024, https://vulcanpost.com/872176/chagee-singapore-comeback-after-sudden-exit/ : after the reopening, with some customers 'waiting for as long as an hour to receive their orders', 'the brand rolled out in-app ordering and delivery and constantly upgraded the ordering process.' Its 'kiosks' are a store format ('pivoting from their takeaway kiosks for comfortable dine-in, sit-down tea bars'), not ordering kiosks. Quotes checked by us, 22 Oct 2026.",
@@ -1092,11 +1092,11 @@
         0.3
       ],
       "source": "assumption",
-      "rationale": "Slide 08 sensitivity only. Scenario steps, not a measured forecast accuracy: Chagee's forecast error is unknown. The roster is set from the wrong forecast; the customers are the day's actual ones."
+      "rationale": "Slide 09 sensitivity only. Scenario steps, not a measured forecast accuracy: Chagee's forecast error is unknown. The roster is set from the wrong forecast; the customers are the day's actual ones."
     }
   },
   "sitepick": {
-    "_note": "Slide 10 new-store forecast only (sim/sitepick.js). SYNTHETIC app demand on the team's Singapore map (sim/sg_geo.json, image pixels). Never feeds the cost model. Hub positions are the map's place labels; weights are illustrative, not population data.",
+    "_note": "Slide 13 new-store forecast only (sim/sitepick.js). SYNTHETIC app demand on the team's Singapore map (sim/sg_geo.json, image pixels). Never feeds the cost model. Hub positions are the map's place labels; weights are illustrative, not population data.",
     "km_per_px": {
       "value": 0.033,
       "unit": "km per map pixel",
@@ -1367,11 +1367,11 @@
       "unit": "toy points in a 600 x 330 box",
       "range": null,
       "source": "assumption",
-      "rationale": "Explainer only: a small made-up point set for the 'How it works' walkthrough on slide 10 and the appendix figure, so each DBSCAN step is visible. Not used by any forecast."
+      "rationale": "Explainer only: a small made-up point set for the 'How it works' walkthrough on slide 13 and the appendix figure, so each DBSCAN step is visible. Not used by any forecast."
     }
   },
   "site_ext": {
-    "_note": "The four-scores and pin-to-profit slides only (things to consider: Jin's site-selection framework, I-team-site-framework). Singapore only. Illustrative, synthetic data, not Chagee data. Never feeds the benefit, the cost model or any decision check. Cups a day, price and margin are NOT here: they are the benefit slide's inputs (store.cups_per_store_per_year, storyboard.price_per_cup, storyboard.gross_margin_per_cup), and the build fails if slide 09 shows other values.",
+    "_note": "The four-scores and pin-to-profit slides only (things to consider: Jin's site-selection framework, I-team-site-framework). Singapore only. Illustrative, synthetic data, not Chagee data. Never feeds the benefit, the cost model or any decision check. Cups a day, price and margin are NOT here: they are the benefit slide's inputs (store.cups_per_store_per_year, storyboard.price_per_cup, storyboard.gross_margin_per_cup), and the build fails if slide 11 shows other values.",
     "scores": {
       "value": {
         "demand": 84,
@@ -1491,7 +1491,7 @@
       "unit": "ridge penalty on standardised features; delivery radius km; cap on distance to the nearest outlet km",
       "range": null,
       "source": "assumption",
-      "rationale": "The supervised site model (sim/sitemodel.js): ridge regression trained on the slide 10 engine's synthetic outlet cups a day, tested by leave-one-out. A small penalty keeps the fit stable with few outlets. Illustrative; not trained on Chagee data."
+      "rationale": "The supervised site model (sim/sitemodel.js): ridge regression trained on the slide 13 engine's synthetic outlet cups a day, tested by leave-one-out. A small penalty keeps the fit stable with few outlets. Illustrative; not trained on Chagee data."
     },
     "new_market_inputs": {
       "value": [
@@ -1547,7 +1547,7 @@
       "unit": "a hypothetical city: km, town centres and weights; grid spacing km; stores to place (default and maximum)",
       "range": null,
       "source": "assumption",
-      "rationale": "The supervised site model's proxy for a new market: a made-up city, not a real place. Its population dots are generated at Singapore's synthetic density (same dots per unit of town weight and same even background per km2 as the slide 10 events), so the model's inputs mean the same thing in both. With real data, a census population grid and real town centres replace it."
+      "rationale": "The supervised site model's proxy for a new market: a made-up city, not a real place. Its population dots are generated at Singapore's synthetic density (same dots per unit of town weight and same even background per km2 as the slide 13 events), so the model's inputs mean the same thing in both. With real data, a census population grid and real town centres replace it."
     }
   },
   "new_market": {
@@ -1556,7 +1556,7 @@
       "unit": "text",
       "range": null,
       "source": "assumption",
-      "rationale": "Australia worked example, kept separate from every other section: nothing here feeds the main story (slides 01 to 10) or the benefit and nothing in them is changed. Every Australian input is a scenario assumption; no Australian data has been retrieved for this deck. Archetype areas stand in for real suburbs until Census and market data are pulled."
+      "rationale": "Australia worked example, kept separate from every other section: nothing here feeds the main story (slides 01 to 15) or the benefit and nothing in them is changed. Every Australian input is a scenario assumption; no Australian data has been retrieved for this deck. Archetype areas stand in for real suburbs until Census and market data are pulled."
     },
     "currency": {
       "value": "AUD",
@@ -1810,7 +1810,7 @@
       "unit": "storyboard.split_presets keys compared",
       "range": null,
       "source": "assumption",
-      "rationale": "Human-only against machine-made drink, as on slide 09; same station speeds and staffing rule (sim/counter.js)."
+      "rationale": "Human-only against machine-made drink, as on slide 11; same station speeds and staffing rule (sim/counter.js)."
     },
     "cannibalisation": {
       "value": {
@@ -1857,7 +1857,7 @@
       "unit": "text",
       "range": null,
       "source": "assumption",
-      "rationale": "Five-year projection of the same new outlet at two sites (slide 10): beside the existing outlet nearest the selected site, without AI, and the selected site, with AI-assisted site selection. Same opening date, equipment and staffing rule in both, so only the site differs. Illustrative scenarios, not demonstrated causal gains from AI. Nothing here feeds the benefit or any other slide."
+      "rationale": "Five-year projection of the same new outlet at two sites (slide 13): beside the existing outlet nearest the selected site, without AI, and the selected site, with AI-assisted site selection. Same opening date, equipment and staffing rule in both, so only the site differs. Illustrative scenarios, not demonstrated causal gains from AI. Nothing here feeds the benefit or any other slide."
     },
     "years": {
       "value": 5,
@@ -1952,7 +1952,7 @@
   },
   "members": {
     "_note": {
-      "value": "Slides 05-07, part one: grow demand",
+      "value": "Slides 05-08, part one: grow demand",
       "unit": "text",
       "range": null,
       "source": "assumption",
@@ -2220,12 +2220,12 @@
         0.3
       ],
       "source": "assumption",
-      "rationale": "Illustrative placeholder, not sourced: the running cost of personalised suggestions per participating member, allocated. Replace with a quoted cost before any decision. Used only on slide 07 to show what personalisation must add on top of squads."
+      "rationale": "Illustrative placeholder, not sourced: the running cost of personalised suggestions per participating member, allocated. Replace with a quoted cost before any decision. Used only on slide 08 to show what personalisation must add on top of squads."
     }
   },
   "squadcast": {
     "_note": {
-      "value": "Slide 06b: group orders to forecasts",
+      "value": "Slide 07: group orders to forecasts",
       "unit": "text",
       "range": null,
       "source": "assumption",
