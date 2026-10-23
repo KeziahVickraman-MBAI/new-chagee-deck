@@ -2041,8 +2041,8 @@
     const mo = new MutationObserver(closeAll); slides.forEach(sl => mo.observe(sl, { attributes: true, attributeFilter: ["class"] }));   // a slide change
     printers.push(closeAll);
   })();
-  // appendix contents: each line jumps to its page
-  $$(document, ".apxix li[data-go]").forEach(li => (li.onclick = () => show(slides.indexOf(document.getElementById(li.dataset.go)))));
+  // appendix contents and in-slide links: each jumps to its page
+  $$(document, ".apxix li[data-go], .golink[data-go]").forEach(li => (li.onclick = () => show(slides.indexOf(document.getElementById(li.dataset.go)))));
 
   /* ---------------------------------------------------------------- print */
   function preparePrint() {

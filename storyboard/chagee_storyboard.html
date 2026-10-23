@@ -577,6 +577,8 @@ html,body{margin:0;background:#E7E3DC;color:var(--ink);font-family:var(--sans);-
 .o2tab .pick{background:#EEF5F0;color:#1F4D31;font-weight:600;border-left:2px solid #2F6B45;border-right:2px solid #2F6B45}
 .o2tab tr:last-child .pick{border-bottom:2px solid #2F6B45} .o2tab th.pick{border-top:2px solid #2F6B45;color:#2F6B45}
 .o2tab .rtag{display:block;width:fit-content;margin:0 0 5px auto;padding:2px 8px;border-radius:10px;background:#2F6B45;color:#fff;font:600 10.5px/1.4 var(--sans);letter-spacing:.1em}
+.golink{display:inline-block;margin-left:4px;color:var(--red);font-weight:600;cursor:pointer;border-bottom:1px dotted var(--red)} .golink:after{content:" →"}
+.adat .card ul:not(.srcl){margin:6px 0 0;padding-left:18px;font-size:14.5px;line-height:1.45} .adat .card li{margin-bottom:6px}
 .s3v{flex:1;display:flex;align-items:center;justify-content:center;min-height:0} .s3v svg{width:100%;max-height:132px}
 .s3p .where{margin:0;font:600 12px/1.3 var(--sans);color:var(--red)} .s3a{display:grid;place-items:center;font:28px var(--serif);color:var(--gold)}
 /* 07: the demand-data demonstration, readable sizes */
@@ -959,7 +961,7 @@ aside.notes{display:none}
       </div>
       <div class="cards" style="gap:12px">
         <div class="card"><h4>Chagee-App</h4><p>An <b>order-ahead, self-pickup app</b>; in Singapore, <b>in-app ordering and delivery</b> followed the reopening queues. Chagee <b>collects personal and transactional data</b>.</p><p style="margin-top:4px"><i>To confirm:</i> the app's share of Singapore orders; whether searches or location are logged.</p><ul class="srcl"><li>CHAGEE App Store listing</li><li>Vulcan Post, Oct 2024</li><li>Chagee Form 20-F, FY 2025</li></ul></div>
-        <div class="card"><h4>Why Chagee?</h4><p>A <b>fast-growing, playful</b> brand with <b>heavy app use</b>.</p><p style="margin-top:6px">Likely to have <b>rich order data</b> and <b>room for AI</b> to help the stores.</p></div>
+        <div class="card"><h4>Why Chagee?</h4><p><b>One company, one data system</b> (Chagee source, anonymous), with <b>lots of data</b> from its reliance on the Chagee app. <span class="golink" data-go="adata">Data collection: appendix</span></p><p style="margin-top:6px">A <b>fast-growing, playful</b> brand with <b>heavy app use</b>. Likely to have <b>rich order data</b> and <b>room for AI</b> to enhance the business.</p><p style="margin-top:6px">We also <b>interviewed an internal staff member</b> (anonymous) about the problems they actually face.</p></div>
       </div>
     </div>
     <div class="takeaway"><span class="lab">TAKEAWAY</span><span>Whatever the channel, every order ends at one counter. Peak hour is where an outlet wins or loses.</span></div>
@@ -1712,7 +1714,7 @@ aside.notes{display:none}
       <div><h5>Grow demand</h5><ol><li data-go="am1">Members: the model and its checks</li><li data-go="am2">Members: break-even, assumptions and sources</li><li data-go="am3">Group orders to forecasts: method and results</li></ol></div>
       <div><h5>Serve demand</h5><ol><li data-go="aops">Counter comparisons, every day type</li><li data-go="c8">The modelled decisions in detail</li><li data-go="c9">The size of the benefit</li><li data-go="ab">The benefit in detail</li><li data-go="cm">Machine ladder</li><li data-go="a3">Machine ladder: tiers and sources</li></ol></div>
       <div><h5>Expand access</h5><ol><li data-go="a2">How the site forecast works</li><li data-go="ap">The new store in money: five-year P&amp;L</li><li data-go="x1">Four scores for every location</li><li data-go="x1b">The supervised model</li><li data-go="x2">From pin to net profit</li></ol></div>
-      <div><h5>Across the story</h5><ol><li data-go="c1b">Network effects across the three parts</li><li data-go="a1">Sources and assumptions</li></ol></div>
+      <div><h5>Across the story</h5><ol><li data-go="adata">Chagee's data collection</li><li data-go="c1b">Network effects across the three parts</li><li data-go="a1">Sources and assumptions</li></ol></div>
       <div><h5>Optional extension</h5><ol><li data-go="an">New market: inputs and method</li></ol></div>
     </div>
   </div>
@@ -1720,6 +1722,36 @@ aside.notes{display:none}
   <aside class="notes"><p>The appendix holds everything moved off the main slides: derivations, the full tables, sources and earlier analyses. Click a line to jump to it.</p></aside>
 </section>
 
+
+<!-- ======================================================= APPENDIX: CHAGEE'S DATA COLLECTION -->
+<section class="slide content" id="adata" data-chapter="Appendix" data-title="Chagee's data collection">
+  <div class="leafart" aria-hidden="true"></div>
+  <div class="inner">
+    <p class="kicker">Appendix · context · behind slides 01 and 03</p>
+    <h2 class="head">Chagee's data collection: what is public, what is to confirm</h2>
+    <p class="sub">Only what our sources say; everything else in the deck is synthetic or illustrative.</p>
+    <div class="body adat" style="grid-template-columns:repeat(3,1fr);gap:14px;margin-top:12px">
+      <div class="card"><h4>Public sources</h4>
+        <ul><li>Chagee's annual report: <i>“Our business generates and processes personal, transactional and other data.”</i></li>
+        <li>The app: <i>“Order and pay digitally”</i>, <i>“Order for self-pickup ahead of time”</i>, <i>“Locate our outlets and their operating hours”</i>.</li>
+        <li>After the Singapore reopening queues, <i>“the brand rolled out in-app ordering and delivery”</i>.</li></ul>
+        <ul class="srcl"><li>Chagee Form 20-F, FY 2025</li><li>CHAGEE App Store listing</li><li>Vulcan Post, Oct 2024</li></ul></div>
+      <div class="card"><h4>Chagee source, anonymous</h4>
+        <ul><li>Singapore outlets run under <b>one company and one data system</b>.</li>
+        <li>All delivery is through <b>third-party apps</b>, so delivery orders arrive by platform.</li>
+        <li>People are deployed on <b>local expertise</b>: the GM and outlet teams make the staffing calls.</li></ul>
+        <p class="tiny">An internal staff member who asked not to be named; paraphrased, not quoted.</p></div>
+      <div class="card"><h4>To confirm</h4>
+        <ul><li>The <b>app's share</b> of Singapore orders: not in the parts of the annual report we read.</li>
+        <li>Whether <b>searches or location</b> are logged. The app's privacy label lists precise location as not linked to the user and does not list search history (storefront seen: not Singapore).</li>
+        <li><b>Wait times, footfall and walk-aways</b>.</li>
+        <li>Any use of app data needs <b>consent</b> under Singapore's data protection law (PDPA).</li></ul></div>
+    </div>
+    <div class="takeaway"><span class="lab">TAKEAWAY</span><span>Orders are recorded in one system; searches, location and waits are to confirm. That is why our app and site data are synthetic (slides 07 and 13).</span></div>
+  </div>
+  <div class="foot"><span>OPIM639 · Group 3 · sources as cited · quotes checked against the source text</span><span class="rail"></span><span class="pg"></span></div>
+  <aside class="notes"><p>Backup for slide 01's "Why Chagee?" and slide 03's data trail. Only three public sources speak to Chagee's data: the annual report's risk factors, the app's store listing and Vulcan Post on the reopening. Our Chagee source, who asked not to be named, added that Singapore runs on one company and one data system, that delivery is all third-party, and that staffing is decided by the GM and outlet teams. What we could not confirm: the app's share of orders, whether searches or location are logged, and waits or walk-aways; that is why the app and site data in the deck are synthetic.</p></aside>
+</section>
 <section class="slide content mb" id="am1" data-chapter="Appendix" data-title="Members: the model and its checks">
   <div class="leafart" aria-hidden="true"></div>
   <div class="inner">
@@ -6497,8 +6529,8 @@ aside.notes{display:none}
     const mo = new MutationObserver(closeAll); slides.forEach(sl => mo.observe(sl, { attributes: true, attributeFilter: ["class"] }));   // a slide change
     printers.push(closeAll);
   })();
-  // appendix contents: each line jumps to its page
-  $$(document, ".apxix li[data-go]").forEach(li => (li.onclick = () => show(slides.indexOf(document.getElementById(li.dataset.go)))));
+  // appendix contents and in-slide links: each jumps to its page
+  $$(document, ".apxix li[data-go], .golink[data-go]").forEach(li => (li.onclick = () => show(slides.indexOf(document.getElementById(li.dataset.go)))));
 
   /* ---------------------------------------------------------------- print */
   function preparePrint() {
