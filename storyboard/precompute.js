@@ -21,6 +21,7 @@ const PNL = require("../sim/pnl.js");
 const MB = require("../sim/members.js");
 const SQ = require("../sim/squadcast.js");
 const ONL = require("../sim/online.js");
+const CT = require("../sim/crewtool.js");
 
 const RAW = JSON.parse(fs.readFileSync(path.join(__dirname, "..", "assumptions.json"), "utf8"));
 const P = Sim.params(RAW), SB = RAW.storyboard;
@@ -175,10 +176,23 @@ for (const day of Object.keys(P.surgeMult)) {
     [k, C.shareCompare(Sim, Store, P, { ...shOpts, day, robots, staff, perHour: undefined })]));
 }
 
+// slides 06 to 08, the manager's bottleneck tool (sim/crewtool.js): what the notes quote, at the tablet's defaults; the deck
+// runs the same model live. The recommendation at every slider step, the default comparison, and the sealer-slow case.
+const ctE = CT.inputs(RAW, Sim), ctD = ctE.demand.value, ctRec = CT.recommend(ctE, { perHour: ctD });
+const ctMove = ctRec.best ? { [ctRec.best.worker]: ctRec.best.to } : {}, ctSlow = CT.recommend(ctE, { perHour: ctD, slow: true });
+const crewTool = {
+  perHour: ctD, rec: { kind: ctRec.kind, cause: ctRec.cause, con: ctRec.conId, longest: ctE.stations[ctRec.longest].id, best: ctRec.best && { worker: ctRec.best.worker, to: ctRec.best.to, spare: ctRec.best.spare }, range: ctRec.range },
+  cmp: CT.compare(ctE, Sim, { perHour: ctD, alloc: ctMove }),
+  slow: { kind: ctSlow.kind, cause: ctSlow.cause, con: ctSlow.conId, cmp: CT.compare(ctE, Sim, { perHour: ctD, slow: true, alloc: ctMove }) },
+  sweep: [],
+};
+for (let d = ctE.demand.range[0]; d <= ctE.demand.range[1] + 1e-9; d += ctE.demand.step) { const r = CT.recommend(ctE, { perHour: d }); crewTool.sweep.push({ perHour: d, kind: r.kind, cause: r.cause }); }
+
 const pl = Sim.plan(P, "mixed");
 const data = {
   generated: new Date().toISOString(), seeds,
   grid, splits, aiLayer, forecastErr, newMarket, pnl, members, squadcast, site, ladder, benefit, decisions, siteExt, siteModel, sharing,
+  crewTool,
   online: ONL.compare(ONL.inputs(RAW)),          // slides 03 to 07: the online retailing business case and the brief, reconciled
   sharing_times: { handover: P.humanSec.handover * P.humanMult, all_human: P.stations.reduce((a, k) => a + P.humanSec[k] * P.humanMult, 0),
                    hand_here: P.stations.filter(k => !shRobots.includes(k)).reduce((a, k) => a + P.humanSec[k] * P.humanMult, 0) },

@@ -612,7 +612,7 @@
         ? `At ${Math.round(st.per)} orders an hour both rules keep up: no step is overloaded, so changing how work is shared changes little.`
         : dp > 10 && dm >= 0
         ? `At ${Math.round(st.per)} orders an hour the same ${staff} people, sharing flexibly: median ${mmss(a.median)} → <b>${mmss(b.median)}</b>, ${Math.round(UP * 100)}th percentile ${mmss(a.p90)} → <b>${mmss(b.p90)}</b>, ${a.completed.toFixed(0)} → <b>${b.completed.toFixed(0)}</b> orders completed, same paid hour. A simulation result under our assumptions.`
-        : `At ${Math.round(st.per)} orders an hour flexible assistance does not clearly help (${mmss(a.p90)} against ${mmss(b.p90)} at the ${Math.round(UP * 100)}th percentile): the queue needs more staff (slide 08) or equipment (slide 10).`;
+        : `At ${Math.round(st.per)} orders an hour flexible assistance does not clearly help (${mmss(a.p90)} against ${mmss(b.p90)} at the ${Math.round(UP * 100)}th percentile): the queue needs more staff (the forecasting page) or equipment (the equipment page).`;
     }
     function how() {
       const rows = LV.map(([k, L]) => `<tr><td>${DAY_LABEL[k]} peak · ${Math.round(L.perHour)}/h</td>` + ["fixed", "assist"].map(m => { const r = L[m];
@@ -622,7 +622,7 @@
         `<h5>The two rules</h5><p><b>A, fixed responsibilities</b>: each person keeps their own steps, using the split that balances the work best (the faster person takes the heavier steps).</p>` +
         `<p><b>B, flexible assistance</b>: when a person's own steps have nothing waiting, they walk to another hand step with at least ${AS.trigger} cups waiting and help, paying the walk and ${AS.handoverSec} s of coordination on every cup they make there; they go back as soon as their own steps have work. Not the bucket brigade, which is in the appendix.</p>` +
         `<h5>The measurement window</h5><p>Orders placed ${clock(0).slice(0, 5)}–${clock(3600).slice(0, 5)} (simulated). <b>Completed</b>: ready within the hour. <b>Unfinished</b>: still at the counter at ${clock(3600).slice(0, 5)}; they are followed until ready for the order-to-ready times. <b>Walked away</b>: left on arrival because more than ${P.targetWait} minutes of work was already queued (the model's rule).</p>`;
-      $(sl, ".shhow2").innerHTML = `<h5>Held on both sides</h5><p>${staff} people (the event-day forecast crew), the same machines, the same orders (same random seed), drink mix, step times, walking speed and walk-away rule. Machine investment (slide 10) and forecast staffing (slide 08) are separate comparisons.</p>` +
+      $(sl, ".shhow2").innerHTML = `<h5>Held on both sides</h5><p>${staff} people (the event-day forecast crew), the same machines, the same orders (same random seed), drink mix, step times, walking speed and walk-away rule. Machine investment (the equipment page) and forecast staffing (the forecasting page) are separate comparisons.</p>` +
         `<h5>Mean of ${SEEDS} runs at each day type's peak · median / ${Math.round(UP * 100)}th</h5><table class="res"><tr><th>Demand</th><th>A · fixed</th><th>B · flexible</th></tr>${rows}</table>` +
         `<h5>To validate with Chagee</h5><p>Which steps machines do; actual task times and equipment cycles; who is trained on which step; walking distances and movement limits behind the counter; the coordination cost of helping; order arrivals and order-to-ready times.</p>`;
     }
@@ -858,7 +858,7 @@
         <div class="big">+${Math.round(f.netNew).toLocaleString("en-SG")}<small>cups a day for Chagee</small></div>
         <div class="why2">The new store sells ${Math.round(f.cups)} a day (${(f.cups / avg).toFixed(1)}× an average outlet). ${Math.round(f.cannibal)} of those move from outlets nearby${f.hit.length ? ":" : "."}</div>
         <dl>${f.hit.slice(0, 2).map(h => `<dt title="${Math.round(M.storeCups[h.j])} → ${Math.round(M.storeCups[h.j] - h.cups)} cups a day">${oname(h.j)}, ${h.km.toFixed(1)} km</dt><dd>−${Math.round(h.cups)}</dd>`).join("")}</dl>
-        <div class="peak">Peak hour ${hourLabel(pf.peak)}: <b>${Math.round(pf.peakCups)} cups</b> → <b>${pf.peakStaff} ${pf.peakStaff === 1 ? "person" : "people"}</b> on today's counter (slides 08 to 10).</div>
+        <div class="peak">Peak hour ${hourLabel(pf.peak)}: <b>${Math.round(pf.peakCups)} cups</b> → <b>${pf.peakStaff} ${pf.peakStaff === 1 ? "person" : "people"}</b> on today's counter (counter pages, appendix).</div>
         <button class="btn primary screenonly pnlb" data-act="pnl" title="Five years of this outlet here against beside the nearest outlet">What does this mean for P&amp;L?</button>`;
       if (pnlOn) pnlRender();
       $$(ctlEl, "[data-v]").forEach(el => { const d = sl.find(x => x[0] === el.dataset.v); el.textContent = d[4](par[d[0]]); });
@@ -2132,7 +2132,7 @@
       $(sl, ".optake .t").innerHTML = step < 2 ? `${DAY_LABEL[st.day]}: the forecast peaks at <b>${Math.round(cups[pk])}</b> cups at ${hourLabel(pk)}, about ${(cups[pk] / Math.min(...cups)).toFixed(1)}× the quietest hour.`
         : step < 3 ? (short ? `With the normal-day roster, <b>${short}</b> hour${short > 1 ? "s run" : " runs"} short by up to <b>${Math.round(maxShort)}</b> cups, while ${idleH} hours use less than half the crew's capacity.`
                             : `On a ${DAY_LABEL[st.day].toLowerCase()} the normal-day roster covers the peak, but ${idleH} hours use less than half the crew's capacity.`)
-        : step < 4 ? `The forecast roster puts <b>${fc[pk]}</b> on at ${hourLabel(pk)}. Forecasting estimates the capacity needed; 08b and 09 compare ways of providing it.`
+        : step < 4 ? `The forecast roster puts <b>${fc[pk]}</b> on at ${hourLabel(pk)}. Forecasting estimates the capacity needed; the sharing and equipment pages compare ways of providing it.`
         : st.e === 0 ? `Exact forecast: <b>${z.staff}</b> at the peak, <b>${pct(z.lostShare, 1)}</b> walk away, S$${Math.round(z.cost)} a day. Move the forecast error to see what a wrong forecast costs.`
         : `Forecast ${errLab(st.e)}: <b>${cur.staff}</b> at the peak, <b>${pct(cur.lostShare, 1)}</b> walk away, S$${Math.round(cur.cost)} a day; peak-hour contribution <b>S$${Math.round(cur.contribution)}</b> against S$${Math.round(z.contribution)} with an exact forecast.`;
       $(sl, ".opctlp").innerHTML = `<div class="k">Shown</div><p>${DAY_LABEL[st.day]}, today's split, forecast ${errLab(st.e)}. Other days: the deck's interactive version.</p>`;
@@ -2176,7 +2176,7 @@
       const rc = i => (i === cols.length - 1 ? ` class="pick"` : "");
       $(sl, ".o2tab").innerHTML = `<tr><th>Criterion</th>${cols.map((c, i) => `<th${rc(i)}>${i === cols.length - 1 ? `<span class="rtag">Proposed pilot</span>` : ""}${c.h}<br><small style="text-transform:none;letter-spacing:0">${c.sub}</small></th>`).join("")}</tr>` +
         ROWS.map(([lab, f]) => `<tr><td>${lab}</td>${cols.map((c, i) => `<td${rc(i)}>${f(c.r)}</td>`).join("")}</tr>`).join("") +
-        `<tr><td>Flexible sharing, same crew: median ready time (slide 09)</td>${["today", "forecast", "single"].map((k, i) => { const x = DATA.sharing.decision[d][k];
+        `<tr><td>Flexible sharing, same crew: median ready time (sharing page)</td>${["today", "forecast", "single"].map((k, i) => { const x = DATA.sharing.decision[d][k];
           return `<td${rc(i)}>${x.fixed.staff < 2 ? "one person, no one to help" : `${mmss(x.fixed.median)} → ${mmss(x.assist.median)}`}</td>`; }).join("")}</tr>`;
       $$(sl, ".o2day").forEach(e => (e.textContent = DAY_LABEL[d]));
     }
@@ -2620,13 +2620,13 @@
     const pa = document.getElementById("p1a");
     if (pa) {
       const S = { pick: null, fill: false, dec: null, ord: false }, inc = v("switch_incentive"), minSave = v("min_saving_min");
-      const bt = v("busy_travel_min"), br = v("busy_ready_min"), at = v("alt_travel_min"), emb = $(pa, "img.emb").src;
+      const bt = v("busy_travel_min"), br = v("busy_ready_min"), at = v("alt_travel_min");
       $(pa, '[data-cx="scen"]').textContent = `${B} is swamped and ${AL}, nearby, has room. The outlets are the reference deck's example; every time is illustrative.`;
       $$(pa, '[data-cx="clock"]').forEach(e => (e.textContent = "9:41"));
       const render = () => {
         // pickup: collection is the later of walking there and the drink being ready; a switch is offered only if it saves enough
         const ar = S.fill ? v("alt_ready_when_full_min") : v("alt_ready_min"), bc = Math.max(bt, br), ac = Math.max(at, ar), save = bc - ac, offer = save >= minSave;
-        let ph = `<div class="brand"><img src="${emb}" alt="">CHAGEE</div><div class="ctx">Pickup · ${B}</div>`;
+        let ph = `<div class="brand"><i class="emi"></i>CHAGEE</div><div class="ctx">Pickup · ${B}</div>`;
         if (S.pick === "switch") ph += `<div class="hero">Switched</div><div class="pc ok"><span class="chip">Confirmed · simulated</span><b>Collect at ${AL} in about ${ac} min</b>Switch perk added: ${inc.toLowerCase()}.</div><button class="pb alt sm" data-cx="undo">Undo</button>`;
         else if (S.pick === "keep") ph += `<div class="hero">Your tea</div><div class="pc ok"><span class="chip">Confirmed · simulated</span><b>Collect at ${B} in about ${bc} min</b>You kept your outlet; nothing else changes.</div><button class="pb alt sm" data-cx="undo">Undo</button>`;
         else if (offer) ph += `<div class="hero">Your tea, sooner</div><div class="pc sug"><span class="chip">Suggested for you</span><b>Collect at ${AL} in about ${ac} min</b>instead of ${bc} min at ${B}.</div>
@@ -2641,7 +2641,7 @@
           <p class="who"><b>Customer chooses</b> before paying.<br><button class="lnk" data-cx="fill">${S.fill ? `${AL} has room again` : `What if ${AL} fills up?`}</button></p>`;
         // delivery: nothing changes for customers until the zone manager decides
         const D = S.dec, paused = D === "pause", nudged = D === "pause" || D === "promo";
-        const store = (n, cls, badges) => `<div class="st ${cls}"><img src="${emb}" alt=""><div><b>CHAGEE · ${n}</b>${badges}</div></div>`;
+        const store = (n, cls, badges) => `<div class="st ${cls}"><i class="emi"></i><div><b>CHAGEE · ${n}</b>${badges}</div></div>`;
         let dp = `<div class="dhd">Delivery<span>Chagee</span></div>`;
         if (S.ord) dp += `<div class="res">Your order</div><div class="pc ok"><span class="chip">Placed · simulated</span><b>CHAGEE · ${AL} is preparing it</b>A rider collects from the outlet with room, not the busy counter.</div><button class="pb alt sm" data-cx="ordx">Back to results</button>`;
         else dp += `<div class="res">Results near you</div>` +
@@ -2673,6 +2673,222 @@
       });
       printers.push(() => { Object.assign(S, { pick: null, fill: false, dec: "pause", ord: false }); $(pa, ".cxw").classList.remove("exec"); render(); });
       render();
+    }
+  })();
+
+  /* ---------------------------------------------------------------- 06 to 08: Proposal 2, the manager's bottleneck tool. 06 a
+     clickable counter at the rush; 07 three steps; 08 the tablet. The recommendation is crewtool's projection and rules (AI
+     predicts, rules compare feasible actions); the comparison is its seeded simulation, run live, with the same drinks for every
+     allocation, so the recommended move can lose. The manager decides. All values: assumptions.json ops_tool. */
+  (function crewTool() {
+    const CT = window.ChageeCrewTool; if (!CT || !RAW.ops_tool) return;
+    const E = CT.inputs(RAW, Sim), D0 = E.demand.value, OT = RAW.ops_tool, still = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const lab = k => E.stations[k].label, lc = s => s.charAt(0).toLowerCase() + s.slice(1), kOf = id => E.stations.findIndex(s => s.id === id);
+    const who = id => E.crew.find(c => c.id === id), drinks = n => `${n} drink${n === 1 ? "" : "s"}`;
+    const KIND = { move: "Reassign", keep: "Keep", escalate: "Escalate" };
+    const band = f => ({ lo: CT.project(E, { ...f, perHour: f.perHour * (1 - E.band) }), hi: CT.project(E, { ...f, perHour: f.perHour * (1 + E.band) }) });
+    // the recommendation in words: one call, its reason, and why that colleague (or why no one)
+    function recCopy(r) {
+      const C_ = lab(r.con), c_ = lc(C_), s = r.base.st[r.con], b = r.best, w = b && who(b.worker);
+      const others = E.crew.filter(x => !b || x.id !== b.worker).map(x => x.home === r.con ? `${x.name} already works ${c_}`
+        : !x.trained.includes(r.con) ? `${x.name} is not yet trained on ${c_}` : r.base.crew.find(c => c.id === x.id).spare < E.spareMin ? `${x.name} has little spare time` : null).filter(Boolean);
+      if (r.kind === "keep") return { head: `Keep the current allocation: ${c_} is the busiest step, but its backlog clears within ${E.window} minutes without moving anyone.`,
+        short: `${C_}: work due is about ${pct(s.rho)} of its capacity over the next ${E.window} minutes.`, why: [`<b>No move:</b> moving someone would add walking and set-up time for no gain.`, `<b>Review:</b> the tablet keeps predicting; it speaks up if a step starts to build.`] };
+      if (r.kind === "move") return { head: `${C_} is building up. Assign ${w.name}, available and trained, to help, then review when the backlog clears.`,
+        short: `${C_}: work due is about ${pct(s.rho)} of capacity over the next ${E.window} minutes; ${w.name} has about ${pct(b.spare)} spare at ${lc(lab(w.home))}.`,
+        why: [`<b>Why ${w.name}:</b> trained on ${c_}; about ${pct(b.spare)} of ${w.name}'s time is predicted spare at ${lc(lab(w.home))}.`,
+              `<b>${w.name}'s own step:</b> ${lc(lab(w.home))} stays ${w.name}'s; ${w.name} goes back whenever ${drinks(E.returnTrigger)} wait there.`,
+              `<b>Review:</b> the help ends once ${c_} is down to ${drinks(E.clearLevel)} or fewer.`, others.length ? `<b>Not the others:</b> ${others.join("; ")}.` : ""].filter(Boolean) };
+      if (r.cause === "equipment") return { head: `Escalate: the ${c_} is the constraint, and moving people adds no ${c_} capacity. Check the machine; keep the current allocation.`,
+        short: `The ${c_}: work due is about ${pct(s.rho)} of its capacity, the highest of any step; it is a machine step.`, why: [`<b>No move:</b> help at another step would only feed the ${c_} faster.`, `<b>Escalate to:</b> maintenance, or the zone manager to steer new orders (Proposal 1).`] };
+      if (r.cause === "partial") return { head: `Escalate: ${c_} keeps building even if ${w.name} helps. ${w.name} can help meanwhile; call in cover or ask the zone manager to steer new orders (Proposal 1).`,
+        short: `${C_}: work due is about ${pct(s.rho)} of capacity; with ${w.name}'s spare time it still does not clear in ${E.window} minutes.`, why: [`<b>Interim:</b> ${w.name} helps at ${c_}, returning whenever ${drinks(E.returnTrigger)} wait at ${lc(lab(w.home))}.`, `<b>Escalate to:</b> cover from a break or a nearby outlet, or the zone manager (Proposal 1).`] };
+      return { head: `Escalate: no one trained on ${c_} has time to spare, so moving someone would only move the queue. Call in cover or ask the zone manager to steer new orders (Proposal 1).`,
+        short: `${C_}: work due is about ${pct(s.rho)} of capacity; no colleague trained on it has ${pct(E.spareMin)} of their time spare, and help elsewhere would not clear it.`, why: [`<b>No move:</b> ${others.join("; ") || "no feasible helper"}.`, `<b>Escalate to:</b> cover from a break or a nearby outlet, or the zone manager (Proposal 1).`] };
+    }
+    const bandLine = r => r.range.holds ? `Holds across the forecast range, ±${pct(E.band)} on incoming drinks.`
+      : `Forecast range ±${pct(E.band)}: at the low end, ${lc(KIND[r.range.low])}; at the high end, ${lc(KIND[r.range.high])}.`;
+    // the counter as six tiles: drinks waiting now, and predicted load against capacity (bar to 150%, the dashed line is 100%)
+    const SCALE = 1.5, w_ = v => (Math.min(v, SCALE) / SCALE * 100).toFixed(1);
+    function strip(p, lo, hi, al = {}, cups = 8) {
+      return E.stations.map((s, k) => {
+        const x = p.st[k], con = k === p.con && x.rho >= 1, n = E.snapshot[k];
+        const hp = Object.entries(al).filter(([, t]) => t && kOf(t) === k).map(([id]) => who(id).name);
+        const name = s.machine ? "machine" : E.crew.filter(c => c.home === k).map(c => c.name).join(", ");
+        return `<div class="stp${con ? " cst" : ""}${k === p.longest ? " long" : ""}" style="--i:${k}">${con ? `<span class="tag">Constraint</span>` : k === p.longest ? `<span class="tag ll">Longest list</span>` : ""}` +
+          `<h6>${s.label}</h6><span class="who${s.machine ? " m" : ""}">${name}${hp.length ? ` <span class="hp">+ ${hp.join(", ")}</span>` : ""}</span>` +
+          `<span class="wq">${"<i></i>".repeat(Math.min(n, cups))}<em>${n} waiting</em></span>` +
+          `<div class="lbar${x.rho >= 1 ? " hi" : ""}"><i style="width:${w_(x.rho)}%"></i><s style="left:${w_(lo.st[k].rho)}%;width:${(w_(hi.st[k].rho) - w_(lo.st[k].rho)).toFixed(1)}%"></s><u style="left:${(100 / SCALE).toFixed(1)}%"></u></div>` +
+          `<span class="wl">${pct(x.rho)} of capacity</span></div>`;
+      }).join("");
+    }
+
+    /* 06: the counter at the rush, four points and the proposal */
+    const sp = document.getElementById("s2p");
+    if (sp) {
+      const panel = $(sp, ".p2panel"), sc = $(sp, ".p2scene"), tip = $(sp, ".p1tip"), rows = $$(sp, ".p1row"), N = rows.length + 1;
+      const TIPS = {
+        screen: ["Order screen", "New app and counter orders keep landing. It shows the longest list, but this step is quick: those orders are only waiting to start."],
+        ben: ["Cups at finishing", "Topped and fruit drinks take longer to finish. In this rush, cups wait in front of Ben while the other steps keep up."],
+        ana: ["Ana · cup and ice", "Has just cleared the cups at cup and ice, so has time to spare for a while. Trained on finishing."],
+        cai: ["Cai · hand-over", "Busy handing drinks to customers and riders. Still in training for finishing."],
+        mach: ["Machines", "Tea and milk, and the sealer, keep pace in this scene. Which steps machines do is our illustrative split, not Chagee's disclosed setup."],
+        mgr: ["The outlet manager", "Sees the rush, but not where the next queue will form, who could help, or for how long."] };
+      let k = 1;
+      const paint = () => {
+        panel.dataset.k = k; if (k < N) sc.dataset.f = k; else delete sc.dataset.f;
+        rows.forEach((r, i) => { r.classList.toggle("seen", i < k); r.classList.toggle("cur", i === k - 1); });
+        $$(sp, ".p1dots i").forEach((d, i) => d.classList.toggle("on", i < k));
+        $(sp, ".p1n").textContent = `${k} / ${N}`; $(sp, '[data-p2="next"]').textContent = k < N ? "Next ▶" : "Next slide ▶"; tip.innerHTML = "";
+      };
+      const setPlay = on => { sc.classList.toggle("paused", !on); $(sp, '[data-p2="play"]').textContent = on ? "❚❚ Pause" : "▶ Play"; };
+      sp._intro = { enter: fromEnd => { k = fromEnd ? N : 1; paint(); },
+        next: () => { if (k < N) { k++; paint(); return true; } return false; },
+        prev: () => { if (k > 1) { k--; paint(); return true; } return false; } };
+      sp.addEventListener("click", e => {
+        const b = e.target.closest("[data-p2]"), row = e.target.closest(".p1row"), hs = e.target.closest(".hs");
+        if (b) { b.blur(); const a = b.dataset.p2;
+          if (a === "next") { if (!sp._intro.next()) show(cur + 1); }
+          else if (a === "play") setPlay(sc.classList.contains("paused"));
+          else if (a === "replay") { const s = $(sc, "svg"); s.replaceWith(s.cloneNode(true)); k = 1; paint(); setPlay(!still); } }
+        else if (row) { k = rows.indexOf(row) + 1; paint(); }
+        else if (hs && TIPS[hs.dataset.hs]) { const [h, t] = TIPS[hs.dataset.hs]; tip.innerHTML = `<b>${h}</b>${t}`; }
+      });
+      printers.push(() => { k = N; paint(); }); paint(); setPlay(!still);
+    }
+
+    /* 07: see the workload, predict the constraint, recommend a feasible response */
+    const sb = document.getElementById("s2b");
+    if (sb) {
+      const box = $(sb, ".c5intro"), N = $$(box, ".c5s").length, pop = $(box, ".pop"), IN = OT.inputs.value; let st = 1;
+      $$(sb, ".src[data-in]").forEach(b => { const x = IN[+b.dataset.in]; $(b, "b").textContent = x.label; $(b, "small").textContent = x.detail; $(b, ".tg").textContent = x.tag; b.classList.toggle("prop", x.status !== "recorded"); });
+      const f0 = { perHour: D0, alloc: {} }, p0 = CT.project(E, f0), B = band(f0), con = p0.con;
+      $(sb, ".strip").innerHTML = strip(p0, B.lo, B.hi);
+      const lo = Math.round(B.lo.st[con].end), hi = Math.round(B.hi.st[con].end), dl = Math.round(D0 * (1 - E.band) * E.window / 60), dh = Math.round(D0 * (1 + E.band) * E.window / 60);
+      $(sb, '[data-s2b="band"]').innerHTML = `Next ${E.window} minutes: about ${dl}–${dh} drinks expected (forecast range ±${pct(E.band)}). Without help, ${lc(lab(con))} would end the window with ${lo === hi ? `about ${lo}` : `${lo ? `about ${lo}` : "none"} to ${hi}`} drinks still waiting. The ${lc(lab(p0.longest))} shows the longest list, but it is quick.`;
+      const R = CT.recommend(E, { perHour: D0 }), cp = recCopy(R);
+      const kb = $(sb, '[data-s2b="kind"]'); kb.textContent = KIND[R.kind]; kb.className = `kb ${R.kind}`;
+      $(sb, '[data-s2b="rec"]').textContent = cp.head;
+      $(sb, '[data-s2b="why"]').innerHTML = cp.why.map(x => `<li>${x}</li>`).join("");
+      const w = R.best && who(R.best.worker);
+      const decide = d => { $$(sb, "[data-dec]").forEach(b => b.classList.toggle("on", b.dataset.dec === d));
+        $(sb, '[data-s2b="dec"]').textContent = d === "yes" ? (w ? `Approved: ${w.name} moves to ${lc(lab(con))}; the tablet reviews when the backlog clears.` : "Approved.")
+          : d === "no" ? "Declined: the allocation stays as it is; the decision is logged to evaluate the tool." : "approves or declines; nothing moves until then"; };
+      const DET = {
+        in0: ["Outstanding orders and drink mix", "Orders placed and the drinks on each sit in Chagee's order data today, as far as we know. Whether drink-level detail reaches the counter in real time is to confirm."],
+        in1: ["Task times and equipment status", "When each drink finishes each step, and whether a machine is slow or down. Not recorded today, as far as we know: it needs step timestamps and equipment logs. Proposed."],
+        in2: ["Staff assignments and skills", "Who is on which step now, and who is trained for what. A roster may exist; a skills record would have to be built and kept current. Proposed."],
+        in3: ["Expected incoming demand", `Drinks expected over the next ${E.window} minutes, with a range, forecast from recorded orders. In this demonstration it is a set value with a ±${pct(E.band)} range, not a trained model.`],
+        pred: ["AI predicts workload", `Expected incoming drinks for the next ${E.window} minutes, plus the drinks already waiting, give the work due at each step. In a pilot the forecast would be a model trained on Chagee's order history; here it is an illustrative input.`],
+        bott: ["Bottleneck analysis", "For each step, work due (drinks times seconds per drink) against capacity (its machines, or the people assigned and their speed). The step with the highest load is the constraint; adding capacity anywhere else does not help."],
+        band: ["Uncertainty", `The tablet projects the low, base and high end of the forecast, ±${pct(E.band)}. If its call changes across the range, it says so. Each bar's whisker is the range.`],
+        rule: ["Operational rules, not the AI", `Keep if no step builds up; escalate if the constraint is a machine, or if no trained colleague with at least ${pct(E.spareMin)} of their time spare can clear it; otherwise suggest the one move that leaves the least work waiting. A separate simulation checks the outcome on the next slide.`],
+        akeep: ["Keep the current allocation", "When the busiest step still keeps up, a move would only add walking and set-up time. At lower demand the tablet says keep."],
+        acrew: ["No one trained has time to spare", "When no colleague trained on the constrained step has time to spare, moving someone only moves the queue. The crew cannot resolve it: escalate for cover, or ask the zone manager to steer new orders to an outlet with room (Proposal 1)."],
+        aequip: ["Equipment is the constraint", "If a machine such as the sealer is slow, the queue is the machine's. People cannot add machine capacity, so the tablet escalates rather than moving anyone."],
+        cbott: ["Bottleneck analysis", "A line's output is set by its most constrained step. Find it from capacity, not from the longest visible queue."],
+        ccap: ["Capacity", "What each step can do in the window: machines by their cycle time, people by their speed and the drinks' work content. The drink mix matters: topped drinks take longer to finish."],
+        cbal: ["Workload balancing", "Moving work from busy to less busy people. Week 5's bucket brigade shows how work sharing and hand-overs can let a line balance itself. This tool is not a bucket brigade: it suggests one approved move of one trained colleague, ended by a review."] };
+      const closePop = () => { pop.classList.remove("on"); $$(box, ".src.on,.con.on").forEach(e => e.classList.remove("on")); };
+      const play = () => { box.classList.remove("play"); void box.offsetWidth; box.classList.add("play"); $(box, "svg.flw").setCurrentTime?.(0); };
+      const paint = () => {
+        box.dataset.st = st; $(box, ".c5n").textContent = `${st} / ${N}`; $(box, '[data-c5="prev"]').disabled = st === 1;
+        $$(box, ".sx li").forEach((l, i) => { l.classList.toggle("cur", i === st - 1); l.classList.toggle("done", i < st - 1); });
+        $(box, '[data-c5="next"]').textContent = st < N ? "Next ▶" : "Try the manager's tablet →"; closePop(); play();
+      };
+      sb._intro = { enter: fromEnd => { st = fromEnd ? N : 1; paint(); },
+        next: () => { if (st < N) { st++; paint(); return true; } return false; },
+        prev: () => { if (st > 1) { st--; paint(); return true; } return false; } };
+      box.addEventListener("click", e => {
+        const b = e.target.closest("button,[data-d],[data-s]"); if (!b) return closePop(); b.blur?.();
+        if (b.dataset.c5 === "next") { if (!sb._intro.next()) show(cur + 1); }
+        else if (b.dataset.c5 === "prev") sb._intro.prev();
+        else if (b.dataset.c5 === "replay") { closePop(); play(); }
+        else if (b.dataset.dec) decide(b.classList.contains("on") ? null : b.dataset.dec);
+        else if (b.dataset.s) { st = +b.dataset.s; paint(); }
+        else if (b.classList.contains("x")) closePop();
+        else if (DET[b.dataset.d]) { const [h, t] = DET[b.dataset.d]; closePop(); b.classList.add("on"); $(pop, "b").textContent = h; $(pop, "p").textContent = t;
+          const Rb = box.getBoundingClientRect(), r = b.getBoundingClientRect(), s = Rb.width / box.offsetWidth;
+          pop.style.left = `${Math.max(12, Math.min(box.offsetWidth - 482, (r.left - Rb.left) / s))}px`;
+          if ((r.top + r.bottom) / 2 - Rb.top < Rb.height / 2) { pop.style.top = `${(r.bottom - Rb.top) / s + 8}px`; pop.style.bottom = ""; }
+          else { pop.style.bottom = `${(Rb.bottom - r.top) / s + 8}px`; pop.style.top = ""; }
+          pop.classList.add("on"); }
+      });
+      printers.push(() => { st = N; decide(null); paint(); }); decide(null); paint();
+    }
+
+    /* 08: the tablet. Demand and the equipment toggle feed the prediction; staff cards set one help step per person (trained
+       steps only); Try runs the current allocation against this one, Keep runs the current one alone, Reset restores */
+    const tt = document.getElementById("s2t");
+    if (tt) {
+      const tab = $(tt, ".tab2"), dem = $(tt, '[data-t="dem"]'), slow = $(tt, '[data-t="slow"]');
+      dem.min = E.demand.range[0]; dem.max = E.demand.range[1]; dem.step = E.demand.step;
+      $(tt, '[data-t="where"]').textContent = `· ${OT.outlet_label.value} · ${OT.clock.value}`;
+      $(tt, '[data-t="eqlab"]').textContent = E.equipment.label;
+      const S = {};
+      const reset = () => Object.assign(S, { per: D0, slow: false, alloc: {}, auto: true, shown: null, res: null });
+      const autoFill = () => { if (!S.auto) return; const r = CT.recommend(E, { perHour: S.per, slow: S.slow }); S.alloc = r.best ? { [r.best.worker]: r.best.to } : {}; };
+      const delta = (d, unit, fmt, good) => Math.abs(d) < unit ? `<span class="dch">about the same</span>`
+        : `<span class="dch ${(d < 0) === good ? "g" : "r"}">${fmt(d)}</span>`;
+      const wd = o => `<div class="wd">${E.crew.map((w, i) => { const x = o.crew[i];
+        return `<span>${w.name}<i><em style="width:${(100 * x.work).toFixed(1)}%"></em><u style="left:${(100 * x.work).toFixed(1)}%;width:${(100 * x.moving).toFixed(1)}%"></u></i>${pct(x.work + x.moving)}</span>`; }).join("")}</div>`;
+      function results() {
+        if (!S.shown) return `<p class="ph">Pick a step on a staff card, or keep the tablet's suggestion, then press Try this allocation. It runs ${E.seeds} seeded simulations of the next ${E.window} minutes for each allocation; nothing moves until the manager decides.</p>`;
+        const c = S.res.current, t = S.shown === "try" ? S.res.tried : null;
+        return `<div class="rg"><div class="h"></div><div class="h">Current allocation</div><div class="h t">${t ? "This allocation" : S.shown === "keep" ? "Kept: no one moves" : "No move to try"}</div>` +
+          `<div class="m">Order-to-ready<small>median, min:s</small></div>` +
+          `<div class="v"><b>${mmss(c.median)}</b><small>runs ${mmss(c.lo)}–${mmss(c.hi)}</small></div>` +
+          `<div class="v">${t ? `<b>${mmss(t.median)}</b>${delta(t.median - c.median, 5, d => `${mmss(Math.abs(d))} ${d < 0 ? "faster" : "slower"}`, true)}<small>runs ${mmss(t.lo)}–${mmss(t.hi)}</small>` : S.shown === "keep" ? `<small>the decision is logged for review</small>` : `<small>pick a step on a staff card to compare</small>`}</div>` +
+          `<div class="m">Orders completed<small>in ${E.window} min</small></div>` +
+          `<div class="v"><b>${Math.round(c.completed)}</b><small>${Math.round(c.unfinished)} still in progress</small></div>` +
+          `<div class="v">${t ? `<b>${Math.round(t.completed)}</b>${delta(t.completed - c.completed, 0.5, d => `${d > 0 ? "+" : "−"}${Math.round(Math.abs(d))}`, false)}<small>${Math.round(t.unfinished)} still in progress</small>` : ""}</div>` +
+          `<div class="m">Workload<small>share of time · striped: moving</small></div>` +
+          `<div class="v">${wd(c)}</div><div class="v">${t ? wd(t) : ""}</div></div>`;
+      }
+      // with no move to try (the tablet suggests none and none is picked), the current allocation is shown alone
+      function run() {
+        const f = { perHour: S.per, slow: S.slow };
+        S.res = S.shown === "try" && Object.keys(S.alloc).length ? CT.compare(E, Sim, { ...f, alloc: S.alloc })
+          : S.shown ? { current: CT.outcome(E, Sim, { ...f, alloc: {} }) } : null;
+      }
+      function render() {
+        const f = { perHour: S.per, slow: S.slow }, r = CT.recommend(E, f);
+        autoFill();
+        const p = CT.project(E, { ...f, alloc: S.alloc }), B = band({ ...f, alloc: S.alloc }), base = CT.project(E, { ...f, alloc: {} });
+        dem.value = S.per; $(tt, '[data-t="demv"]').textContent = S.per; slow.checked = S.slow;
+        $(tt, ".tstrip").innerHTML = strip(p, B.lo, B.hi, S.alloc, 4);
+        $(tt, ".tstaff").innerHTML = E.crew.map(w => {
+          const c = base.crew.find(x => x.id === w.id), sel = S.alloc[w.id], busy = c.spare < E.spareMin;
+          const chips = E.stations.map((s, k) => ({ s, k })).filter(({ s, k }) => !s.machine && k !== w.home).map(({ s, k }) => {
+            const ok = w.trained.includes(k), on = sel === s.id, cls = !ok ? "no" : on ? "on" : busy ? "busy" : "";
+            return `<button class="chip ${cls}" data-w="${w.id}" data-to="${s.id}"${ok ? "" : " disabled"}>Help at ${lc(s.label)}<small>${!ok ? "not trained" : on ? "trying" : busy ? "busy" : "eligible"}</small></button>`;
+          }).join("");
+          return `<div class="tsc${sel ? " sel" : ""}"><div class="hd"><span class="av">${w.name[0]}</span><span><b>${w.name}</b><small>On ${lc(lab(w.home))}${sel ? ` → helps at ${lc(lab(kOf(sel)))}` : ` · ${w.note.split(";")[0]}`}</small></span></div>` +
+            `<div class="ld"><span>Busy at own step, next ${E.window} min</span><span>${c.load >= 1 ? "over capacity" : pct(c.load)}</span><div class="lbar${c.load >= 1 ? " hi" : ""}"><i style="width:${(100 * Math.min(1, c.load)).toFixed(1)}%"></i></div></div>` +
+            `<span class="cl">Can help at · one step at a time</span><div class="chips">${chips}</div></div>`;
+        }).join("");
+        const cp = recCopy(r), kb = $(tt, '[data-t="kind"]');
+        $(tt, ".trec").className = `trec ${r.kind}`; kb.textContent = KIND[r.kind]; kb.className = `kb ${r.kind}`;
+        $(tt, '[data-t="rec"]').textContent = cp.head; $(tt, '[data-t="why"]').textContent = cp.short; $(tt, '[data-t="band"]').textContent = bandLine(r);
+        $(tt, '[data-t="try"]').disabled = !Object.keys(S.alloc).length;
+        $(tt, '[data-t="res"]').innerHTML = results();
+      }
+      tt.addEventListener("click", e => {
+        const b = e.target.closest("[data-t],.chip"); if (!b || b.disabled) return; b.blur?.();
+        if (b.classList.contains("chip")) { S.auto = false; if (S.alloc[b.dataset.w] === b.dataset.to) delete S.alloc[b.dataset.w]; else S.alloc[b.dataset.w] = b.dataset.to; if (S.shown) run(); return render(); }
+        const a = b.dataset.t;
+        if (a === "try") { S.shown = "try"; run(); render(); }
+        else if (a === "keep") { S.shown = "keep"; run(); render(); }
+        else if (a === "reset") { reset(); autoFill(); render(); }
+        else if (a === "exec") tab.classList.add("exec");
+        else if (a === "back") tab.classList.remove("exec");
+      });
+      dem.addEventListener("input", () => { S.per = +dem.value; autoFill(); if (S.shown) run(); render(); });
+      slow.addEventListener("change", () => { S.slow = slow.checked; autoFill(); if (S.shown) run(); render(); });
+      addEventListener("keydown", e => { if (e.key === "Escape") tab.classList.remove("exec"); });
+      new MutationObserver(() => { if (!tt.classList.contains("active")) tab.classList.remove("exec"); }).observe(tt, { attributes: true, attributeFilter: ["class"] });
+      printers.push(() => { reset(); autoFill(); S.shown = "try"; tab.classList.remove("exec"); run(); render(); });
+      reset(); render();
     }
   })();
 

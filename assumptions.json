@@ -3193,28 +3193,28 @@
         {
           "id": "orders",
           "label": "Outstanding orders and drink mix",
-          "detail": "orders placed, drinks on each, and which are not ready yet",
+          "detail": "orders not ready yet, drinks on each",
           "status": "recorded",
           "tag": "orders recorded · drink detail to confirm"
         },
         {
           "id": "times",
           "label": "Task times and equipment status",
-          "detail": "when each drink finishes each step; whether a machine is slow or down",
+          "detail": "time per step; machine slow or down",
           "status": "proposed",
           "tag": "proposed · needs step timestamps"
         },
         {
           "id": "staff",
           "label": "Staff assignments and skills",
-          "detail": "who is on which step, and who is trained for what",
+          "detail": "who is where; who is trained for what",
           "status": "proposed",
           "tag": "roster to confirm · skills record to build"
         },
         {
           "id": "demand",
           "label": "Expected incoming demand",
-          "detail": "orders forecast for the next quarter of an hour, with a range",
+          "detail": "forecast for the next quarter hour",
           "status": "recorded",
           "tag": "forecast from recorded orders"
         }

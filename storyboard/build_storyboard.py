@@ -510,6 +510,31 @@ def values(d: dict) -> dict:
         raise SystemExit("build: slide 07 says the initiatives add contribution but do not fund the proposed team or pay back in any scenario; that no longer holds, rewrite it")
     if not (B0["i3"]["delivery"]["perOrder"] > 0 and ON["breakEven"]["runTeamCovered"] < OC["run_team_people"]["value"]):
         raise SystemExit("build: slides 06 and 07 say delivery-to-pickup moves gain per order and base contribution covers fewer than the proposed team; rewrite them")
+    # slides 06 to 08, the manager's bottleneck tool (sim/crewtool.js via precompute.js); the deck runs the same model live
+    CTd, OTR = d["crewTool"], RAW["ops_tool"]
+    rc_, D_ = CTd["rec"], OTR["demand_per_hour"]["value"]
+    if not (rc_["kind"] == "move" and rc_["best"] and rc_["best"]["worker"] == "ana" and rc_["best"]["to"] == rc_["con"] == "topping_finish" and rc_["longest"] == "ticket"):
+        raise SystemExit("build: slides 06 to 08 say finishing is the constraint, the order screen the longest list, and the tablet moves Ana to finishing; rewrite them")
+    crew = OTR["crew"]["value"]
+    if [(c["id"], c["name"], c["home"]) for c in crew] != [("ana", "Ana", "cup_ice"), ("ben", "Ben", "topping_finish"), ("cai", "Cai", "handover")] \
+            or "topping_finish" not in crew[0]["trained"] or "topping_finish" in crew[2]["trained"]:
+        raise SystemExit("build: slide 06's scene draws Ana on cup and ice (trained on finishing), Ben on finishing and Cai on hand-over (not trained on it); redraw it")
+    cur, tr = CTd["cmp"]["current"], CTd["cmp"]["tried"]
+    if not (tr["median"] < cur["median"] and tr["completed"] > cur["completed"]):
+        raise SystemExit("build: slide 08's notes say the recommended move shortens order-to-ready time and completes more orders at the default; rewrite them")
+    sl_ = CTd["slow"]
+    if not (sl_["kind"] == "escalate" and sl_["cause"] == "equipment" and abs(sl_["cmp"]["tried"]["completed"] - sl_["cmp"]["current"]["completed"]) < 1):
+        raise SystemExit("build: slide 08's notes say with the sealer slow the tablet escalates and moving Ana changes nothing; rewrite them")
+    sw = CTd["sweep"]
+    keep = [s["perHour"] for s in sw if s["kind"] == "keep"]; esc = [s["perHour"] for s in sw if s["kind"] == "escalate" and s["perHour"] > D_]
+    if not keep or not esc or max(keep) >= D_ or any(s["kind"] != "keep" for s in sw if s["perHour"] <= max(keep)) \
+            or any(s["kind"] != "escalate" for s in sw if s["perHour"] >= min(esc)) or sw[-1]["cause"] != "crew":
+        raise SystemExit("build: slide 08's notes say keep below one demand, escalate from another, and everyone trained is busy at the top; rewrite them")
+    v["ct.demand"], v["ct.window"], v["ct.band"] = D_, OTR["window_min"]["value"], OTR["forecast_band"]["value"]
+    v["ct.cur_med"], v["ct.try_med"], v["ct.cur_done"], v["ct.try_done"] = cur["median"], tr["median"], cur["completed"], tr["completed"]
+    v["ct.ana_moves"] = tr["crew"][0]["moves"]
+    v["ct.switch_sec"], v["ct.away_sec"], v["ct.return_trigger"] = OTR["switch_sec"]["value"], RAW["sharing"]["assist_handover_sec"]["value"], OTR["return_trigger"]["value"]
+    v["ct.keep_upto"], v["ct.esc_from"], v["ct.slow_done"] = max(keep), min(esc), sl_["cmp"]["current"]["completed"]
     return v
 
 
@@ -667,6 +692,34 @@ def p1_steps() -> tuple:
     return steps, page
 
 
+def p2_steps() -> tuple:
+    """Slide 08's execution panel and its printed appendix page: the four steps, the tablet's inputs and the rules' settings."""
+    O = RAW["ops_tool"]; v = lambda k: O[k]["value"]; lab = v("station_labels"); low = lambda k: lab[k].lower()
+    cells = "".join(f"<div><span class='n'>{i + 1}</span><h5>{s['step']}</h5><p style='margin:0'>{s['detail']}</p></div>" for i, s in enumerate(v("execution_steps")))
+    steps = (f"<div class='p1xs'>{cells}</div>"
+             "<p class='p2xnote'><b>Decision-maker:</b> the operations manager or outlet GM decides after each step whether to continue. No timing, cost, labour saving or profit is estimated. "
+             "Equipment purchases are a separate investigation: <span class='golink' data-go='c7'>machine comparison, appendix</span></p>")
+    ins = "".join(f"<tr><td>{x['label']}</td><td>{x['detail']}</td><td>{'recorded today, as far as we know' if x['status'] == 'recorded' else 'proposed: needs instrumentation or a new record'} · {x['tag']}</td></tr>" for x in v("inputs"))
+    crew = "; ".join(f"{c['name']} on {low(c['home'])}, trained on {', '.join(low(k) for k in c['trained'])}" for c in v("crew"))
+    eq, sh = v("equipment"), RAW["sharing"]["assist_handover_sec"]["value"]
+    rows = [("Counter", "today's split (our scenario): machines on " + ", ".join(low(k) for k in RAW["stations"]["mixed_machine_stations"]["value"]) + "; seconds per drink from stations.*, machine units as the counter simulation"),
+            ("Crew", f"{crew}; speeds 1 ± {RAW['people']['worker_speed_spread']['value']:g} (people.worker_speed_spread)"),
+            ("Drink mix", "; ".join(f"{x['label'].lower()} {x['share']:.0%}, finishing ×{x['finish_mult']:g}" for x in v("drink_mix"))),
+            ("Demand", f"{v('demand_per_hour')} drinks an hour by default, slider {O['demand_per_hour']['range'][0]}–{O['demand_per_hour']['range'][1]}; forecast range ±{v('forecast_band'):.0%}"),
+            ("Comparison", f"the next {v('window_min')} minutes; {v('seeds')} seeded runs per allocation, the same drinks and task-time variation for each"),
+            ("Waiting at the start", ", ".join(f"{low(k)} {n}" for k, n in v("snapshot").items())),
+            ("Moving", f"walking at illustration.walk_back_speed; {v('switch_sec')} s set-up on every move; {sh} s per drink away from one's own step (sharing.assist_handover_sec)"),
+            ("Review and return", f"a helper goes back when {v('return_trigger')} drinks wait at their own step, and returns to help once it is clear; the help ends when the constraint is down to {v('clear_level')}"),
+            ("Rules", f"keep if the constraint clears within the window; escalate if it is a machine, or if no trained colleague with at least {v('spare_min'):.0%} spare time can clear it; otherwise the one move that leaves the least work waiting"),
+            ("Equipment scenario", f"{eq['label']}: the {low(eq['station'])} at ×{eq['slow_factor']:g} its seconds per drink")]
+    page = (steps + "<h5>The tablet's inputs</h5><table class='res mbt'><tr><th>Input</th><th>What</th><th>Status</th></tr>" + ins + "</table>"
+            "<h5>The illustrative scenario and the rules (assumptions.json ops_tool; to validate with Chagee)</h5><table class='res mbt'>" + "".join(f"<tr><td>{a}</td><td>{b}</td></tr>" for a, b in rows) + "</table>"
+            "<h5>What we do not claim</h5><p>The counter layout, skills, timings and drink mix are ours, to validate by observing Chagee's counters; we have not observed them, and a queue at one step in a rush is not a failing. "
+            "The demand forecast is an illustrative input, not a trained model. Reassignment moves work between the same paid people: no labour saving, sales or profit is estimated. "
+            "Results are a simulation under stated assumptions. <span class='golink' data-go='s2t'>Back to the tablet</span></p>")
+    return steps, page
+
+
 def online_appendix(d: dict) -> tuple:
     """Appendix for slides 03 to 07 (online retailing): inputs, each initiative, the brief reconciled; policy, plan, team, sources."""
     ON, OC, F, SBv, ST, X = d["online"], RAW["online_case"], RAW["facts"], RAW["storyboard"], RAW["store"], RAW["site_ext"]
@@ -737,7 +790,7 @@ def ops_appendix(d: dict) -> str:
     ms = lambda x: "–" if x is None else f"{int(x // 60)}:{int(round(x % 60)):02d}"
     sg = lambda x: f"S${x:,.0f}"
     hd = lambda first, sub: "<tr><th>" + first + "</th>" + "".join(f"<th>{lab[k]}<br><small>{sub}</small></th>" for k in days) + "</tr>"
-    out = ["<h5>Slide 08 · forecast error: the roster follows a wrong forecast, the customers do not (today's split, bucket brigade)</h5>",
+    out = ["<h5>Forecasting page (earlier version) · forecast error: the roster follows a wrong forecast, the customers do not (today's split, bucket brigade)</h5>",
            "<table class='res mbt'>" + hd("Forecast", "crew · away · S$/day")]
     for i, r0 in enumerate(d["forecastErr"][days[0]]):
         e = r0["e"]; name = "exact" if e == 0 else f"{abs(e):.0%} {'high' if e > 0 else 'low'}"
@@ -749,7 +802,7 @@ def ops_appendix(d: dict) -> str:
         out.append(f"<tr><td>{nm}</td>" + "".join(f"<td>{d['aiLayer'][k]['today'][k_]['with']['staff']} · {p1(d['aiLayer'][k]['today'][k_]['with']['lostShare'])} · {ms(d['aiLayer'][k]['today'][k_]['with']['medianWait'])}</td>" for k in days) + "</tr>")
     out.append("</table>")
     SH = d["sharing"]; up = RAW["sharing"]["upper_percentile"]["value"]
-    out += [f"<h5>Slide 09 · same crew of {SH['staff']}, fixed responsibilities against flexible assistance, at each day type's peak hour</h5>",
+    out += [f"<h5>Sharing page (earlier version) · same crew of {SH['staff']}, fixed responsibilities against flexible assistance, at each day type's peak hour</h5>",
             "<table class='res mbt'><tr><th>Rule</th>" + "".join(f"<th>{lab[k]} peak, {SH['levels'][k]['perHour']:.0f} orders an hour<br><small>median · {up:.0%} · completed · unfinished · away</small></th>" for k in days) + "</tr>"]
     for k_, nm in (("fixed", "A · fixed responsibilities"), ("assist", "B · flexible assistance")):
         out.append(f"<tr><td>{nm}</td>" + "".join((lambda r: f"<td>{ms(r['median'])} · {ms(r['p90'])} · {r['completed']:.0f} · {r['unfinished']:.0f} · {r['lost']:.0f}</td>")(SH['levels'][k][k_]) for k in days) + "</tr>")
@@ -760,7 +813,7 @@ def ops_appendix(d: dict) -> str:
         cost = r["cost"] if k == "single" else r["cost"]["total"]
         if k != "single" and not r["meets"]: return f"over the limit · {sg(cost)}"
         return f"{r['staff'] if r['staff'] else '–'} · {p1(r['lostShare'])} · {ms(r['medianWait'])} · {sg(cost)}"
-    out += [f"<h5>Slide 10 · five setups: the fewest people that keep walk-aways within {SBv['walkaway_target']['value']:.0%}</h5>", "<table class='res mbt'>" + hd("Setup", "people · away · wait · S$/day")]
+    out += [f"<h5>Equipment page · five setups: the fewest people that keep walk-aways within {SBv['walkaway_target']['value']:.0%}</h5>", "<table class='res mbt'>" + hd("Setup", "people · away · wait · S$/day")]
     for k in names:
         out.append(f"<tr><td>{names[k]}</td>" + "".join(f"<td>{row(day, k)}</td>" for day in days) + "</tr>")
     out.append("</table>")
@@ -958,13 +1011,15 @@ def build() -> Path:
     mx = mb_appendix(d)
     html = html.replace("<!--SQAPPX-->", sq_appendix(d))
     html = html.replace("<!--OPSAPPX-->", ops_appendix(d))
+    p2 = p2_steps()
+    html = html.replace("<!--P2XSTEPS-->", p2[0]).replace("<!--P2XPAGE-->", p2[1])
     ps = p1_steps()
     html = html.replace("<!--P1XSTEPS-->", ps[0]).replace("<!--P1XPAGE-->", ps[1])
     oa = online_appendix(d)
     html = html.replace("<!--ONLAPPX1-->", oa[0]).replace("<!--ONLAPPX2-->", oa[1])
     html = html.replace("<!--MBAPPX1-->", mx[0]).replace("<!--MBAPPX2-->", mx[1]).replace("<!--MBAPPX3-->", mx[2])
     html = html.replace("<!--APPENDIX-->", appendix()).replace("<!--NMAPPENDIX-->", nm_appendix()).replace("<!--TIERS-->", tiers_table())
-    js = "\n".join((ROOT / "sim" / f).read_text(encoding="utf-8") for f in ("sim.js", "store.js", "counter.js", "sitepick.js", "ladder.js", "benefit.js", "siteext.js", "sitemodel.js", "newmarket.js", "pnl.js", "members.js", "squadcast.js"))
+    js = "\n".join((ROOT / "sim" / f).read_text(encoding="utf-8") for f in ("sim.js", "store.js", "counter.js", "sitepick.js", "ladder.js", "benefit.js", "siteext.js", "sitemodel.js", "newmarket.js", "pnl.js", "members.js", "squadcast.js", "crewtool.js"))
     js += "\n" + (HERE / "deck.js").read_text(encoding="utf-8")
     payload = {"RAW": RAW, "DATA": d, "GEO": json.loads((ROOT / "sim" / "sg_geo.json").read_text(encoding="utf-8")),
                "MAP": imgs["sg_map_crop"],
