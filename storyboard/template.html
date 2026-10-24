@@ -1292,15 +1292,16 @@ html,body{margin:0;background:#E7E3DC;color:var(--ink);font-family:var(--sans);-
 .p2panel[data-k="5"] .p1gains{display:block}
 .p2scene{position:relative;align-self:center} .p2svg{width:100%;height:auto;display:block}
 .p2scene .hs{cursor:pointer;transition:opacity .45s ease} .p2scene .hs:hover{filter:brightness(1.04) drop-shadow(0 0 4px rgba(184,50,43,.35))}
-.p2scene[data-f="1"] .hs:not(.hs-screen),.p2scene[data-f="2"] .hs:not(.hs-ben),.p2scene[data-f="3"] .hs:not(.hs-ana),.p2scene[data-f="4"] .hs:not(.hs-mgr){opacity:.28}
+.p2scene[data-f="2"] .hs:not(.hs-screen):not(.hs-ben),.p2scene[data-f="3"] .hs:not(.hs-ben):not(.hs-ana),.p2scene[data-f="4"] .hs:not(.hs-mgr){opacity:.28}
 .p2scene .wk,.p2scene .fq,.p2scene .free,.p2scene .busy,.p2scene .acup,.p2scene .np,.p2scene .mgrw,.p2scene .mbub,.p2scene .press{transform-box:fill-box;transform-origin:50% 100%}
-.p2scene .orows{animation:p2scroll 1.8s linear infinite} .p2scene .blink{animation:p1think 1.2s ease-in-out infinite}
+.p2scene .blink{animation:p1think 1.2s ease-in-out infinite}
 .p2scene .np{opacity:0;animation:p2np 3.6s ease-out infinite} .p2scene .np1{animation-delay:1.8s}
 .p2scene .wk{animation:p1bob 2.2s ease-in-out infinite} .p2scene .busyw{animation-duration:1.1s}
-.p2scene .fq{animation:c5pop .45s ease-out var(--d) both}
-.p2scene .acup{animation:p2pass 1.6s ease-in-out .6s both} .p2scene .free{animation:c5pop .45s ease-out 2.3s both,p2glow 1.8s ease-in-out 2.8s infinite}
-.p2scene .busy{animation:c5fade .45s ease-out 3.4s both} .p2scene .drip{animation:p2drip 1.1s ease-in infinite} .p2scene .press{animation:p2press 1.6s ease-in-out infinite}
-.p2scene .mgrw{animation:p2walk 1.4s ease-out 1s both} .p2scene .mbub{animation:c5fade .5s ease-out 4.2s both}
+.p2scene .free,.p2scene .busy{opacity:0;transition:opacity .35s} .p2scene .free.on{opacity:1;animation:p2glow 1.8s ease-in-out infinite} .p2scene .busy.on{opacity:1}
+.p2scene .drip{animation:p2drip 1.1s ease-in infinite} .p2scene .press{animation:p2press 1.6s ease-in-out infinite}
+.p2scene .mgrw{animation:p2walk 1.4s ease-out 1s both} .p2scene .mbub{opacity:0;transition:opacity .45s} .p2panel:is([data-k="4"],[data-k="5"]) .mbub{opacity:1}
+.p2scene .tubs{opacity:0;transition:opacity .5s} .p2panel:not([data-k="1"]) .tubs{opacity:1} .p2scene .tk{animation:c5fade .35s ease-out both}
+.bprob .ev.ctx{color:var(--red);border:1px dashed var(--red);background:#fff}
 @keyframes p2scroll{to{transform:translateY(-24px)}} @keyframes p2np{0%{transform:translateY(0);opacity:0}15%{opacity:1}75%{transform:translateY(-24px);opacity:1}100%{transform:translateY(-30px);opacity:0}}
 @keyframes p2pass{0%{transform:translateX(0);opacity:1}70%{opacity:1}100%{transform:translateX(26px);opacity:0}}
 @keyframes p2glow{0%,100%{filter:none}50%{filter:drop-shadow(0 0 5px rgba(47,107,69,.75))}} @keyframes p2drip{from{transform:translateY(0);opacity:1}to{transform:translateY(16px);opacity:0}}
@@ -1452,6 +1453,92 @@ html,body{margin:0;background:#E7E3DC;color:var(--ink);font-family:var(--sans);-
 @media print{
   :is(#s2b,#s2t) .tab2 .p2exec{display:none!important} :is(#s2b,#s2t) .tab2 *{animation:none!important} :is(#s2b,#s2t) .tdem input{display:none} :is(#s2b,#s2t) .teq{display:none} :is(#s2b,#s2t) .chip{cursor:default}
 }
+/* ---------------------------------------------------------------- slides 07 and 08: Proposal 2, the bucket brigade (sim/toppings.js)
+   07 three steps (the .c5intro look): one hand-over cycle played from the model, what it needs, AI vs the rule;
+   08 fixed responsibilities against the brigade, two live counters, the outcomes and the manager's decision */
+#s2r .c5intro{height:448px;padding:12px 22px}
+#s2r .sx{display:flex;align-items:center;gap:10px;margin:0;padding:0;list-style:none}
+#s2r .sx li{position:relative;display:flex;align-items:center;gap:8px;padding:5px 14px 5px 6px;border-radius:20px;border:1.5px solid var(--line);background:#fff;font:600 14px var(--sans);color:var(--taupe);cursor:pointer;transition:all .3s}
+#s2r .sx li+li{margin-left:26px} #s2r .sx li+li::before{content:"";width:26px;height:2px;background:var(--line);margin-left:-36px;margin-right:2px}
+#s2r .sx li .num{background:#D8D0C2;margin:0;width:22px;height:22px;font-size:12px}
+#s2r .sx li.done{color:var(--navy);border-color:#C9D3E3} #s2r .sx li.done .num{background:var(--navy)}
+#s2r .sx li.cur{color:#fff;background:var(--red);border-color:var(--red)} #s2r .sx li.cur .num{background:#fff;color:var(--red)}
+#s2r .c5s{margin-top:8px} #s2r .sc{position:relative;height:318px;flex:none}
+#s2r .c5cap{margin:6px 0 0;font-size:16px;padding-right:470px;white-space:nowrap}
+#s2r .sc1{display:grid;grid-template-columns:720px 1fr;gap:16px}
+#s2r .bbox{position:relative;background:#fff;border-radius:12px;padding:8px 10px 6px;display:flex;flex-direction:column}
+#s2r .bclock,#s2c .tclk{display:inline-flex;align-items:baseline;gap:8px;align-self:flex-start;background:var(--navy);color:#fff;border-radius:999px;padding:4px 14px;font:13px/1.2 var(--sans)}
+#s2r .bclock .lab,#s2c .tclk .lab{font:600 9.5px var(--sans);letter-spacing:.12em;text-transform:uppercase;color:#C9D3E3}
+#s2r .bclock b,#s2c .tclk b{font:700 19px/1 var(--sans);font-variant-numeric:tabular-nums}
+#s2r .bclock .spd,#s2c .tclk .pb{font:600 12px var(--sans);color:#F1D9A6}
+#s2r .bsvg{display:block;width:100%;height:auto;margin-top:4px}
+#s2r .bcap{margin:2px 4px 0;min-height:40px;font:500 18px/1.25 var(--serif);color:var(--navy)} #s2r .bcap i{font-style:normal;color:var(--red)}
+#s2r .rules{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:9px}
+#s2r .rules li{display:grid;grid-template-columns:30px 1fr;gap:10px;align-items:start;background:#fff;border-radius:12px;padding:10px 12px;border:2px solid transparent;opacity:.55;transition:opacity .35s,border-color .35s}
+#s2r .rules li.on{opacity:1;border-color:var(--red)} #s2r .rules li.done{opacity:1}
+#s2r .rn{display:grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--navy);color:#fff;font:700 14px var(--sans)} #s2r .rules li.on .rn{background:var(--red)}
+#s2r .rules b{display:block;font:600 16px/1.2 var(--sans);color:var(--ink)} #s2r .rules p{margin:3px 0 0;font:13.5px/1.38 var(--sans);color:var(--ink2)}
+#s2r .needs{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;height:100%}
+#s2r .nd{display:grid;grid-template-columns:46px 1fr;gap:12px;align-items:start;background:#fff;border-radius:12px;padding:14px;border-top:4px solid var(--navy);animation:c5fade .4s ease-out both}
+#s2r .nd.lim{border-top-color:var(--red)} #s2r .nd.alt{border-top-color:#C8A96A}
+#s2r .nd:nth-child(2){animation-delay:.12s} #s2r .nd:nth-child(3){animation-delay:.24s} #s2r .nd:nth-child(4){animation-delay:.36s} #s2r .nd:nth-child(5){animation-delay:.48s} #s2r .nd:nth-child(6){animation-delay:.6s}
+#s2r .nd .ic{display:grid;place-items:center;width:46px;height:46px;border-radius:50%;background:#EEF1F6} #s2r .nd.lim .ic{background:#FBEDEC} #s2r .nd.alt .ic{background:#F6EEDC}
+#s2r .nd .ic svg{width:24px;height:24px;fill:none;stroke:var(--navy);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round} #s2r .nd.lim .ic svg{stroke:var(--red)}
+#s2r .nd b{display:block;font:600 16px/1.25 var(--sans);color:var(--ink)} #s2r .nd p{margin:5px 0 0;font:13.5px/1.42 var(--sans);color:var(--ink2)} #s2r .nd .golink{font-weight:600}
+#s2r .rflow{display:grid;grid-template-columns:1fr 40px 1fr 40px 1fr;align-items:stretch;gap:4px}
+#s2r .rflow .zar{align-self:center;width:36px;height:20px} #s2r .zar path{fill:none;stroke:#C8A96A;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+#s2r .rc{background:#fff;border-radius:12px;padding:12px 14px;border-top:5px solid var(--navy);animation:c5fade .45s ease-out both} #s2r .rc.rule{border-top-color:#A88539;animation-delay:.25s} #s2r .rc.mg{border-top-color:var(--dmg);animation-delay:.5s}
+#s2r .rc .rt{display:inline-block;font:700 11px/1 var(--sans);letter-spacing:.1em;text-transform:uppercase;padding:5px 8px;border-radius:6px;color:#fff;background:var(--navy)} #s2r .rc.rule .rt{background:#A88539} #s2r .rc.mg .rt{background:var(--dmg)}
+#s2r .rc b{display:block;margin-top:8px;font:500 20px/1.2 var(--serif);color:var(--ink)} #s2r .rc p{margin:6px 0 0;font:13.5px/1.42 var(--sans);color:var(--ink2)}
+#s2r .rnot{margin:14px 0 0;background:#FBEDEC;border-left:4px solid var(--red);border-radius:6px;padding:7px 12px;font:13.5px/1.4 var(--sans);color:var(--ink)} #s2r .rnot b{font:600 10px var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--red);margin-right:10px}
+#s2r .cons{display:flex;align-items:center;gap:10px;margin-top:12px} #s2r .con{padding:5px 12px;border-radius:16px;background:#fff;border:1.5px solid #C8A96A;font:600 13.5px var(--sans);color:var(--ink)} #s2r .cons .golink{margin-left:auto;font:600 13.5px var(--sans)}
+#s2r .btake{margin-top:12px;visibility:hidden} #s2r .c5intro[data-st="3"]~.btake{visibility:visible;animation:c5fade .5s ease-out 1.2s both}
+#s2r .btake small{display:block;font-size:12.5px;color:#C9D3E3;margin-top:1px}
+#s2r .bsum{display:none}
+@media (prefers-reduced-motion:reduce){#s2r *,#s2c *{animation:none!important;transition:none!important}}
+@media print{
+  #s2r .bsum{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:8px}
+  #s2r .bsum>div{background:var(--cream);border-radius:10px;padding:7px 11px} #s2r .bsum h5{display:flex;align-items:center;gap:6px;margin:0 0 3px;font:600 14px var(--sans);color:var(--navy)} #s2r .bsum p{margin:0;font:11.5px/1.38 var(--sans);color:var(--ink2)}
+  #s2r .bsum .num{background:var(--navy)}
+  #s2r .c5intro{height:auto;margin-top:8px;padding:10px 18px} #s2r .c5intro *{animation:none!important}
+  #s2r .c5s{display:none!important} #s2r .c5s[data-k="1"]{display:flex!important;margin-top:0} #s2r .sx,#s2r .c5cap{display:none!important}
+  #s2r .rules li{opacity:1} #s2r .btake{visibility:visible;animation:none!important;margin-top:8px;padding:8px 20px}
+}
+/* 08 */
+#s2c .tcmp{position:relative;margin-top:8px;background:var(--cream);border-radius:14px;padding:8px 14px 8px;display:flex;flex-direction:column;gap:4px}
+#s2c .tcbar{display:flex;align-items:center;gap:14px}
+#s2c .tsh{display:flex;align-items:center;gap:10px;background:#fff;border:2px solid var(--red);border-radius:10px;padding:4px 12px}
+#s2c .tsh .l{font:600 13.5px/1.15 var(--sans);color:var(--ink)} #s2c .tsh .l small{display:block;font:500 10.5px var(--sans);color:var(--taupe)}
+#s2c .tsh input{width:190px;accent-color:var(--red)} #s2c .tsh b{min-width:46px;font:700 22px/1 var(--sans);color:var(--red);font-variant-numeric:tabular-nums}
+#s2c .tclk{align-self:center} #s2c .tclk .of{font:12px var(--sans);color:#C9D3E3}
+#s2c .tply{display:flex;align-items:center;gap:6px} #s2c .tply .btn{padding:4px 9px;font-size:12.5px}
+#s2c .spd{display:inline-flex;border:1.5px solid var(--line);border-radius:8px;overflow:hidden;background:#fff}
+#s2c .spd button{all:unset;cursor:pointer;padding:4px 8px;font:600 12px var(--sans);color:var(--ink2)} #s2c .spd button+button{border-left:1px solid var(--line)} #s2c .spd button.on{background:var(--navy);color:#fff}
+#s2c .asmb{margin-left:auto}
+#s2c .lanes{display:flex;flex-direction:column;gap:2px}
+#s2c .lane{background:#fff;border-radius:10px;padding:3px 10px 0}
+#s2c .lh{display:flex;align-items:baseline;gap:8px;font:600 14px var(--sans);color:var(--ink)} #s2c .lh small{font:500 11.5px var(--sans);color:var(--taupe)}
+#s2c .lh .tag{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:5px;background:var(--navy);color:#fff;font-size:12px} #s2c .lane[data-m="brigade"] .tag{background:var(--red)}
+#s2c .lh .lr{margin-left:auto;font:600 12px var(--sans);color:var(--ink2);font-variant-numeric:tabular-nums}
+#s2c .lane svg{display:block;width:100%;height:auto}
+#s2c .tout{display:grid;grid-template-columns:1.1fr 1fr 1fr;gap:8px}
+#s2c .mc{background:#fff;border-radius:10px;padding:5px 12px}
+#s2c .mh{margin:0;font:600 13px/1.2 var(--sans);color:var(--ink)} #s2c .mh small{font:500 11px var(--sans);color:var(--taupe);margin-left:6px}
+#s2c .mv{display:flex;align-items:baseline;gap:14px;margin-top:1px}
+#s2c .mv span{display:inline-flex;align-items:baseline;gap:5px} #s2c .mv i{font:700 10px var(--sans);font-style:normal;color:#fff;background:var(--navy);border-radius:4px;padding:1px 5px} #s2c .mv .b i{background:var(--red)}
+#s2c .mv b{font:700 21px/1.1 var(--sans);color:var(--ink);font-variant-numeric:tabular-nums} #s2c .mv small{font:11px var(--sans);color:var(--taupe)}
+#s2c .dch{margin-left:auto;font:600 12px var(--sans);padding:2px 8px;border-radius:10px;background:#EEF1F6;color:var(--ink2);white-space:nowrap} #s2c .dch.g{background:#E3EFE6;color:#2F6B45} #s2c .dch.r{background:#FBEDEC;color:var(--red)}
+#s2c .tdef{margin:0;font:11.5px/1.35 var(--sans);color:var(--ink2)} #s2c .tdef b{color:var(--ink)} #s2c .tdef .lim{color:var(--red);font-weight:600}
+#s2c .tasm{position:absolute;left:0;right:0;top:46px;bottom:0;z-index:6;display:none;flex-direction:column;gap:8px;background:var(--cream);border-radius:0 0 14px 14px;padding:6px 16px 10px;overflow:auto}
+#s2c .tcmp.asm .tasm{display:flex} #s2c .tasm .ptop{display:flex;align-items:center;gap:8px} #s2c .tasm .ptitle{margin-right:auto;font:600 13px var(--sans);color:var(--navy)}
+#s2c .tasmb{display:grid;grid-template-columns:1fr 1.25fr 1fr;gap:10px}
+#s2c .ag{background:#fff;border-radius:10px;padding:8px 12px;font:12.5px/1.4 var(--sans);color:var(--ink2)} #s2c .ag h6{margin:0 0 5px;font:600 13.5px var(--sans);color:var(--ink)}
+#s2c .ag label{display:flex;align-items:center;gap:8px;margin:3px 0} #s2c .ag input[type=range]{flex:1;accent-color:var(--navy)} #s2c .ag label b{min-width:44px;color:var(--ink);font-variant-numeric:tabular-nums}
+#s2c .ag table{width:100%;border-collapse:collapse} #s2c .ag td{padding:3px 4px;border-top:1px solid var(--line)} #s2c .ag select{font:12.5px var(--sans)}
+#s2c .ag.fx{grid-column:1 / -1;background:transparent;padding:2px 4px}
+#s2c .mdec{grid-template-columns:150px 1.55fr 1fr;font-size:12.5px;line-height:1.35} #s2c .mdec>div{padding:6px 12px} #s2c .mdec .q{margin-bottom:2px} #s2c .mdec .who b{font-size:14px}
+#s2c .mdec .golink{margin-left:0;font-size:12.5px}
+@media print{#s2c .tasm{display:none!important} #s2c .tsh input{display:none} #s2c .tsh{border-width:1.5px}}
 /* ---------------------------------------------------------------- the earlier online slides, now in the appendix (overview, offers, pickup rewards, case) */
 #oo .oo3{flex:1;min-height:0;display:grid;grid-template-columns:1fr 44px 1fr 44px 1fr;align-items:center;gap:6px;margin-top:14px}
 #oo .oon{height:100%;display:flex;flex-direction:column;align-items:center;gap:10px;padding:14px 16px 16px;background:#fff;border:1px solid var(--line);border-top:4px solid var(--navy);border-radius:16px;box-shadow:0 1px 2px rgba(0,0,0,.04),0 14px 34px -14px rgba(36,64,107,.22)}
@@ -1952,41 +2039,6 @@ aside.notes{display:none}
   </aside>
 </section>
 
-<!-- ======================================================= 05 ONLINE RETAILING · PROPOSAL 1: THE CUSTOMER EXPERIENCE -->
-<section class="slide content" id="p1a" data-chapter="Online" data-reveal="all" data-title="The customer experience">
-  <div class="leafart" aria-hidden="true"></div>
-  <div class="inner">
-    <p class="kicker">05 · Online retailing · the customer experience<span class="stg"><b>Online</b><i>Problem</i><i class="on">Solution</i><i class="on">Decision</i></span><span class="dm"><i>Decision-maker</i>Digital commerce manager, with operations</span></p>
-    <h2 class="head">Customers get a faster outlet; managers approve delivery actions</h2>
-    <p class="bprob keep"><b>Illustrative scenario</b><span data-cx="scen"></span></p>
-    <div class="cxw keep" style="--emb:url({img:emblem})">
-      <div class="cxh pick">
-        <span class="cxpill">Pickup · Chagee app</span>
-        <div class="cxph2"><div class="sbar"><span data-cx="clock"></span><i>•••</i></div><span class="notch" aria-hidden="true"></span>
-          <div class="scr" data-cx="pphone"></div>
-          <nav class="tabs" aria-hidden="true"><span><svg viewBox="0 0 24 24"><path d="M4 11 L12 4 L20 11 V20 H4 Z"/></svg>Home</span><span class="on"><svg viewBox="0 0 24 24"><path d="M7 8 H17 L15.8 21 H8.2 Z M6 8 H18 M12 8 V4 l3 -1"/></svg>Menu</span><span><svg viewBox="0 0 24 24"><path d="M6 3 H18 V21 H6 Z M9 8 H15 M9 12 H15 M9 16 H13"/></svg>Orders</span><span><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21 Q4 14 12 14 Q20 14 20 21"/></svg>Me</span></nav></div>
-        <div class="side" data-cx="ptext"></div>
-      </div>
-      <div class="cxh dlv">
-        <span class="cxpill">Delivery · e.g. GrabFood</span>
-        <div class="cxph2"><div class="sbar"><span data-cx="clock"></span><i>•••</i></div><span class="notch" aria-hidden="true"></span>
-          <div class="scr" data-cx="dphone"></div>
-          <nav class="tabs" aria-hidden="true"><span class="on"><svg viewBox="0 0 24 24"><path d="M4 11 L12 4 L20 11 V20 H4 Z"/></svg>Home</span><span><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"/><path d="M16 16 L20 20"/></svg>Search</span><span><svg viewBox="0 0 24 24"><path d="M6 3 H18 V21 H6 Z M9 8 H15 M9 12 H15 M9 16 H13"/></svg>Orders</span><span><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21 Q4 14 12 14 Q20 14 20 21"/></svg>Account</span></nav></div>
-        <div class="side" data-cx="dtext"></div>
-      </div>
-      
-      <div class="cxexecp"><div class="ptop"><span class="ptitle">Execution steps · proposed plan, reusing the online roadmap's timing and gates</span><button class="btn" data-cx="back">← Back to the demonstration</button></div><div class="p1xsteps"><!--P1XSTEPS--></div></div>
-    </div>
-    <p class="cxmore screenonly"><button class="btn" data-cx="reset">↺ Reset both</button><span class="golink" data-cx="exec">See execution steps</span></p>
-  </div>
-  <div class="foot"><span>OPIM639 · Group 3 · mock-ups and times are illustrative, not live Chagee or delivery-app data</span><span class="rail"></span><span class="pg"></span></div>
-  <aside class="notes">
-    <p>What the customer sees, in two channels; switch with the toggle. Pickup, in the Chagee app: the customer near Suntec City sees their outlet and an estimated collection time, a suggested alternative at Raffles City with its collection time, including the walk, and an optional switch incentive. Choose Switch outlet or Keep my outlet: the confirmation and both outlets' workload update. The customer chooses before paying. Tick the fill-up box: once Raffles City is busy too, the saving falls below the approved minimum and the suggestion is withdrawn.</p>
-    <p>Delivery, in an illustrative third-party app: the agent's recommendation goes to the zone manager first, who can approve a temporary pause at the busy outlet, promote the alternative outlet instead, or decline. Only then does the customer-facing screen change. Orders already placed are not moved, customers are free to order elsewhere or not at all, and the platform, not Chagee, controls its ranking; platform integration and permissions are requirements to confirm.</p>
-    <p>See execution steps opens the plan: confirm data access and instrument outcomes, run in shadow mode, pilot customer choices and manager-approved actions, then evaluate before scaling, on the online roadmap's phases and gates. The same steps are printed in the appendix. Every time here is an illustrative scenario from the reference deck, not Chagee data. About one minute.</p>
-  </aside>
-</section>
-
 <!-- ======================================================= PROPOSAL 1 · HOW IT WORKS (summary) -->
 <section class="slide content" id="p1h" data-chapter="Online" data-reveal="all" data-title="Proposal 1: how it works">
   <div class="leafart" aria-hidden="true"></div>
@@ -2027,6 +2079,41 @@ aside.notes{display:none}
   <aside class="notes">
     <p>A one-page summary of Proposal 1. The data: Chagee's app and sales, outlet operations, delivery apps and historical events, meaning decisions made and their profitability outcomes. The proposed AI agent: a trigger when a store's wait is, or is about to go, above {{dm.wait_threshold}} minutes, an illustrative setting; predictive AI recommends an outlet, an action and an incentive within approved rules; generative AI explains it, and customers and managers accept or decline.</p>
     <p>What it does at the peak: offers a faster outlet for pickups, and recommends a delivery pause that the zone manager reviews and approves. Every decision and its outcome feed back in, so the model keeps learning. The operations ideas: demand shaping, capacity pooling with nearby outlets, and reducing bottlenecks dynamically. The benefits we expect, to be tested in the pilot: a better-balanced zone and more sales, and higher profit with a better customer experience. About thirty seconds.</p>
+  </aside>
+</section>
+
+<!-- ======================================================= 05 ONLINE RETAILING · PROPOSAL 1: THE CUSTOMER EXPERIENCE -->
+<section class="slide content" id="p1a" data-chapter="Online" data-reveal="all" data-title="The customer experience">
+  <div class="leafart" aria-hidden="true"></div>
+  <div class="inner">
+    <p class="kicker">05 · Online retailing · the customer experience<span class="stg"><b>Online</b><i>Problem</i><i class="on">Solution</i><i class="on">Decision</i></span><span class="dm"><i>Decision-maker</i>Digital commerce manager, with operations</span></p>
+    <h2 class="head">Customers get a faster outlet; managers approve delivery actions</h2>
+    <p class="bprob keep"><b>Illustrative scenario</b><span data-cx="scen"></span></p>
+    <div class="cxw keep" style="--emb:url({img:emblem})">
+      <div class="cxh pick">
+        <span class="cxpill">Pickup · Chagee app</span>
+        <div class="cxph2"><div class="sbar"><span data-cx="clock"></span><i>•••</i></div><span class="notch" aria-hidden="true"></span>
+          <div class="scr" data-cx="pphone"></div>
+          <nav class="tabs" aria-hidden="true"><span><svg viewBox="0 0 24 24"><path d="M4 11 L12 4 L20 11 V20 H4 Z"/></svg>Home</span><span class="on"><svg viewBox="0 0 24 24"><path d="M7 8 H17 L15.8 21 H8.2 Z M6 8 H18 M12 8 V4 l3 -1"/></svg>Menu</span><span><svg viewBox="0 0 24 24"><path d="M6 3 H18 V21 H6 Z M9 8 H15 M9 12 H15 M9 16 H13"/></svg>Orders</span><span><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21 Q4 14 12 14 Q20 14 20 21"/></svg>Me</span></nav></div>
+        <div class="side" data-cx="ptext"></div>
+      </div>
+      <div class="cxh dlv">
+        <span class="cxpill">Delivery · e.g. GrabFood</span>
+        <div class="cxph2"><div class="sbar"><span data-cx="clock"></span><i>•••</i></div><span class="notch" aria-hidden="true"></span>
+          <div class="scr" data-cx="dphone"></div>
+          <nav class="tabs" aria-hidden="true"><span class="on"><svg viewBox="0 0 24 24"><path d="M4 11 L12 4 L20 11 V20 H4 Z"/></svg>Home</span><span><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"/><path d="M16 16 L20 20"/></svg>Search</span><span><svg viewBox="0 0 24 24"><path d="M6 3 H18 V21 H6 Z M9 8 H15 M9 12 H15 M9 16 H13"/></svg>Orders</span><span><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21 Q4 14 12 14 Q20 14 20 21"/></svg>Account</span></nav></div>
+        <div class="side" data-cx="dtext"></div>
+      </div>
+      
+      <div class="cxexecp"><div class="ptop"><span class="ptitle">Execution steps · proposed plan, reusing the online roadmap's timing and gates</span><button class="btn" data-cx="back">← Back to the demonstration</button></div><div class="p1xsteps"><!--P1XSTEPS--></div></div>
+    </div>
+    <p class="cxmore screenonly"><button class="btn" data-cx="reset">↺ Reset both</button><span class="golink" data-cx="exec">See execution steps</span></p>
+  </div>
+  <div class="foot"><span>OPIM639 · Group 3 · mock-ups and times are illustrative, not live Chagee or delivery-app data</span><span class="rail"></span><span class="pg"></span></div>
+  <aside class="notes">
+    <p>What the customer sees, in two channels; switch with the toggle. Pickup, in the Chagee app: the customer near Suntec City sees their outlet and an estimated collection time, a suggested alternative at Raffles City with its collection time, including the walk, and an optional switch incentive. Choose Switch outlet or Keep my outlet: the confirmation and both outlets' workload update. The customer chooses before paying. Tick the fill-up box: once Raffles City is busy too, the saving falls below the approved minimum and the suggestion is withdrawn.</p>
+    <p>Delivery, in an illustrative third-party app: the agent's recommendation goes to the zone manager first, who can approve a temporary pause at the busy outlet, promote the alternative outlet instead, or decline. Only then does the customer-facing screen change. Orders already placed are not moved, customers are free to order elsewhere or not at all, and the platform, not Chagee, controls its ranking; platform integration and permissions are requirements to confirm.</p>
+    <p>See execution steps opens the plan: confirm data access and instrument outcomes, run in shadow mode, pilot customer choices and manager-approved actions, then evaluate before scaling, on the online roadmap's phases and gates. The same steps are printed in the appendix. Every time here is an illustrative scenario from the reference deck, not Chagee data. About one minute.</p>
   </aside>
 </section>
 
@@ -2077,7 +2164,7 @@ aside.notes{display:none}
   <div class="foot"><span>OPIM639 · Group 3 · illustrative assumptions: counter, staffing, timings and the toppings plan are ours, to validate with Chagee · not an observation of Chagee's counter</span><span class="rail"></span><span class="pg"></span></div>
   <aside class="notes">
     <p>Solution two, in-store management. The order has reached an outlet; the question now is how that outlet fulfils it. We start with the person: the outlet manager at a busy hour. The business problem: introducing toppings adds work to some orders; as uptake grows, how can Chagee keep service fast while controlling cost? Say clearly that the toppings plan is our project's scenario: we found no documented Chagee plan to add toppings, so it is to confirm with Chagee, and toppings are not part of today's workflow as we show it.</p>
-    <p>The counter is driven by our simulation, not a cartoon loop: {{tp.per_hour}} orders an hour, three people, fixed responsibilities. Ana does cup and ice; Ben runs tea and milk, toppings and finishing; Cai the sealer and hand-over. Click Next through four points. One: standard drinks flow, no toppings, and the crew keeps up; follow the numbered cups. Two: toppings are introduced; some tickets now carry the topping icon and those cups take an extra manual step, {{tp.top_sec}} seconds in our assumption. Three: workloads become uneven; every topping lands on Ben, so cups wait on Ben's shelf while Ana has time to spare. At {{tp.share|pct}} of orders topped, Ben is busy about {{tp.ben_busy|pct}} of the hour and Ana about {{tp.ana_busy|pct}}. Four: the manager asks, can we share this extra work, or do we need dedicated capacity? Click a person, a machine or the screen for a short explanation; Pause stops the motion.</p>
+    <p>The counter is driven by our simulation, not a cartoon loop: {{tp.per_hour}} orders an hour, three people, fixed responsibilities. Ana does cup and ice; Ben runs tea and milk, toppings and finishing; Cai the sealer and hand-over. Click Next through four points. One: standard drinks flow, no toppings, and the crew keeps up; follow the numbered cups. Two: toppings are introduced; some tickets now carry the topping icon and those cups take an extra manual step, {{tp.top_sec}} seconds in our assumption. Three: workloads become uneven; every topping lands on Ben, so cups wait on Ben's shelf while Ana has time to spare. At {{tp.share|pct}} of orders topped, Ben is busy about {{tp.ben_busy|pct}} of the hour and Ana about {{tp.ana_busy|pct}}, averaged over {{tp.seeds}} simulated hours. The scene is one run: at minute {{tp.sc_min}} it shows {{tp.sc_shelf}} cups waiting for Ben; across many runs the median at that minute is {{tp.sc_median}}, and about {{tp.sc_share|pct}} of runs show {{tp.sc_shelf}} or more, so this run sits towards the long end. Four: the manager asks, can we share this extra work, or do we need dedicated capacity? Click a person, a machine or the screen for a short explanation; Pause stops the motion.</p>
     <p>The layout, who does which step and the timings are our illustration, to validate by watching real peaks; a queue at one step is not a failing. The last Next shows the proposal: test whether a bucket brigade can absorb topping complexity with the same crew, in three ideas: anticipate demand, by forecasting how many orders include toppings; balance the work, by comparing fixed responsibilities with a bucket brigade; and know the limit, when dedicated staff or equipment is needed. Design aims, not measured results. About forty-five seconds.</p>
   </aside>
 </section>
