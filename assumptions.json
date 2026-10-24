@@ -2840,5 +2840,162 @@
       "source": "T-online-brief",
       "rationale": "Reconciliation only (appendix): never shown as our estimate."
     }
+  },
+  "demand_mgmt": {
+    "_note": {
+      "value": "Slides 03 to 05: Proposal 1, AI-enabled demand management (problem, how it works, customer experience)",
+      "unit": "text",
+      "range": null,
+      "source": "assumption",
+      "rationale": "Content from the team's reference deck (chagee-deck.vercel.app, slides 5 to 7). Every time and threshold here is an illustrative scenario for the demonstration, not a validated operating rule or an observed Chagee figure. No financial uplift is claimed. The earlier online slides and their business case (online_case) are in the appendix."
+    },
+    "busy_outlet": {
+      "value": "Suntec City",
+      "unit": "text",
+      "range": null,
+      "source": "assumption, illustrative scenario (team reference deck), not Chagee data",
+      "rationale": "The reference deck's example of a swamped outlet. Illustrative."
+    },
+    "alt_outlet": {
+      "value": "Raffles City",
+      "unit": "text",
+      "range": null,
+      "source": "assumption, illustrative scenario (team reference deck), not Chagee data",
+      "rationale": "The reference deck's nearby support outlet. Illustrative."
+    },
+    "wait_threshold_min": {
+      "value": 40,
+      "unit": "minutes of predicted wait that trigger a recommendation (adjustable)",
+      "range": [
+        20,
+        60
+      ],
+      "source": "assumption, illustrative scenario (team reference deck), not Chagee data",
+      "rationale": "The reference deck's 40 minutes, kept only as an illustrative, adjustable setting; not a validated operating rule."
+    },
+    "threshold_step": {
+      "value": 5,
+      "unit": "minutes per slider step",
+      "range": null,
+      "source": "assumption",
+      "rationale": "Display only."
+    },
+    "predicted_wait": {
+      "value": [
+        22,
+        27,
+        33,
+        41,
+        50,
+        58,
+        60,
+        54
+      ],
+      "unit": "predicted wait at the busy outlet, minutes, every ten minutes from now",
+      "range": null,
+      "source": "assumption, illustrative scenario (team reference deck), not Chagee data",
+      "rationale": "Illustrative forecast path for the trigger chart, peaking at the reference deck's 60 minutes."
+    },
+    "now_clock": {
+      "value": "12:00",
+      "unit": "time of day at the start of the trigger chart",
+      "range": null,
+      "source": "assumption",
+      "rationale": "Display."
+    },
+    "busy_ready_min": {
+      "value": 60,
+      "unit": "minutes until a new order is ready at the busy outlet",
+      "range": null,
+      "source": "assumption, illustrative scenario (team reference deck), not Chagee data",
+      "rationale": "The reference deck's 60 minutes. Illustrative."
+    },
+    "busy_travel_min": {
+      "value": 3,
+      "unit": "customer's walking minutes to the busy outlet",
+      "range": null,
+      "source": "assumption, illustrative scenario (team reference deck), not Chagee data",
+      "rationale": "Our illustrative customer is near Suntec City."
+    },
+    "alt_ready_min": {
+      "value": 10,
+      "unit": "minutes until a new order is ready at the support outlet",
+      "range": null,
+      "source": "assumption, illustrative scenario (team reference deck), not Chagee data",
+      "rationale": "Illustrative; with travel, collection is the later of the two."
+    },
+    "alt_travel_min": {
+      "value": 15,
+      "unit": "customer's walking minutes to the support outlet",
+      "range": null,
+      "source": "assumption, illustrative scenario (team reference deck), not Chagee data",
+      "rationale": "Illustrative. Collection time = the later of travel and readiness, so the alternative is about 15 minutes, as in the reference deck."
+    },
+    "alt_ready_when_full_min": {
+      "value": 50,
+      "unit": "minutes until ready at the support outlet once it fills up",
+      "range": null,
+      "source": "assumption, illustrative scenario (team reference deck), not Chagee data",
+      "rationale": "Presenter control: shows the recommendation being withdrawn when the support outlet no longer saves enough time."
+    },
+    "min_saving_min": {
+      "value": 15,
+      "unit": "minutes a switch must save before it is offered",
+      "range": [
+        5,
+        20
+      ],
+      "source": "assumption, illustrative scenario (team reference deck), not Chagee data",
+      "rationale": "Approved-rule placeholder: below this, no alternative is offered."
+    },
+    "switch_incentive": {
+      "value": "A voucher for your next drink, or a free carrier bag",
+      "unit": "text",
+      "range": null,
+      "source": "assumption, illustrative scenario (team reference deck), not Chagee data",
+      "rationale": "The reference deck's switch perk. Optional, within approved rules; its cost and uptake are not estimated here."
+    },
+    "execution_steps": {
+      "value": [
+        {
+          "step": "Confirm data access and instrument outcomes",
+          "phase": 0,
+          "owners": "Product manager, data scientists, app engineers, store-operations lead",
+          "detail": "Which order, queue, crew, equipment, location and delivery data Chagee can use; log every recommendation, decision and outcome from the start."
+        },
+        {
+          "step": "Run forecasts and recommendations in shadow mode",
+          "phase": 0,
+          "owners": "Data scientists, zone managers",
+          "detail": "Predict waits and readiness and log what the tool would recommend, without showing it to customers; compare with what actually happened."
+        },
+        {
+          "step": "Pilot customer choices and manager-approved actions",
+          "phase": 1,
+          "owners": "Digital commerce manager, zone and outlet managers, CRM analyst",
+          "detail": "One zone: a busy outlet and a nearby support outlet. Customers choose whether to switch; the zone manager approves any delivery action. Compare with normal checkout."
+        },
+        {
+          "step": "Evaluate before scaling",
+          "phase": 2,
+          "owners": "Digital commerce manager, with finance and operations",
+          "detail": "Collection times, walk-aways, support-outlet reliability, incremental contribution after incentives, and whether managers and outlets can run it. Scale only past the gate."
+        }
+      ],
+      "unit": "the four execution steps, with the online_case.roadmap phase each sits in (0 build and test, 1 pilot, 2 scale)",
+      "range": null,
+      "source": "assumption",
+      "rationale": "Steps from the brief; timing, gates and roles reuse online_case.roadmap, online_case.gates and online_case.team."
+    },
+    "gate_tests": {
+      "value": [
+        "data access, outcome logging and platform permissions confirmed (or delivery actions dropped); shadow-mode readiness and wait predictions accurate enough to act on",
+        "against normal checkout in the pilot zone: faster collection, fewer walk-aways, support outlets that stay reliable, positive incremental contribution after incentives, and managers able to run it"
+      ],
+      "unit": "what each online_case gate tests for this proposal",
+      "range": null,
+      "source": "assumption",
+      "rationale": "Gate months and names reuse online_case.gates; these tests are ours for Proposal 1."
+    }
   }
 }

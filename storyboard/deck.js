@@ -55,7 +55,7 @@
     cur = Math.max(0, Math.min(slides.length - 1, i));
     slides.forEach((s, k) => s.classList.toggle("active", k === cur));
     buildTo(slides[cur], fromEnd || revealAll || editingNow() ? Infinity : -1);
-    slides[cur]._intro?.enter(fromEnd);                             // a slide with its own overview (slides 04, 12) starts there
+    slides[cur]._intro?.enter(fromEnd);                             // a slide with its own steps (03 to 05, 10, the earlier online page) starts there
     const gt = $(document, "#goto"); if (document.activeElement !== gt) gt.value = cur + 1; $(document, "#count .tot").textContent = `/ ${slides.length}`;
     const n = $(slides[cur], "aside.notes");
     $(document, "#notes .nb").innerHTML = n ? n.innerHTML : "";
@@ -2320,7 +2320,7 @@
     stepIntro(sl, "Open the app demo")?.printCopy();
   })();
 
-  /* ---------------------------------------------------------------- slides 05 to 07: online retailing. 05: the offer a
+  /* ---------------------------------------------------------------- the earlier online slides (appendix). The offer a
      member sees in each scenario (proposed policy, online_case.offer_policy); 06: the pickup checkout for each journey;
      07: the business case waterfall by scenario (DATA.online, sim/online.js) and the proposed plan */
   (function onlineRetail() {
@@ -2435,6 +2435,140 @@
       $(oe, '[data-oe="road"]').innerHTML = `<div class="oerd">${RM.map(p => `<div class="ph">${p.phase}<small>months ${p.from}–${p.to} · ${team.filter(r => r.from_month <= p.from).reduce((a, r) => a + r.people, 0)} people</small></div>`).join("")}</div>
         <div class="oegt">${GT.map(g => `<span><b>${g.name}</b> · month ${g.month}: ${g.test}</span>`).join("")}</div>`;
       printers.push(() => { s = "base"; draw(); }); draw();
+    }
+  })();
+
+  /* ---------------------------------------------------------------- slides 03 to 05: Proposal 1, AI-enabled demand management.
+     03: five points, one per Next, each lighting its part of a looping scene; 04: three steps in the .c5intro look, the last
+     Next goes to 05; 05: the pickup and delivery phones and the execution steps panel. Times are demand_mgmt's illustrative
+     scenario (the team's reference deck), not Chagee data. */
+  (function demandMgmt() {
+    const DMr = RAW.demand_mgmt; if (!DMr) return;
+    const v = k => DMr[k].value, still = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const B = v("busy_outlet"), AL = v("alt_outlet"), THR = DMr.wait_threshold_min;
+
+    const pp = document.getElementById("p1p");
+    if (pp) {
+      const panel = $(pp, ".p1panel"), sc = $(pp, ".p1scene"), tip = $(pp, ".p1tip"), rows = $$(pp, ".p1row"), N = rows.length + 1;
+      const TIPS = {
+        walker: ["Drop-off", "A customer checks the wait and walks away: a sale lost before an order is placed."],
+        queue: ["Crowding", "Those who stay fill the outlet, so it sells less and delivery orders slow down too."],
+        wait: ["Long wait", "The wait is longer than customers expected, and the experience suffers."],
+        riders: ["Riders waiting", "Delivery customers cannot see the queue, so orders keep arriving and riders wait at the collection shelf."],
+        notif: ["Orders keep arriving", "New app and delivery orders reach the counter whatever the queue."],
+        store: ["The store experience", "Chagee's stores are part of the brand; a frustrated crowd at the door undoes the experience they are built for."] };
+      let k = 1;
+      const paint = () => {
+        panel.dataset.k = k; if (k < N) sc.dataset.f = k; else delete sc.dataset.f;
+        rows.forEach((r, i) => { r.classList.toggle("seen", i < k); r.classList.toggle("cur", i === k - 1); });
+        $$(pp, ".p1dots i").forEach((d, i) => d.classList.toggle("on", i < k));
+        $(pp, ".p1n").textContent = `${k} / ${N}`; $(pp, '[data-p1="next"]').textContent = k < N ? "Next ▶" : "Next slide ▶"; tip.innerHTML = "";
+      };
+      const setPlay = on => { sc.classList.toggle("paused", !on); $(pp, '[data-p1="play"]').textContent = on ? "❚❚ Pause" : "▶ Play"; };
+      pp._intro = { enter: fromEnd => { k = fromEnd ? N : 1; paint(); },
+        next: () => { if (k < N) { k++; paint(); return true; } return false; },
+        prev: () => { if (k > 1) { k--; paint(); return true; } return false; } };
+      pp.addEventListener("click", e => {
+        const b = e.target.closest("[data-p1]"), row = e.target.closest(".p1row"), hs = e.target.closest(".hs");
+        if (b) { b.blur(); const a = b.dataset.p1;
+          if (a === "next") { if (!pp._intro.next()) show(cur + 1); }
+          else if (a === "play") setPlay(sc.classList.contains("paused"));
+          else if (a === "replay") { const s = $(sc, "svg"); s.replaceWith(s.cloneNode(true)); k = 1; paint(); setPlay(!still); } }
+        else if (row) { k = rows.indexOf(row) + 1; paint(); }
+        else if (hs && TIPS[hs.dataset.hs]) { const [h, t] = TIPS[hs.dataset.hs]; tip.innerHTML = `<b>${h}</b>${t}`; }
+      });
+      printers.push(() => { k = N; paint(); }); paint(); setPlay(!still);
+    }
+
+    const pb = document.getElementById("p1b");
+    if (pb) {
+      const box = $(pb, ".c5intro"), N = $$(box, ".c5s").length; let st = 1;
+      const play = () => { box.classList.remove("play"); void box.offsetWidth; box.classList.add("play"); };
+      const paint = () => { box.dataset.st = st; $(box, ".c5n").textContent = `${st} / ${N}`; $(box, '[data-c5="prev"]').disabled = st === 1;
+        $(box, '[data-c5="next"]').textContent = st < N ? "Next ▶" : "Try the customer experience →"; play(); };
+      pb._intro = { enter: fromEnd => { st = fromEnd ? N : 1; paint(); },
+        next: () => { if (st < N) { st++; paint(); return true; } return false; },
+        prev: () => { if (st > 1) { st--; paint(); return true; } return false; } };
+      box.addEventListener("click", e => {
+        const b = e.target.closest("button"); if (!b) return; b.blur();
+        if (b.dataset.c5 === "next") { if (!pb._intro.next()) show(cur + 1); }
+        else if (b.dataset.c5 === "prev") pb._intro.prev();
+        else if (b.dataset.c5 === "replay") play();
+        else if (b.classList.contains("c5card")) { const s = b.closest(".c5s");
+          $$(s, ".c5card").forEach(c => c.classList.toggle("on", c === b)); $(s, ".c5why").innerHTML = `<b>${$(b, ".lb").textContent}</b>: ${b.dataset.why}`; }
+      });
+      // the trigger: the illustrative predicted wait against an adjustable threshold
+      const W = v("predicted_wait"), [h0, m0] = v("now_clock").split(":").map(Number), inp = $(pb, '[data-p1b="thr"]'), svg = $(pb, ".p1tc");
+      inp.min = THR.range[0]; inp.max = THR.range[1]; inp.step = v("threshold_step"); inp.value = THR.value;
+      const clk = i => { const t = h0 * 60 + m0 + i * 10; return `${String(Math.floor(t / 60)).padStart(2, "0")}:${String(t % 60).padStart(2, "0")}`; };
+      const chart = () => {
+        const th = +inp.value, top = Math.max(70, ...W), x = i => 34 + i * (284 / (W.length - 1)), y = m => 140 - m / top * 118, hit = W.findIndex(w => w >= th);
+        svg.innerHTML = `<line x1="34" x2="318" y1="140" y2="140" stroke="#C9C2B6"/>` +
+          W.map((w, i) => i % 2 ? "" : `<text x="${x(i)}" y="156" font-size="10" fill="#9A9387" text-anchor="middle">${clk(i)}</text>`).join("") +
+          `<line x1="34" x2="318" y1="${y(th)}" y2="${y(th)}" stroke="#B8322B" stroke-width="1.6" stroke-dasharray="5 4"/><text x="36" y="${y(th) - 5}" font-size="10.5" fill="#B8322B">threshold · ${th} min</text>` +
+          `<polyline points="${W.map((w, i) => `${x(i)},${y(w)}`).join(" ")}" fill="none" stroke="#24406B" stroke-width="2.5"/>` +
+          `<path d="${W.map((w, i) => `${i ? "L" : "M"}${x(i)},${y(w * 1.15)}`).join(" ")} ${[...W].reverse().map((w, j) => `L${x(W.length - 1 - j)},${y(w * 0.85)}`).join(" ")} Z" fill="#24406B" opacity=".08"/>` +
+          `<text x="318" y="14" font-size="10.5" fill="#24406B" text-anchor="end">predicted wait at ${B}, minutes · shaded: uncertainty</text>` +
+          (hit >= 0 ? `<circle cx="${x(hit)}" cy="${y(W[hit])}" r="6" fill="#B8322B"/><text x="${x(hit)}" y="${y(W[hit]) - 10}" font-size="11" font-weight="700" fill="#B8322B" text-anchor="middle">trigger ${clk(hit)}</text>`
+                    : `<text x="176" y="80" font-size="12" fill="#B8322B" text-anchor="middle">no trigger: the forecast stays below</text>`);
+        $(pb, '[data-p1b="th"]').textContent = `${th} min`;
+      };
+      inp.addEventListener("input", chart); chart();
+      printers.push(() => { st = 1; paint(); }); paint();
+    }
+
+    const pa = document.getElementById("p1a");
+    if (pa) {
+      const S = { ch: "pick", pick: null, fill: false, dec: null }, inc = v("switch_incentive"), minSave = v("min_saving_min");
+      const bt = v("busy_travel_min"), br = v("busy_ready_min"), at = v("alt_travel_min");
+      const peakWait = Math.max(...v("predicted_wait"));
+      $(pa, '[data-cx="scen"]').textContent = `${B} is swamped and ${AL}, nearby, has room. The outlets are the reference deck's example; every time is illustrative.`;
+      $(pa, '[data-cx="filllab"]').textContent = `${AL} fills up`;
+      const render = () => {
+        $$(pa, ".cxseg .btn").forEach(b => b.classList.toggle("on", b.dataset.v === S.ch));
+        $$(pa, ".cxch").forEach(c => c.classList.toggle("on", c.dataset.ch === S.ch));
+        // pickup: collection is the later of walking there and the drink being ready
+        const ar = S.fill ? v("alt_ready_when_full_min") : v("alt_ready_min"), bc = Math.max(bt, br), ac = Math.max(at, ar), save = bc - ac, offer = save >= minSave;
+        let body = `<div class="cxsel"><b>Your outlet: ${B}</b>Collect in about <em>${bc} min</em>: walk ${bt} min, ready in about ${br}</div>`;
+        if (S.pick === "switch") body += `<div class="cxok"><b>Order confirmed · simulated</b>Collect at ${AL} in about ${ac} min. Switch perk added to your account.</div>`;
+        else if (S.pick === "keep") body += `<div class="cxok"><b>Order confirmed · simulated</b>Collect at ${B} in about ${bc} min.</div>`;
+        else if (offer) body += `<div class="cxsug"><b>Suggested: ${AL}</b>Collect in about <em>${ac} min</em>: walk ${at} min, ready in about ${ar}. About ${save} min sooner.</div>
+            <div class="cxinc"><b>Optional switch perk</b>${inc}</div><button class="cxbtn go" data-cx="sw">Switch outlet</button><button class="cxbtn keep" data-cx="kp">Keep my outlet</button><span class="cxsim">You choose before you pay.</span>`;
+        else body += `<div class="cxwd"><b>No alternative offered</b>${AL} is busy too: switching would save about ${save} min, below the ${minSave}-minute minimum.</div><button class="cxbtn keep" data-cx="kp">Continue at ${B}</button>`;
+        $(pa, '[data-cx="pphone"]').innerHTML = `<div class="olbar"><b>Pickup</b><span>Chagee app · illustrative</span></div><div class="odscr-b">${body}</div>`;
+        $(pa, '[data-cx="ptext"]').innerHTML = `<h4>${offer || S.pick ? "A faster outlet, offered" : "The suggestion is withdrawn"}</h4>
+          <p class="cxcalc">Collection = the later of the walk and the drink being ready.<br>${B}: later of ${bt} and ${br} = <b>${bc} min</b> · ${AL}: later of ${at} and ${ar} = <b>${ac} min</b><br>Saving: ${bc} − ${ac} = <b>${save} min</b>; offered only if at least ${minSave} min (approved-rule placeholder).</p>
+          <p><b>The customer chooses</b> before paying; the perk is optional and within approved rules. A confirmed order never moves.</p>`;
+        const row = (n, r, ok, note) => `<div class="cxwr${ok ? " ok" : ""}"><span>${n}</span><i><em style="width:${Math.min(100, r / br * 100)}%"></em></i><span>${r} min</span></div>${note ? `<div class="cxsim" style="text-align:left;margin:-2px 0 4px 118px">${note}</div>` : ""}`;
+        $(pa, '[data-cx="pwl"]').innerHTML = row(B, br, false, S.pick === "switch" ? "one fewer order waiting" : S.pick === "keep" ? "your order joins this queue" : "") +
+                                             row(AL, ar, !S.fill, S.pick === "switch" ? "your order added; still within its capacity" : "");
+        // delivery: the zone manager decides first, then the customer screen changes
+        const D = S.dec, btn = (d, l) => `<button class="btn${D === d ? " on" : ""}" data-cx="dec" data-v="${d}">${l}</button>`;
+        $(pa, '[data-cx="mgr"]').innerHTML = `<span class="t">Agent recommendation · zone manager</span><h5>${B}: predicted wait about ${peakWait} min, above the ${THR.value}-minute threshold</h5>
+          <p class="why">Suggest a temporary pause of ${B} on the delivery app, or a promotion at ${AL}, which can have orders ready in about ${v("alt_ready_min")} min.</p>
+          <span class="gen">Explanation written from the structured recommendation; the figures come from the models, not the text generator.</span>
+          <div class="acts">${btn("pause", "Approve temporary pause")}${btn("promo", `Promote ${AL} instead`)}${btn("decline", "Decline")}</div>
+          <span class="st">${D === "pause" ? "Pause approved · simulated" : D === "promo" ? `Promotion at ${AL} approved · simulated` : D === "decline" ? "Declined: no change" : "Awaiting the manager's decision"}</span>`;
+        const store = (n, on, badge, v2) => `<div class="dlvst${on ? "" : " off"}"><span class="lg">C</span><div><b>CHAGEE · ${n}</b><span class="bd ${on ? "on" : "off"}">${badge}</span>${v2 ? `<span class="bd v">${v2}</span>` : ""}</div></div>`;
+        $(pa, '[data-cx="dphone"]').innerHTML = `<div class="dlvbar"><b>Delivery</b><span>Chagee</span></div><div class="odscr-b"><div class="odctx">Results near you</div>
+          ${store(B, D !== "pause", D === "pause" ? "Not taking orders right now" : "Open")}${store(AL, true, "Open", D === "promo" ? "Promotion today" : "")}
+          <span class="cxsim">${D ? "After the manager's decision" : "Before the manager decides"} · illustrative mock-up, not a real app</span></div>`;
+        $(pa, '[data-cx="dtext"]').innerHTML = `<h4>The busy outlet steps back, only if the manager approves</h4>
+          <p>The recommendation reaches the zone manager first; the customer screen changes only after a decision.</p>
+          <p>Orders already placed at ${B} are not moved. Customers may order from ${AL}, elsewhere, or not at all. The platform, not Chagee, controls its own ranking.</p>
+          <p class="cxreq"><b>To confirm:</b> platform integration and permissions to pause an outlet or run an outlet promotion.</p>`;
+      };
+      pa.addEventListener("click", e => {
+        const b = e.target.closest("[data-cx]"); if (!b || b.tagName === "INPUT") return; const a = b.dataset.cx; b.blur?.();
+        if (a === "ch") S.ch = b.dataset.v; else if (a === "sw") S.pick = "switch"; else if (a === "kp") S.pick = "keep";
+        else if (a === "dec") S.dec = b.dataset.v; else if (a === "reset") Object.assign(S, { pick: null, fill: false, dec: null });
+        else if (a === "exec") { $(pa, ".cxpanel").classList.add("exec"); return; } else if (a === "back") { $(pa, ".cxpanel").classList.remove("exec"); return; }
+        else return;
+        $(pa, '[data-cx="fill"]').checked = S.fill; render();
+      });
+      $(pa, '[data-cx="fill"]').addEventListener("change", e => { S.fill = e.target.checked; S.pick = null; render(); });
+      printers.push(() => { Object.assign(S, { ch: "pick", pick: null, fill: false, dec: "pause" }); $(pa, ".cxpanel").classList.remove("exec"); render(); });
+      render();
     }
   })();
 

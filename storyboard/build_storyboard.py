@@ -641,6 +641,32 @@ def mb_appendix(d: dict) -> tuple:
     return "\n".join(a), "\n".join(b), "\n".join(c)
 
 
+def p1_steps() -> tuple:
+    """Slide 05's execution panel and its printed appendix page: the four steps on the online roadmap's phases and gates."""
+    DM, OC = RAW["demand_mgmt"], RAW["online_case"]
+    RM, GT, tests = OC["roadmap"]["value"], OC["gates"]["value"], DM["gate_tests"]["value"]
+    cells = "".join(f"<div><span class='n'>{i + 1}</span><span class='when'>{RM[s['phase']]['phase']} · months {RM[s['phase']]['from']}–{RM[s['phase']]['to']}</span>"
+                    f"<h5>{s['step']}</h5><p style='margin:0'>{s['detail']}</p><p class='who'>Owners: {s['owners']}</p></div>" for i, s in enumerate(DM["execution_steps"]["value"]))
+    gates = "".join(f"<p><b>{g['name']}</b> · month {g['month']}: {tests[i]}</p>" for i, g in enumerate(GT))
+    steps = (f"<div class='p1xs'>{cells}</div><div class='p1xg'>{gates}</div>"
+             "<p class='p1xd'><b>Decision-maker:</b> the digital commerce manager, with zone and outlet managers, decides whether to pilot in one zone and, at each gate, whether to continue. "
+             "Phases, months and gate names reuse the online roadmap (team brief); the steps' scope and the gate tests are ours.</p>")
+    v = lambda k: DM[k]["value"]
+    rows = [("Busy and support outlet", f"{v('busy_outlet')} and {v('alt_outlet')} (the reference deck's example)"),
+            ("Trigger threshold", f"{v('wait_threshold_min')} min, adjustable {DM['wait_threshold_min']['range'][0]}–{DM['wait_threshold_min']['range'][1]}; illustrative, not a validated rule"),
+            ("Busy outlet", f"walk {v('busy_travel_min')} min, ready in {v('busy_ready_min')} min"),
+            ("Support outlet", f"walk {v('alt_travel_min')} min, ready in {v('alt_ready_min')} min; {v('alt_ready_when_full_min')} min once it fills up"),
+            ("Offer rule", f"suggest a switch only if it saves at least {v('min_saving_min')} min; collection = the later of walk and readiness"),
+            ("Switch perk", v("switch_incentive") + "; cost and uptake not estimated")]
+    page = (steps + "<h5>The illustrative scenario on slides 03 to 05</h5><table class='res mbt'>" + "".join(f"<tr><td>{a}</td><td>{b}</td></tr>" for a, b in rows) + "</table>"
+            "<h5>Data the tool would need</h5><p>Recorded today, as far as we know: orders by outlet and time. Proposed, needing access, consent or logging: customer location (with permission), margin per drink, "
+            "crew and equipment availability, delivery orders and rider waits (where platforms share them), and a log of recommendations, decisions and outcomes.</p>"
+            "<h5>What we checked, and what we do not claim</h5><p>CHAGEE Singapore's Help Centre (October 2026): in-app delivery is available within coverage, with partners such as Grab elsewhere; rewards are redeemable only on in-app pickup orders. "
+            "Pausing an outlet or promoting another on a delivery platform depends on that platform's tools and permissions, to confirm. No sales or profit uplift is estimated for this proposal; "
+            "the earlier online business case, with its reconciliation, follows in this appendix. <span class='golink' data-go='p1a'>Back to the customer experience</span></p>")
+    return steps, page
+
+
 def online_appendix(d: dict) -> tuple:
     """Appendix for slides 03 to 07 (online retailing): inputs, each initiative, the brief reconciled; policy, plan, team, sources."""
     ON, OC, F, SBv, ST, X = d["online"], RAW["online_case"], RAW["facts"], RAW["storyboard"], RAW["store"], RAW["site_ext"]
@@ -932,6 +958,8 @@ def build() -> Path:
     mx = mb_appendix(d)
     html = html.replace("<!--SQAPPX-->", sq_appendix(d))
     html = html.replace("<!--OPSAPPX-->", ops_appendix(d))
+    ps = p1_steps()
+    html = html.replace("<!--P1XSTEPS-->", ps[0]).replace("<!--P1XPAGE-->", ps[1])
     oa = online_appendix(d)
     html = html.replace("<!--ONLAPPX1-->", oa[0]).replace("<!--ONLAPPX2-->", oa[1])
     html = html.replace("<!--MBAPPX1-->", mx[0]).replace("<!--MBAPPX2-->", mx[1]).replace("<!--MBAPPX3-->", mx[2])
