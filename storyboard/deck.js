@@ -71,7 +71,7 @@
   const KEEP = ".kicker,.head,.sub,.revctl,.leafart,.keep";
   function unitsOf(sl) {
     if (sl._units) return sl._units;
-    const U = [], inner = $(sl, ".inner"), ss = sl.classList.contains("content") && sl.dataset.chapter !== "Appendix" && inner;
+    const U = [], inner = $(sl, ".inner"), ss = sl.classList.contains("content") && sl.dataset.chapter !== "Appendix" && sl.dataset.reveal !== "all" && inner;   // data-reveal="all": the whole slide at once
     if (ss) {
       const slideStep = inner.classList.contains("stepper") ? sl._stepper : null;
       let pend = [];                                                // keys and labels that belong to the next block (.aikey)
@@ -204,6 +204,13 @@
   let idle; const wake = () => { document.body.classList.remove("idle"); clearTimeout(idle); idle = setTimeout(() => document.body.classList.add("idle"), 2500); };
   addEventListener("mousemove", wake); addEventListener("keydown", wake); wake();
   $$(document, ".agenda li[data-go]").forEach(li => (li.onclick = () => show(slides.indexOf(document.getElementById(li.dataset.go)))));
+  // agenda numbers follow the deck: the kicker number of the line's first slide (data-go) to its last (data-to); an
+  // unnumbered slide in the main run (Q&A) takes the number after the last numbered slide before it
+  const noOf = el => { const m = el && $(el, ".kicker")?.textContent.match(/^\s*(\d\d)\b/); return m ? m[1] : null; };
+  const slideNo = id => { const el = document.getElementById(id); if (!el) return null; const n = noOf(el); if (n) return n;
+    for (let i = slides.indexOf(el) - 1; i >= 0; i--) { const p = noOf(slides[i]); if (p) return String(+p + 1).padStart(2, "0"); } return null; };
+  $$(document, ".agenda li[data-go]").forEach(li => { const no = $(li, ".no"); if (!no || no.textContent.trim()) return;
+    const a = slideNo(li.dataset.go), b = li.dataset.to && slideNo(li.dataset.to); no.textContent = a ? (b && b !== a ? `${a}–${b}` : a) : "+"; });
   addEventListener("resize", fit);
 
   /* ---------------------------------------------------------------- step-through panels */
@@ -238,11 +245,6 @@
   }
   const steppers = $$(document, ".panel.stepper, .inner.stepper").map(p => ({ p, S: stepper(p) }));
 
-  // 02: the cup token travels along the chain
-  steppers.filter(x => x.p.closest("#c2")).forEach(({ p, S }) => {
-    const tok = $(p, ".token"), nodes = $$(p, ".node");
-    S.hooks.push(k => { tok.style.left = `${(k - 0.5) / nodes.length * 100}%`; nodes.forEach((n, i) => n.classList.toggle("now", i === k - 1)); });
-  });
   // 03: rows light up one by one, then the scope rows
   steppers.filter(x => x.p.dataset.kind === "matrix").forEach(({ p, S }) => {
     const rows = $$(p, ".rowg"), scope = [1, 2, 4, 5];

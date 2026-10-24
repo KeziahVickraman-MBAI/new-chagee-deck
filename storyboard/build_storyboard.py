@@ -61,6 +61,7 @@ def images() -> dict:
     with zipfile.ZipFile(PPTX) as z:
         for k, p in PPTX_IMAGES.items():
             out[k] = "data:image/png;base64," + base64.b64encode(z.read(p)).decode()
+    out["emblem"] = "data:image/png;base64," + base64.b64encode((HERE / "media" / "chagee_emblem.png").read_bytes()).decode()   # slide 01
     with zipfile.ZipFile(DOCX) as z:
         raw = z.read(DOCX_MAP)
     try:
@@ -811,7 +812,7 @@ def fill(text: str, vals: dict) -> str:
     return re.sub(r"\{\{([a-zA-Z_][\w.]*)(?:\|(\w+))?\}\}", rep, text)
 
 
-ALLOWED = re.compile(r"(?i:\bslides?\s+\d\db?(?:\s*(?:,|and|to|–)\s*\d\db?)*)|\bM[1-3]\b|Item 3\.D|\bslides? 3\d\b|\b8[A-D]\b|\b(?:19|20)\d\d\b|OPIM\s?639|Topic \d|\bT\d\b|\b0[1-9]b?\b|\b10b\b|\b1\d(?= ·)|\bslides? 1\d\b|Week \d|\b1 (?=company|counter)|Group \d|Form 20-F")
+ALLOWED = re.compile(r"(?i:\bslides?\s+\d\db?(?:\s*(?:,|and|to|–)\s*\d\db?)*)|\bM[1-3]\b|Item 3\.D|\bslides? 3\d\b|\b8[A-D]\b|\b(?:19|20)\d\d\b|OPIM\s?639|Topic \d|\bT\d\b|\b0[1-9]b?\b|\b10b\b|\b1\d(?= ·)|\bslides? 1\d\b|Week \d|\b1 (?=company|counter)|Group \d|Form 20-F|Proposal \d")
 
 
 def digit_check(tpl: str) -> None:
