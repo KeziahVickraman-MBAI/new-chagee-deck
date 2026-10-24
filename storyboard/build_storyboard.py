@@ -91,6 +91,7 @@ def values(d: dict) -> dict:
             v[f"sb.{k}"] = o["value"]
     v["sb.staff_max"] = RAW["storyboard"]["staff_choices"]["value"][1]
     v["a.target_wait"] = RAW["service"]["target_wait_minutes"]["value"]
+    v["dm.wait_threshold"] = RAW["demand_mgmt"]["wait_threshold_min"]["value"]
     v["a.surge_hours"] = RAW["surge"]["surge_hours"]["value"]
     v["a.seeds"] = d["seeds"]
     for g, m in RAW["surge"]["surge_multiplier"]["value"].items():
@@ -514,27 +515,68 @@ def values(d: dict) -> dict:
     CTd, OTR = d["crewTool"], RAW["ops_tool"]
     rc_, D_ = CTd["rec"], OTR["demand_per_hour"]["value"]
     if not (rc_["kind"] == "move" and rc_["best"] and rc_["best"]["worker"] == "ana" and rc_["best"]["to"] == rc_["con"] == "topping_finish" and rc_["longest"] == "ticket"):
-        raise SystemExit("build: slides 06 to 08 say finishing is the constraint, the order screen the longest list, and the tablet moves Ana to finishing; rewrite them")
+        raise SystemExit("build: the tablet pages (appendix) say finishing is the constraint, the order screen the longest list, and the tablet moves Ana to finishing; rewrite them")
     crew = OTR["crew"]["value"]
     if [(c["id"], c["name"], c["home"]) for c in crew] != [("ana", "Ana", "cup_ice"), ("ben", "Ben", "topping_finish"), ("cai", "Cai", "handover")] \
             or "topping_finish" not in crew[0]["trained"] or "topping_finish" in crew[2]["trained"]:
-        raise SystemExit("build: slide 06's scene draws Ana on cup and ice (trained on finishing), Ben on finishing and Cai on hand-over (not trained on it); redraw it")
+        raise SystemExit("build: slides 06 to 08 and the tablet pages have Ana on cup and ice (trained on finishing), Ben on finishing and Cai on hand-over (not trained on it); rewrite them")
     cur, tr = CTd["cmp"]["current"], CTd["cmp"]["tried"]
     if not (tr["median"] < cur["median"] and tr["completed"] > cur["completed"]):
-        raise SystemExit("build: slide 08's notes say the recommended move shortens order-to-ready time and completes more orders at the default; rewrite them")
+        raise SystemExit("build: the tablet page's notes say the recommended move shortens order-to-ready time and completes more orders at the default; rewrite them")
     sl_ = CTd["slow"]
     if not (sl_["kind"] == "escalate" and sl_["cause"] == "equipment" and abs(sl_["cmp"]["tried"]["completed"] - sl_["cmp"]["current"]["completed"]) < 1):
-        raise SystemExit("build: slide 08's notes say with the sealer slow the tablet escalates and moving Ana changes nothing; rewrite them")
+        raise SystemExit("build: the tablet page's notes say with the sealer slow the tablet escalates and moving Ana changes nothing; rewrite them")
     sw = CTd["sweep"]
     keep = [s["perHour"] for s in sw if s["kind"] == "keep"]; esc = [s["perHour"] for s in sw if s["kind"] == "escalate" and s["perHour"] > D_]
     if not keep or not esc or max(keep) >= D_ or any(s["kind"] != "keep" for s in sw if s["perHour"] <= max(keep)) \
             or any(s["kind"] != "escalate" for s in sw if s["perHour"] >= min(esc)) or sw[-1]["cause"] != "crew":
-        raise SystemExit("build: slide 08's notes say keep below one demand, escalate from another, and everyone trained is busy at the top; rewrite them")
+        raise SystemExit("build: the tablet page's notes say keep below one demand, escalate from another, and everyone trained is busy at the top; rewrite them")
     v["ct.demand"], v["ct.window"], v["ct.band"] = D_, OTR["window_min"]["value"], OTR["forecast_band"]["value"]
     v["ct.cur_med"], v["ct.try_med"], v["ct.cur_done"], v["ct.try_done"] = cur["median"], tr["median"], cur["completed"], tr["completed"]
     v["ct.ana_moves"] = tr["crew"][0]["moves"]
     v["ct.switch_sec"], v["ct.away_sec"], v["ct.return_trigger"] = OTR["switch_sec"]["value"], RAW["sharing"]["assist_handover_sec"]["value"], OTR["return_trigger"]["value"]
     v["ct.keep_upto"], v["ct.esc_from"], v["ct.slow_done"] = max(keep), min(esc), sl_["cmp"]["current"]["completed"]
+    # slides 06 to 08, can the same crew absorb toppings (sim/toppings.js via precompute.js); the deck runs the same model live
+    TPd, TR = d["toppings"], RAW["toppings"]; tv = lambda k: TR[k]["value"]
+    A_, B_, Z = TPd["def"]["fixed"], TPd["def"]["brigade"], TPd["zero"]
+    if [(c["id"], c["name"]) for c in crew] != [("ana", "Ana"), ("ben", "Ben"), ("cai", "Cai")] or tv("fixed_assignment") != {"ana": ["cup_ice"], "ben": ["tea_milk", "topping", "finish"], "cai": ["shake_seal", "handover"]}:
+        raise SystemExit("build: slide 06 draws Ana on cup and ice, Ben on tea and milk, toppings and finishing, Cai on the sealer and hand-over; redraw it")
+    if not (B_["median"] < A_["median"] and B_["completed"] > A_["completed"]):
+        raise SystemExit("build: slides 06 to 08 say the brigade beats fixed responsibilities at the default topping share; rewrite them")
+    if not abs(Z["brigade"]["completed"] - Z["fixed"]["completed"]) < 2:
+        raise SystemExit("build: slide 08's notes say the two rules complete about the same before toppings; rewrite them")
+    sw = TPd["sweep"]
+    if any(b["fixed"]["completed"] > a["fixed"]["completed"] + 0.5 for a, b in zip(sw, sw[1:])) or not all(x["brigade"]["completed"] >= x["fixed"]["completed"] for x in sw):
+        raise SystemExit("build: slide 08's notes say fixed responsibilities complete fewer orders as toppings rise, and the brigade keeps up better; rewrite them")
+    a0, b0 = A_["crew"][0], A_["crew"][1]
+    busy = lambda c: c["work"] + c["walk"] + c["pass"]
+    if not (busy(b0) > busy(a0) + 0.3):
+        raise SystemExit("build: slide 06 says toppings land on Ben while Ana has time to spare; rewrite it")
+    cyc = [(e["type"], e["who"], e.get("from")) for e in TPd["cycle"]]
+    if cyc != [("ready", "cai", None), ("pass", "cai", "ben"), ("pass", "ben", "ana"), ("start", "ana", None)]:
+        raise SystemExit("build: slide 07 narrates Cai handing over, taking Ben's cup, Ben taking Ana's, Ana starting the next order; rewrite it")
+    one, two = TPd["bar"]["one"], TPd["bar"]["two"]
+    top_max, fin = TR["topping_sec"]["range"][1], tv("finish_sec")
+    bar_need = (fin + top_max) * tv("peak_orders_per_hour") / 3600
+    if not (bar_need > 1 and max(one["fixed"]["completed"], one["brigade"]["completed"]) < 3600 / (fin + top_max) and two["brigade"]["completed"] > one["brigade"]["completed"]):
+        raise SystemExit("build: slide 08's notes say at the longest topping time the one-person bar caps both rules, and a second position helps the brigade; rewrite them")
+    v["tp.share"], v["tp.per_hour"], v["tp.minutes"], v["tp.seeds"] = tv("topping_share"), tv("peak_orders_per_hour"), tv("peak_minutes"), tv("seeds")
+    v["tp.top_sec"], v["tp.finish_sec"], v["tp.walk_sec"], v["tp.hand_sec"] = tv("topping_sec"), fin, tv("walk_sec_per_station"), tv("handover_sec")
+    v["tp.std"], v["tp.topped"], v["tp.placed"] = TPd["def"]["content"]["standard"], TPd["def"]["content"]["topped"], A_["placed"]
+    v["tp.a_med"], v["tp.b_med"], v["tp.a_p90"], v["tp.b_p90"] = A_["median"], B_["median"], A_["p90"], B_["p90"]
+    v["tp.a_done"], v["tp.b_done"], v["tp.cost"] = A_["completed"], B_["completed"], TPd["def"]["cost"]
+    v["tp.z_a_med"], v["tp.z_b_med"], v["tp.z_a_done"], v["tp.z_b_done"] = Z["fixed"]["median"], Z["brigade"]["median"], Z["fixed"]["completed"], Z["brigade"]["completed"]
+    v["tp.ben_busy"], v["tp.ana_busy"] = busy(b0), busy(a0)
+    v["tp.f_full"], v["tp.b_full"] = sw[-1]["fixed"]["completed"], sw[-1]["brigade"]["completed"]
+    v["tp.top_max"], v["tp.bar_need"], v["tp.bar_cap"] = top_max, bar_need, 3600 / (fin + top_max)
+    v["tp.bar1_a"], v["tp.bar1_b"], v["tp.bar2_b"] = one["fixed"]["completed"], one["brigade"]["completed"], two["brigade"]["completed"]
+    v["tp.cai_b_med"] = TPd["cai"]["brigade"]["median"]
+    sc_ = TPd["scene"]
+    if not (sc_["shown"] > sc_["median"] and RAW["toppings"]["scene"]["value"]["plain_minutes"] < RAW["toppings"]["scene"]["value"]["build_minute"]):
+        raise SystemExit("build: slide 06's notes say its run shows a longer-than-median shelf at Ben; check toppings.scene")
+    v["tp.sc_shelf"], v["tp.sc_median"], v["tp.sc_share"], v["tp.sc_min"] = sc_["shown"], sc_["median"], sc_["share4"], RAW["toppings"]["scene"]["value"]["build_minute"]
+    ids = {e["type"] + ":" + e["who"]: e["order"] for e in TPd["cycle"]}
+    v["tp.cyc_ready"], v["tp.cyc_cai"], v["tp.cyc_ben"], v["tp.cyc_start"] = ids["ready:cai"], ids["pass:cai"], ids["pass:ben"], ids["start:ana"]
     return v
 
 
@@ -1019,7 +1061,7 @@ def build() -> Path:
     html = html.replace("<!--ONLAPPX1-->", oa[0]).replace("<!--ONLAPPX2-->", oa[1])
     html = html.replace("<!--MBAPPX1-->", mx[0]).replace("<!--MBAPPX2-->", mx[1]).replace("<!--MBAPPX3-->", mx[2])
     html = html.replace("<!--APPENDIX-->", appendix()).replace("<!--NMAPPENDIX-->", nm_appendix()).replace("<!--TIERS-->", tiers_table())
-    js = "\n".join((ROOT / "sim" / f).read_text(encoding="utf-8") for f in ("sim.js", "store.js", "counter.js", "sitepick.js", "ladder.js", "benefit.js", "siteext.js", "sitemodel.js", "newmarket.js", "pnl.js", "members.js", "squadcast.js", "crewtool.js"))
+    js = "\n".join((ROOT / "sim" / f).read_text(encoding="utf-8") for f in ("sim.js", "store.js", "counter.js", "sitepick.js", "ladder.js", "benefit.js", "siteext.js", "sitemodel.js", "newmarket.js", "pnl.js", "members.js", "squadcast.js", "crewtool.js", "toppings.js"))
     js += "\n" + (HERE / "deck.js").read_text(encoding="utf-8")
     payload = {"RAW": RAW, "DATA": d, "GEO": json.loads((ROOT / "sim" / "sg_geo.json").read_text(encoding="utf-8")),
                "MAP": imgs["sg_map_crop"],

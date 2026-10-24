@@ -3248,5 +3248,266 @@
       "source": "assumption",
       "rationale": "Ours, from the brief. No timing or cost is estimated."
     }
+  },
+  "toppings": {
+    "_note": {
+      "value": "Slides 06 to 08: Proposal 2, can the same crew absorb toppings? Fixed responsibilities against a bucket brigade",
+      "unit": "text",
+      "range": null,
+      "source": "assumption",
+      "rationale": "One counter at one peak hour, simulated in seconds (sim/toppings.js). The toppings plan is project-provided context, not a documented Chagee plan. Step times for cup and ice, tea and milk, the sealer and hand-over, worker speeds and task-time variation are the deck's own (stations, people); the crew's names, speeds and training are ops_tool.crew. Every other value here is ours, to validate by observing Chagee's counters. Nothing here says Chagee's counter is inefficient; no labour saving or profit is claimed."
+    },
+    "plan_status": {
+      "value": "Introducing toppings is project-provided context (our team's scenario). We found no documented Chagee plan to add toppings; to confirm with Chagee.",
+      "unit": "text",
+      "range": null,
+      "source": "project brief, to confirm",
+      "rationale": "The slides present toppings as a possible future menu change, not as part of today's observed workflow."
+    },
+    "step_labels": {
+      "value": {
+        "cup_ice": "Cup and ice",
+        "tea_milk": "Tea and milk",
+        "topping": "Toppings",
+        "finish": "Finishing",
+        "shake_seal": "Sealer",
+        "handover": "Hand-over"
+      },
+      "unit": "text",
+      "range": null,
+      "source": "assumption",
+      "rationale": "Display names. Toppings and finishing share one work area, labelled 'Toppings and finishing' on the slides."
+    },
+    "step_locations": {
+      "value": {
+        "cup_ice": 0,
+        "tea_milk": 1,
+        "topping": 2,
+        "finish": 2,
+        "shake_seal": 3,
+        "handover": 4
+      },
+      "unit": "position along the counter, in stations from the cup-and-ice station",
+      "range": null,
+      "source": "assumption, illustrative, to validate with Chagee",
+      "rationale": "Five work spots in a line, as drawn on slide 06. Toppings and finishing share the topping bar (spot 2)."
+    },
+    "finish_sec": {
+      "value": 6,
+      "unit": "seconds of an average worker on every drink: lid, label check",
+      "range": [
+        4,
+        10
+      ],
+      "source": "assumption, illustrative, to validate with Chagee",
+      "rationale": "These slides split the deck's 12-second topping/finish step (stations.human_seconds_per_cup.topping_finish) into finishing on every drink and toppings only on drinks that have them, so topping work is not counted twice. At half the drinks topped and the default topping time, the average is the deck's 12 seconds. Not a Chagee timing."
+    },
+    "topping_sec": {
+      "value": 12,
+      "unit": "extra seconds of an average worker on a drink with toppings",
+      "range": [
+        4,
+        30
+      ],
+      "source": "assumption, illustrative, to validate with Chagee",
+      "rationale": "The extra manual step a topping adds. No Chagee timing exists for toppings it does not yet serve; the Assumptions panel varies it.",
+      "step": 2
+    },
+    "topping_share": {
+      "value": 0.5,
+      "unit": "share of orders with toppings",
+      "range": [
+        0,
+        1
+      ],
+      "source": "assumption, illustrative, to validate with Chagee",
+      "rationale": "The main slider (0 to 100%). The opening slide's baseline is 0%: toppings not yet introduced.",
+      "step": 0.05
+    },
+    "peak_orders_per_hour": {
+      "value": 120,
+      "unit": "orders an hour arriving at the counter in the peak hour (one drink an order)",
+      "range": null,
+      "source": "assumption, illustrative, to validate with Chagee",
+      "rationale": "A busy hour for a three-person counter, between the deck's busy-day (about 92) and event-day (about 153) peak hours for an average outlet (counter.forecastDay). Set so the counter keeps up before toppings; to validate from Chagee's order data."
+    },
+    "peak_minutes": {
+      "value": 60,
+      "unit": "minutes in the comparison period",
+      "range": null,
+      "source": "assumption, illustrative, to validate with Chagee",
+      "rationale": "One peak hour, starting with an empty counter. Orders placed in the hour are followed until ready."
+    },
+    "follow_minutes": {
+      "value": 30,
+      "unit": "minutes after the peak in which orders placed in the peak are followed",
+      "range": null,
+      "source": "assumption, illustrative, to validate with Chagee",
+      "rationale": "Orders arrive at the same rate meanwhile. Any order still not ready counts with its time so far (a lower bound)."
+    },
+    "fixed_assignment": {
+      "value": {
+        "ana": [
+          "cup_ice"
+        ],
+        "ben": [
+          "tea_milk",
+          "topping",
+          "finish"
+        ],
+        "cai": [
+          "shake_seal",
+          "handover"
+        ]
+      },
+      "unit": "steps each person owns under fixed responsibilities",
+      "range": null,
+      "source": "assumption, illustrative, to validate with Chagee",
+      "rationale": "View A. Before toppings, Ben and Cai carry similar loads and Ana has time to spare. Toppings all land on Ben."
+    },
+    "skill_steps": {
+      "value": [
+        "topping",
+        "finish"
+      ],
+      "unit": "steps that need toppings-and-finishing training (ops_tool.crew 'topping_finish')",
+      "range": null,
+      "source": "assumption, illustrative, to validate with Chagee",
+      "rationale": "Cup and ice and hand-over are basic; the two machine steps are attended by whoever carries the cup."
+    },
+    "walk_sec_per_station": {
+      "value": 1.0,
+      "unit": "seconds to walk one station along the counter, empty-handed or carrying a cup",
+      "range": [
+        0,
+        3
+      ],
+      "source": "assumption, illustrative, to validate with Chagee",
+      "rationale": "About a metre between work spots. Every cup travels the same path under both rules, so total walking per cup is the same; only who walks, and how much waiting, changes.",
+      "step": 0.5
+    },
+    "handover_sec": {
+      "value": 2,
+      "unit": "seconds for one person to take a cup from another (or from the pass shelf under fixed responsibilities)",
+      "range": [
+        0,
+        6
+      ],
+      "source": "assumption, illustrative, to validate with Chagee",
+      "rationale": "Checking the ticket and the step reached. Paid on every pass under both rules.",
+      "step": 1
+    },
+    "bar_positions": {
+      "value": 1,
+      "unit": "people who can work at the topping bar at the same time",
+      "range": [
+        1,
+        2
+      ],
+      "source": "assumption, illustrative, to validate with Chagee",
+      "rationale": "Shared preparation space. One by default; the Assumptions panel tries two. With one, the bar can become the bottleneck and moving people cannot add capacity there."
+    },
+    "dt": {
+      "value": 0.25,
+      "unit": "seconds per simulation step",
+      "range": null,
+      "source": "assumption",
+      "rationale": "Small against the shortest step (6 s)."
+    },
+    "seeds": {
+      "value": 20,
+      "unit": "simulated peak hours per setting",
+      "range": null,
+      "source": "assumption",
+      "rationale": "Same orders, topping draws and task-time variation for both views in each run."
+    },
+    "first_order_id": {
+      "value": 101,
+      "unit": "number shown on the first order",
+      "range": null,
+      "source": "assumption",
+      "rationale": "Display only: lets the audience follow cups."
+    },
+    "scene": {
+      "value": {
+        "seed": 34,
+        "plain_minutes": 3,
+        "build_minute": 15,
+        "speed": 8,
+        "cycle_speed": 1,
+        "compare_speeds": [
+          1,
+          5,
+          20,
+          60
+        ],
+        "compare_speed": 20
+      },
+      "unit": "slide 06's run (seed; minutes before toppings come in; the minute its third point shows; playback, times real time), slide 07's playback, slide 08's playback choices and default",
+      "range": null,
+      "source": "assumption",
+      "rationale": "Display only. Slide 06 plays one simulated run under fixed responsibilities. At its third point the shelf in front of Ben holds four cups: across many runs at that minute the median is about two, so this run sits towards the long end, and the notes say so (precompute.js toppings.scene)."
+    },
+    "cycle_stage": {
+      "value": {
+        "screen": [
+          3
+        ],
+        "top": [
+          1
+        ],
+        "people": {
+          "cai": {
+            "x": 4,
+            "order": 0,
+            "step": 5,
+            "mode": "work",
+            "left": 0.4
+          },
+          "ben": {
+            "x": 2,
+            "order": 1,
+            "step": 2,
+            "mode": "work",
+            "left": 0.6
+          },
+          "ana": {
+            "x": 0,
+            "order": 2,
+            "step": 0,
+            "mode": "work",
+            "left": 0.5
+          }
+        }
+      },
+      "unit": "slide 07's opening scene: orders by index (0 = the first order number), steps by index in sim/toppings.js STEPS, left = share of the step still to do",
+      "range": null,
+      "source": "assumption",
+      "rationale": "Display only: one hand-over cycle, played slowly. Cai is finishing the hand-over of the first order, Ben is adding toppings to the second, Ana is on cup and ice with the third, and the fourth waits on the screen."
+    },
+    "execution_steps": {
+      "value": [
+        {
+          "step": "Confirm the toppings plan and time the counter",
+          "detail": "Which drinks would carry toppings and what uptake is expected; time each step with and without toppings at real peaks."
+        },
+        {
+          "step": "Check training, space and safe hand-over points",
+          "detail": "Who is trained on toppings and finishing; whether two people can work at the topping bar; where a cup can be passed safely."
+        },
+        {
+          "step": "Trial the brigade against fixed responsibilities",
+          "detail": "Alternate the two rules on comparable peaks, off-peak first; run the topping-share forecast in shadow mode alongside."
+        },
+        {
+          "step": "Decide on dedicated capacity",
+          "detail": "If order-to-ready time or orders completed slip as topping share rises, or the bar is the limit, cost a dedicated topping person or topping-dispensing equipment."
+        }
+      ],
+      "unit": "proposed plan",
+      "range": null,
+      "source": "assumption",
+      "rationale": "Proposed steps, not a measured result. The operations manager or outlet GM decides after each."
+    }
   }
 }

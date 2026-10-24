@@ -22,6 +22,7 @@ const MB = require("../sim/members.js");
 const SQ = require("../sim/squadcast.js");
 const ONL = require("../sim/online.js");
 const CT = require("../sim/crewtool.js");
+const TP = require("../sim/toppings.js");
 
 const RAW = JSON.parse(fs.readFileSync(path.join(__dirname, "..", "assumptions.json"), "utf8"));
 const P = Sim.params(RAW), SB = RAW.storyboard;
@@ -188,11 +189,39 @@ const crewTool = {
 };
 for (let d = ctE.demand.range[0]; d <= ctE.demand.range[1] + 1e-9; d += ctE.demand.step) { const r = CT.recommend(ctE, { perHour: d }); crewTool.sweep.push({ perHour: d, kind: r.kind, cause: r.cause }); }
 
+// slides 06 to 08, can the same crew absorb toppings (sim/toppings.js): what the notes quote, at the defaults; the deck runs
+// the same model live. Fixed responsibilities against a bucket brigade at every topping share, the topping bar at its limit,
+// Cai trained, and slide 07's one hand-over cycle.
+const tpE = TP.inputs(RAW, Sim), tpTrim = r => ({ completed: r.completed, placed: r.placed, median: r.median, p90: r.p90, late: r.late, bar: r.bar, passes: r.passes, crew: r.crew });
+const tpCmp = o => { const r = TP.compare(tpE, Sim, o); return { fixed: tpTrim(r.fixed), brigade: tpTrim(r.brigade), cost: r.cost, content: r.content }; };
+const tpMax = { share: 1, toppingSec: tpE.toppingSec.range[1] };
+const toppings = {
+  def: tpCmp({}), zero: tpCmp({ share: 0 }), cai: tpCmp({ trained: { cai: true } }),
+  bar: { one: tpCmp(tpMax), two: tpCmp({ ...tpMax, bar: 2 }) },
+  sweep: Array.from({ length: 11 }, (_, i) => ({ share: i / 10, ...tpCmp({ share: i / 10 }) })).map(({ share, fixed, brigade }) => ({ share, fixed, brigade })),
+  scene: (() => {                                  // slide 06's run against many runs: Ben's shelf at the minute shown
+    const sc = RAW.toppings.scene.value, shelf = seed => {
+      const S = TP.create(tpE, Sim, { mode: "fixed", seed, share: 0 });
+      while (S.t < sc.plain_minutes * 60) S.step();
+      S.share = tpE.share.value; while (S.t < sc.build_minute * 60) S.step();
+      return S.workers[1].inq.length;
+    };
+    const all = Array.from({ length: 300 }, (_, i) => shelf(i + 1)).sort((x, y) => x - y);
+    return { shown: shelf(sc.seed), median: all[150], p75: all[225], share4: all.filter(q => q >= shelf(sc.seed)).length / all.length };
+  })(),
+  cycle: (() => {
+    const S = TP.create(tpE, Sim, { mode: "brigade", share: 0, events: true }), K = id => TP.STEPS.indexOf(id);
+    S.stage(RAW.toppings.cycle_stage.value);
+    while (!S.events.some(e => e.type === "start" && e.who === S.workers[0].id) && S.t < 600) S.step();
+    return S.events.filter(e => ["ready", "pass", "start"].includes(e.type));
+  })(),
+};
+
 const pl = Sim.plan(P, "mixed");
 const data = {
   generated: new Date().toISOString(), seeds,
   grid, splits, aiLayer, forecastErr, newMarket, pnl, members, squadcast, site, ladder, benefit, decisions, siteExt, siteModel, sharing,
-  crewTool,
+  crewTool, toppings,
   online: ONL.compare(ONL.inputs(RAW)),          // slides 03 to 07: the online retailing business case and the brief, reconciled
   sharing_times: { handover: P.humanSec.handover * P.humanMult, all_human: P.stations.reduce((a, k) => a + P.humanSec[k] * P.humanMult, 0),
                    hand_here: P.stations.filter(k => !shRobots.includes(k)).reduce((a, k) => a + P.humanSec[k] * P.humanMult, 0) },
