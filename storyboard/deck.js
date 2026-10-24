@@ -55,7 +55,7 @@
     cur = Math.max(0, Math.min(slides.length - 1, i));
     slides.forEach((s, k) => s.classList.toggle("active", k === cur));
     buildTo(slides[cur], fromEnd || revealAll || editingNow() ? Infinity : -1);
-    slides[cur]._intro?.enter(fromEnd);                             // a slide with its own overview (slides 03, 08) starts there
+    slides[cur]._intro?.enter(fromEnd);                             // a slide with its own overview (slides 04, 12) starts there
     const gt = $(document, "#goto"); if (document.activeElement !== gt) gt.value = cur + 1; $(document, "#count .tot").textContent = `/ ${slides.length}`;
     const n = $(slides[cur], "aside.notes");
     $(document, "#notes .nb").innerHTML = n ? n.innerHTML : "";
@@ -612,7 +612,7 @@
         ? `At ${Math.round(st.per)} orders an hour both rules keep up: no step is overloaded, so changing how work is shared changes little.`
         : dp > 10 && dm >= 0
         ? `At ${Math.round(st.per)} orders an hour the same ${staff} people, sharing flexibly: median ${mmss(a.median)} → <b>${mmss(b.median)}</b>, ${Math.round(UP * 100)}th percentile ${mmss(a.p90)} → <b>${mmss(b.p90)}</b>, ${a.completed.toFixed(0)} → <b>${b.completed.toFixed(0)}</b> orders completed, same paid hour. A simulation result under our assumptions.`
-        : `At ${Math.round(st.per)} orders an hour flexible assistance does not clearly help (${mmss(a.p90)} against ${mmss(b.p90)} at the ${Math.round(UP * 100)}th percentile): the queue needs more staff (slide 04) or equipment (slide 06).`;
+        : `At ${Math.round(st.per)} orders an hour flexible assistance does not clearly help (${mmss(a.p90)} against ${mmss(b.p90)} at the ${Math.round(UP * 100)}th percentile): the queue needs more staff (slide 08) or equipment (slide 10).`;
     }
     function how() {
       const rows = LV.map(([k, L]) => `<tr><td>${DAY_LABEL[k]} peak · ${Math.round(L.perHour)}/h</td>` + ["fixed", "assist"].map(m => { const r = L[m];
@@ -622,7 +622,7 @@
         `<h5>The two rules</h5><p><b>A, fixed responsibilities</b>: each person keeps their own steps, using the split that balances the work best (the faster person takes the heavier steps).</p>` +
         `<p><b>B, flexible assistance</b>: when a person's own steps have nothing waiting, they walk to another hand step with at least ${AS.trigger} cups waiting and help, paying the walk and ${AS.handoverSec} s of coordination on every cup they make there; they go back as soon as their own steps have work. Not the bucket brigade, which is in the appendix.</p>` +
         `<h5>The measurement window</h5><p>Orders placed ${clock(0).slice(0, 5)}–${clock(3600).slice(0, 5)} (simulated). <b>Completed</b>: ready within the hour. <b>Unfinished</b>: still at the counter at ${clock(3600).slice(0, 5)}; they are followed until ready for the order-to-ready times. <b>Walked away</b>: left on arrival because more than ${P.targetWait} minutes of work was already queued (the model's rule).</p>`;
-      $(sl, ".shhow2").innerHTML = `<h5>Held on both sides</h5><p>${staff} people (the event-day forecast crew), the same machines, the same orders (same random seed), drink mix, step times, walking speed and walk-away rule. Machine investment (slide 06) and forecast staffing (slide 04) are separate comparisons.</p>` +
+      $(sl, ".shhow2").innerHTML = `<h5>Held on both sides</h5><p>${staff} people (the event-day forecast crew), the same machines, the same orders (same random seed), drink mix, step times, walking speed and walk-away rule. Machine investment (slide 10) and forecast staffing (slide 08) are separate comparisons.</p>` +
         `<h5>Mean of ${SEEDS} runs at each day type's peak · median / ${Math.round(UP * 100)}th</h5><table class="res"><tr><th>Demand</th><th>A · fixed</th><th>B · flexible</th></tr>${rows}</table>` +
         `<h5>To validate with Chagee</h5><p>Which steps machines do; actual task times and equipment cycles; who is trained on which step; walking distances and movement limits behind the counter; the coordination cost of helping; order arrivals and order-to-ready times.</p>`;
     }
@@ -858,7 +858,7 @@
         <div class="big">+${Math.round(f.netNew).toLocaleString("en-SG")}<small>cups a day for Chagee</small></div>
         <div class="why2">The new store sells ${Math.round(f.cups)} a day (${(f.cups / avg).toFixed(1)}× an average outlet). ${Math.round(f.cannibal)} of those move from outlets nearby${f.hit.length ? ":" : "."}</div>
         <dl>${f.hit.slice(0, 2).map(h => `<dt title="${Math.round(M.storeCups[h.j])} → ${Math.round(M.storeCups[h.j] - h.cups)} cups a day">${oname(h.j)}, ${h.km.toFixed(1)} km</dt><dd>−${Math.round(h.cups)}</dd>`).join("")}</dl>
-        <div class="peak">Peak hour ${hourLabel(pf.peak)}: <b>${Math.round(pf.peakCups)} cups</b> → <b>${pf.peakStaff} ${pf.peakStaff === 1 ? "person" : "people"}</b> on today's counter (slides 04 to 06).</div>
+        <div class="peak">Peak hour ${hourLabel(pf.peak)}: <b>${Math.round(pf.peakCups)} cups</b> → <b>${pf.peakStaff} ${pf.peakStaff === 1 ? "person" : "people"}</b> on today's counter (slides 08 to 10).</div>
         <button class="btn primary screenonly pnlb" data-act="pnl" title="Five years of this outlet here against beside the nearest outlet">What does this mean for P&amp;L?</button>`;
       if (pnlOn) pnlRender();
       $$(ctlEl, "[data-v]").forEach(el => { const d = sl.find(x => x[0] === el.dataset.v); el.textContent = d[4](par[d[0]]); });
@@ -2176,14 +2176,14 @@
       const rc = i => (i === cols.length - 1 ? ` class="pick"` : "");
       $(sl, ".o2tab").innerHTML = `<tr><th>Criterion</th>${cols.map((c, i) => `<th${rc(i)}>${i === cols.length - 1 ? `<span class="rtag">Proposed pilot</span>` : ""}${c.h}<br><small style="text-transform:none;letter-spacing:0">${c.sub}</small></th>`).join("")}</tr>` +
         ROWS.map(([lab, f]) => `<tr><td>${lab}</td>${cols.map((c, i) => `<td${rc(i)}>${f(c.r)}</td>`).join("")}</tr>`).join("") +
-        `<tr><td>Flexible sharing, same crew: median ready time (slide 05)</td>${["today", "forecast", "single"].map((k, i) => { const x = DATA.sharing.decision[d][k];
+        `<tr><td>Flexible sharing, same crew: median ready time (slide 09)</td>${["today", "forecast", "single"].map((k, i) => { const x = DATA.sharing.decision[d][k];
           return `<td${rc(i)}>${x.fixed.staff < 2 ? "one person, no one to help" : `${mmss(x.fixed.median)} → ${mmss(x.assist.median)}`}</td>`; }).join("")}</tr>`;
       $$(sl, ".o2day").forEach(e => (e.textContent = DAY_LABEL[d]));
     }
     BUS.fns.push(draw); printers.push(draw); draw();
   })();
 
-  /* ---------------------------------------------------------------- three-step overviews (slides 03 and 08), then the
+  /* ---------------------------------------------------------------- three-step overviews (slides 04 and 12), then the
      slide's interactive panel. Next steps 1 → 2 → 3, then opens the panel at its starting state; Previous from there
      returns to step 3; "← Overview" goes back to step 1. Print: the panel prints on the slide's page, a static copy of the
      overview on the page before it. */
@@ -2265,7 +2265,7 @@
     const card = (k, lab, p, sel, i, ops) => { const n = ops[0][2], same = k === "early" && p && n && p.o === n.o && p.t === n.t;
       return `<button class="olopt${sel ? " sel" : ""}" data-k="${k}" style="--i:${i}"${p ? "" : " disabled"}><span class="t">${lab}<em>${p ? clock(p.at) : "–"}</em></span>${detail(k, p, same)}</button>`; };
     const bars = (o, S, hi) => { const L = load(o, S), cap = O[o].cap_per_slot;
-      return `<div class="olw"><span class="n">${O[o].name}<small>walk ${O[o].walk_min} min · ${cap} cups a slot</small></span><span class="olbars" style="--ns:${NS}">` +
+      return `<div class="olw"><span class="n">${O[o].name}<small>walk ${O[o].walk_min} min · ${cap} cups a window</small></span><span class="olbars" style="--ns:${NS}">` +
         L.map((x, t) => `<span class="s${x.full ? " over" : ""}" title="${clock(t * SLT)}–${clock((t + 1) * SLT)}: ${x.b} waiting, ${x.f} forecast, ${x.mine} demo, room ${x.room}${x.full ? ", forecast does not fit" : ""}">` +
           `<i class="b" style="height:${100 * x.b / cap}%"></i><i class="m${hi === t ? " fly" : ""}" style="height:${100 * x.mine / cap}%"></i><i class="f" style="height:${100 * x.f / cap}%"></i></span>`).join("") + `</span></div>`; };
     const drinkline = `${PK.drink.value} · ${CUPS} cup${CUPS > 1 ? "s" : ""}`;
@@ -2318,6 +2318,124 @@
     printers.push(() => { Object.assign(st, { m: MR.value, mine: [], pick: "early", done: false }); draw(); });
     draw();
     stepIntro(sl, "Open the app demo")?.printCopy();
+  })();
+
+  /* ---------------------------------------------------------------- slides 05 to 07: online retailing. 05: the offer a
+     member sees in each scenario (proposed policy, online_case.offer_policy); 06: the pickup checkout for each journey;
+     07: the business case waterfall by scenario (DATA.online, sim/online.js) and the proposed plan */
+  (function onlineRetail() {
+    const OC = RAW.online_case, ON = DATA.online; if (!OC || !ON) return;
+    const POL = OC.offer_policy.value, hs = RAW.store.hourly_demand_share.value, h0 = DATA.counter.firstHour;
+    const sgd = x => `S$${x.toFixed(2)}`, pc = x => `${Math.round(100 * x)}%`, hh = h => `${String(h).padStart(2, "0")}:00`;
+    const sk = x => `${x < 0 ? "−" : ""}S$${Math.round(Math.abs(x) / 1000).toLocaleString("en-GB")}k`;
+    // the quietest two open hours after the lunch peak, and the first hour after the peak the customer orders in
+    let qi = 3; for (let i = 3; i < hs.length - 2; i++) if (hs[i] + hs[i + 1] < hs[qi] + hs[qi + 1]) qi = i;
+    const quiet = `${hh(h0 + qi)}–${hh(h0 + qi + 2)}`, peakSet = [...hs.keys()].sort((a, b) => hs[b] - hs[a]).slice(0, OC.peak_hours.value);
+    const [nh] = RAW.pickup.now_clock.value.split(":").map(Number); let after = nh - h0; while (peakSet.includes(after)) after++;
+    const drink = RAW.pickup.drink.value, B = ON.scenarios.base;
+
+    const od = document.getElementById("od");
+    if (od) {
+      const SC = [
+        { k: "offpeak", lab: "Off-peak", ctx: `Weekday · ${hh(h0 + qi)} · a quiet window`,
+          offers: [[sgd(POL.offpeak.off) + " off", `a featured drink: the ${POL.offpeak.what}`]],
+          win: `<b>Eligible</b> today, ${quiet}, one app order`,
+          why: "Spare capacity in a quiet window. An offer pays only if it brings orders that would not otherwise happen; a model estimates who that is likely to be.",
+          row: [`up to ${sgd(POL.offpeak.off)}, ${POL.offpeak.what}`, "quiet windows"] },
+        { k: "peak", lab: "Peak", ctx: `Weekday · ${RAW.pickup.now_clock.value} · peak`,
+          offers: [["No discount now", "the counter is near capacity", true], [sgd(POL.peak_preorder.off) + " off a pre-order", `if you collect from ${hh(h0 + after)}, when there is room`]],
+          win: "<b>Proposed</b> Grab delivery limited while slots are full, as Grab's merchant tools allow (to confirm)",
+          why: "At the peak a discount would subsidise orders that come anyway. A pre-order discount helps only if it moves collection into a window with room: ordering earlier alone does not cut the peak's production workload.",
+          row: [`none; ${sgd(POL.peak_preorder.off)} off a pre-order collected later`, "busiest hours"] },
+        { k: "weather", lab: "Weather or event", ctx: "Hot afternoon · no nearby event",
+          offers: [[sgd(POL.hot_weather.off) + " off", "a cold drink"]],
+          win: `<b>Rules</b> normal weather or rain ${sgd(POL.normal_or_rain.off)} off · nearby event: no offer`,
+          why: "Hot weather already lifts demand, so a smaller offer; none near events, when demand is already high. A model would estimate those lifts from weather and event data rather than assume them.",
+          row: [`${sgd(POL.hot_weather.off)} hot; ${sgd(POL.normal_or_rain.off)} normal or rain; none at events`, "by forecast"] },
+        { k: "dormant", lab: "Inactive member", ctx: "Member · no orders lately",
+          offers: [[sgd(POL.dormant.off) + " off your favourite", drink]],
+          win: `<b>Eligible</b> for ${POL.dormant.days} days · then a free upsize for ${POL.dormant.upsize_after_days} more days`,
+          why: "Win back a member before they lapse. A model scores who is lapsing and who would return only with an offer; members who would come back anyway should not get one.",
+          row: [`up to ${sgd(POL.dormant.off)} off a favourite; then a free upsize`, `${POL.dormant.days} days, then ${POL.dormant.upsize_after_days} more`] },
+      ];
+      const seg = $(od, ".odseg"); let cur = 0;
+      seg.innerHTML = SC.map((s, i) => `<button class="btn${i ? "" : " on"}" data-i="${i}">${s.lab}</button>`).join("");
+      const draw = () => { const s = SC[cur];
+        $$(seg, ".btn").forEach((b, i) => b.classList.toggle("on", i === cur));
+        $(od, '[data-od="phone"]').innerHTML = `<div class="olbar"><b>Offers for you</b><span>Chagee app · illustrative</span></div><div class="odscr-b">
+          <div class="odctx">${s.ctx}</div>${s.offers.map(([a, b, none]) => `<div class="odoff${none ? " none" : ""}"><b>${a}</b><span>${b}</span></div>`).join("")}
+          <div class="odwin">${s.win}</div><div class="odctx" style="margin-top:auto">Proposed policy · discount only</div></div>`;
+        $(od, '[data-od="why"]').textContent = s.why;
+        $(od, '[data-od="tab"]').innerHTML = `<tr><th>Scenario</th><th>Offer</th><th>When</th></tr>` + SC.map((x, i) => `<tr class="${i === cur ? "cur" : ""}"><td>${x.lab}</td><td>${x.row[0]}</td><td>${x.row[1]}</td></tr>`).join("");
+        $(od, '[data-od="printsc"]').textContent = `Printed: the ${s.lab.toLowerCase()} scenario; all four are in the table.`; };
+      seg.addEventListener("click", e => { const b = e.target.closest("[data-i]"); if (b) { cur = +b.dataset.i; draw(); } });
+      printers.push(() => { cur = 0; draw(); }); draw();
+    }
+
+    const os = document.getElementById("os");
+    if (os) {
+      const D = B.i3.delivery, G = B.i3.grabPickup, rw = sgd(OC.pickup_reward.value), comm = RAW.site_ext.delivery_commission_share.value;
+      const out = RAW.pickup.outlets.value[0].name, sel = (t, d) => `<div class="osopt sel"><b>${t}</b>${d}</div>`, opt = (t, d) => `<div class="osopt"><b>${t}</b>${d}</div>`;
+      const J = [
+        { lab: "Delivery → pickup", title: "Delivery → Chagee-app pickup · changes fulfilment",
+          what: "The order leaves delivery for in-app pickup: no rider and no platform commission. Its revenue moves channel; it is not added unless the customer buys more.",
+          val: `Chagee gains about <b>${sgd(D.perOrder)}</b> an order: ${sgd(RAW.storyboard.price_per_cup.value)} × (${pc(comm)} commission − ${pc(OC.app_payment_cost.value)} payment) − ${rw} reward. Assumptions, not Chagee's terms.`,
+          steps: [`<div class="odctx">How would you like it?</div>${opt("Delivery · via Grab", "a rider brings it to you")}${sel("Pickup in the CHAGEE app", `${out} · ready while you walk`)}`,
+                  `<div class="odctx">Your savings, shown up front</div><div class="ossave"><span>Delivery fee</span><b>none</b></div><div class="ossave"><span>Pickup reward (proposed)</span><b>${rw} voucher</b></div><div class="ossave"><span>Rewards on this order</span><b>earn and redeem</b></div>`,
+                  `<div class="osrw"><b>Reward added</b>${rw} off your next app pickup · proposed</div><div class="odctx">Order confirmed · simulated</div>`] },
+        { lab: "Grab pickup → app", title: "Grab self-pickup → Chagee-app pickup · changes the channel",
+          what: "Same outlet, same collection: only where the order is placed changes. Chagee avoids Grab's pickup commission, which is not public.",
+          val: `At an assumed ${pc(OC.grab_pickup_commission.value)} pickup commission it gains <b>${sgd(G.perOrder)}</b> an order after the ${rw} reward: it pays only above <b>${(100 * G.breakEvenComm).toFixed(1)}%</b>.`,
+          steps: [`<div class="odctx">Collecting it yourself?</div>${opt("Self-pickup on Grab", "same outlet")}${sel("Pickup in the CHAGEE app", "same outlet, same time")}`,
+                  `<div class="odctx">Why the app</div><div class="ossave"><span>Rewards on this order</span><b>earn and redeem</b></div><div class="ossave"><span>Pickup reward (proposed)</span><b>${rw} voucher</b></div>`,
+                  `<div class="osrw"><b>Reward added</b>${rw} off your next app pickup · proposed</div><div class="odctx">Order confirmed · simulated</div>`] },
+        { lab: "Concept", title: "Concept · reward Grab self-pickup through membership",
+          what: "The brief's idea: the order stays on Grab and the reward lands in CHAGEE membership. No commission is saved, so the reward is a cost unless it later moves the customer to the app. Not in the totals.",
+          val: "To confirm before any pilot: account linking (exists for earning on GrabFood orders), proof that a Grab order was self-pickup, and reward eligibility rules.",
+          steps: [`<div class="oscon">Proposed integration · concept, not live</div>${sel("GrabFood self-pickup", "CHAGEE membership linked on GrabFood")}`,
+                  `<div class="oscon">Concept</div><div class="ossave"><span>Self-pickup verified</span><b>to confirm</b></div><div class="ossave"><span>Bonus for collecting</span><b>proposed</b></div>`,
+                  `<div class="oscon">Concept</div><div class="osrw"><b>Bonus credited</b>to your CHAGEE account · concept only</div>`] },
+      ];
+      const seg = $(os, ".osseg"); let j = 0, k = 0;
+      seg.innerHTML = J.map((s, i) => `<button class="btn${i ? "" : " on"}" data-i="${i}">${s.lab}</button>`).join("");
+      const draw = () => { const s = J[j];
+        $$(seg, ".btn").forEach((b, i) => b.classList.toggle("on", i === j));
+        $(os, '[data-os="phone"]').innerHTML = `<div class="olbar"><b>Checkout</b><span>${j === 2 ? "Grab with CHAGEE membership · concept" : "Chagee app · illustrative"}</span></div><div class="odscr-b">${s.steps[k]}</div>`;
+        $(os, '[data-os="step"]').textContent = `Step ${k + 1} of ${s.steps.length}`;
+        $(os, '[data-os="jt"]').textContent = s.title; $(os, '[data-os="jwhat"]').textContent = s.what; $(os, '[data-os="jval"]').innerHTML = s.val;
+        $(os, '[data-os="printj"]').textContent = `Printed: ${s.title.split(' · ')[0].toLowerCase()}, the savings step; the other journeys are in the notes.`; };
+      seg.addEventListener("click", e => { const b = e.target.closest("[data-i]"); if (b) { j = +b.dataset.i; k = 0; draw(); } });
+      $(os, '[data-os="next"]').onclick = () => { k = Math.min(J[j].steps.length - 1, k + 1); draw(); };
+      $(os, '[data-os="prev"]').onclick = () => { k = Math.max(0, k - 1); draw(); };
+      printers.push(() => { j = 0; k = 1; draw(); }); draw();
+    }
+
+    const oe = document.getElementById("oe");
+    if (oe) {
+      const svg = $(oe, ".oewf"), seg = $(oe, ".oeseg"), L = { low: "Low", base: "Base", high: "High" }; let s = "base";
+      seg.innerHTML = Object.keys(L).map(k => `<button class="btn${k === s ? " on" : ""}" data-s="${k}">${L[k]}</button>`).join("");
+      const draw = () => { const A = ON.scenarios[s];
+        $$(seg, ".btn").forEach(b => b.classList.toggle("on", b.dataset.s === s));
+        const steps = [["Capacity-aware ordering", A.i1.contrib], ["Targeted discounts", A.i2.contrib], ["Pickup rewards", A.i3.contrib], ["Gross contribution", A.gross, "t"],
+                       [`Team (${OC.run_team_people.value} people)`, -A.team], ["Cloud", -A.cloud], ["Operating result", A.operating, "t"]];
+        let run = 0; const bars = steps.map(([lab, v, t]) => { const a = t ? 0 : run, b2 = t ? v : run + v; if (!t) run += v; return { lab, v, t, lo: Math.min(a, b2), hi: Math.max(a, b2) }; });
+        const top = Math.max(...bars.map(b => b.hi)), bot = Math.min(0, ...bars.map(b => b.lo)), Y0 = 22, H = 178, y = v => Y0 + (top - v) / (top - bot) * H;
+        const W = 640, bw = 62, gap = (W - 30 - bw * bars.length) / (bars.length - 1);
+        svg.innerHTML = `<line x1="16" x2="${W - 8}" y1="${y(0)}" y2="${y(0)}" stroke="#9A9387" stroke-width="1"/>` + bars.map((b, i) => {
+          const x = 22 + i * (bw + gap), col = b.t ? "#24406B" : b.v >= 0 ? "#2F6B45" : "#B8322B", yl = y(b.hi) - 6;
+          const words = b.lab.split(" "), l1 = words.slice(0, Math.ceil(words.length / 2)).join(" "), l2 = words.slice(Math.ceil(words.length / 2)).join(" ");
+          return `<rect x="${x}" y="${y(b.hi)}" width="${bw}" height="${Math.max(1.5, y(b.lo) - y(b.hi))}" rx="3" fill="${col}"/>` +
+            `<text x="${x + bw / 2}" y="${yl}" font-size="12.5" font-weight="700" fill="${col}" text-anchor="middle">${sk(b.v)}</text>` +
+            `<text x="${x + bw / 2}" y="${Y0 + H + 22}" font-size="11" fill="#4A4A4A" text-anchor="middle">${l1}</text><text x="${x + bw / 2}" y="${Y0 + H + 36}" font-size="11" fill="#4A4A4A" text-anchor="middle">${l2}</text>`;
+        }).join("");
+        const C = ON.cash[s];
+        $(oe, '[data-oe="note"]').innerHTML = `${L[s]} scenario. Moved orders shift revenue and count only the commission avoided, less rewards. Gross: ${sk(ON.scenarios.low.gross)} low to ${sk(ON.scenarios.high.gross)} high. Implementation spend ${sk(C.implementation)}; payback: ${C.payback ? `month ${C.payback}` : `none within ${RAW.business_case.horizon_years.value} years`}.`; };
+      seg.addEventListener("click", e => { const b = e.target.closest("[data-s]"); if (b) { s = b.dataset.s; draw(); } });
+      const RM = OC.roadmap.value, GT = OC.gates.value, team = OC.team.value;
+      $(oe, '[data-oe="road"]').innerHTML = `<div class="oerd">${RM.map(p => `<div class="ph">${p.phase}<small>months ${p.from}–${p.to} · ${team.filter(r => r.from_month <= p.from).reduce((a, r) => a + r.people, 0)} people</small></div>`).join("")}</div>
+        <div class="oegt">${GT.map(g => `<span><b>${g.name}</b> · month ${g.month}: ${g.test}</span>`).join("")}</div>`;
+      printers.push(() => { s = "base"; draw(); }); draw();
+    }
   })();
 
   /* ---------------------------------------------------------------- "How it works" / "Numbers" panels: [data-hiw] opens the

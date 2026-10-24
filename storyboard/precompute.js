@@ -20,6 +20,7 @@ const NM = require("../sim/newmarket.js");
 const PNL = require("../sim/pnl.js");
 const MB = require("../sim/members.js");
 const SQ = require("../sim/squadcast.js");
+const ONL = require("../sim/online.js");
 
 const RAW = JSON.parse(fs.readFileSync(path.join(__dirname, "..", "assumptions.json"), "utf8"));
 const P = Sim.params(RAW), SB = RAW.storyboard;
@@ -178,6 +179,7 @@ const pl = Sim.plan(P, "mixed");
 const data = {
   generated: new Date().toISOString(), seeds,
   grid, splits, aiLayer, forecastErr, newMarket, pnl, members, squadcast, site, ladder, benefit, decisions, siteExt, siteModel, sharing,
+  online: ONL.compare(ONL.inputs(RAW)),          // slides 03 to 07: the online retailing business case and the brief, reconciled
   sharing_times: { handover: P.humanSec.handover * P.humanMult, all_human: P.stations.reduce((a, k) => a + P.humanSec[k] * P.humanMult, 0),
                    hand_here: P.stations.filter(k => !shRobots.includes(k)).reduce((a, k) => a + P.humanSec[k] * P.humanMult, 0) },
   counter: {

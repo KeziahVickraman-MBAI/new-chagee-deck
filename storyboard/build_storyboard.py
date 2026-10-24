@@ -490,6 +490,26 @@ def values(d: dict) -> dict:
         raise SystemExit("build: slide 8C notes say AI staffing cuts human-only walk-aways and an under-forecast gives some back; rewrite them")
     nx = sorted(Q["next"], key=lambda o: -o["score"])[0]
     v["s.nm_next"], v["s.nm_next_name"], v["x.nm_next_cann"] = nx["id"], A_[nx["id"]]["name"], nx["cannibal"]
+    # slides 03 to 07, online retailing (sim/online.js via precompute.js): the business case on the deck's own assumptions
+    ON, OC = d["online"], RAW["online_case"]; B0, POL, BR = ON["scenarios"]["base"], OC["offer_policy"]["value"], OC["brief"]["value"]
+    v["oc.cpc"] = RAW["storyboard"]["price_per_cup"]["value"] * RAW["storyboard"]["gross_margin_per_cup"]["value"]
+    v["oc.disc"], v["oc.be_inc"], v["oc.be_gp"] = OC["offer_discount"]["value"], ON["breakEven"]["incShare"], ON["breakEven"]["grabPickupComm"]
+    v["oc.g_del"], v["oc.comm"], v["oc.pay"] = B0["i3"]["delivery"]["perOrder"], RAW["site_ext"]["delivery_commission_share"]["value"], OC["app_payment_cost"]["value"]
+    v["oc.p_off"], v["oc.p_pre"], v["oc.p_hot"], v["oc.p_rain"], v["oc.p_dor"] = (POL[k]["off"] for k in ("offpeak", "peak_preorder", "hot_weather", "normal_or_rain", "dormant"))
+    v["oc.p_dor_days"], v["oc.p_up_days"] = POL["dormant"]["days"], POL["dormant"]["upsize_after_days"]
+    v["oc.i1"], v["oc.i2"], v["oc.i3"], v["oc.gross"] = B0["i1"]["contrib"], B0["i2"]["contrib"], B0["i3"]["contrib"], B0["gross"]
+    v["oc.gross_lo"], v["oc.gross_hi"] = ON["scenarios"]["low"]["gross"], ON["scenarios"]["high"]["gross"]
+    v["oc.team"], v["oc.cloud"], v["oc.op"] = B0["team"], B0["cloud"], B0["operating"]
+    v["oc.run_cover"], v["oc.team_n"] = ON["breakEven"]["runTeamCovered"], OC["run_team_people"]["value"]
+    v["oc.cups_day"] = RAW["store"]["cups_per_store_per_year"]["value"] / RAW["store"]["open_days_per_year"]["value"]
+    v["oc.years"] = RAW["business_case"]["horizon_years"]["value"]
+    v["oc.brief_sales"], v["oc.brief_profit"] = BR["sales"]["total"], BR["profit"]["total"]
+    v["oc.b_outlets"], v["oc.b_price"], v["oc.b_days"], v["oc.b_uplift"] = BR["outlets"], BR["price"], BR["days"], BR["offpeak_uplift"]
+    sc = ("low", "base", "high")
+    if not (B0["gross"] > 0 and all(ON["scenarios"][s]["operating"] < 0 and ON["cash"][s]["payback"] is None for s in sc)):
+        raise SystemExit("build: slide 07 says the initiatives add contribution but do not fund the proposed team or pay back in any scenario; that no longer holds, rewrite it")
+    if not (B0["i3"]["delivery"]["perOrder"] > 0 and ON["breakEven"]["runTeamCovered"] < OC["run_team_people"]["value"]):
+        raise SystemExit("build: slides 06 and 07 say delivery-to-pickup moves gain per order and base contribution covers fewer than the proposed team; rewrite them")
     return v
 
 
@@ -513,7 +533,7 @@ USED = [  # (section, key, label) shown in the appendix: every input the storybo
     ("costs", "machine_cost_per_unit_per_month", "Robot cost per station unit per month (SGD)"),
     ("people", "all_machine_attendant_per_open_hour", "Attendant hours, all-robot counter"),
     ("storyboard", "walkaway_target", "Walk-away limit for the GM's split table"),
-    ("sitepick", "events", "Synthetic app-intent dots (slide 08)"),
+    ("sitepick", "events", "Synthetic app-intent dots (slide 12)"),
     ("sitepick", "walk_km", "Walking distance to collect"),
     ("sitepick", "decay_share", "Distance decay, share of the walking distance"),
     ("sitepick", "outside_option", "Pull of not buying"),
@@ -621,14 +641,77 @@ def mb_appendix(d: dict) -> tuple:
     return "\n".join(a), "\n".join(b), "\n".join(c)
 
 
+def online_appendix(d: dict) -> tuple:
+    """Appendix for slides 03 to 07 (online retailing): inputs, each initiative, the brief reconciled; policy, plan, team, sources."""
+    ON, OC, F, SBv, ST, X = d["online"], RAW["online_case"], RAW["facts"], RAW["storyboard"], RAW["store"], RAW["site_ext"]
+    S, CA, BE, BR = ON["scenarios"], ON["cash"], ON["breakEven"], OC["brief"]["value"]
+    v = lambda k: OC[k]["value"]; sc = ("low", "base", "high")
+    sg = lambda x: f"{'−' if x < 0 else ''}S${abs(x):,.0f}"; sk = lambda x: f"{'−' if x < 0 else ''}S${abs(x) / 1e3:,.0f}k"
+    pc = lambda x: f"{100 * x:.0f}%"; c2 = lambda x: f"S${x:.2f}"; n0 = lambda x: f"{x:,.0f}"
+    tri = lambda f: " · ".join(f(S[s]) for s in sc)
+    price, mg, cups = SBv["price_per_cup"]["value"], SBv["gross_margin_per_cup"]["value"], ST["cups_per_store_per_year"]["value"]
+    ch, b = v("channel_shares"), S["base"]
+    app = 1 - X["delivery_share_of_cups"]["value"] - ch["grab_pickup"] - ch["app_delivery"]
+    peak = b["i1"]["eligible"] / (b["app"])
+    p1 = ["<h5>Inputs: the deck's own values, and where each comes from</h5><table class='res mbt'><tr><th>Input</th><th>Value</th><th>Source</th></tr>",
+          f"<tr><td>Outlets</td><td>{F['sg_outlets']['value']} (store directory, 15 Oct 2026). The store locator listed {v('outlets_locator')} on 24 Oct 2026: at that count every volume line is {pc(v('outlets_locator') / F['sg_outlets']['value'] - 1)} higher</td><td>facts.sg_outlets; online_case.outlets_locator</td></tr>",
+          f"<tr><td>Days, cups, price, margin</td><td>{ST['open_days_per_year']['value']} days; {n0(cups)} cups an outlet a year (about {cups / ST['open_days_per_year']['value']:.0f} a day); {c2(price)} a cup; {pc(mg)} margin, so {c2(price * mg)} contribution a cup</td><td>store; storyboard</td></tr>",
+          f"<tr><td>Channels</td><td>Chagee-app pickup and in-store app orders {pc(app)}; Grab delivery {pc(X['delivery_share_of_cups']['value'])} at {pc(X['delivery_commission_share']['value'])} commission; Grab self-pickup {pc(ch['grab_pickup'])}; in-app delivery {pc(ch['app_delivery'])} (rider cost unknown, not valued)</td><td>site_ext (as on the expansion slides); online_case.channel_shares</td></tr>",
+          f"<tr><td>Peak and off-peak</td><td>peak = the {v('peak_hours')} busiest hours, {pc(peak)} of cups; off-peak the rest</td><td>store.hourly_demand_share</td></tr></table>",
+          "<h5>Each initiative, a full-scale year: low · base · high</h5><table class='res mbt'><tr><th>Initiative</th><th>Eligible volume and rule</th><th>Contribution</th></tr>",
+          f"<tr><td>Capacity-aware ordering</td><td>{n0(b['i1']['eligible'])} peak-hour Chagee-app cups (Grab orders cannot be rerouted); {tri(lambda a: pc(a['i1']['cups'] / a['i1']['eligible']))} kept × {c2(price * mg)}</td><td>{tri(lambda a: sk(a['i1']['contrib']))}</td></tr>",
+          f"<tr><td>Targeted discounts</td><td>{n0(b['i2']['eligible'])} off-peak app cups; {pc(v('offer_share'))} redeemed with {c2(v('offer_discount'))} off; {tri(lambda a: pc(a['i2']['incremental'] / a['i2']['redeemed']))} of them new. Contribution = new × {c2(price * mg)} − redeemed × {c2(v('offer_discount'))}; break-even {pc(BE['incShare'])} new</td><td>{tri(lambda a: sk(a['i2']['contrib']))}</td></tr>",
+          f"<tr><td>Delivery → app pickup</td><td>{n0(b['i3']['delivery']['eligible'])} Grab delivery cups; {tri(lambda a: pc(a['i3']['delivery']['moved'] / a['i3']['delivery']['eligible']))} move; each gains {c2(price)} × ({pc(X['delivery_commission_share']['value'])} − {pc(v('app_payment_cost'))}) − {c2(v('pickup_reward'))} reward = {c2(b['i3']['delivery']['perOrder'])}; {sk(b['i3']['delivery']['shiftedRevenue'])} of revenue moves at base, none added</td><td>{tri(lambda a: sk(a['i3']['delivery']['contrib']))}</td></tr>",
+          f"<tr><td>Grab pickup → app pickup</td><td>{n0(b['i3']['grabPickup']['eligible'])} Grab self-pickup cups; each gains {c2(price)} × ({pc(v('grab_pickup_commission'))} − {pc(v('app_payment_cost'))}) − {c2(v('pickup_reward'))} = {c2(b['i3']['grabPickup']['perOrder'])}; pays only if Grab's pickup commission is above {BE['grabPickupComm']:.1%}</td><td>{tri(lambda a: sk(a['i3']['grabPickup']['contrib']))}</td></tr>",
+          f"<tr><td><b>Gross contribution</b></td><td>added sales (rerouting, plus new offer orders less every discount): {tri(lambda a: sk(a['sales']))}</td><td><b>{tri(lambda a: sk(a['gross']))}</b></td></tr></table>"]
+    q = ON["brief"]
+    p1 += ["<h5>The team brief, line by line: what its figures imply, and how we treat them</h5><table class='res mbt'><tr><th>Line</th><th>Brief</th><th>What it implies</th><th>Here, base</th></tr>",
+           f"<tr><td>Base</td><td>{BR['outlets']} × {BR['cups_per_day']} cups × {BR['days']} days × {c2(BR['price'])} = {sg(q['base'])}</td><td>the locator's count; {BR['days']} trading days</td><td>{sg(q['ourBase'])} on the deck's inputs</td></tr>",
+           f"<tr><td>Rerouting</td><td>sales {sg(BR['sales']['rerouting'])}; profit {sg(BR['profit']['rerouting'])}</td><td>{pc(BR['retained'])} of all peak revenue ({pc(BR['peak_share'])}), Grab included; a {pc(q['reroutingMargin'])} margin</td><td>app orders only, {pc(mg)} margin: {sk(b['i1']['contrib'])}</td></tr>",
+           f"<tr><td>Dynamic pricing</td><td>sales {sg(BR['sales']['pricing'])}; profit {sg(BR['profit']['pricing'])}</td><td>{pc(BR['offpeak_uplift'])} of {sg(q['pricingBase'])}, which is {pc(q['pricingBaseShare'])} of the base: all delivery revenue, not off-peak, where app vouchers cannot reach; {pc(BR['delivery_margin'])} margin; no discount on orders that would happen anyway</td><td>off-peak app orders, discount on every redeemed order: {sk(b['i2']['contrib'])}</td></tr>",
+           f"<tr><td>Self-pickup</td><td>{sg(q['moved'])} moves; profit {sg(BR['profit']['pickup'])}</td><td>{pc(BR['shift'])} of that delivery revenue × ({pc(BR['commission'])} − {pc(BR['payment'])}); no reward cost; Grab pickup still pays Grab</td><td>two journeys, the deck's {pc(X['delivery_commission_share']['value'])} commission, reward deducted: {sk(b['i3']['contrib'])}</td></tr>",
+           f"<tr><td>Total</td><td>sales {sg(BR['sales']['total'])}; profit {sg(BR['profit']['total'])}</td><td>gross: no team, cloud or integration cost</td><td>gross {sk(b['gross'])}; operating {sk(b['operating'])} after the run team and cloud</td></tr>",
+           f"<tr><td>Payback</td><td>within a year if build costs stay below the annual profit</td><td>build cost against one year's gross; the team's running cost left out</td><td>phased cash flow: no payback within {RAW['business_case']['horizon_years']['value']} years in any scenario</td></tr>",
+           "<tr><td>Scale</td><td>stores averaged over 1,500 cups a day, Q2 2025</td><td>could not be verified (transcript inaccessible); most likely group or China, not Singapore</td><td>not used</td></tr></table>"]
+    c = CA["base"]
+    p2 = [f"<h5>Costs, cash flow and payback · base (S$; low and high in brackets)</h5><table class='res mbt'><tr><th>Year</th><th>Benefit</th><th>Team</th><th>Cloud</th><th>Integration</th><th>Net</th><th>Cumulative</th></tr>"]
+    for y in c["years"]:
+        p2.append(f"<tr><td>{y['year']}</td><td>{sk(y['benefit'])}</td><td>{sk(-y['team'])}</td><td>{sk(-y['cloud'])}</td><td>{sk(-y['integ']) if y['integ'] else '–'}</td><td>{sk(y['net'])}</td><td>{sk(y['cum'])} ({sk(CA['low']['years'][y['year'] - 1]['cum'])}; {sk(CA['high']['years'][y['year'] - 1]['cum'])})</td></tr>")
+    pm = RAW["business_case"]["specialist_day_rate"]["value"] * RAW["business_case"]["working_days_per_month"]["value"]
+    small = OC["run_team_people"]["range"][0]
+    p2.append(f"</table><p>Implementation spend, months 1 to {v('roadmap')[0]['to']}: {sk(c['implementation'])} (team and integration). Run cost from month {v('roadmap')[-1]['to'] + 1}: {sk(b['team'])} team ({v('run_team_people')} people × {sg(pm)} a person-month, the approved specialist rate) and {sk(b['cloud'])} cloud. Payback: none within the horizon. With a {small}-person run team the base operating result would be {sk(b['gross'] - small * pm * 12 - b['cloud'])} a year.</p>")
+    POL = v("offer_policy")
+    p2 += ["<h5>Proposed offer policy (team brief): discounts only, not proven optimal</h5><table class='res mbt'><tr><th>Scenario</th><th>Offer</th><th>Condition we add</th></tr>",
+           f"<tr><td>Off-peak</td><td>up to {c2(POL['offpeak']['off'])} on the {POL['offpeak']['what']}</td><td>only to members the model scores as likely to add an order</td></tr>",
+           f"<tr><td>Peak</td><td>no vouchers; {c2(POL['peak_preorder']['off'])} off a pre-order; limit Grab delivery when slots are full</td><td>the pre-order discount only if collection moves into a window with room; Grab limits as Grab's merchant tools allow (to confirm)</td></tr>",
+           f"<tr><td>Weather, events</td><td>{c2(POL['hot_weather']['off'])} off in hot weather; {c2(POL['normal_or_rain']['off'])} in normal weather or rain; none during nearby events</td><td>weather and event effects estimated, not assumed</td></tr>",
+           f"<tr><td>Inactive member</td><td>up to {c2(POL['dormant']['off'])} off their favourite for {POL['dormant']['days']} days; a free upsize after {POL['dormant']['upsize_after_days']} more days</td><td>only members the model scores as lapsing and responsive</td></tr></table>"]
+    team = v("team")
+    p2.append("<h5>Proposed plan: three phases, two gates, and the team as it joins</h5><table class='res mbt'><tr><th>Phase</th><th>Months</th><th>Scope</th><th>People</th><th>Team cost</th></tr>")
+    for ph in v("roadmap"):
+        ppl = sum(r["people"] for r in team if r["from_month"] <= ph["from"])
+        p2.append(f"<tr><td>{ph['phase']}</td><td>{ph['from']}–{ph['to']}</td><td>{ph['what']}</td><td>{ppl}</td><td>{sk(ppl * pm * (ph['to'] - ph['from'] + 1))}</td></tr>")
+    p2.append("</table><p>" + "; ".join(f"<b>{g['name']}</b> (month {g['month']}): {g['test']}" for g in v("gates")) + ". Roles: " + ", ".join(f"{r['role']} ({r['people']}, from month {r['from_month']})" for r in team) + ".</p>")
+    p2 += ["<h5>Sources the brief cites, checked 24 Oct 2026</h5><table class='res mbt'><tr><th>Source</th><th>Supports</th><th>Does not support</th></tr>",
+           "<tr><td>De Vries, Roy and De Koster 2018</td><td>longer waits relate to customers leaving and returning less (one Indian restaurant)</td><td>the 'nearly 15%' is a simulation without any waiting, not a Chagee uplift</td></tr>",
+           "<tr><td>Wang and co-authors 2024</td><td>pooled capacity for app and platform orders gives more profit and throughput, in a queueing model</td><td>a size for Chagee</td></tr>",
+           "<tr><td>Tong and co-authors 2020</td><td>platforms with dynamic pricing show higher demand (China O2O)</td><td>that targeted discounts lift Chagee's orders; an association</td></tr>",
+           "<tr><td>Ma and co-authors 2024</td><td>Singapore consumers more sensitive to menu-price premiums than to delivery fees (stated choices; partly verified)</td><td>observed Chagee behaviour</td></tr>",
+           "<tr><td>Kim, Wang and Malthouse 2015</td><td>app adopters spend more (US loyalty programme)</td><td>a Chagee uplift</td></tr>",
+           "<tr><td>Traynor and co-authors 2022; Liu and Li 2023</td><td>operators see commissions as a cost (US interviews); a model that assumes and caps commissions</td><td>Chagee's commission rate</td></tr>",
+           "<tr><td>CHAGEE SG Help Centre, Oct 2026</td><td>rewards redeemable only on in-app pickup; GrabFood orders earn once accounts are linked; in-app delivery within coverage; app payment methods</td><td>that Grab self-pickup orders earn; 'no delivery in the app' (the page says delivery is available)</td></tr>",
+           "<tr><td>Q2 2025 earnings call</td><td>could not be accessed</td><td>the '1,500 cups a day' figure; not used</td></tr></table>"]
+    return "".join(p1), "".join(p2)
+
+
 def ops_appendix(d: dict) -> str:
-    """Appendix for the Serve chapter (slides 04 to 07): the tables moved off the slides, every day type."""
+    """Appendix for the Serve chapter (slides 08 to 11): the tables moved off the slides, every day type."""
     SBv = RAW["storyboard"]; days = list(RAW["surge"]["surge_multiplier"]["value"]); lab = SBv["day_type_labels"]["value"]
     p1 = lambda x: "–" if x is None else f"{100 * x:.1f}%"
     ms = lambda x: "–" if x is None else f"{int(x // 60)}:{int(round(x % 60)):02d}"
     sg = lambda x: f"S${x:,.0f}"
     hd = lambda first, sub: "<tr><th>" + first + "</th>" + "".join(f"<th>{lab[k]}<br><small>{sub}</small></th>" for k in days) + "</tr>"
-    out = ["<h5>Slide 04 · forecast error: the roster follows a wrong forecast, the customers do not (today's split, bucket brigade)</h5>",
+    out = ["<h5>Slide 08 · forecast error: the roster follows a wrong forecast, the customers do not (today's split, bucket brigade)</h5>",
            "<table class='res mbt'>" + hd("Forecast", "crew · away · S$/day")]
     for i, r0 in enumerate(d["forecastErr"][days[0]]):
         e = r0["e"]; name = "exact" if e == 0 else f"{abs(e):.0%} {'high' if e > 0 else 'low'}"
@@ -640,7 +723,7 @@ def ops_appendix(d: dict) -> str:
         out.append(f"<tr><td>{nm}</td>" + "".join(f"<td>{d['aiLayer'][k]['today'][k_]['with']['staff']} · {p1(d['aiLayer'][k]['today'][k_]['with']['lostShare'])} · {ms(d['aiLayer'][k]['today'][k_]['with']['medianWait'])}</td>" for k in days) + "</tr>")
     out.append("</table>")
     SH = d["sharing"]; up = RAW["sharing"]["upper_percentile"]["value"]
-    out += [f"<h5>Slide 05 · same crew of {SH['staff']}, fixed responsibilities against flexible assistance, at each day type's peak hour</h5>",
+    out += [f"<h5>Slide 09 · same crew of {SH['staff']}, fixed responsibilities against flexible assistance, at each day type's peak hour</h5>",
             "<table class='res mbt'><tr><th>Rule</th>" + "".join(f"<th>{lab[k]} peak, {SH['levels'][k]['perHour']:.0f} orders an hour<br><small>median · {up:.0%} · completed · unfinished · away</small></th>" for k in days) + "</tr>"]
     for k_, nm in (("fixed", "A · fixed responsibilities"), ("assist", "B · flexible assistance")):
         out.append(f"<tr><td>{nm}</td>" + "".join((lambda r: f"<td>{ms(r['median'])} · {ms(r['p90'])} · {r['completed']:.0f} · {r['unfinished']:.0f} · {r['lost']:.0f}</td>")(SH['levels'][k][k_]) for k in days) + "</tr>")
@@ -651,7 +734,7 @@ def ops_appendix(d: dict) -> str:
         cost = r["cost"] if k == "single" else r["cost"]["total"]
         if k != "single" and not r["meets"]: return f"over the limit · {sg(cost)}"
         return f"{r['staff'] if r['staff'] else '–'} · {p1(r['lostShare'])} · {ms(r['medianWait'])} · {sg(cost)}"
-    out += [f"<h5>Slide 06 · five setups: the fewest people that keep walk-aways within {SBv['walkaway_target']['value']:.0%}</h5>", "<table class='res mbt'>" + hd("Setup", "people · away · wait · S$/day")]
+    out += [f"<h5>Slide 10 · five setups: the fewest people that keep walk-aways within {SBv['walkaway_target']['value']:.0%}</h5>", "<table class='res mbt'>" + hd("Setup", "people · away · wait · S$/day")]
     for k in names:
         out.append(f"<tr><td>{names[k]}</td>" + "".join(f"<td>{row(day, k)}</td>" for day in days) + "</tr>")
     out.append("</table>")
@@ -767,7 +850,7 @@ def tiers_table() -> str:
     for i, t in enumerate(T["tiers"], 1):
         if t["id"] == "arm":                                   # the baseline sits where it does on the slide ladder
             rows.append(f'<tr class="base"><td>–</td><td><b>{esc(base["label"])}</b></td>'
-                        f'<td><b>{", ".join(STEP[s] for s in mixed)}</b>. A scenario of ours (slides 05 and 06), not Chagee\'s disclosed setup</td>'
+                        f'<td><b>{", ".join(STEP[s] for s in mixed)}</b>. A scenario of ours (slides 09 and 10), not Chagee\'s disclosed setup</td>'
                         f'<td>Model: S${RAW["costs"]["machine_cost_per_unit_per_month"]["value"]:,.0f} a month per station unit</td>'
                         f'<td></td><td>{tag(base["reliability"])}</td><td>assumptions.json</td></tr>')
         n = len(t["examples"])
@@ -800,6 +883,7 @@ FMT = {
     "g1": lambda x: f"{x:.1f}",
     "sgm": lambda x: f"{'−' if x < 0 else ''}S${abs(x) / 1e6:.1f}m",
     "sgm2": lambda x: f"{'−' if x < 0 else ''}S${abs(x) / 1e6:.2f}m",
+    "sgk": lambda x: f"{'−' if x < 0 else ''}S${abs(x) / 1e3:,.0f}k",
 }
 
 
@@ -812,7 +896,7 @@ def fill(text: str, vals: dict) -> str:
     return re.sub(r"\{\{([a-zA-Z_][\w.]*)(?:\|(\w+))?\}\}", rep, text)
 
 
-ALLOWED = re.compile(r"(?i:\bslides?\s+\d\db?(?:\s*(?:,|and|to|–)\s*\d\db?)*)|\bM[1-3]\b|Item 3\.D|\bslides? 3\d\b|\b8[A-D]\b|\b(?:19|20)\d\d\b|OPIM\s?639|Topic \d|\bT\d\b|\b0[1-9]b?\b|\b10b\b|\b1\d(?= ·)|\bslides? 1\d\b|Week \d|\b1 (?=company|counter)|Group \d|Form 20-F|Proposal \d")
+ALLOWED = re.compile(r"(?i:\bslides?\s+\d\db?(?:\s*(?:,|and|to|–)\s*\d\db?)*)|\bM[1-3]\b|Item 3\.D|\bslides? 3\d\b|\b8[A-D]\b|\b(?:19|20)\d\d\b|OPIM\s?639|Topic \d|\bT\d\b|\b0[1-9]b?\b|\b10b\b|\b1\d(?= ·)|\bslides? 1\d\b|Week \d|\b1 (?=company|counter)|Group \d|Form 20-F|Proposal \d|Gate \d")
 
 
 def digit_check(tpl: str) -> None:
@@ -848,6 +932,8 @@ def build() -> Path:
     mx = mb_appendix(d)
     html = html.replace("<!--SQAPPX-->", sq_appendix(d))
     html = html.replace("<!--OPSAPPX-->", ops_appendix(d))
+    oa = online_appendix(d)
+    html = html.replace("<!--ONLAPPX1-->", oa[0]).replace("<!--ONLAPPX2-->", oa[1])
     html = html.replace("<!--MBAPPX1-->", mx[0]).replace("<!--MBAPPX2-->", mx[1]).replace("<!--MBAPPX3-->", mx[2])
     html = html.replace("<!--APPENDIX-->", appendix()).replace("<!--NMAPPENDIX-->", nm_appendix()).replace("<!--TIERS-->", tiers_table())
     js = "\n".join((ROOT / "sim" / f).read_text(encoding="utf-8") for f in ("sim.js", "store.js", "counter.js", "sitepick.js", "ladder.js", "benefit.js", "siteext.js", "sitemodel.js", "newmarket.js", "pnl.js", "members.js", "squadcast.js"))

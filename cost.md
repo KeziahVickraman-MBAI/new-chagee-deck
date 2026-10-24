@@ -111,7 +111,7 @@ From `sim/counter.js` `dayCost`: the forecast roster for that day type, machine 
 | All robots | ticket, cup_ice, tea_milk, topping_finish, shake_seal, handover | Busy day | 0 | 12 | S$181 | 6 | S$382 | S$562 |
 | All robots | ticket, cup_ice, tea_milk, topping_finish, shake_seal, handover | Event day | 0 | 12 | S$181 | 6 | S$382 | S$562 |
 
-The split table on slide 06 adds people above this roster where needed to keep peak walk-aways within 2%; its costs per day:
+The split table on slide 10 adds people above this roster where needed to keep peak walk-aways within 2%; its costs per day:
 
 | Split | Normal day | Busy day | Event day |
 |---|---|---|---|
@@ -184,7 +184,7 @@ Every input in `assumptions.json`. **Key** is the path to change; **Range** is w
 |---|---|---|---|---|---|
 | `predict_toggles.remove_hype_default` | True | boolean |  | assumption | APPROVED (user, after step 4 rework). Slide 2 starts with opening-week hype removed, so slides 3-5 receive the steady-demand band by default. The hype band stays visible on the chart for comparison. |
 
-### store · used on: every counter and benefit slide; slide 08 volume
+### store · used on: every counter and benefit slide; slide 12 volume
 
 | Key | Value | Unit | Range | Status | Notes |
 |---|---|---|---|---|---|
@@ -206,7 +206,7 @@ Every input in `assumptions.json`. **Key** is the path to change; **Range** is w
 | `demand.opening_hype_weeks` | 2 | weeks | [1, 6] | assumption | How long the hype lasts before demand settles. Illustrative. |
 | `demand.uncertainty_sweep` | {"from": 0.0, "to": 0.6, "step": 0.05} | half-width, share of base |  | assumption | x-axis of the crossover chart. Covers strong-signal to no-signal bands from slide 2. |
 
-### surge · used on: busy and event days: slides 04 to 07 and the benefit slide
+### surge · used on: busy and event days: slides 08 to 11 and the benefit slide
 
 | Key | Value | Unit | Range | Status | Notes |
 |---|---|---|---|---|---|
@@ -214,7 +214,7 @@ Every input in `assumptions.json`. **Key** is the path to change; **Range** is w
 | `surge.surge_hours` | 2 | busiest forecast hours that get the surge |  | assumption | This number was only in the surge_multiplier rationale; it now has its own field so the code reads it from here. With the default curve these are 12:00-14:00 (ties go to the earlier hour). |
 | `surge.surge_default` | moderate | text |  | assumption | Default toggle position and printed state. |
 
-### stations · used on: counter replica: slides 05 to 07
+### stations · used on: counter replica: slides 09 to 11
 
 | Key | Value | Unit | Range | Status | Notes |
 |---|---|---|---|---|---|
@@ -313,7 +313,7 @@ Every input in `assumptions.json`. **Key** is the path to change; **Range** is w
 |---|---|---|---|---|---|
 | `triggers.volume_trigger_range_cups_per_day` | [277.8, 3000] | cups per store per day |  | assumption | Approved for the volume trigger only and labelled on slides 'trigger range, not a new-store forecast'. Lower end = cups_per_store_per_year low (100,000) / open_days_per_year. Cost charts keep the approved 278-833 cups/day (cups_per_store_per_year range). |
 
-### illustration · used on: counter animations (walking speed, slides 05 and 06, appendix brigade)
+### illustration · used on: counter animations (walking speed, slides 09 and 10, appendix brigade)
 
 | Key | Value | Unit | Range | Status | Notes |
 |---|---|---|---|---|---|
@@ -338,7 +338,7 @@ Every input in `assumptions.json`. **Key** is the path to change; **Range** is w
 | `validation.crossover_stability` | {"seeds": 20, "min_seeds_with_crossover": 18, "max_spread_pct_points": 10} | mixed |  | assumption | Pass if a crossover exists in at least 18 of 20 seeds and the crossover u differs by at most 10 percentage points across them. If it fails, the slide shows a crossover zone or none, not a single point. |
 | `validation.sensitivity` | one-at-a-time: each parameter with a non-null range set to its low then high value, all others at default; report crossover u (or none) and cost/cup at the slide 2 default u | text |  | assumption | Shows which assumptions decide the headline; feeds the 'what could shift the balance' panel and Q&A. No pass/fail. |
 
-### storyboard · used on: price, margin, day types, split table, forecast-error steps: slides 04-09 and the appendix
+### storyboard · used on: price, margin, day types, split table, forecast-error steps: slides 08-13 and the appendix
 
 | Key | Value | Unit | Range | Status | Notes |
 |---|---|---|---|---|---|
@@ -357,7 +357,7 @@ Every input in `assumptions.json`. **Key** is the path to change; **Range** is w
 | `storyboard.event_days_per_year` | 11 | event days a year (day type 'large') |  | assumption | Illustrative definition, to confirm with Chagee: event days = Singapore public holidays. An input on the GM's playbook, not a measured count. |
 | `storyboard.forecast_error_scenarios` | [-0.3, -0.15, 0, 0.15, 0.3] | share by which the forecast misses the day's cups (negative = too low) | [-0.3, 0.3] | assumption | Slide 09 sensitivity only. Scenario steps, not a measured forecast accuracy: Chagee's forecast error is unknown. The roster is set from the wrong forecast; the customers are the day's actual ones. |
 
-### sitepick · used on: slides 08 and 09 site forecast
+### sitepick · used on: slides 12 and 13 site forecast
 
 | Key | Value | Unit | Range | Status | Notes |
 |---|---|---|---|---|---|
@@ -423,7 +423,7 @@ Every input in `assumptions.json`. **Key** is the path to change; **Range** is w
 | `new_market.trigger_weeks` | 4 | consecutive weeks a pilot signal must hold before acting |  | assumption | Our judgement, illustrative. |
 | `new_market.day_mix` | {"moderate": 104, "large": 12} | busy and event days a year; the rest of store.open_days_per_year are normal days |  | assumption | Scenario assumption for the Australian pilot: busy days = weekend days; event days = a guess at local public holidays and events, not counted. Weights the year-average contribution on the new-market setup slide. |
 
-### pnl · used on: slide 08 P&L view, slide 09 criteria and the appendix page
+### pnl · used on: slide 12 P&L view, slide 13 criteria and the appendix page
 
 > Five-year projection of the same new outlet at two sites (slide 14): beside the existing outlet nearest the selected site, without AI, and the selected site, with AI-assisted site selection. Same opening date, equipment and staffing rule in both, so only the site differs. Illustrative scenarios, not demonstrated causal gains from AI. Nothing here feeds the benefit or any other slide.
 
@@ -483,22 +483,22 @@ Every input in `assumptions.json`. **Key** is the path to change; **Range** is w
 | `squadcast.success_pick` | 1.45 | actual cups against the calendar baseline for the fourth example day on slide 07 (squad rush) |  | assumption | Display: a success case chosen by rule, not by hand. Among the same 300 synthetic windows, only those where the squad forecast is closer than the history-only forecast at the slide's default minute; of those, the one whose actual cups are closest to this share of the baseline. The slide also states the share of all windows where the squad forecast was closer, so the case is not presented as typical of every day. |
 | `squadcast.drink_mix` | {"Jasmine milk tea": 0.35, "Oolong milk tea": 0.3, "Black milk tea": 0.2, "Fresh fruit tea": 0.15} | share of cups by drink, for predicted cups not yet chosen |  | assumption | Illustrative generic drinks, not Chagee's menu or sales mix. |
 
-### pickup · used on: slide 03 pickup planner (illustrative demo; made-up outlets)
+### pickup · used on: slide 04 pickup planner (illustrative demo; made-up outlets)
 
 > An illustrative demonstration of the mechanics only: three made-up outlets near one office, with made-up workloads, capacity and walking times. Nothing here is measured, nothing feeds any other slide, and no improvement in conversion, abandonment or pickup accuracy is claimed; those are what a pilot would measure.
 
 | Key | Value | Unit | Range | Status | Notes |
 |---|---|---|---|---|---|
 | `pickup.now_clock` | 12:40 | time of day when the customer orders |  | assumption | Display: the lunchtime order the demonstration starts from. |
-| `pickup.slot_minutes` | 5 | minutes per preparation slot |  | assumption | Capacity is planned in short slots so a confirmed order can be placed in a slot with room; the demo looks one hour ahead. |
-| `pickup.slots` | 12 | slots shown (one hour ahead) |  | assumption | Display horizon. |
+| `pickup.slot_minutes` | 10 | minutes per preparation slot |  | assumption | Capacity is planned in ten-minute windows (the online retailing brief) so a confirmed order can be placed in a window with room; the demo looks one hour ahead. Per-window capacity and forecast are twice the earlier five-minute values, so capacity per hour is unchanged. |
+| `pickup.slots` | 6 | slots shown (one hour ahead) |  | assumption | Display horizon. |
 | `pickup.order_cups` | 1 | cups in the customer's order |  | assumption | One drink keeps the demonstration simple. |
 | `pickup.drink` | Jasmine milk tea | text |  | assumption | Display only; the first drink in the slide 07 drink mix. |
 | `pickup.preferred_after_min` | 30 | minutes from now when the customer would like to collect (the 'later pickup' window) |  | assumption | Illustrative customer preference entered in the app. |
 | `pickup.demand_multiplier` | 1 | forecast incoming orders, as a multiple of the outlets' usual lunchtime level | [0.5, 2.0] | assumption | The demo's one slider: busier or quieter than forecast. The forecast itself is illustrative; with Chagee's data it would come from the predictive model (slide 09 shows the hourly version). |
-| `pickup.outlets` | [{"name": "Office-tower outlet", "walk_min": 4, "cap_per_slot": 6, "incoming_per_slot": 4, "backlog_cups": 9, "x": 300, "y": 120}, {"name": "MRT-station outlet", "walk_min": 9, "cap_per_slot": 7, "incoming_per_slot": 3, "backlog_cups": 4, "x": 150, "y": 230}, {"name": "Mall outlet", "walk_min": 15, "cap_per_slot": 8, "incoming_per_slot": 3, "backlog_cups": 2, "x": 470, "y": 250}] | per outlet: walking minutes from the office, cups it can prepare per slot (staff and equipment), forecast incoming cups per slot at the usual level, cups already confirmed and waiting, map position (illustrative) |  | assumption | Made-up outlets, not real Chagee sites. Capacity stands in for staff and equipment availability, which a real version would read from the roster and machine status (proposed, needs data access). Walking times would need location, with consent. |
+| `pickup.outlets` | [{"name": "Office-tower outlet", "walk_min": 4, "cap_per_slot": 12, "incoming_per_slot": 8, "backlog_cups": 9, "x": 300, "y": 120}, {"name": "MRT-station outlet", "walk_min": 9, "cap_per_slot": 14, "incoming_per_slot": 6, "backlog_cups": 4, "x": 150, "y": 230}, {"name": "Mall outlet", "walk_min": 15, "cap_per_slot": 16, "incoming_per_slot": 6, "backlog_cups": 2, "x": 470, "y": 250}] | per outlet: walking minutes from the office, cups it can prepare per ten-minute window (staff and equipment), forecast incoming cups per ten-minute window at the usual level, cups already confirmed and waiting, map position (illustrative) |  | assumption | Made-up outlets, not real Chagee sites. Capacity stands in for staff and equipment availability, which a real version would read from the roster and machine status (proposed, needs data access). Walking times would need location, with consent. |
 
-### sharing · used on: slide 05 sharing the work (fixed responsibilities against flexible assistance) and slide 07's last row
+### sharing · used on: slide 09 sharing the work (fixed responsibilities against flexible assistance) and slide 11's last row
 
 > Fixed responsibilities against flexible assistance (sim/counter.js mode 'assist', a separate rule from the bucket brigade, which is in the appendix). Crew, robots, customers, drink times and walking speed are held; only who may do which step changes. Illustrative counter setup, not Chagee's observed operation.
 
@@ -512,6 +512,33 @@ Every input in `assumptions.json`. **Key** is the path to change; **Range** is w
 | `sharing.demand_per_hour_range` | [30, 180] | orders an hour arriving at the counter (the slider's range) |  | assumption | Display range around the model's own peaks: the normal-day and event-day peak hours (demand model) are marked on the slider as quiet and congested. |
 | `sharing.upper_percentile` | 0.9 | share of orders ready within the upper order-to-ready time shown |  | assumption | The 90th percentile: nine in ten orders are ready within this time. |
 | `sharing.playback_speeds` | [1, 10, 30] | simulated seconds per real second |  | assumption | Display only; 1 = real time. |
+
+### online_case · used on: slides 03 to 07 online retailing: initiatives, business case and the brief reconciled (appendix)
+
+> Business case for capacity-aware ordering, targeted discounts and self-pickup rewards (sim/online.js via precompute.js). Reuses the deck's outlets, cups, price, margin, open days, hourly curve, specialist day rate and platform cost; adds only what the online case needs. The team brief (T-online-brief) is reconciled, not copied. Nothing here feeds the other chapters; a retained peak order is never counted again in the counter chapter.
+
+| Key | Value | Unit | Range | Status | Notes |
+|---|---|---|---|---|---|
+| `online_case.outlets_locator` | 46 | Singapore outlets listed on the store locator |  | sourced: L-sg-locator-oct26 | Reconciliation only. The brief's 46 matches the store locator checked on 24 Oct 2026 (a 'Nearby stores' list, so possibly incomplete); the deck keeps facts.sg_outlets (44, store directory, 15 Oct 2026) so every chapter uses one count. The appendix shows the difference. |
+| `online_case.peak_hours` | 4 | busiest open hours counted as peak | [3, 5] | assumption | Peak = the four busiest hours of store.hourly_demand_share (about 41% of cups), close to the brief's assumed 40%. |
+| `online_case.channel_shares` | {"grab_pickup": 0.05, "app_delivery": 0.05} | share of cups by channel, beyond third-party delivery (site_ext.delivery_share_of_cups); the rest is Chagee-app pickup and in-store app orders |  | assumption | Not public for Singapore; our placeholders. Third-party delivery reuses the deck's site_ext.delivery_share_of_cups and its commission site_ext.delivery_commission_share, so every chapter uses one value; the brief's 25% and 20% are reconciled in the appendix. In-app delivery exists where the address is in coverage (L-chagee-help-delivery); its rider cost is unknown, so it is not valued here. |
+| `online_case.channel_share_ranges` | {"grab_pickup": [0.02, 0.1], "app_delivery": [0.0, 0.1]} | ranges for channel_shares |  | assumption | Sensitivity only. |
+| `online_case.peak_retained_share` | 0.03 | share of peak-hour Chagee-app orders kept by offering a feasible time or a nearby outlet | [0.01, 0.05] | assumption | The brief's 3%, applied only to app orders at peak: Grab orders cannot be rerouted in Chagee's app. Low and high scenarios use the range. |
+| `online_case.offer_share` | 0.1 | share of off-peak Chagee-app orders placed with a targeted offer | [0.05, 0.15] | assumption | Who gets an offer is the model's call (it scores each member's likely incremental response); this is the volume that ends up redeemed. |
+| `online_case.offer_incremental_share` | 0.5 | share of redeemed offer orders that would not have happened without the offer | [0.2, 0.6] | assumption | The unknown that decides whether offers pay; measured only against a no-offer control group. 10% redeemed x 50% incremental = a 5% off-peak app uplift, the size of the brief's claimed uplift. |
+| `online_case.offer_discount` | 1 | SGD off per redeemed order, average | [0.5, 1.0] | assumption | The brief's off-peak voucher of up to S$1; deducted on every redeemed order, incremental or not. |
+| `online_case.offer_policy` | {"offpeak": {"off": 1.0, "what": "highest-margin drink"}, "peak_preorder": {"off": 0.5}, "hot_weather": {"off": 0.5}, "normal_or_rain": {"off": 1.0}, "dormant": {"off": 1.0, "days": 7, "upsize_after_days": 14}} | proposed offer policy (SGD off; days) |  | T-online-brief | PROPOSED POLICY from the team brief, not a proven optimum: off-peak up to S$1 on the highest-margin drink; peak no vouchers, S$0.50 off a pre-order only when collection moves into a window with room (our condition: ordering earlier alone does not cut peak workload), limit Grab delivery when slots are full (to confirm what Grab's merchant tools allow); S$0.50 off in hot weather, S$1 in normal weather or rain, none during nearby events; inactive members up to S$1 off their favourite drink for 7 days, then a free upsize after 14 more days. Discounts only, never surcharges. |
+| `online_case.grab_pickup_commission` | 0.1 | share of order value Chagee pays Grab on a Grab self-pickup order | [0.05, 0.2] | assumption | Not public; our placeholder. The appendix gives the break-even rate. |
+| `online_case.app_payment_cost` | 0.03 | share of order value paid in card and wallet fees on a Chagee-app order | [0.02, 0.035] | assumption | The brief's 3%. App orders take cards, Apple Pay, PayNow, GrabPay, ShopeePay and AliPay (L-chagee-help-payment); the blended fee is not public. |
+| `online_case.pickup_reward` | 0.5 | SGD reward cost per order moved to Chagee-app pickup (bonus points or voucher) | [0.3, 1.0] | assumption | The brief proposes bonus points and vouchers but gives no value; our placeholder, deducted on every moved order. |
+| `online_case.shift_share_delivery` | 0.1 | share of Grab delivery orders that move to Chagee-app pickup | [0.05, 0.15] | assumption | The brief's 10%. Revenue moves channel; it is not added. |
+| `online_case.shift_share_grab_pickup` | 0.1 | share of Grab self-pickup orders that move to Chagee-app pickup | [0.05, 0.2] | assumption | Our placeholder; a channel change only. |
+| `online_case.team` | [{"role": "Product manager", "people": 1, "from_month": 1}, {"role": "Data scientists", "people": 2, "from_month": 1}, {"role": "App engineers", "people": 2, "from_month": 1}, {"role": "CRM analyst", "people": 1, "from_month": 7}, {"role": "Store-operations lead", "people": 1, "from_month": 7}] | people by role and the month they join |  | assumption | The brief's seven-person team; the CRM analyst and store-operations lead join for the pilot (our phasing). Costed at business_case.specialist_day_rate x working_days_per_month (approved). |
+| `online_case.run_team_people` | 7 | people kept after month 18 | [3, 7] | assumption | The brief names one seven-person team and no smaller run team, so it stays at seven; the appendix shows a three-person run team. |
+| `online_case.integration_one_time` | 250,000 | SGD, months 1 to 6 |  | assumption | App, POS, offer engine and Grab account-linking work; the same size as the approved business_case.integration_one_time, which covers different systems. |
+| `online_case.roadmap` | [{"phase": "Build and test", "from": 1, "to": 6, "what": "capacity forecast by ten-minute window, offer engine, pickup reward flow; no-offer control group set up"}, {"phase": "Pilot", "from": 7, "to": 12, "what": "pilot outlets against matched control outlets and a no-offer group"}, {"phase": "Scale", "from": 13, "to": 18, "what": "roll out across Singapore outlets, ramping evenly"}] | proposed three-phase plan, months |  | assumption | The brief's 3 phases over 18 months; scopes and the pilot design are our reading. |
+| `online_case.gates` | [{"month": 6, "name": "Gate 1 · ready to pilot", "test": "forecasts and capacity checks reliable in shadow mode; app flows and control groups working; Grab linking confirmed or dropped"}, {"month": 12, "name": "Gate 2 · ready to scale", "test": "incremental contribution after incentives and operating costs above the control group; pickup reliability and satisfaction hold"}] | the two gates |  | assumption | The brief's 2 gates; their tests are ours. |
+| `online_case.brief` | {"outlets": 46, "cups_per_day": 500, "price": 6.0, "days": 365, "peak_share": 0.4, "retained": 0.03, "offpeak_uplift": 0.05, "delivery_margin": 0.4, "shift": 0.1, "commission": 0.2, "payment": 0.03, "sales": {"rerouting": 604000, "pricing": 630000, "pickup": 0, "total": 1234000}, "profit": {"rerouting": 423000, "pricing": 252000, "pickup": 214000, "total": 889000}} | the team brief's inputs and claimed results |  | T-online-brief | Reconciliation only (appendix): never shown as our estimate. |
 
 ## 6. Sourced facts (quoted on the slides)
 
@@ -533,6 +560,19 @@ Every input in `assumptions.json`. **Key** is the path to change; **Range** is w
 
 ## 7. Sources
 
+- **T-online-brief**: Team brief 'CHAGEE Singapore: AI-Enabled Online Retailing Business Plan' (Revan, Oct 2026; local copy 'CHAGEE online retailing (Revan).docx.pdf'). Its figures are reconciled in the appendix, not copied; its '1,500 cups a day' (Q2 2025 call) could not be verified and is not used.
+- **L-sg-locator-oct26**: CHAGEE Singapore store locator, https://www.chagee.com.sg/en/stores, checked 24 Oct 2026: 46 outlets listed (a 'Nearby stores' list, possibly incomplete).
+- **L-chagee-help-delivery**: CHAGEE Singapore Help Centre, 'Why is there no delivery option in the CHAGEE App?' (updated 20 Oct 2026): 'CHAGEE App delivery is available to all users'; outside the coverage zone, order through delivery partners such as Grab.
+- **L-chagee-help-redeem**: CHAGEE Singapore Help Centre, 'Can I redeem my membership rewards via delivery?' (updated 20 Sep 2026): 'membership rewards are only redeemable for in-app pickup orders unless otherwise stated.'
+- **L-chagee-help-earn**: CHAGEE Singapore Help Centre, 'How to Earn Reward Tea Leaves' (updated 21 Oct 2026) and Rewards Programme terms (4 Oct 2026): GrabFood orders earn once the CHAGEE membership is linked to CHAGEE on GrabFood; not retroactive. Neither page says whether GrabFood self-pickup orders earn.
+- **L-chagee-help-payment**: CHAGEE Singapore Help Centre, 'What payment methods are accepted?' (updated 9 Oct 2026): app orders take credit/debit cards, Apple Pay, PayNow, GrabPay, ShopeePay and AliPay.
+- **R-devries2018**: De Vries, Roy & De Koster (2018), Journal of Operations Management 63, 59-78. One Indian sit-down restaurant: longer waits relate to reneging and fewer returns; a simulation without waiting raises revenue by nearly 15%. Context, not a Chagee estimate.
+- **R-traynor2022**: Traynor, Bernard, Moreo & O'Neill (2022), International Journal of Hospitality Management 107, 103299. Interviews with 17 US restaurant operators: commissions and fees deter use of delivery aggregators.
+- **R-wang2024**: Wang, Guo, Wang & Zhang (2024), International Journal of Production Economics 274, 109306. Queueing-game model: pooling app and platform orders yields higher restaurant profit and throughput than dedicated capacity.
+- **R-tong2020**: Tong, Dai, Xiao & Yan (2020), International Journal of Production Economics 219, 375-385. China O2O food platforms: platforms with dynamic pricing show higher demand than static ones (association).
+- **R-ma2024**: Ma, Wong, Teo & Sun (2024), Journal of Retailing and Consumer Services 81, 104027. Singapore stated-choice experiment: consumers more sensitive to menu-price premiums than to delivery fees (partly verified; hypothetical choices).
+- **R-kim2015**: Kim, Wang & Malthouse (2015), Journal of Interactive Marketing 31, 28-41. US loyalty programme: adopting and continuing to use a brand app increases later spending.
+- **R-liu-li2023**: Liu & Li (2023), Transportation Research Part E 171, 103019. Model of delivery platforms that assumes a commission and studies capping it; not evidence of a commission level.
 - **L-jiemian**: Jiemian (en.jiemian.com), earnings-call coverage: 7,453 stores end-2025; about 200 overseas stores planned for 2026; 345 overseas stores; 7 overseas markets. (brief.md section 9)
 - **L-gabgrowth**: GabGrowth (secondary): first overseas store, Kuala Lumpur, reportedly sold 1,000+ cups on opening day. (brief.md section 9)
 - **L-unsw**: UNSW BusinessThink, Oct 2024: Chagee semi-automation, baristas scan a QR code and the machine dispenses the formulation. (brief.md section 9)
@@ -586,6 +626,6 @@ Every input in `assumptions.json`. **Key** is the path to change; **Range** is w
 - Gross margin per cup: our assumption (50 to 70%).
 - Delivery share of cups and platform commission: assumptions, not sourced.
 - Australian inputs (new-market slides): all scenario assumptions in A$; no Australian data has been retrieved.
-- AI implementation and recurring costs (slide 08 P&L): assumptions, all charged to one outlet by default.
+- AI implementation and recurring costs (slide 12 P&L): assumptions, all charged to one outlet by default.
 - Members (appendix): every parameter is an illustrative index, not Chagee data; the extra orders squads would bring is what a pilot must measure.
 - How many stores Chagee plans to open: confidential; nothing in the deck assumes a number.

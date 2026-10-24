@@ -25,13 +25,13 @@ OUT = ROOT / "cost.md"
 
 # where each section is used on the slides (for the team's orientation)
 USED_ON = {
-    "store": "every counter and benefit slide; slide 08 volume", "demand": "forecast uncertainty (engine; not on current slides)",
-    "surge": "busy and event days: slides 04 to 07 and the benefit slide", "stations": "counter replica: slides 05 to 07", "people": "counter replica and staffing rule",
+    "store": "every counter and benefit slide; slide 12 volume", "demand": "forecast uncertainty (engine; not on current slides)",
+    "surge": "busy and event days: slides 08 to 11 and the benefit slide", "stations": "counter replica: slides 09 to 11", "people": "counter replica and staffing rule",
     "costs": "labour and machine cost everywhere in Singapore", "service": "walk-away rule", "provision": "milk stock (engine)",
     "benefit": "the benefit slide (things to consider, TBC)", "business_case": "AI platform cost in the business case (engine)", "staffing": "roster rules (engine)",
-    "simulation": "seeds and draws", "triggers": "volume trigger (engine)", "illustration": "counter animations (walking speed, slides 05 and 06, appendix brigade)", "validation": "tests and checks",
-    "storyboard": "price, margin, day types, split table, forecast-error steps: slides 04-09 and the appendix", "sitepick": "slides 08 and 09 site forecast", "site_ext": "four scores, supervised site model, pin to profit (things to consider)",
-    "new_market": "new-market slides, Australia (A$; things to consider)", "pnl": "slide 08 P&L view, slide 09 criteria and the appendix page", "members": "membership slides, now in the appendix (the CRM decision: reward and AI cost)", "pickup": "slide 03 pickup planner (illustrative demo; made-up outlets)", "sharing": "slide 05 sharing the work (fixed responsibilities against flexible assistance) and slide 07's last row",
+    "simulation": "seeds and draws", "triggers": "volume trigger (engine)", "illustration": "counter animations (walking speed, slides 09 and 10, appendix brigade)", "validation": "tests and checks",
+    "storyboard": "price, margin, day types, split table, forecast-error steps: slides 08-13 and the appendix", "sitepick": "slides 12 and 13 site forecast", "site_ext": "four scores, supervised site model, pin to profit (things to consider)",
+    "new_market": "new-market slides, Australia (A$; things to consider)", "pnl": "slide 12 P&L view, slide 13 criteria and the appendix page", "members": "membership slides, now in the appendix (the CRM decision: reward and AI cost)", "pickup": "slide 04 pickup planner (illustrative demo; made-up outlets)", "online_case": "slides 03 to 07 online retailing: initiatives, business case and the brief reconciled (appendix)", "sharing": "slide 09 sharing the work (fixed responsibilities against flexible assistance) and slide 11's last row",
     "predict": "forecast toggle (engine)", "predict_toggles": "forecast toggle (engine)",
 }
 
@@ -226,7 +226,7 @@ def main() -> None:
             x = CC[k]["days"][d]
             w(f"| {CC[k]['label']} | {', '.join(CC[k]['robots']) or 'none'} | {DL[d]} | {x['peakStaff']} | {x['labourHours']} | {money(x['labour'])} | {x['units']} | {money(x['machine'])} | {money(x['total'])} |")
     w("")
-    w("The split table on slide 06 adds people above this roster where needed to keep peak walk-aways within "
+    w("The split table on slide 10 adds people above this roster where needed to keep peak walk-aways within "
       f"{A('storyboard', 'walkaway_target'):.0%}; its costs per day:")
     w("")
     w("| Split | " + " | ".join(DL[d] for d in ("none", "moderate", "large")) + " |")
@@ -350,7 +350,7 @@ def main() -> None:
               "Gross margin per cup: our assumption (50 to 70%).",
               "Delivery share of cups and platform commission: assumptions, not sourced.",
               "Australian inputs (new-market slides): all scenario assumptions in A$; no Australian data has been retrieved.",
-              "AI implementation and recurring costs (slide 08 P&L): assumptions, all charged to one outlet by default.",
+              "AI implementation and recurring costs (slide 12 P&L): assumptions, all charged to one outlet by default.",
               "Members (appendix): every parameter is an illustrative index, not Chagee data; the extra orders squads would bring is what a pilot must measure.",
               "How many stores Chagee plans to open: confidential; nothing in the deck assumes a number."):
         w(f"- {t}")
