@@ -1167,6 +1167,35 @@ html,body{margin:0;background:#E7E3DC;color:var(--ink);font-family:var(--sans);-
   #p1b .c5s{display:none!important} #p1b .c5s[data-k="3"]{display:flex!important;margin-top:0} #p1b .sx,#p1b .pop,#p1b .c5cap,#p1b .ii{display:none!important}
   #p1b .btake{visibility:visible;animation:none!important;margin-top:8px;padding:8px 20px}
 }
+/* 11: further application, existing outlets: a panel over the decision slide, and the same content as an appendix page */
+.exob{margin-left:auto;height:26px;font-size:12px;color:var(--ink2);border-style:dashed}
+#e2 .ptop{display:flex;align-items:center}
+.exo{display:none;position:absolute;left:56px;right:56px;top:66px;bottom:42px;z-index:8;background:#fff;border-radius:16px;box-shadow:0 14px 40px rgba(36,64,107,.25);border:1px solid var(--line);padding:14px 20px;flex-direction:column}
+.exo.open{display:flex;animation:c5fade .3s ease-out both} .exo.static{display:flex;position:relative;inset:auto;box-shadow:none;border:0;padding:0;margin-top:4px}
+.exohd{display:flex;align-items:center;justify-content:space-between} .exohd .btn{height:28px;font-size:12.5px}
+.exotag{font:700 11px var(--sans);letter-spacing:.12em;text-transform:uppercase;color:#fff;background:var(--dmg);padding:5px 10px;border-radius:7px}
+.exo h3{margin:8px 0 2px;font:500 30px/1.15 var(--serif);color:var(--ink)} .exosub{margin:0;font:15px/1.4 var(--sans);color:var(--ink2)}
+.exog{flex:1;min-height:0;display:grid;grid-template-columns:730px 1fr;gap:18px;margin-top:10px}
+.exol{display:flex;flex-direction:column;gap:10px;min-height:0}
+.exomap{position:relative;background:var(--cream);border-radius:12px;overflow:hidden} .exosvg{display:block;width:100%;height:auto}
+.exosvg .ol{cursor:pointer} .exosvg .ol:hover circle{stroke:var(--red)}
+.exosvg .fl{stroke-dasharray:1;stroke-dashoffset:0} .exo.go .exosvg .fl{animation:bdraw 1s ease-out both} .exo.go .exosvg .rv{animation:c5fade .4s ease-out .9s both}
+.exohint{position:absolute;left:10px;bottom:8px;font:600 11px var(--sans);color:var(--taupe);background:rgba(255,255,255,.85);padding:2px 7px;border-radius:6px}
+.exock{background:var(--cream);border-radius:12px;padding:9px 14px} .exock .k{display:block;font:700 10.5px var(--sans);letter-spacing:.12em;text-transform:uppercase;color:#2F6B45;margin-bottom:4px}
+.exock ul{margin:0;padding-left:18px;display:grid;grid-template-columns:1fr 1fr;gap:3px 18px;font:13px/1.35 var(--sans);color:var(--ink)}
+.exoside{display:flex;flex-direction:column;gap:8px;min-width:0}
+.exosel{display:flex;flex-direction:column;gap:2px} .exosel .t{font:700 10.5px var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--taupe)} .exosel b{font:600 18px/1.2 var(--sans);color:var(--ink)} .exosel small{font:13px var(--sans);color:var(--ink2)}
+.exogo{align-self:flex-start;height:30px;font-size:13px}
+.exoscn{font:700 10px var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--red);border:1px dashed var(--red);border-radius:6px;padding:4px 7px;align-self:flex-start}
+.exom{display:grid;grid-template-columns:1fr auto;gap:5px 10px;align-items:baseline;margin:0;font:13px/1.35 var(--sans);color:var(--ink2)}
+.exom dt{color:var(--ink)} .exom dd{margin:0;font-weight:700;color:var(--navy);text-align:right;white-space:nowrap} .exom dd.lost{color:var(--red)} .exom small{grid-column:1 / -1;margin-top:-3px;color:var(--taupe);font-size:11.5px}
+.exom.off dd{color:#C9C2B6}
+.exodec{margin-top:auto;border:1.5px solid var(--dmg);border-radius:10px;overflow:hidden} .exodec .lab{display:block;background:var(--dmg);color:#fff;font:600 10px var(--sans);letter-spacing:.14em;text-transform:uppercase;padding:5px 10px}
+.exodec p{margin:0;padding:7px 10px;font:500 17px/1.25 var(--serif);color:var(--ink)}
+.exonote{margin:8px 0 0;font:12.5px/1.4 var(--sans);color:var(--ink)} .exonote::before{content:"Caution · ";font-weight:700;color:var(--red)}
+.exo.static .exog{grid-template-columns:700px 1fr}
+.exo.static [data-exo=close]{display:none} .exoun{font:italic 600 13px var(--sans);color:var(--red)} .exoback{font-size:13px}
+@media print{ .exo:not(.static){display:none!important} .exo.static *{animation:none!important} }
 /* 05: two channels side by side, each a phone and its story; every button in them is live */
 #p1a .cxw{position:relative;margin-top:10px;height:462px;display:grid;grid-template-columns:1fr 1fr;gap:22px}
 #p1a .cxh{position:relative;border-radius:22px;padding:16px 18px 14px;display:grid;grid-template-columns:212px 1fr;grid-template-rows:auto 1fr;column-gap:18px;row-gap:12px}
@@ -2062,7 +2091,7 @@ aside.notes{display:none}
     <h2 class="head">Investigate the site that adds customers, then check the downside</h2>
     <div class="body" style="grid-template-columns:1fr;margin-top:10px">
       <div class="panel">
-        <div class="ptop"><span class="ptitle">The same new outlet at two sites · synthetic app data · five years, our assumptions</span></div>
+        <div class="ptop"><span class="ptitle">The same new outlet at two sites · synthetic app data · five years, our assumptions</span><button class="btn exob screenonly" data-exo="open" title="A further application of the same network view">What about existing outlets?</button></div>
         <table class="res e2tab">
           <tr><th>Criterion</th><th>Beside {{s.bt_outlet}}<br><small>our assumed baseline</small></th><th>Cluster near {{s.top_hub}}<br><small>DBSCAN + demand model</small></th></tr>
           <tr><td>Customer access: cups from people with no outlet within walking distance</td><td>{{r.nd_unmet|pct}}</td><td><b>{{r.top_unmet|pct}}</b></td></tr>
@@ -2082,12 +2111,24 @@ aside.notes{display:none}
         <span class="k">Proposed</span>Investigate the cluster near {{s.top_hub}}: rerun the method on Chagee's app logs before any lease or pilot.</div>
       <div><span class="k">Proceed if, on real data</span><ul><li>most of its cups come from customers without convenient access</li><li>net additional cups, not moved cups, carry the case</li><li>profit covers the investment, with an acceptable downside</li></ul></div></div>
     <p class="nextl"><b>Next</b>Our recommendation: three managers, three pilots.</p>
+    <div class="exo keep" role="dialog" aria-label="Further application: optimise the existing store network">
+      <div class="exohd"><span class="exotag">Further application · optimise the existing store network</span><button class="btn screenonly" data-exo="close">← Back to the decision</button></div>
+      <h3>Where should we open, strengthen, relocate or consolidate?</h3>
+      <p class="exosub">The network view can also help investigate existing locations—not just choose new ones.</p>
+      <div class="exog">
+        <div class="exol"><div class="exomap"><svg class="exosvg" viewBox="0 0 1672 640" preserveAspectRatio="xMidYMid meet" aria-label="Singapore outlets; the selected outlet and where its demand would go"></svg><span class="exohint screenonly">Click an outlet to select it</span></div>
+          <div class="exock"><span class="k">Evidence needed before a real decision</span><ul><li>Costs actually avoided, lease commitments and exit costs</li><li>Customer willingness to switch locations</li><li>Capacity and service levels at nearby outlets</li><li>Customer access and the store's strategic role</li></ul></div></div>
+        <div class="exoside"></div>
+      </div>
+      <p class="exonote">Low sales alone do not justify closure. DBSCAN identifies demand clusters; closure or relocation decisions require a separate network and financial assessment. No closure savings are added to any financial total in this deck.</p>
+    </div>
   </div>
   <div class="foot"><span>OPIM639 · Group 3 · synthetic app data · illustrative assumptions, not a demonstrated causal gain from AI</span><span class="rail"></span><span class="pg"></span></div>
   <aside class="notes">
     <p>The decision for solution three belongs to the expansion manager: which location should we investigate or pilot next? The solution: identify underserved search clusters, evaluate candidate locations, and assess net additional demand and financial outcomes. The test: do its expected incremental returns justify the investment?</p>
     <p>The table puts the same new outlet at two sites and reads down the criteria. Customer access: about {{r.top_unmet|pct}} of the cluster site's cups come from people with no outlet within walking distance, against {{r.nd_unmet|pct}} beside the existing outlet. Net additional demand: about {{r.top_net}} cups a day against {{r.nd_net}}. Incremental operating profit over {{r.pnl_years}} years: about {{r.pnl_wi_op5|sgm}} against {{r.pnl_wo_op5|sgm}}, on {{r.pnl_wi_invest|sgm}} invested, paying back in about {{r.pnl_wi_payback|g1}} years. Then the downside: at low volume the cluster site makes about {{r.pnl_wi_op5_lo|sgm2}} and does not pay back within {{r.pnl_years}} years.</p>
     <p>Say it plainly: DBSCAN does not predict sales or profit. It finds where unserved searches gather; a separate demand model, on our assumptions, estimates sales and cannibalisation, and the searches are synthetic. So the proposal is to investigate, not to open: rerun the method on Chagee's app logs before any lease. For a new market without app history, external area features and demand scenarios stand in: the optional extension after the close. About fifty seconds.</p>
+    <p>If asked about existing outlets, press What about existing outlets? on the table. The same network view can investigate locations Chagee already has: select an outlet and explore it being temporarily unavailable. The same demand model, run in reverse, shows how much of its demand nearby outlets might keep, how much Chagee might lose, how far customers would travel and how much extra work lands on the receiving outlets. Say clearly: it is an illustrative scenario, not a closure recommendation. The manager's question is whether the location needs operational improvement, relocation or a deeper consolidation review, and that needs costs actually avoided, lease and exit costs, customers' willingness to switch, nearby capacity and service levels, and the store's strategic role. Low sales alone do not justify closure; no closure savings are added to any total. Back to the decision returns to the table. The printed version is in the appendix.</p>
   </aside>
 </section>
 
@@ -2313,7 +2354,7 @@ aside.notes{display:none}
     <div class="apxix">
       <div><h5>Online retailing</h5><ol><li data-go="p1x">Proposal 1: execution steps and scenario</li><li data-go="oo">Earlier version: overview</li><li data-go="ol">Earlier version: capacity-aware ordering</li><li data-go="od">Earlier version: targeted discounts</li><li data-go="os">Earlier version: self-pickup rewards</li><li data-go="oe">Earlier version: business case and decision</li><li data-go="aol1">Online retailing: business case and reconciliation</li><li data-go="aol2">Online retailing: offers, plan, team and sources</li></ol><h5>Grow demand</h5><ol><li data-go="m1">Members: when does joining feel worth it?</li><li data-go="m2">The proposed squad experience</li><li data-go="m2b">Every group order helps us serve customers better</li><li data-go="m3">Pilot squads with personalised suggestions?</li><li data-go="am1">Members: the model and its checks</li><li data-go="am2">Members: break-even, assumptions and sources</li><li data-go="am3">Group orders to forecasts: method and results</li></ol></div>
       <div><h5>Serve demand</h5><ol><li data-go="c6">Bucket brigade: sharing the work</li><li data-go="aops">Counter comparisons, every day type</li><li data-go="c8">The modelled decisions in detail</li><li data-go="c9">The size of the benefit</li><li data-go="ab">The benefit in detail</li><li data-go="cm">Machine ladder</li><li data-go="a3">Machine ladder: tiers and sources</li></ol></div>
-      <div><h5>Expand access</h5><ol><li data-go="a2">How the site forecast works</li><li data-go="ap">The new store in money: five-year P&amp;L</li><li data-go="x1">Four scores for every location</li><li data-go="x1b">The supervised model</li><li data-go="x2">From pin to net profit</li></ol></div>
+      <div><h5>Expand access</h5><ol><li data-go="a2">How the site forecast works</li><li data-go="ap">The new store in money: five-year P&amp;L</li><li data-go="x1">Four scores for every location</li><li data-go="x1b">The supervised model</li><li data-go="x2">From pin to net profit</li><li data-go="xo">Further application: existing outlets</li></ol></div>
       <div><h5>Across the story</h5><ol><li data-go="c3">The data trail</li><li data-go="c4">Our scope: the earlier three-part framing</li><li data-go="adata">Chagee's data collection</li><li data-go="c1b">Network effects across the three parts</li><li data-go="a1">Sources and assumptions</li></ol></div>
       <div><h5>Optional extension</h5><ol><li data-go="an">New market: inputs and method</li></ol></div>
     </div>
@@ -3292,6 +3333,31 @@ aside.notes{display:none}
     <p>The waterfall starts from cups a day times price times margin, the same inputs as the benefit slide: {{x.cups}} cups a day. Take off the profit neighbours lose, delivery fees, the counter, rent and utilities: about {{s.x_net}} a month net to Chagee, a payback of about {{x.payback}} months. At the low end of the cups range it loses money, so the call is: {{s.x_rec}}. Move rent, delivery or set-up cost and watch the call change; these are our assumptions, not Chagee data.</p>
     <p>The honest point: switch to the pin with an outlet {{x.c_nb_km|km}} km away. It takes {{x.c_share|pct}} of its cups from our own outlets and comes out at {{s.x_c_net}} a month, a {{s.x_c_rec}}. About forty-five seconds.</p>
     <p>Later: reuse in new markets via transfer learning, out of scope.</p>
+  </aside>
+</section>
+
+<!-- ======================================================= APPENDIX: FURTHER APPLICATION, EXISTING OUTLETS -->
+<section class="slide content" id="xo" data-chapter="Appendix" data-title="Further application: existing outlets">
+  <div class="leafart" aria-hidden="true"></div>
+  <div class="inner">
+    <p class="kicker">Appendix · Expand · further application</p>
+    <p class="exoback screenonly" style="position:absolute;right:72px;top:40px;margin:0">Opened from <span class="golink" data-go="e2">the expansion manager's decision</span></p>
+    <div class="exo static">
+      <div class="exohd"><span class="exotag">Further application · optimise the existing store network</span><button class="btn screenonly" data-exo="close">← Back to the decision</button></div>
+      <h3>Where should we open, strengthen, relocate or consolidate?</h3>
+      <p class="exosub">The network view can also help investigate existing locations—not just choose new ones.</p>
+      <div class="exog">
+        <div class="exol"><div class="exomap"><svg class="exosvg" viewBox="0 0 1672 640" preserveAspectRatio="xMidYMid meet" aria-label="Singapore outlets; the selected outlet and where its demand would go"></svg><span class="exohint screenonly">Click an outlet to select it</span></div>
+          <div class="exock"><span class="k">Evidence needed before a real decision</span><ul><li>Costs actually avoided, lease commitments and exit costs</li><li>Customer willingness to switch locations</li><li>Capacity and service levels at nearby outlets</li><li>Customer access and the store's strategic role</li></ul></div></div>
+        <div class="exoside"></div>
+      </div>
+      <p class="exonote">Low sales alone do not justify closure. DBSCAN identifies demand clusters; closure or relocation decisions require a separate network and financial assessment. No closure savings are added to any financial total in this deck.</p>
+    </div>
+  </div>
+  <div class="foot"><span>OPIM639 · Group 3 · illustrative scenario on synthetic app data, not a closure recommendation</span><span class="rail"></span><span class="pg"></span></div>
+  <aside class="notes">
+    <p>A further application of the expansion network view, opened from the expansion manager's decision slide. New-store selection stays the main story; this shows the same model looking at an existing outlet instead. The printed scenario takes the outlet whose nearest neighbour is closest and makes it temporarily unavailable: the demand model, run in reverse, splits its cups between nearby outlets and customers lost to Chagee, and compares how far customers travel before and after.</p>
+    <p>It is an illustrative scenario, not a closure recommendation. The model has no capacity limit, so the extra work at receiving outlets needs checking against their real capacity and service levels. Low sales alone do not justify closure: a real decision needs costs actually avoided, lease and exit costs, customers' willingness to switch, nearby capacity, customer access and the store's strategic role. DBSCAN identifies demand clusters; closure or relocation needs a separate network and financial assessment, and no closure savings are added to any total.</p>
   </aside>
 </section>
 

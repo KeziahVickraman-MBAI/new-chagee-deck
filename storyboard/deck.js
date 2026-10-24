@@ -2442,6 +2442,68 @@
      03: five points, one per Next, each lighting its part of a looping scene; 04: three steps in the .c5intro look, the last
      Next goes to 05; 05: the pickup and delivery phones and the execution steps panel. Times are demand_mgmt's illustrative
      scenario (the team's reference deck), not Chagee data. */
+  /* ---------------------------------------------------------------- 11 further application: an existing outlet temporarily
+     unavailable, on the slide 10 demand model run in reverse (sitepick.unavailable): a panel on the decision slide, and the
+     same view as an appendix page for print. An illustrative scenario, never a closure recommendation. */
+  (function existingOutlets() {
+    const Site = window.ChageeSite, GEO = window.STORY.GEO; if (!Site?.unavailable) return;
+    const M = Site.model(Sim, RAW, GEO), oname = j => `${GEO.numbers[j]} · ${GEO.names[j]}`;
+    const nn = j => Site.outlet(M, j).neighbour.km, J0 = GEO.outlets.map((o, j) => j).sort((a, b) => nn(a) - nn(b))[0];
+    const km = x => `${x.toFixed(1)} km`, n = x => Math.round(x).toLocaleString("en-SG");
+    function mount(box, live) {
+      const S = { j: J0, on: !live }, svg = $(box, ".exosvg"), side = $(box, ".exoside");
+      svg.innerHTML = `<image href="${window.STORY.MAP}" x="0" y="0" width="1672" height="640" opacity=".6"/><g></g>`;
+      const layer = $(svg, "g");
+      const draw = () => {
+        const u = Site.unavailable(M, S.j), [ox, oy] = GEO.outlets[S.j], top = u.recv.slice(0, 3);
+        let s = "";
+        if (S.on) {
+          s += `<circle cx="${ox}" cy="${oy - 14}" r="${M.walkKm / M.kmpx}" fill="rgba(184,50,43,.10)" stroke="${COL.red}" stroke-width="2" stroke-dasharray="7 6"/>`;
+          top.forEach(r => { const [x, y] = GEO.outlets[r.j];
+            s += `<line class="fl" pathLength="1" x1="${ox}" y1="${oy - 14}" x2="${x}" y2="${y - 14}" stroke="#2F6B45" stroke-width="${Math.max(4, Math.min(16, r.cups / 12))}" stroke-linecap="round" opacity=".75"/>`; });
+        }
+        GEO.outlets.forEach(([x, y], j) => {
+          const me = j === S.j, off = me && S.on;
+          s += `<g class="ol" data-j="${j}"><circle cx="${x}" cy="${y - 14}" r="${me ? 22 : 17}" fill="${off ? "#B9B2A6" : me ? COL.red : COL.navy}" stroke="#fff" stroke-width="3"/>` +
+               T(x, y - 8, GEO.numbers[j], `font-size="${me ? 19 : 16}" font-weight="700" fill="#fff" text-anchor="middle"`) + `</g>`;
+        });
+        if (S.on) top.forEach(r => { const [x, y] = GEO.outlets[r.j], w = 96;
+          s += `<g class="rv"><rect x="${x + 20}" y="${y - 58}" width="${w}" height="34" rx="8" fill="#fff" stroke="#2F6B45" stroke-width="2.5"/>` +
+               T(x + 20 + w / 2, y - 33, `+${n(r.cups)}`, `font-size="23" font-weight="700" fill="#2F6B45" text-anchor="middle"`) + `</g>`; });
+        if (S.on) s += `<path class="rv" d="M${ox - 13} ${oy - 27} l26 26 M${ox + 13} ${oy - 27} l-26 26" stroke="${COL.red}" stroke-width="5" stroke-linecap="round"/>`;
+        layer.innerHTML = s;
+        const m = (l, v, cls = "") => `<dt>${l}</dt><dd class="${cls}">${S.on ? v : "—"}</dd>`;
+        side.innerHTML = `<div class="exosel"><span class="t">Selected outlet</span><b>${oname(S.j)}${S.on ? ` <em class="exoun">temporarily unavailable</em>` : ""}</b><small>about ${n(u.cups)} cups a day today (model) · nearest outlet ${km(nn(S.j))} away</small></div>
+          ${live ? `<button class="btn ${S.on ? "" : "primary "}exogo" data-exo="go">${S.on ? "↺ Back to today" : "Explore temporary unavailability"}</button>` : ""}
+          <span class="exoscn">Illustrative scenario · not a closure recommendation</span>
+          <dl class="exom${S.on ? "" : " off"}">
+            ${m("Demand potentially retained by nearby outlets", `${n(u.retained)} a day · ${pct(u.retained / u.cups)}`)}
+            ${m("Demand potentially lost to Chagee", `${n(u.lost)} a day · ${pct(u.lost / u.cups)}`, "lost")}
+            ${m("Customer travel, for those who move", `${km(u.travelBeforeKm)} → ${km(u.travelAfterKm)}`)}
+            ${m("Additional workload at receiving outlets", top.length ? "" : "none")}
+            ${S.on ? top.map(r => `<dt>&nbsp;&nbsp;${oname(r.j)}</dt><dd>+${n(r.cups)} · ${pct(r.cups / r.today)} more</dd>`).join("") : ""}
+            <small>Same demand model as the new-store forecast, run in reverse; it has no capacity limit, so receiving outlets' service levels need checking.</small></dl>
+          <div class="exodec"><span class="lab">Manager's decision · expansion manager</span><p>Does this location need operational improvement, relocation or a deeper consolidation review?</p></div>`;
+        box.classList.remove("go"); if (S.on && live) { void box.offsetWidth; box.classList.add("go"); }
+      };
+      svg.addEventListener("click", e => { const g = e.target.closest(".ol"); if (!g || !live) return; S.j = +g.dataset.j; S.on = false; draw(); });
+      box.addEventListener("click", e => { const b = e.target.closest("[data-exo=go]"); if (b) { b.blur(); S.on = !S.on; draw(); } });
+      draw();
+      return { reset: () => { S.j = J0; S.on = false; draw(); } };
+    }
+    const sl = document.getElementById("e2"), ov = sl && $(sl, ".exo");
+    if (ov) {
+      const V = mount(ov, true);
+      const close = () => ov.classList.remove("open");
+      sl.addEventListener("click", e => { const b = e.target.closest("[data-exo=open],[data-exo=close]"); if (!b) return; b.blur();
+        if (b.dataset.exo === "open") { V.reset(); ov.classList.add("open"); } else close(); });
+      addEventListener("keydown", e => { if (e.key === "Escape") close(); });
+      new MutationObserver(close).observe(sl, { attributes: true, attributeFilter: ["class"] });
+      printers.push(close);
+    }
+    const ap = document.getElementById("xo"); if (ap) mount($(ap, ".exo"), false);
+  })();
+
   (function demandMgmt() {
     const DMr = RAW.demand_mgmt; if (!DMr) return;
     const v = k => DMr[k].value, still = matchMedia("(prefers-reduced-motion: reduce)").matches;

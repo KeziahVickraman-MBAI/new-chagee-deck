@@ -93,3 +93,17 @@ test("site: the walkthrough's trace replays to the same labels, and the toy show
   assert.ok(kinds.has("core") && kinds.has("border") && t.labels.includes(-1), [...kinds].join());
   assert.ok(t.centres.length >= 2, `${t.centres.length} clusters`);
 });
+
+test("site: an outlet temporarily unavailable splits its cups into retained by neighbours and lost, nothing invented", () => {
+  geo.outlets.forEach((o, j) => {
+    const u = T.unavailable(M, j);
+    assert.ok(Math.abs(u.cups - M.storeCups[j]) < 1e-6 * M.storeCups[j], `outlet ${geo.numbers[j]} cups`);
+    assert.ok(Math.abs(u.retained + u.lost - u.cups) < 1e-6 * u.cups);
+    assert.ok(u.retained >= 0 && u.lost >= 0 && u.recv.every(r => r.j !== j));
+    assert.ok(u.recv.reduce((a, r) => a + r.cups, 0) <= u.retained + 1e-6);
+  });
+  // an outlet among others keeps more of its demand than an outlet on its own
+  const share = j => { const u = T.unavailable(M, j); return u.retained / u.cups; };
+  const nn = j => T.outlet(M, j).neighbour.km, js = geo.outlets.map((o, j) => j).sort((a, b) => nn(a) - nn(b));
+  assert.ok(share(js[0]) > share(js[js.length - 1]));
+});

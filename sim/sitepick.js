@@ -17,6 +17,10 @@
  *   forecast(M, pin)             a new outlet at pin (map pixels): its cups/day, how many come from
  *                                demand no outlet serves today (net new) and how many from existing
  *                                outlets (cannibalised, with the outlets it takes most from).
+ *   unavailable(M, j)            outlet j temporarily unavailable, the reverse of forecast: of its cups/day, how many the
+ *                                same split sends to nearby outlets (retained, by outlet) and how many to the outside
+ *                                option (lost to Chagee), and the cup-weighted distance customers travel before and after.
+ *                                An illustrative scenario on the same assumptions, not a closure appraisal.
  * Proximity split (Huff-style): pull of store j on a dot = exp(-(d / L)^2 / 2), L = walk_km x decay_share;
  * share of the dot bought at j = pull_j / (outside_option + sum of pulls).
  */
@@ -165,7 +169,28 @@
     return { cups: all * scale, nearShare: all ? near / all : 0, neighbour: nb, unmetNearby: unmet * scale };
   }
 
-  const api = { events, dbscan, toy, model, forecast, outlet };
+  function unavailable(M, j) {
+    const { ev, stores, sum, a0, scale, pull, kmpx } = M, [ox, oy] = stores[j];
+    let cups = 0, kept = 0, dB = 0, dA = 0;
+    const gain = new Float64Array(stores.length);
+    ev.forEach((e, i) => {
+      const dj = Math.hypot(e.x - ox, e.y - oy), pj = pull(dj);
+      if (pj < 1e-9) return;
+      const s = sum[i], c = pj / (a0 + s), rest = s - pj;
+      cups += c; dB += c * dj;
+      stores.forEach(([x, y], k) => {
+        if (k === j) return;
+        const d = Math.hypot(e.x - x, e.y - y), p = pull(d), g = p / (a0 + rest) - p / (a0 + s);
+        if (g > 0) { gain[k] += g; kept += g; dA += g * d; }
+      });
+    });
+    const recv = Array.from(gain, (g, k) => ({ j: k, cups: g * scale, today: M.storeCups[k],
+      km: Math.hypot(stores[k][0] - ox, stores[k][1] - oy) * kmpx })).filter(r => r.j !== j && r.cups > 0.5).sort((a, b) => b.cups - a.cups);
+    return { cups: cups * scale, retained: kept * scale, lost: (cups - kept) * scale, recv,
+             travelBeforeKm: cups ? dB / cups * kmpx : 0, travelAfterKm: kept ? dA / kept * kmpx : 0 };
+  }
+
+  const api = { events, dbscan, toy, model, forecast, outlet, unavailable };
   if (typeof module !== "undefined" && module.exports) module.exports = api;
   else root.ChageeSite = api;
 })(typeof window !== "undefined" ? window : globalThis);
