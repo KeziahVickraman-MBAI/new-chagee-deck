@@ -46,7 +46,7 @@
     "I-sg-groundfloor": "INFORMAL - quote in the team's ideation doc (Chagee Singapore's Lee: 'Whenever you see a Chagee, it's always on the first floor'; kiosk-style outlets in basements and MRT stations at entry in 2019). The article is not named in the doc; confirm the source before quoting.",
     "I-team-automation": "INFORMAL - team research (Oct 2026): Chagee's counters are heading towards machines making the drink while people tag the order and hand it over; consistent with I-leeyen's 'push towards app-to-machine automation, sub-one-minute fulfilment'. Source to be added before it is cited on a slide.",
     "I-team-app-first": "INFORMAL - team observation in the ideation doc: Chagee Singapore sells mainly through its app, with minimal order kiosks in outlets. Confirm before citing. SUPERSEDED on slide 01 (22 Oct 2026) by P-appstore, P-vulcanpost-comeback and L-sec20f-data; the app's share of orders stays to confirm.",
-    "L-ester1996": "Ester, M., Kriegel, H.-P., Sander, J. and Xu, X. (1996). A density-based algorithm for discovering clusters in large spatial databases with noise. Proceedings of the Second International Conference on Knowledge Discovery and Data Mining (KDD-96), 226-231. The DBSCAN algorithm used on slide 13.",
+    "L-ester1996": "Ester, M., Kriegel, H.-P., Sander, J. and Xu, X. (1996). A density-based algorithm for discovering clusters in large spatial databases with noise. Proceedings of the Second International Conference on Knowledge Discovery and Data Mining (KDD-96), 226-231. The DBSCAN algorithm used on slide 14.",
     "I-chagee-contact": "CHAGEE SOURCE, ANONYMOUS (Oct 2026): a Chagee source who asked not to be named; do not identify them. Four points only: whether Singapore outlets are owned, a joint venture or franchised does not matter for this work, because the data sits in one system; Singapore outlets run under one company and one data system; all delivery is via third-party apps; people are deployed on local expertise: the GM and outlet teams make the staffing calls. Ownership itself is not attributed to this source: see I-sg-owned (project owner confirmation).",
     "P-honeycombers": "PRESS - in-store sightings, indicative. Honeycombers (Feb 2026), https://thehoneycombers.com/singapore/china-bubble-tea-brand-singapore/ : Chagee price sightings in Singapore; not a current full menu.",
     "P-eatbook": "PRESS - in-store sightings, indicative. Eatbook (Aug 2024), https://eatbook.sg/?p=168476 : Chagee price sightings in Singapore; not a current full menu, and older than the deck.",
@@ -1096,7 +1096,7 @@
     }
   },
   "sitepick": {
-    "_note": "Slide 13 new-store forecast only (sim/sitepick.js). SYNTHETIC app demand on the team's Singapore map (sim/sg_geo.json, image pixels). Never feeds the cost model. Hub positions are the map's place labels; weights are illustrative, not population data.",
+    "_note": "Slide 14 new-store forecast only (sim/sitepick.js). SYNTHETIC app demand on the team's Singapore map (sim/sg_geo.json, image pixels). Never feeds the cost model. Hub positions are the map's place labels; weights are illustrative, not population data.",
     "km_per_px": {
       "value": 0.033,
       "unit": "km per map pixel",
@@ -1367,7 +1367,7 @@
       "unit": "toy points in a 600 x 330 box",
       "range": null,
       "source": "assumption",
-      "rationale": "Explainer only: a small made-up point set for the 'How it works' walkthrough on slide 13 and the appendix figure, so each DBSCAN step is visible. Not used by any forecast."
+      "rationale": "Explainer only: a small made-up point set for the 'How it works' walkthrough on slide 14 and the appendix figure, so each DBSCAN step is visible. Not used by any forecast."
     }
   },
   "site_ext": {
@@ -1491,7 +1491,7 @@
       "unit": "ridge penalty on standardised features; delivery radius km; cap on distance to the nearest outlet km",
       "range": null,
       "source": "assumption",
-      "rationale": "The supervised site model (sim/sitemodel.js): ridge regression trained on the slide 13 engine's synthetic outlet cups a day, tested by leave-one-out. A small penalty keeps the fit stable with few outlets. Illustrative; not trained on Chagee data."
+      "rationale": "The supervised site model (sim/sitemodel.js): ridge regression trained on the slide 14 engine's synthetic outlet cups a day, tested by leave-one-out. A small penalty keeps the fit stable with few outlets. Illustrative; not trained on Chagee data."
     },
     "new_market_inputs": {
       "value": [
@@ -1547,7 +1547,7 @@
       "unit": "a hypothetical city: km, town centres and weights; grid spacing km; stores to place (default and maximum)",
       "range": null,
       "source": "assumption",
-      "rationale": "The supervised site model's proxy for a new market: a made-up city, not a real place. Its population dots are generated at Singapore's synthetic density (same dots per unit of town weight and same even background per km2 as the slide 13 events), so the model's inputs mean the same thing in both. With real data, a census population grid and real town centres replace it."
+      "rationale": "The supervised site model's proxy for a new market: a made-up city, not a real place. Its population dots are generated at Singapore's synthetic density (same dots per unit of town weight and same even background per km2 as the slide 14 events), so the model's inputs mean the same thing in both. With real data, a census population grid and real town centres replace it."
     }
   },
   "new_market": {
@@ -1556,7 +1556,7 @@
       "unit": "text",
       "range": null,
       "source": "assumption",
-      "rationale": "Australia worked example, kept separate from every other section: nothing here feeds the main story (slides 01 to 15) or the benefit and nothing in them is changed. Every Australian input is a scenario assumption; no Australian data has been retrieved for this deck. Archetype areas stand in for real suburbs until Census and market data are pulled."
+      "rationale": "Australia worked example, kept separate from every other section: nothing here feeds the main story (slides 01 to 16) or the benefit and nothing in them is changed. Every Australian input is a scenario assumption; no Australian data has been retrieved for this deck. Archetype areas stand in for real suburbs until Census and market data are pulled."
     },
     "currency": {
       "value": "AUD",
@@ -1857,7 +1857,7 @@
       "unit": "text",
       "range": null,
       "source": "assumption",
-      "rationale": "Five-year projection of the same new outlet at two sites (slide 13): beside the existing outlet nearest the selected site, without AI, and the selected site, with AI-assisted site selection. Same opening date, equipment and staffing rule in both, so only the site differs. Illustrative scenarios, not demonstrated causal gains from AI. Nothing here feeds the benefit or any other slide."
+      "rationale": "Five-year projection of the same new outlet at two sites (slide 14): beside the existing outlet nearest the selected site, without AI, and the selected site, with AI-assisted site selection. Same opening date, equipment and staffing rule in both, so only the site differs. Illustrative scenarios, not demonstrated causal gains from AI. Nothing here feeds the benefit or any other slide."
     },
     "years": {
       "value": 5,
@@ -2365,6 +2365,102 @@
       "range": null,
       "source": "assumption, synthetic, not Chagee data",
       "rationale": "Illustrative generic drinks, not Chagee's menu or sales mix."
+    }
+  },
+  "pickup": {
+    "_note": {
+      "value": "Slide 13: online retailing optimisation, pickup planning",
+      "unit": "text",
+      "range": null,
+      "source": "assumption",
+      "rationale": "An illustrative demonstration of the mechanics only: three made-up outlets near one office, with made-up workloads, capacity and walking times. Nothing here is measured, nothing feeds any other slide, and no improvement in conversion, abandonment or pickup accuracy is claimed; those are what a pilot would measure."
+    },
+    "now_clock": {
+      "value": "12:40",
+      "unit": "time of day when the customer orders",
+      "range": null,
+      "source": "assumption, illustrative, not Chagee data",
+      "rationale": "Display: the lunchtime order the demonstration starts from."
+    },
+    "slot_minutes": {
+      "value": 5,
+      "unit": "minutes per preparation slot",
+      "range": null,
+      "source": "assumption, illustrative, not Chagee data",
+      "rationale": "Capacity is planned in short slots so a confirmed order can be placed in a slot with room; the demo looks one hour ahead."
+    },
+    "slots": {
+      "value": 12,
+      "unit": "slots shown (one hour ahead)",
+      "range": null,
+      "source": "assumption, illustrative, not Chagee data",
+      "rationale": "Display horizon."
+    },
+    "order_cups": {
+      "value": 1,
+      "unit": "cups in the customer's order",
+      "range": null,
+      "source": "assumption, illustrative, not Chagee data",
+      "rationale": "One drink keeps the demonstration simple."
+    },
+    "drink": {
+      "value": "Jasmine milk tea",
+      "unit": "text",
+      "range": null,
+      "source": "assumption, illustrative, not Chagee data",
+      "rationale": "Display only; the first drink in the slide 07 drink mix."
+    },
+    "preferred_after_min": {
+      "value": 30,
+      "unit": "minutes from now when the customer would like to collect (the 'later pickup' window)",
+      "range": null,
+      "source": "assumption, illustrative, not Chagee data",
+      "rationale": "Illustrative customer preference entered in the app."
+    },
+    "demand_multiplier": {
+      "value": 1.0,
+      "unit": "forecast incoming orders, as a multiple of the outlets' usual lunchtime level",
+      "range": [
+        0.5,
+        2.0
+      ],
+      "source": "assumption, illustrative, not Chagee data",
+      "rationale": "The demo's one slider: busier or quieter than forecast. The forecast itself is illustrative; with Chagee's data it would come from the predictive model (slide 09 shows the hourly version)."
+    },
+    "outlets": {
+      "value": [
+        {
+          "name": "Office-tower outlet",
+          "walk_min": 4,
+          "cap_per_slot": 6,
+          "incoming_per_slot": 4,
+          "backlog_cups": 9,
+          "x": 300,
+          "y": 120
+        },
+        {
+          "name": "MRT-station outlet",
+          "walk_min": 9,
+          "cap_per_slot": 7,
+          "incoming_per_slot": 3,
+          "backlog_cups": 4,
+          "x": 150,
+          "y": 230
+        },
+        {
+          "name": "Mall outlet",
+          "walk_min": 15,
+          "cap_per_slot": 8,
+          "incoming_per_slot": 3,
+          "backlog_cups": 2,
+          "x": 470,
+          "y": 250
+        }
+      ],
+      "unit": "per outlet: walking minutes from the office, cups it can prepare per slot (staff and equipment), forecast incoming cups per slot at the usual level, cups already confirmed and waiting, map position (illustrative)",
+      "range": null,
+      "source": "assumption, illustrative, not Chagee data",
+      "rationale": "Made-up outlets, not real Chagee sites. Capacity stands in for staff and equipment availability, which a real version would read from the roster and machine status (proposed, needs data access). Walking times would need location, with consent."
     }
   }
 }

@@ -55,7 +55,7 @@
     cur = Math.max(0, Math.min(slides.length - 1, i));
     slides.forEach((s, k) => s.classList.toggle("active", k === cur));
     buildTo(slides[cur], fromEnd || revealAll || editingNow() ? Infinity : -1);
-    slides[cur]._intro?.enter(fromEnd);                             // a slide with its own overview (slide 13) starts there
+    slides[cur]._intro?.enter(fromEnd);                             // a slide with its own overview (slides 13, 14) starts there
     const gt = $(document, "#goto"); if (document.activeElement !== gt) gt.value = cur + 1; $(document, "#count .tot").textContent = `/ ${slides.length}`;
     const n = $(slides[cur], "aside.notes");
     $(document, "#notes .nb").innerHTML = n ? n.innerHTML : "";
@@ -2044,20 +2044,22 @@
     BUS.fns.push(draw); printers.push(draw); draw();
   })();
 
-  /* ---------------------------------------------------------------- slide 13: three-step overview, then the forecaster.
-     Next steps 1 → 2 → 3, then opens the forecaster at its starting state; Previous from there returns to step 3. */
-  (function siteIntro() {
-    const sl = document.getElementById("c5"), box = sl && $(sl, ".c5intro"); if (!box) return;
+  /* ---------------------------------------------------------------- three-step overviews (slides 13 and 14), then the
+     slide's interactive panel. Next steps 1 → 2 → 3, then opens the panel at its starting state; Previous from there
+     returns to step 3; "← Overview" goes back to step 1. Print: the panel prints on the slide's page, a static copy of the
+     overview on the page before it. */
+  function stepIntro(sl, openLabel, onOpen) {
+    const box = sl && $(sl, ".c5intro"); if (!box) return null;
     const N = $$(box, ".c5s").length, I = { on: false, st: 1 };
     const play = () => { box.classList.remove("play"); void box.offsetWidth; box.classList.add("play"); };
     const paint = () => {
       box.dataset.st = I.st; $(box, ".c5n").textContent = `${I.st} / ${N}`;
       $(box, '[data-c5="prev"]').disabled = I.st === 1;
-      $(box, '[data-c5="next"]').textContent = I.st < N ? "Next ▶" : "Open the forecaster ▶";
+      $(box, '[data-c5="next"]').textContent = I.st < N ? "Next ▶" : `${openLabel} ▶`;
       play();
     };
     I.open = st => { I.on = true; I.st = st; sl.classList.add("c5ov"); if (stepping()) buildTo(sl, -1); paint(); };
-    I.close = () => { I.on = false; sl.classList.remove("c5ov"); box.classList.remove("play"); buildTo(sl, stepping() ? 0 : Infinity); };
+    I.close = () => { I.on = false; sl.classList.remove("c5ov"); box.classList.remove("play"); buildTo(sl, stepping() ? 0 : Infinity); onOpen?.(); };
     I.enter = fromEnd => { if (fromEnd) { I.on = false; sl.classList.remove("c5ov"); } else I.open(1); };
     I.next = () => { if (!I.on) return false; if (I.st < N) { I.st++; paint(); } else I.close(); return true; };
     I.prev = () => {
@@ -2076,15 +2078,107 @@
       }
     });
     $(sl, ".c5back").addEventListener("click", e => { e.currentTarget.blur(); I.open(1); });
-    // print: the forecaster prints on the slide's own page; a static copy of the overview prints on the page before it
-    const pg = document.createElement("section"); pg.className = "slide content"; pg.id = "c5p"; pg.dataset.chapter = "Expand";
-    pg.innerHTML = `<div class="leafart" aria-hidden="true"></div><div class="inner"></div>`;
-    [".kicker", ".head", ".bprob"].forEach(q => $(pg, ".inner").appendChild($(sl, q).cloneNode(true)));
-    const ov = box.cloneNode(true); ov.className = "c5intro static"; ov.removeAttribute("data-st");
-    $$(ov, ".c5nav").forEach(n => n.remove()); $$(ov, ".c5k").forEach((k, i) => (k.textContent = `${i + 1}`));
-    $(pg, ".inner").appendChild(ov); pg.appendChild($(sl, ".foot").cloneNode(true)); sl.before(pg);
+    I.printCopy = () => {
+      const pg = document.createElement("section"); pg.className = "slide content"; pg.id = `${sl.id}p`; pg.dataset.chapter = sl.dataset.chapter;
+      pg.innerHTML = `<div class="leafart" aria-hidden="true"></div><div class="inner"></div>`;
+      [".kicker", ".head", ".bprob"].forEach(q => $(pg, ".inner").appendChild($(sl, q).cloneNode(true)));
+      const ov = box.cloneNode(true); ov.className = "c5intro static"; ov.removeAttribute("data-st");
+      $$(ov, ".c5nav").forEach(n => n.remove()); $$(ov, ".c5k").forEach((k, i) => (k.textContent = `${i + 1}`));
+      $(pg, ".inner").appendChild(ov); pg.appendChild($(sl, ".foot").cloneNode(true)); sl.before(pg);
+    };
     printers.push(() => sl.classList.remove("c5ov"));
     addEventListener("afterprint", () => { if (I.on) sl.classList.add("c5ov"); });
+    return I;
+  }
+  stepIntro(document.getElementById("c5"), "Open the forecaster")?.printCopy();
+
+  /* ---------------------------------------------------------------- 13 online retailing optimisation: pickup planning.
+     Each outlet prepares in short slots with a capacity (staff and equipment). Cups already waiting fill the first slots;
+     forecast incoming cups take their share of every slot; an order goes into the first slot with room. Preparation and
+     the walk run together, so the customer collects at whichever ends later. The app offers three optional choices;
+     a confirmed order keeps its slot whatever happens to demand later. All values: assumptions.json, pickup (illustrative). */
+  (function pickupPlan() {
+    const sl = document.getElementById("ol"), PK = RAW.pickup; if (!sl || !PK) return;
+    const O = PK.outlets.value, SLT = PK.slot_minutes.value, NS = PK.slots.value, CUPS = PK.order_cups.value, PREF = PK.preferred_after_min.value;
+    const [h0, m0] = PK.now_clock.value.split(":").map(Number), clock = m => { const t = h0 * 60 + m0 + Math.round(m); return `${String(Math.floor(t / 60) % 24).padStart(2, "0")}:${String(t % 60).padStart(2, "0")}`; };
+    const MR = PK.demand_multiplier, GREEN = "#2F6B45";
+    const st = { m: MR.value, mine: [], pick: null, done: false };
+    // per outlet and slot: confirmed cups come first (already waiting, b, and the demo's own orders), then the forecast (f)
+    // takes what is left; "full" marks a slot where forecast demand does not fit. Room = what a new order can use.
+    const load = (o, S = st) => { const inc = Math.round(O[o].incoming_per_slot * S.m); let left = O[o].backlog_cups;
+      return Array.from({ length: NS }, (_, t) => { const cap = O[o].cap_per_slot, b = Math.min(cap, left); left -= b;
+        const mine = S.mine.filter(x => x.o === o && x.t === t).length * CUPS, f = Math.max(0, Math.min(inc, cap - b - mine));
+        return { cap, b, f, mine, room: cap - b - mine - f, full: inc > cap - b - mine }; }); };
+    const slotFrom = (o, from, S) => { const L = load(o, S); for (let t = from; t < NS; t++) if (L[t].room >= CUPS) return t; return null; };
+    const plan = (o, t) => t == null ? null : { o, t, ready: (t + 1) * SLT, at: Math.max(O[o].walk_min, (t + 1) * SLT) };
+    function options(S = st) {
+      const byWalk = O.map((_, o) => o).sort((a, b) => O[a].walk_min - O[b].walk_min);
+      const near = plan(byWalk[0], slotFrom(byWalk[0], 0, S));
+      const all = O.map((_, o) => plan(o, slotFrom(o, 0, S))).filter(Boolean);
+      const early = all.length ? all.reduce((a, b) => (b.at < a.at || (b.at === a.at && O[b.o].walk_min < O[a.o].walk_min) ? b : a)) : null;
+      const pt = Math.max(0, Math.ceil(PREF / SLT) - 1); let later = null;
+      for (const o of byWalk) { const p = plan(o, slotFrom(o, pt, S)); if (p) { later = { ...p, win: true }; break; } }
+      return [["near", "Nearby", near], ["early", "Earliest collection", early], ["later", "Later pickup", later]];
+    }
+    const detail = (k, p, same) => !p ? `<span class="d no">No slot with room in the next hour</span>`
+      : same ? `<span class="d">Same as Nearby: the closest outlet is also the fastest</span>`
+      : `<span class="d">${O[p.o].name} · walk ${O[p.o].walk_min} min</span><span class="d">${k === "later" ? `collect ${clock(p.at)}–${clock(p.at + SLT)}` : `drink ready ${clock(p.ready)}${p.at > p.ready ? `; you arrive ${clock(p.at)}` : ""}`}</span>`;
+    const card = (k, lab, p, sel, i, ops) => { const n = ops[0][2], same = k === "early" && p && n && p.o === n.o && p.t === n.t;
+      return `<button class="olopt${sel ? " sel" : ""}" data-k="${k}" style="--i:${i}"${p ? "" : " disabled"}><span class="t">${lab}<em>${p ? clock(p.at) : "–"}</em></span>${detail(k, p, same)}</button>`; };
+    const bars = (o, S, hi) => { const L = load(o, S), cap = O[o].cap_per_slot;
+      return `<div class="olw"><span class="n">${O[o].name}<small>walk ${O[o].walk_min} min · ${cap} cups a slot</small></span><span class="olbars" style="--ns:${NS}">` +
+        L.map((x, t) => `<span class="s${x.full ? " over" : ""}" title="${clock(t * SLT)}–${clock((t + 1) * SLT)}: ${x.b} waiting, ${x.f} forecast, ${x.mine} demo, room ${x.room}${x.full ? ", forecast does not fit" : ""}">` +
+          `<i class="b" style="height:${100 * x.b / cap}%"></i><i class="m${hi === t ? " fly" : ""}" style="height:${100 * x.mine / cap}%"></i><i class="f" style="height:${100 * x.f / cap}%"></i></span>`).join("") + `</span></div>`; };
+    const drinkline = `${PK.drink.value} · ${CUPS} cup${CUPS > 1 ? "s" : ""}`;
+    $$(sl, '[data-pk="drink"]').forEach(e => (e.textContent = drinkline));
+    $$(sl, '[data-pk="pref"]').forEach(e => (e.textContent = `around ${clock(PREF)}`));
+    $$(sl, '[data-pk="drinkline"]').forEach(e => (e.textContent = `${drinkline} · now ${clock(0)}`));
+    // the overview's step 3: the default options, the earliest one chosen, the order landing in that outlet's workload
+    (() => { const S0 = { m: MR.value, mine: [] }, ops = options(S0), pick = ops[1][2];
+      $(sl, '[data-pk="opts3"]').innerHTML = ops.map(([k, lab, p], i) => card(k, lab, p, k === "early", i, ops)).join("");
+      if (pick) { $(sl, '[data-pk="conf3"]').textContent = `Collect at ${O[pick.o].name}, ${clock(pick.at)}. Not a real order.`;
+        $(sl, '[data-pk="wl3"]').innerHTML = bars(pick.o, { ...S0, mine: [{ o: pick.o, t: pick.t }] }, pick.t); } })();
+    // the map: the office, the three outlets, walking paths; the chosen outlet's path in red
+    function map(ops) {
+      const off = { x: 300, y: 196 }, chosen = st.done ? st.mine[st.mine.length - 1] : st.pick && ops.find(x => x[0] === st.pick)?.[2];
+      let s = `<rect width="560" height="320" rx="12" fill="#F1EADB"/>` +
+        [60, 140, 220, 300].map(y => `<path d="M0 ${y} H560" stroke="#fff" stroke-width="12"/>`).join("") + [110, 230, 370, 490].map(x => `<path d="M${x} 0 V320" stroke="#fff" stroke-width="12"/>`).join("") +
+        `<rect x="380" y="20" width="90" height="34" rx="6" fill="#DCE8D6"/><text x="425" y="42" font-size="11" fill="${GREEN}" text-anchor="middle">park</text>`;
+      O.forEach((x, o) => { const on = chosen && chosen.o === o;
+        s += `<path d="M${off.x} ${off.y} Q${(off.x + x.x) / 2} ${Math.min(off.y, x.y) - 30} ${x.x} ${x.y}" fill="none" stroke="${on ? COL.red : COL.taupe}" stroke-width="${on ? 3.5 : 2}" stroke-dasharray="5 6"/>` +
+          `<g transform="translate(${x.x} ${x.y})"><path d="M0 0 c-9 -12 -13 -17 -13 -24 a13 13 0 0 1 26 0 c0 7 -4 12 -13 24 Z" fill="${on ? COL.red : COL.navy}"/><circle cy="-24" r="5" fill="#fff"/></g>` +
+          T(x.x, x.y + 18, x.name, `font-size="13" font-weight="600" fill="${COL.ink}" text-anchor="middle" stroke="#F1EADB" stroke-width="4" paint-order="stroke"`) +
+          T(x.x, x.y + 33, `walk ${x.walk_min} min`, `font-size="11.5" fill="${COL.ink2}" text-anchor="middle" stroke="#F1EADB" stroke-width="4" paint-order="stroke"`); });
+      s += `<rect x="${off.x - 22}" y="${off.y - 34}" width="44" height="40" rx="4" fill="#fff" stroke="${COL.navy}" stroke-width="2.5"/>` +
+        [0, 1].map(r => [0, 1, 2].map(c => `<rect x="${off.x - 16 + c * 12}" y="${off.y - 28 + r * 13}" width="8" height="8" rx="1" fill="${COL.ice}"/>`).join("")).join("") +
+        `<circle cx="${off.x}" cy="${off.y + 16}" r="8" fill="${GREEN}"/>` + T(off.x, off.y + 40, "You · office", `font-size="12.5" font-weight="600" fill="${GREEN}" text-anchor="middle" stroke="#F1EADB" stroke-width="4" paint-order="stroke"`);
+      $(sl, ".olmsvg").innerHTML = s;
+    }
+    const slider = $(sl, 'input[data-ol="m"]'); Object.assign(slider, { min: MR.range[0], max: MR.range[1], step: 0.1, value: st.m });
+    function draw() {
+      const ops = options(), scr = $(sl, ".olphd .olscr");
+      $(sl, '[data-pk="opts"]').innerHTML = ops.map(([k, lab, p], i) => card(k, lab, p, st.pick === k, i, ops)).join("");
+      $(sl, '[data-ol="confirm"]').disabled = !(st.pick && ops.find(x => x[0] === st.pick)?.[2]);
+      scr.classList.toggle("done", st.done);
+      $(sl, '[data-pk="wl"]').innerHTML = O.map((_, o) => bars(o, st)).join("");
+      $(sl, '[data-pk="mult"]').textContent = `×${st.m.toFixed(1)}`; slider.value = st.m;
+      map(ops);
+      const over = O.reduce((a, _, o) => a + load(o).filter(x => x.full).length, 0), last = st.mine[st.mine.length - 1];
+      if (last) $(sl, '[data-pk="conf"]').textContent = `Collect at ${O[last.o].name}, ${clock(last.at)}. It keeps this slot even if demand changes. Not a real order.`;
+      $(sl, '[data-pk="now"]').innerHTML = `Online demand ×${st.m.toFixed(1)} the forecast. Options: ` + ops.map(([, lab, p]) => `${lab.toLowerCase()} ${p ? `${clock(p.at)} at ${O[p.o].name}` : "none with room"}`).join("; ") +
+        `. Demo orders confirmed: <b>${st.mine.length}</b>; slots where forecast demand does not fit: <b>${over}</b>${over ? " (confirmed orders keep their slots; new customers see other outlets or times)" : ""}. Made-up values.`;
+    }
+    sl.addEventListener("click", e => {
+      const b = e.target.closest("button"); if (!b || !b.closest(".oldemo")) return; b.blur();
+      if (b.classList.contains("olopt") && !st.done) { st.pick = b.dataset.k; draw(); }
+      else if (b.dataset.ol === "confirm") { const p = options().find(x => x[0] === st.pick)?.[2]; if (p) { st.mine.push({ ...p }); st.done = true; draw(); } }
+      else if (b.dataset.ol === "again") { st.done = false; st.pick = null; draw(); }
+      else if (b.dataset.ol === "reset") { Object.assign(st, { m: MR.value, mine: [], pick: null, done: false }); draw(); }
+    });
+    slider.addEventListener("input", () => { st.m = +slider.value; draw(); });
+    printers.push(() => { Object.assign(st, { m: MR.value, mine: [], pick: "early", done: false }); draw(); });
+    draw();
+    stepIntro(sl, "Open the app demo")?.printCopy();
   })();
 
   /* ---------------------------------------------------------------- "How it works" / "Numbers" panels: [data-hiw] opens the

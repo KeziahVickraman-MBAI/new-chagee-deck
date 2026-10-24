@@ -504,7 +504,7 @@ USED = [  # (section, key, label) shown in the appendix: every input the storybo
     ("costs", "machine_cost_per_unit_per_month", "Robot cost per station unit per month (SGD)"),
     ("people", "all_machine_attendant_per_open_hour", "Attendant hours, all-robot counter"),
     ("storyboard", "walkaway_target", "Walk-away limit for the GM's split table"),
-    ("sitepick", "events", "Synthetic app-intent dots (slide 13)"),
+    ("sitepick", "events", "Synthetic app-intent dots (slide 14)"),
     ("sitepick", "walk_km", "Walking distance to collect"),
     ("sitepick", "decay_share", "Distance decay, share of the walking distance"),
     ("sitepick", "outside_option", "Pull of not buying"),
