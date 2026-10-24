@@ -2462,5 +2462,77 @@
       "source": "assumption, illustrative, not Chagee data",
       "rationale": "Made-up outlets, not real Chagee sites. Capacity stands in for staff and equipment availability, which a real version would read from the roster and machine status (proposed, needs data access). Walking times would need location, with consent."
     }
+  },
+  "sharing": {
+    "_note": {
+      "value": "Slide 10: the same crew, two ways to share the work at the peak",
+      "unit": "text",
+      "range": null,
+      "source": "assumption",
+      "rationale": "Fixed responsibilities against flexible assistance (sim/counter.js mode 'assist', a separate rule from the bucket brigade, which is in the appendix). Crew, robots, customers, drink times and walking speed are held; only who may do which step changes. Illustrative counter setup, not Chagee's observed operation."
+    },
+    "setup": {
+      "value": "today",
+      "unit": "robot split (storyboard.split_presets key)",
+      "range": null,
+      "source": "assumption, illustrative, to validate with Chagee",
+      "rationale": "Today's split (our scenario): machines take the order tag, tea and milk, and shake and seal; people do cup and ice, toppings and hand-over. Public sources describe semi-automated equipment and people on ice, toppings and hand-over; the exact split is to validate."
+    },
+    "crew_day": {
+      "value": "large",
+      "unit": "day type whose forecast peak crew both counters use",
+      "range": null,
+      "source": "assumption",
+      "rationale": "The same crew on both sides: the forecast roster for the event-day peak (counter.recommendStaff)."
+    },
+    "assist_trigger_cups": {
+      "value": 2,
+      "unit": "cups waiting at another hand station before an idle person goes to help",
+      "range": null,
+      "source": "assumption, illustrative, to validate with Chagee",
+      "rationale": "Avoids walking over for a single cup. A pilot would set it from observed queues."
+    },
+    "assist_handover_sec": {
+      "value": 3,
+      "unit": "extra seconds on every cup a person makes away from their own station",
+      "range": null,
+      "source": "assumption, illustrative, to validate with Chagee",
+      "rationale": "Coordination cost: checking the ticket and finding materials at someone else's station, on top of the walk (illustration.walk_back_speed). To measure in a pilot."
+    },
+    "trained_stations": {
+      "value": "all hand stations",
+      "unit": "text",
+      "range": null,
+      "source": "assumption, illustrative, to validate with Chagee",
+      "rationale": "Everyone on the crew is assumed trained on every hand step (cup and ice, toppings, hand-over). Whether that holds, and for which staff, is to validate."
+    },
+    "demand_per_hour_range": {
+      "value": [
+        30,
+        180
+      ],
+      "unit": "orders an hour arriving at the counter (the slider's range)",
+      "range": null,
+      "source": "assumption",
+      "rationale": "Display range around the model's own peaks: the normal-day and event-day peak hours (demand model) are marked on the slider as quiet and congested."
+    },
+    "upper_percentile": {
+      "value": 0.9,
+      "unit": "share of orders ready within the upper order-to-ready time shown",
+      "range": null,
+      "source": "assumption",
+      "rationale": "The 90th percentile: nine in ten orders are ready within this time."
+    },
+    "playback_speeds": {
+      "value": [
+        1,
+        10,
+        30
+      ],
+      "unit": "simulated seconds per real second",
+      "range": null,
+      "source": "assumption",
+      "rationale": "Display only; 1 = real time."
+    }
   }
 }

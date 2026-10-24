@@ -128,3 +128,44 @@ test("counter: forecastError at zero error is the forecast roster; a lower forec
   assert.equal(mid.lostShare, r.lostShare);
   assert.ok(RAW.storyboard.forecast_error_scenarios.value.includes(0));
 });
+
+// flexible assistance (mode "assist"): a separate rule from the brigade; crew, robots, customers and times held
+const SH = RAW.sharing, AS = { trigger: SH.assist_trigger_cups.value, handoverSec: SH.assist_handover_sec.value };
+const shareRun = o => run({ robots: P.mixedMachine, day: SH.crew_day.value, staff: 2, assist: AS, ...o });
+
+test("counter assist: needs its trigger and hand-over cost, never silently defaults", () => {
+  assert.throws(() => run({ mode: "assist", staff: 2 }), /assist/);
+});
+
+test("counter assist: same customers as fixed responsibilities, and every order is completed, unfinished or walked away", () => {
+  for (const perHour of [40, 120, 170]) {
+    const f = shareRun({ mode: "fixed", perHour }), a = shareRun({ mode: "assist", perHour });
+    assert.equal(a.arrived, f.arrived, `${perHour}/h`);
+    for (const r of [f, a]) assert.equal(r.completed + r.unfinished + r.lost, r.arrived, `${r.mode} ${perHour}/h`);
+  }
+});
+
+test("counter assist: with one person there is no one to help, so it matches fixed responsibilities exactly", () => {
+  const f = shareRun({ mode: "fixed", staff: 1, perHour: 120 }), a = shareRun({ mode: "assist", staff: 1, perHour: 120 });
+  assert.deepEqual([a.served, a.lost, a.times], [f.served, f.lost, f.times]); assert.equal(a.assisted, 0);
+});
+
+test("counter assist: a trigger nobody reaches means no help and the fixed result", () => {
+  const f = shareRun({ mode: "fixed", perHour: 150 }), a = shareRun({ mode: "assist", perHour: 150, assist: { ...AS, trigger: 1e6 } });
+  assert.equal(a.assisted, 0); assert.deepEqual([a.served, a.lost, a.times], [f.served, f.lost, f.times]);
+});
+
+test("counter assist: the hand-over cost is charged (a large one cannot make assisted service faster)", () => {
+  const o = { robots: P.mixedMachine, day: SH.crew_day.value, staff: 2, walkBack, seeds: 6, upper: SH.upper_percentile.value, perHour: 160 };
+  const cheap = C.shareCompare(Sim, St, P, { ...o, assist: { ...AS, handoverSec: 0 } }).assist;
+  const dear = C.shareCompare(Sim, St, P, { ...o, assist: { ...AS, handoverSec: 60 } }).assist;
+  assert.ok(dear.median >= cheap.median, `${dear.median} vs ${cheap.median}`);
+});
+
+test("counter assist: perHour sets the arrivals; shareCompare holds the crew and its paid hour", () => {
+  const o = { robots: P.mixedMachine, day: SH.crew_day.value, walkBack, seeds: 8, upper: SH.upper_percentile.value, assist: AS, perHour: 100 };
+  const r = C.shareCompare(Sim, St, P, o);
+  assert.ok(Math.abs(r.fixed.arrived - 100) < 12, `${r.fixed.arrived}`);
+  assert.equal(r.fixed.staff, r.assist.staff); assert.equal(r.fixed.labour, r.assist.labour);
+  assert.equal(r.fixed.labour, r.fixed.staff * P.wage);
+});

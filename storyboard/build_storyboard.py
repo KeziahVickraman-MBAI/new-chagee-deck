@@ -425,6 +425,14 @@ def values(d: dict) -> dict:
     v["r.fe_bz_err"], v["r.fe_bz_lo_staff"], v["r.fe_bz_0_staff"] = abs(lo_e), bz[lo_e]["staff"], bz[0]["staff"]
     v["r.fe_bz_lo_lost"], v["r.fe_bz_0_lost"] = bz[lo_e]["lostShare"], bz[0]["lostShare"]
     v["r.fe_ev_hi_extra"] = round(ev_[hi_e]["cost"] - ev_[0]["cost"])
+    # slide 10 (counter.shareCompare via precompute.js): fixed responsibilities against flexible assistance, same crew
+    SHd, SHR = d["sharing"], RAW["sharing"]
+    v["sh.staff"], v["sh.trigger"], v["sh.handover_cost"] = SHd["staff"], SHR["assist_trigger_cups"]["value"], SHR["assist_handover_sec"]["value"]
+    v["sh.handover_step"], v["sh.ref_human"], v["sh.hand_work"] = d["sharing_times"]["handover"], d["sharing_times"]["all_human"], d["sharing_times"]["hand_here"]
+    EV = SHd["levels"][SHR["crew_day"]["value"]]
+    v["sh.ev_med_a"], v["sh.ev_med_b"], v["sh.ev_p90_a"], v["sh.ev_p90_b"] = EV["fixed"]["median"], EV["assist"]["median"], EV["fixed"]["p90"], EV["assist"]["p90"]
+    if not (EV["assist"]["median"] <= EV["fixed"]["median"]):
+        raise SystemExit("build: slide 10's notes say flexible assistance shortens the event-day median; it no longer does: rewrite them")
     # slide 06b (sim/squadcast.js via precompute.js): synthetic; the notes quote the default-share evaluation
     SQd, SQR = d["squadcast"], RAW["squadcast"]
     ev = SQd["eval"][str(SQR["social_share"]["value"])]
@@ -626,9 +634,15 @@ def ops_appendix(d: dict) -> str:
         out.append(f"<tr><td>{name}</td>" + "".join(f"<td>{d['forecastErr'][k][i]['staff']} · {p1(d['forecastErr'][k][i]['lostShare'])} · {sg(d['forecastErr'][k][i]['cost'])}</td>" for k in days) + "</tr>")
     out.append("</table>")
     rules = (("brigade", "Bucket brigade"), ("fixed_best", "Fixed posts, fastest on toppings"), ("fixed_worst", "Fixed posts, slowest on toppings"))
-    out += ["<h5>Slide 10 · sharing rules at the forecast crew, today's split</h5>", "<table class='res mbt'>" + hd("Rule", "crew · away · wait")]
+    out += ["<h5>Bucket brigade (appendix) · sharing rules at the forecast crew, today's split</h5>", "<table class='res mbt'>" + hd("Rule", "crew · away · wait")]
     for k_, nm in rules:
         out.append(f"<tr><td>{nm}</td>" + "".join(f"<td>{d['aiLayer'][k]['today'][k_]['with']['staff']} · {p1(d['aiLayer'][k]['today'][k_]['with']['lostShare'])} · {ms(d['aiLayer'][k]['today'][k_]['with']['medianWait'])}</td>" for k in days) + "</tr>")
+    out.append("</table>")
+    SH = d["sharing"]; up = RAW["sharing"]["upper_percentile"]["value"]
+    out += [f"<h5>Slide 10 · same crew of {SH['staff']}, fixed responsibilities against flexible assistance, at each day type's peak hour</h5>",
+            "<table class='res mbt'><tr><th>Rule</th>" + "".join(f"<th>{lab[k]} peak, {SH['levels'][k]['perHour']:.0f} orders an hour<br><small>median · {up:.0%} · completed · unfinished · away</small></th>" for k in days) + "</tr>"]
+    for k_, nm in (("fixed", "A · fixed responsibilities"), ("assist", "B · flexible assistance")):
+        out.append(f"<tr><td>{nm}</td>" + "".join((lambda r: f"<td>{ms(r['median'])} · {ms(r['p90'])} · {r['completed']:.0f} · {r['unfinished']:.0f} · {r['lost']:.0f}</td>")(SH['levels'][k][k_]) for k in days) + "</tr>")
     out.append("</table>")
     names = {"today": "Today's split (our scenario)", "heading": SBv["split_presets"]["display_labels"]["heading"], "all_hand": "All by hand", "all_robot": "All robots", "single": "One machine (tea and milk)"}
     def row(day, k):

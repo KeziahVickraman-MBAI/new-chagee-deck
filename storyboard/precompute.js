@@ -156,10 +156,30 @@ const sqE = SQ.inputs(RAW, P), squadcast = { base: sqE.base, hour: sqE.hour, day
 { const sc = SQ.pickSuccess(sqE, SQ.learn(sqE, Sim), Sim, RAW.squadcast.success_pick.value, -30); squadcast.days.push(sc.seed); squadcast.winShare = sc.winShare; squadcast.nWin = sc.n; }
 for (const s of [0, 0.15, sqE.s, 0.45]) { const E = { ...sqE, s }; squadcast.eval[s] = SQ.evaluate(E, SQ.learn(E, Sim), Sim); }
 
+// slide 10: the same crew, fixed responsibilities against flexible assistance (counter.shareCompare), at the model's
+// own peak hours (normal, busy and event day); and slide 12's sharing row: each of its columns' crew and robots, held,
+// with the two rules
+const SH = RAW.sharing, shAssist = { trigger: SH.assist_trigger_cups.value, handoverSec: SH.assist_handover_sec.value };
+const shRobots = C.presets(RAW, P)[SH.setup.value].robots, shCfg = C.configure(P, shRobots);
+const shStaff = C.recommendStaff(Sim, shCfg.P, SH.crew_day.value, shCfg.setup);
+const peakPer = day => Sim.dailyBase(P) * P.share[C.peakHour(P)] * P.surgeMult[day];
+const shOpts = { robots: shRobots, day: SH.crew_day.value, staff: shStaff, walkBack, seeds, upper: SH.upper_percentile.value, assist: shAssist };
+const sharing = { staff: shStaff, robots: shRobots, levels: {}, decision: {} };
+for (const day of Object.keys(P.surgeMult)) {
+  sharing.levels[day] = { perHour: peakPer(day), ...C.shareCompare(Sim, Store, P, { ...shOpts, perHour: peakPer(day) }) };
+  const single = TIERS.tiers.find(t => t.id === "single").replaces, cfg = r => C.configure(P, r);
+  const cols = { today: [shRobots, C.recommendStaff(Sim, shCfg.P, "none", shCfg.setup)], forecast: [shRobots, C.recommendStaff(Sim, shCfg.P, day, shCfg.setup)],
+                 single: [single, C.recommendStaff(Sim, cfg(single).P, day, cfg(single).setup)] };
+  sharing.decision[day] = Object.fromEntries(Object.entries(cols).map(([k, [robots, staff]]) =>
+    [k, C.shareCompare(Sim, Store, P, { ...shOpts, day, robots, staff, perHour: undefined })]));
+}
+
 const pl = Sim.plan(P, "mixed");
 const data = {
   generated: new Date().toISOString(), seeds,
-  grid, splits, aiLayer, forecastErr, newMarket, pnl, members, squadcast, site, ladder, benefit, decisions, siteExt, siteModel,
+  grid, splits, aiLayer, forecastErr, newMarket, pnl, members, squadcast, site, ladder, benefit, decisions, siteExt, siteModel, sharing,
+  sharing_times: { handover: P.humanSec.handover * P.humanMult, all_human: P.stations.reduce((a, k) => a + P.humanSec[k] * P.humanMult, 0),
+                   hand_here: P.stations.filter(k => !shRobots.includes(k)).reduce((a, k) => a + P.humanSec[k] * P.humanMult, 0) },
   counter: {
     peakHour: C.peakHour(P), firstHour: 10, cupsPerDay: Sim.dailyBase(P),
     perWorkerHour: pl.perWorker * 60, handSeconds: pl.W,

@@ -132,8 +132,9 @@ These come out of the models. Quote them as "in our model".
 | 13 P&L · five years, without AI | net extra network sales / operating profit | S$2,228,403 / −S$630,386 |
 | 13 P&L · five years, with AI site selection | net extra network sales / operating profit / payback | S$7,525,983 / S$1,864,635 / 1.4 years |
 | 13 P&L · uplift | sales / operating profit over five years | S$5,297,581 / S$2,495,021 |
-| 10 · event day, walk-aways at the forecast roster | brigade / fixed best / fixed worst | 1.2% / 4.1% / 34.9% |
-| 10 · normal-day roster on an event day | walk-aways | 54% |
+| Appendix · bucket brigade, event day, walk-aways at the forecast roster | brigade / fixed best / fixed worst | 1.2% / 4.1% / 34.9% |
+| Appendix · bucket brigade, normal-day roster on an event day | walk-aways | 54% |
+| 10 · event-day peak, same crew: fixed responsibilities → flexible assistance | median / upper order-to-ready | 4:10 / 6:28 → 2:04 / 4:18 |
 | 09 · busy day, forecast too low by the step shown | error / peak crew (exact) / walk-aways (exact) | 15% low / 1 (2) / 21% (0.0%) |
 | 09 · event day, forecast too high | extra S$ a day | about S$15 |
 | 08 · break-even extra orders per member a month | squads alone / with personalised suggestions / personalisation's own hurdle | 0.18 / 0.20 / 0.02 (AI cost S$0.05 a member a month) |
@@ -312,7 +313,7 @@ Every input in `assumptions.json`. **Key** is the path to change; **Range** is w
 |---|---|---|---|---|---|
 | `triggers.volume_trigger_range_cups_per_day` | [277.8, 3000] | cups per store per day |  | assumption | Approved for the volume trigger only and labelled on slides 'trigger range, not a new-store forecast'. Lower end = cups_per_store_per_year low (100,000) / open_days_per_year. Cost charts keep the approved 278-833 cups/day (cups_per_store_per_year range). |
 
-### illustration · used on: bucket-brigade animation
+### illustration · used on: counter animations (walking speed, slides 10 and 11, appendix brigade)
 
 | Key | Value | Unit | Range | Status | Notes |
 |---|---|---|---|---|---|
@@ -496,6 +497,21 @@ Every input in `assumptions.json`. **Key** is the path to change; **Range** is w
 | `pickup.preferred_after_min` | 30 | minutes from now when the customer would like to collect (the 'later pickup' window) |  | assumption | Illustrative customer preference entered in the app. |
 | `pickup.demand_multiplier` | 1 | forecast incoming orders, as a multiple of the outlets' usual lunchtime level | [0.5, 2.0] | assumption | The demo's one slider: busier or quieter than forecast. The forecast itself is illustrative; with Chagee's data it would come from the predictive model (slide 09 shows the hourly version). |
 | `pickup.outlets` | [{"name": "Office-tower outlet", "walk_min": 4, "cap_per_slot": 6, "incoming_per_slot": 4, "backlog_cups": 9, "x": 300, "y": 120}, {"name": "MRT-station outlet", "walk_min": 9, "cap_per_slot": 7, "incoming_per_slot": 3, "backlog_cups": 4, "x": 150, "y": 230}, {"name": "Mall outlet", "walk_min": 15, "cap_per_slot": 8, "incoming_per_slot": 3, "backlog_cups": 2, "x": 470, "y": 250}] | per outlet: walking minutes from the office, cups it can prepare per slot (staff and equipment), forecast incoming cups per slot at the usual level, cups already confirmed and waiting, map position (illustrative) |  | assumption | Made-up outlets, not real Chagee sites. Capacity stands in for staff and equipment availability, which a real version would read from the roster and machine status (proposed, needs data access). Walking times would need location, with consent. |
+
+### sharing · used on: slide 10 sharing the work (fixed responsibilities against flexible assistance) and slide 12's last row
+
+> Fixed responsibilities against flexible assistance (sim/counter.js mode 'assist', a separate rule from the bucket brigade, which is in the appendix). Crew, robots, customers, drink times and walking speed are held; only who may do which step changes. Illustrative counter setup, not Chagee's observed operation.
+
+| Key | Value | Unit | Range | Status | Notes |
+|---|---|---|---|---|---|
+| `sharing.setup` | today | robot split (storyboard.split_presets key) |  | assumption | Today's split (our scenario): machines take the order tag, tea and milk, and shake and seal; people do cup and ice, toppings and hand-over. Public sources describe semi-automated equipment and people on ice, toppings and hand-over; the exact split is to validate. |
+| `sharing.crew_day` | large | day type whose forecast peak crew both counters use |  | assumption | The same crew on both sides: the forecast roster for the event-day peak (counter.recommendStaff). |
+| `sharing.assist_trigger_cups` | 2 | cups waiting at another hand station before an idle person goes to help |  | assumption | Avoids walking over for a single cup. A pilot would set it from observed queues. |
+| `sharing.assist_handover_sec` | 3 | extra seconds on every cup a person makes away from their own station |  | assumption | Coordination cost: checking the ticket and finding materials at someone else's station, on top of the walk (illustration.walk_back_speed). To measure in a pilot. |
+| `sharing.trained_stations` | all hand stations | text |  | assumption | Everyone on the crew is assumed trained on every hand step (cup and ice, toppings, hand-over). Whether that holds, and for which staff, is to validate. |
+| `sharing.demand_per_hour_range` | [30, 180] | orders an hour arriving at the counter (the slider's range) |  | assumption | Display range around the model's own peaks: the normal-day and event-day peak hours (demand model) are marked on the slider as quiet and congested. |
+| `sharing.upper_percentile` | 0.9 | share of orders ready within the upper order-to-ready time shown |  | assumption | The 90th percentile: nine in ten orders are ready within this time. |
+| `sharing.playback_speeds` | [1, 10, 30] | simulated seconds per real second |  | assumption | Display only; 1 = real time. |
 
 ## 6. Sourced facts (quoted on the slides)
 

@@ -29,11 +29,14 @@ USED_ON = {
     "surge": "busy and event days: slides 09 to 12 and the benefit slide", "stations": "counter replica: slides 10 to 12", "people": "counter replica and staffing rule",
     "costs": "labour and machine cost everywhere in Singapore", "service": "walk-away rule", "provision": "milk stock (engine)",
     "benefit": "the benefit slide (things to consider, TBC)", "business_case": "AI platform cost in the business case (engine)", "staffing": "roster rules (engine)",
-    "simulation": "seeds and draws", "triggers": "volume trigger (engine)", "illustration": "bucket-brigade animation", "validation": "tests and checks",
+    "simulation": "seeds and draws", "triggers": "volume trigger (engine)", "illustration": "counter animations (walking speed, slides 10 and 11, appendix brigade)", "validation": "tests and checks",
     "storyboard": "price, margin, day types, split table, forecast-error steps: slides 09-15 and the appendix", "sitepick": "slides 14 and 15 site forecast", "site_ext": "four scores, supervised site model, pin to profit (things to consider)",
-    "new_market": "new-market slides, Australia (A$; things to consider)", "pnl": "slide 14 P&L view, slide 15 criteria and the appendix page", "members": "slides 05-08, part one: grow demand (08: reward and AI cost)", "pickup": "slide 13 pickup planner (illustrative demo; made-up outlets)",
+    "new_market": "new-market slides, Australia (A$; things to consider)", "pnl": "slide 14 P&L view, slide 15 criteria and the appendix page", "members": "slides 05-08, part one: grow demand (08: reward and AI cost)", "pickup": "slide 13 pickup planner (illustrative demo; made-up outlets)", "sharing": "slide 10 sharing the work (fixed responsibilities against flexible assistance) and slide 12's last row",
     "predict": "forecast toggle (engine)", "predict_toggles": "forecast toggle (engine)",
 }
+
+
+mm = lambda x: f"{int(x // 60)}:{int(round(x % 60)):02d}"
 
 
 def status(src) -> str:
@@ -252,8 +255,10 @@ def main() -> None:
         ("13 P&L · five years, without AI", "net extra network sales / operating profit", f"{money(V['r.pnl_wo_rev5'])} / {money(V['r.pnl_wo_op5'])}"),
         ("13 P&L · five years, with AI site selection", "net extra network sales / operating profit / payback", f"{money(V['r.pnl_wi_rev5'])} / {money(V['r.pnl_wi_op5'])} / {V['r.pnl_wi_payback']:.1f} years"),
         ("13 P&L · uplift", "sales / operating profit over five years", f"{money(V['r.pnl_up_rev5'])} / {money(V['r.pnl_up_op5'])}"),
-        ("10 · event day, walk-aways at the forecast roster", "brigade / fixed best / fixed worst", f"{pc1(V['r.lost_brigade'])} / {pc1(V['r.lost_fixed_best'])} / {pc1(V['r.lost_fixed_worst'])}"),
-        ("10 · normal-day roster on an event day", "walk-aways", pc(V["r.lost_normal_roster"])),
+        ("Appendix · bucket brigade, event day, walk-aways at the forecast roster", "brigade / fixed best / fixed worst", f"{pc1(V['r.lost_brigade'])} / {pc1(V['r.lost_fixed_best'])} / {pc1(V['r.lost_fixed_worst'])}"),
+        ("Appendix · bucket brigade, normal-day roster on an event day", "walk-aways", pc(V["r.lost_normal_roster"])),
+        ("10 · event-day peak, same crew: fixed responsibilities → flexible assistance", "median / upper order-to-ready",
+         f"{mm(V['sh.ev_med_a'])} / {mm(V['sh.ev_p90_a'])} → {mm(V['sh.ev_med_b'])} / {mm(V['sh.ev_p90_b'])}"),
         ("09 · busy day, forecast too low by the step shown", "error / peak crew (exact) / walk-aways (exact)", f"{pc(V['r.fe_bz_err'])} low / {V['r.fe_bz_lo_staff']} ({V['r.fe_bz_0_staff']}) / {pc(V['r.fe_bz_lo_lost'])} ({pc1(V['r.fe_bz_0_lost'])})"),
         ("09 · event day, forecast too high", "extra S$ a day", f"about S${V['r.fe_ev_hi_extra']:,.0f}"),
         ("08 · break-even extra orders per member a month", "squads alone / with personalised suggestions / personalisation's own hurdle", f"{V['x.mb_be_mid']:.2f} / {V['x.mb_be_ai']:.2f} / {V['x.mb_ai_hurdle']:.2f} (AI cost S${V['x.mb_ai']:.2f} a member a month)"),

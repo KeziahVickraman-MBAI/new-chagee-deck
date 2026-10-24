@@ -515,6 +515,138 @@
   }
   $$(document, '.panel[data-kind="compare"]').forEach(compareWidget);
 
+  /* ---------------------------------------------------------------- 10 sharing the work: fixed responsibilities (A) against
+     flexible assistance (B, counter.js mode "assist", not the brigade). Same crew, robots, customers (seed), drink times and
+     walking speed; only who may do which step changes. One demand control; the three metrics are the mean of the seeded
+     runs (precomputed at the day types' peaks, run live in between); the animation is one seeded run. */
+  (function shareWidget() {
+    const sl = document.getElementById("sh"), SHR = RAW.sharing, SHD = DATA.sharing; if (!sl || !SHD) return;
+    const AS = { trigger: SHR.assist_trigger_cups.value, handoverSec: SHR.assist_handover_sec.value }, UP = SHR.upper_percentile.value;
+    const robots = SHD.robots, staff = SHD.staff, day = SHR.crew_day.value, [DMIN, DMAX] = SHR.demand_per_hour_range.value;
+    const LV = Object.entries(SHD.levels), h0 = DATA.counter.firstHour + DATA.counter.peakHour, GREEN = "#2F6B45";
+    const SIDES = [["fixed", "Fixed responsibilities", "each person stays on their own steps"], ["assist", "Flexible assistance", "a free person helps a queued step"]];
+    const PH = [["Order received", ["ticket"]], ["Cup preparation", ["cup_ice"]], ["Dispensing", ["tea_milk", "topping_finish"]], ["Finishing and sealing", ["shake_seal"]], ["Collection", ["handover"]]];
+    const isM = k => robots.includes(k), secOf = k => (isM(k) ? P.machineSec[k] * P.machineMult : P.humanSec[k] * P.humanMult);
+    const T0 = DATA.sharing_times;
+    // the counter as a sequence: who does each step (illustrative setup)
+    $(sl, ".shflow").innerHTML = PH.map(([lab, ks]) => `<div class="ph"><b>${lab}</b><span>${ks.map(k => `<i class="${isM(k) ? "m" : "p"}">${isM(k) ? "machine" : "person"}</i> ${Math.round(secOf(k))} s`).join(" + ")}</span></div>`).join('<span class="ar">→</span>') +
+      `<div class="vd"><b>Illustrative counter setup, to validate with Chagee.</b> Hand-over is an assumed ${Math.round(T0.handover)} s step, not a drink's make time. All by hand a cup is ${Math.round(T0.all_human)} s of work; here people do ${Math.round(T0.hand_here)} s.</div>`;
+    const st = { per: SHD.levels[day].perHour, playing: false, speed: 10, S: [null, null], cache: {} };
+    LV.forEach(([, L]) => (st.cache[L.perHour.toFixed(3)] = L));
+    const clock = sec => { const t = h0 * 3600 + Math.max(0, sec); return `${String(Math.floor(t / 3600)).padStart(2, "0")}:${String(Math.floor(t / 60) % 60).padStart(2, "0")}:${String(Math.floor(t % 60)).padStart(2, "0")}`; };
+    const minute = S => (S.t - S.measureFrom) / 60;
+    function fresh(toMinute = 0) {
+      st.S = SIDES.map(([mode]) => C.create(Sim, Store, P, { robots, staff, day, walkBack: WB, seed: P.seed, mode, assign: "best", assist: AS, perHour: st.per }));
+      for (const S of st.S) { const end = S.t + toMinute * 60; while (S.t < end - 1e-9) S.step(0.5); }
+    }
+    const cupI = (x, y, c = COL.gold) => `<path d="M${(x - 4).toFixed(1)} ${(y - 5.5).toFixed(1)}h8l-1.3 10.5h-5.4z" fill="${c}" stroke="#fff" stroke-width=".8"/>`;
+    const Y0 = 6, RH = 30;
+    function drawSide(i) {
+      const S = st.S[i], el = $$(sl, ".shopt")[i], n = S.stations.length;
+      const top = S.stations.map((o, k) => (o.machine ? -1 : o.queue.length)), qk = top.indexOf(Math.max(...top)), hot = top[qk] >= AS.trigger ? qk : -1;
+      let s = "";
+      PH.forEach(([lab, ks]) => { const k0 = P.stations.indexOf(ks[0]), y = Y0 + k0 * RH;
+        s += `<rect x="2" y="${y}" width="3" height="${ks.length * RH - 6}" rx="1.5" fill="${COL.gold}"/>` + T(10, y + 15, lab, `font-size="11.5" font-weight="600" fill="${COL.ink2}"`); });
+      S.stations.forEach((o, k) => {
+        const y = Y0 + k * RH, m = o.machine, hq = k === hot;
+        s += `<rect x="128" y="${y}" width="140" height="${RH - 6}" rx="6" fill="${m ? COL.navy : "#fff"}" stroke="${hq ? COL.red : m ? COL.navy : "#CFC6B5"}" stroke-width="${hq ? 2.5 : 1.3}"/>` +
+             T(135, y + 11.5, NAME[o.id], `font-size="11" font-weight="600" fill="${m ? "#fff" : COL.ink}"`) +
+             T(135, y + 21.5, m ? `machine · ${Math.round(o.sec)} s` : `person · ${Math.round(o.sec)} s`, `font-size="9.5" fill="${m ? "#C9D3E6" : COL.taupe}"`);
+        if (m) o.busy.forEach((b, j) => (s += `<rect x="134" y="${y + RH - 9 - j * 3}" width="${128 * (1 - Math.max(0, b.left) / o.sec)}" height="2" fill="${COL.gold}"/>`));
+        o.queue.slice(0, 6).forEach((c, j) => (s += cupI(282 + j * 10, y + 13, hq ? COL.red : COL.gold)));
+        if (o.queue.length > 6) s += T(343, y + 17, `+${o.queue.length - 6}`, `font-size="10" fill="${COL.taupe}"`);
+        if (hq) s += T(282, y + RH - 1, `queue: ${o.queue.length} cups`, `font-size="9.5" font-weight="700" fill="${COL.red}"`);
+      });
+      S.workers.forEach(w => {
+        const near = S.workers.filter(o => o.i < w.i && Math.abs(o.x - w.x) < 0.45).length, x = 384 + near * 62, y = Y0 + Math.min(n - 0.5, w.x) * RH + 10;
+        const free = w.mode === "idle", help = w.mode === "work" && w.helping, walking = w.mode === "walk";
+        const ring = free ? GREEN : help ? COL.gold : null, tag = free ? "free" : help ? "helping" : walking ? "walking" : "";
+        s += `<g opacity="${walking ? 0.55 : 1}">${w.cup ? cupI(x - 17, y) : ""}<circle cx="${x}" cy="${y.toFixed(1)}" r="10" fill="${COL.red}"/>` +
+             (ring ? `<circle cx="${x}" cy="${y.toFixed(1)}" r="13.5" fill="none" stroke="${ring}" stroke-width="3"/>` : "") +
+             T(x, y + 3.5, w.v.toFixed(1), `font-size="9" font-weight="700" fill="#fff" text-anchor="middle"`) +
+             (tag ? T(x + 17, y + 4, tag, `font-size="10.5" font-weight="700" fill="${ring || COL.taupe}"`) : "") + `</g>`;
+      });
+      s += T(128, Y0 + n * RH + 5, "→ collection", `font-size="9.5" fill="${COL.taupe}"`);
+      $(el, "svg").innerHTML = s;
+      const t0 = S.measureFrom, ready = S.done.filter(c => c.out <= S.t).length, prog = S.cups.filter(c => c.born >= t0).length;
+      $(el, ".live").innerHTML = `<span>orders placed <b>${S.arrived}</b></span><span>ready <b>${ready}</b></span><span>in progress <b>${prog}</b></span><span>walked away <b>${S.lost}</b></span>`;
+    }
+    function head() {
+      $$(sl, ".shopt").forEach((el, i) => (el.innerHTML = `<div class="oh"><span class="badge">${"AB"[i]}</span>${SIDES[i][1]}<small>${SIDES[i][2]} · ${staff} people</small></div>` +
+        `<svg viewBox="0 0 470 ${Y0 + P.stations.length * RH + 8}" preserveAspectRatio="xMidYMid meet" aria-label="Counter ${"AB"[i]}: steps, queued cups and the crew"></svg><div class="live"></div>`));
+    }
+    function sync() {
+      const S = st.S[0], mi = Math.max(0, Math.min(60, minute(S)));
+      $(sl, ".shclock .clk").textContent = clock(mi * 60);
+      $(sl, ".shclock .sub").textContent = `simulated · minute ${Math.floor(mi)} of 60 · ${PRINTING ? "printed frame" : st.playing ? (st.speed === 1 ? "real time" : `×${st.speed}`) : "paused"}`;
+      $(sl, '[data-s="play"]').textContent = st.playing ? "❚❚ Pause" : "▶ Play";
+      $$(sl, ".shspd .btn").forEach(b => b.classList.toggle("on", +b.dataset.v === st.speed));
+      drawSide(0); drawSide(1);
+    }
+    // the three metrics: mean of the seeded runs at this demand
+    const opts = per => ({ robots, staff, day, walkBack: WB, seeds: SEEDS, upper: UP, assist: AS, perHour: per });
+    function metrics(live = PRINTING) {
+      const key = st.per.toFixed(3); let R = st.cache[key];
+      if (!R && live) R = st.cache[key] = C.shareCompare(Sim, Store, P, opts(st.per));
+      const box = $(sl, ".shmet");
+      if (!R) { box.innerHTML = `<p class="note">Running ${SEEDS} simulated peak hours at ${Math.round(st.per)} orders an hour…</p>`; clearTimeout(st.tm); st.tm = setTimeout(() => metrics(true), 60); return; }
+      const a = R.fixed, b = R.assist, win = (x, y, lowBetter, tol) => (Math.abs(x - y) < tol ? [false, false] : lowBetter ? [x < y, y < x] : [x > y, y > x]);
+      const [wm0, wm1] = win(a.median, b.median, true, 5), [wp0, wp1] = win(a.p90, b.p90, true, 5), [wc0, wc1] = win(a.completed, b.completed, false, 1);
+      const cell = (i, txt, w) => `<span>${"AB"[i]}</span><span class="${w ? "w" : ""}">${txt}</span>`;
+      box.innerHTML =
+        `<div class="m"><span class="l">Order-to-ready · median / ${Math.round(UP * 100)}th percentile</span><div class="v">${cell(0, `<b>${mmss(a.median)}</b> / ${mmss(a.p90)}`, false)}${cell(1, `<b>${mmss(b.median)}</b> / ${mmss(b.p90)}`, wm1 || wp1)}</div></div>` +
+        `<div class="m"><span class="l">Orders completed in the peak hour</span><div class="v">${cell(0, `<b>${a.completed.toFixed(0)}</b> of ${a.arrived.toFixed(0)} · ${a.unfinished.toFixed(0)} unfinished · ${a.lost.toFixed(0)} away`, wc0)}${cell(1, `<b>${b.completed.toFixed(0)}</b> of ${b.arrived.toFixed(0)} · ${b.unfinished.toFixed(0)} unfinished · ${b.lost.toFixed(0)} away`, wc1)}</div></div>` +
+        `<div class="m"><span class="l">Paid labour for the hour</span><div class="v">${cell(0, `<b>${money(a.labour)}</b> · ${staff} people`, false)}${cell(1, `<b>${money(b.labour)}</b> · the same crew`, false)}</div></div>` +
+        `<p class="note">Mean of ${SEEDS} simulated peak hours at ${Math.round(st.per)} orders an hour · orders placed ${clock(0).slice(0, 5)}–${clock(3600).slice(0, 5)}, timed from order to collection · green: better.</p>`;
+      $(sl, ".shdemp").textContent = `Demand shown: ${Math.round(st.per)} orders an hour.`;
+      // takeaway: what this demand says, without forcing a winner
+      const dm = a.median - b.median, dp = a.p90 - b.p90, both = Math.max(a.p90, b.p90) < 2 * 60 + 30;
+      const t = $(sl, ".shtake .t");
+      t.innerHTML = Math.abs(dm) < 10 && Math.abs(dp) < 10 && both
+        ? `At ${Math.round(st.per)} orders an hour both rules keep up: no step is overloaded, so changing how work is shared changes little.`
+        : dp > 10 && dm >= 0
+        ? `At ${Math.round(st.per)} orders an hour the same ${staff} people, sharing flexibly: median ${mmss(a.median)} → <b>${mmss(b.median)}</b>, ${Math.round(UP * 100)}th percentile ${mmss(a.p90)} → <b>${mmss(b.p90)}</b>, ${a.completed.toFixed(0)} → <b>${b.completed.toFixed(0)}</b> orders completed, same paid hour. A simulation result under our assumptions.`
+        : `At ${Math.round(st.per)} orders an hour flexible assistance does not clearly help (${mmss(a.p90)} against ${mmss(b.p90)} at the ${Math.round(UP * 100)}th percentile): the queue needs more staff (slide 09) or equipment (slide 11).`;
+    }
+    function how() {
+      const rows = LV.map(([k, L]) => `<tr><td>${DAY_LABEL[k]} peak · ${Math.round(L.perHour)}/h</td>` + ["fixed", "assist"].map(m => { const r = L[m];
+        return `<td>${mmss(r.median)} / ${mmss(r.p90)} · ${r.completed.toFixed(0)} done · ${r.unfinished.toFixed(0)} unfinished · ${r.lost.toFixed(0)} away</td>`; }).join("") + `</tr>`).join("");
+      $(sl, ".shhow1").innerHTML = `<h5>Three different times</h5><p><b>Work content</b>: seconds of work in one cup. All by hand it is ${Math.round(T0.all_human)} s; in this setup people do ${Math.round(T0.hand_here)} s and machines the rest. Hand-over is one ${Math.round(T0.handover)} s step of it.</p>` +
+        `<p><b>Time between finished cups</b>: how often a cup leaves the counter, set by the busiest step and the crew on it. <b>Order-to-ready</b>: what the customer feels, the work plus every wait in a queue.</p>` +
+        `<h5>The two rules</h5><p><b>A, fixed responsibilities</b>: each person keeps their own steps, using the split that balances the work best (the faster person takes the heavier steps).</p>` +
+        `<p><b>B, flexible assistance</b>: when a person's own steps have nothing waiting, they walk to another hand step with at least ${AS.trigger} cups waiting and help, paying the walk and ${AS.handoverSec} s of coordination on every cup they make there; they go back as soon as their own steps have work. Not the bucket brigade, which is in the appendix.</p>` +
+        `<h5>The measurement window</h5><p>Orders placed ${clock(0).slice(0, 5)}–${clock(3600).slice(0, 5)} (simulated). <b>Completed</b>: ready within the hour. <b>Unfinished</b>: still at the counter at ${clock(3600).slice(0, 5)}; they are followed until ready for the order-to-ready times. <b>Walked away</b>: left on arrival because more than ${P.targetWait} minutes of work was already queued (the model's rule).</p>`;
+      $(sl, ".shhow2").innerHTML = `<h5>Held on both sides</h5><p>${staff} people (the event-day forecast crew), the same machines, the same orders (same random seed), drink mix, step times, walking speed and walk-away rule. Machine investment (slide 11) and forecast staffing (slide 09) are separate comparisons.</p>` +
+        `<h5>Mean of ${SEEDS} runs at each day type's peak · median / ${Math.round(UP * 100)}th</h5><table class="res"><tr><th>Demand</th><th>A · fixed</th><th>B · flexible</th></tr>${rows}</table>` +
+        `<h5>To validate with Chagee</h5><p>Which steps machines do; actual task times and equipment cycles; who is trained on which step; walking distances and movement limits behind the counter; the coordination cost of helping; order arrivals and order-to-ready times.</p>`;
+    }
+    // controls
+    const sp = $(sl, ".shspd"); sp.innerHTML = SHR.playback_speeds.value.map(v => `<button class="btn" data-v="${v}" title="${v === 1 ? "one simulated second per second" : `${v} simulated seconds per second`}">${v === 1 ? "Real time" : `×${v}`}</button>`).join("");
+    const rng = $(sl, 'input[data-s="dem"]'); Object.assign(rng, { min: DMIN, max: DMAX, step: 1, value: st.per });
+    $(sl, ".shdem .marks").innerHTML = LV.map(([k, L]) => `<button data-per="${L.perHour}" style="left:${((L.perHour - DMIN) / (DMAX - DMIN) * 100).toFixed(1)}%">${DAY_LABEL[k].replace(" day", "").toLowerCase()}</button>`).join("");
+    const setPer = per => { st.per = per; st.playing = false; rng.value = per; $(sl, ".shdem .val").textContent = `${Math.round(per)}`; fresh(0); sync(); metrics(); };
+    $(sl, ".shdem .val").textContent = `${Math.round(st.per)}`;
+    sl.addEventListener("click", e => { const b = e.target.closest("button"); if (!b || !b.closest(".shbar")) return; b.blur();
+      if (b.dataset.s === "play") { if (minute(st.S[0]) >= 60) fresh(0); st.playing = !st.playing; }
+      else if (b.dataset.s === "reset") { st.playing = false; fresh(0); }
+      else if (b.dataset.v) st.speed = +b.dataset.v;
+      else if (b.dataset.per) return setPer(+b.dataset.per);
+      sync(); });
+    rng.addEventListener("input", () => { $(sl, ".shdem .val").textContent = rng.value; clearTimeout(st.dt); st.dt = setTimeout(() => setPer(+rng.value), 200); });
+    let last = null;
+    (function frame(ts) {
+      if (st.playing && slides[cur] === sl && last != null) {
+        const sec = Math.min(0.1, (ts - last) / 1000) * st.speed;
+        for (const S of st.S) { const end = S.t + sec; while (S.t < end - 1e-9) S.step(Math.min(0.25, end - S.t)); }
+        if (minute(st.S[0]) >= 60) st.playing = false;
+        sync();
+      }
+      last = ts; requestAnimationFrame(frame);
+    })();
+    printers.push(() => { st.playing = false; st.per = SHD.levels[day].perHour; rng.value = st.per; fresh(SB.print_minute.value); sync(); metrics(true); });
+    head(); how(); fresh(SB.print_minute.value); sync(); metrics();
+  })();
+
   /* ---------------------------------------------------------------- 05 P&L view and its print companion (sim/pnl.js) */
   const PNL = window.ChageePnl, PE0 = PNL.inputs(RAW, P), PR = RAW.pnl;
   const sgd = x => `${x < 0 ? "−" : ""}S$${Math.round(Math.abs(x)).toLocaleString("en-SG")}`;
@@ -2038,7 +2170,8 @@
       const rc = i => (i === cols.length - 1 ? ` class="pick"` : "");
       $(sl, ".o2tab").innerHTML = `<tr><th>Criterion</th>${cols.map((c, i) => `<th${rc(i)}>${i === cols.length - 1 ? `<span class="rtag">Proposed pilot</span>` : ""}${c.h}<br><small style="text-transform:none;letter-spacing:0">${c.sub}</small></th>`).join("")}</tr>` +
         ROWS.map(([lab, f]) => `<tr><td>${lab}</td>${cols.map((c, i) => `<td${rc(i)}>${f(c.r)}</td>`).join("")}</tr>`).join("") +
-        `<tr><td>Walk-aways with fixed posts: well / badly assigned</td>${cols.map((c, i) => `<td${rc(i)}>${c.fb ? `${pct(c.fb.lostShare, 1)} / ${pct(c.fw.lostShare, 1)}` : "–"}</td>`).join("")}</tr>`;
+        `<tr><td>Flexible sharing, same crew: median ready time (slide 10)</td>${["today", "forecast", "single"].map((k, i) => { const x = DATA.sharing.decision[d][k];
+          return `<td${rc(i)}>${x.fixed.staff < 2 ? "one person, no one to help" : `${mmss(x.fixed.median)} → ${mmss(x.assist.median)}`}</td>`; }).join("")}</tr>`;
       $$(sl, ".o2day").forEach(e => (e.textContent = DAY_LABEL[d]));
     }
     BUS.fns.push(draw); printers.push(draw); draw();

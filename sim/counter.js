@@ -27,7 +27,20 @@
  *                                o.mode "fixed"   = each person stays on their own stations, cups wait
  *                                in a queue in front of each station. Same customers as the brigade
  *                                (same arrival seed and balking rule), same robots.
- *   run(Sim, Store, P, o)        the peak hour -> { served, lost, arrived, times, ... }
+ *                                o.mode "assist"  = flexible assistance, a separate rule (not the brigade): each person
+ *                                keeps their fixed stations first; when those have nothing waiting, they walk to another
+ *                                hand station whose queue has reached o.assist.trigger cups and help there, paying the
+ *                                walk and o.assist.handoverSec on every cup they make away from their own stations;
+ *                                they go back as soon as their own stations have work. Same customers and robots.
+ *                                o.perHour (optional, fixed and assist): orders an hour arriving in the measured hour
+ *                                (the warm-up hour is scaled by the same factor), instead of the day type's peak.
+ *   run(Sim, Store, P, o)        the peak hour -> { served, lost, arrived, times, ... }; for orders placed in the
+ *                                hour also completed (ready within the hour), unfinished (still in the counter at the
+ *                                end of the hour) and assisted (cups made by a helper), so arrived = completed +
+ *                                unfinished + lost.
+ *   shareCompare(Sim, Store, P, o)  fixed responsibilities against flexible assistance, same crew, robots, customers
+ *                                and seeds: per side, median and 90th-percentile order-to-ready time, completed,
+ *                                unfinished, walk-aways and the crew's paid hour.
  *   grid(Sim, Store, P, o)       every day type x staff x mode, averaged over seeds (deck tables).
  *   aiLayer(Sim, Store, P, o)    the intelligence layer alone, for one split and sharing rule on one day:
  *                                without AI = the normal-day roster (forecastDay "none") facing the day's
@@ -113,11 +126,12 @@
     return out;
   }
 
-  function createFixed(Sim, P, setup, { day = P.surgeDefault, seed = P.seed, warm = true, walkBack, staff, assign = "best" }) {
+  function createFixed(Sim, P, setup, { day = P.surgeDefault, seed = P.seed, warm = true, walkBack, staff, assign = "best", assist = null, perHour = null }) {
     const pl = Sim.plan(P, setup), h = peakHour(P), n = P.stations.length;
     const R = Sim.rng(Sim.hash(seed, 7)), RT = Sim.rng(Sim.hash(seed, 8));     // the replica's arrival seed
     const base = Sim.dailyBase(P), mult = P.surgeMult[day];
-    const lamOf = hr => base * P.share[hr] * mult / 3600;
+    const scale = perHour != null ? perHour / (base * P.share[h] * mult) : 1;
+    const lamOf = hr => base * P.share[hr] * mult * scale / 3600;
     const speeds = Sim.workerSpeeds(staff, P.spread);
     const capNom = Sim.nominalCap(pl, staff);
     const exp = 1 - P.newShare * (1 - P.newSpeed);
@@ -131,8 +145,8 @@
     });
     const workers = assignFixed(P, speeds, assign).map((a, i) => ({ i, v: a.v, set: a.set, x: a.set[0], mode: "idle",
       cup: null, k: -1, left: 0, total: 0, target: null, blocked: false, busyTime: 0, blockedTime: 0 }));
-    const S = { setup, mode: "fixed", staff, speeds, capNom, stations, workers, t: 0, hour: h, lam: lamOf(h), n,
-                cups: [], done: [], lost: 0, arrived: 0, acc: 0, measureFrom: Infinity, servedInHour: 0, handed: 0, handovers: [] };
+    const S = { setup, mode: assist ? "assist" : "fixed", staff, speeds, capNom, stations, workers, t: 0, hour: h, lam: lamOf(h), n,
+                cups: [], done: [], lost: 0, arrived: 0, acc: 0, measureFrom: Infinity, servedInHour: 0, handed: 0, handovers: [], assisted: 0 };
     const noise = () => { let u = 0; while (u === 0) u = RT();
       return Math.max(0.2, 1 + P.humanCv * Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * RT())); };
     const inWindow = t => t >= S.measureFrom && t < S.measureFrom + 3600;
@@ -158,9 +172,12 @@
         if (inWindow(S.t)) S.servedInHour++;
       } else stations[k + 1].queue.push(cup);
     }
+    const hand = stations.map((s, k) => k).filter(k => !stations[k].machine);
     function begin(w, k, carry = 0) {                                       // carry: time left over in this step
-      w.cup = stations[k].queue.shift(); w.k = k; w.total = stations[k].sec / (w.v * exp * noise()); w.left = w.total - carry;
-      w.mode = "work"; w.x = k;
+      const away = !w.set.includes(k);                                      // helping at someone else's station
+      w.cup = stations[k].queue.shift(); w.k = k; w.total = stations[k].sec / (w.v * exp * noise()) + (away ? assist.handoverSec : 0);
+      w.left = w.total - carry; w.mode = "work"; w.x = k; w.helping = away;
+      if (away && inWindow(w.cup.born)) S.assisted++;
     }
 
     S.step = (dt, lam = S.lam) => {
@@ -189,9 +206,17 @@
           if (stations[w.target].queue.length) begin(w, w.target); else w.mode = "idle";   // a colleague took it first
           continue;
         }
-        const k = [...w.set].reverse().find(j => stations[j].queue.length > workers.filter(o => o.mode === "walk" && o.target === j).length);
+        const coming = j => workers.filter(o => o.mode === "walk" && o.target === j).length;
+        const lo = Math.min(...w.set), hi = Math.max(...w.set), home = w.x >= lo - 1e-9 && w.x <= hi + 1 + 1e-9;   // within their own stations
+        let k = [...w.set].reverse().find(j => stations[j].queue.length > coming(j));
+        if (k == null && assist) {                                           // own stations clear: help the longest queue elsewhere
+          const c = hand.filter(j => !w.set.includes(j) && stations[j].queue.length - coming(j) >= assist.trigger);
+          if (c.length) k = c.reduce((a, j) => (stations[j].queue.length > stations[a].queue.length
+            || (stations[j].queue.length === stations[a].queue.length && Math.abs(j - w.x) < Math.abs(a - w.x)) ? j : a));
+          else if (!home) { w.mode = "walk"; w.target = w.x < lo ? lo : hi; w.helping = false; continue; }   // nothing to help: walk back
+        }
         if (k == null) continue;                                             // nothing waiting at their stations
-        if (w.set.length === 1 || Math.abs(w.x - k) < 1e-9) begin(w, k, carry);
+        if (Math.abs(w.x - k) < 1e-9 || (w.set.length === 1 && w.set.includes(k) && (!assist || home))) begin(w, k, carry);
         else { w.mode = "walk"; w.target = k; }
       }
     };
@@ -209,7 +234,10 @@
     if (!(o.walkBack > 0)) throw new Error("counter.create: opts.walkBack (illustration.walk_back_speed) is required");
     const c = configure(P, o.robots), day = o.day ?? P.surgeDefault;
     const staff = c.setup === "all_machine" ? 0 : (o.staff ?? recommendStaff(Sim, c.P, day, c.setup));
-    if (o.mode === "fixed" && c.setup !== "all_machine") return createFixed(Sim, c.P, c.setup, { ...o, day, staff });
+    if (o.mode === "assist" && !(o.assist && o.assist.trigger >= 1 && o.assist.handoverSec >= 0))
+      throw new Error("counter.create: mode assist needs opts.assist { trigger, handoverSec } (assumptions.json sharing)");
+    if ((o.mode === "fixed" || o.mode === "assist") && c.setup !== "all_machine")
+      return createFixed(Sim, c.P, c.setup, { ...o, day, staff, assist: o.mode === "assist" ? o.assist : null });
     const S = Store.create(Sim, c.P, c.setup, { surge: day, seed: o.seed ?? P.seed, warm: o.warm ?? true, walkBack: o.walkBack, staff });
     S.mode = o.mode === "fixed" ? "fixed" : "brigade";
     return S;
@@ -219,9 +247,10 @@
     const S = create(Sim, Store, P, o), dt = o.dt || 0.5, t0 = S.t;
     while (S.t < t0 + 3600 - 1e-9) S.step(dt);
     const handovers = S.handovers.length, workerBusy = S.workers.map(w => w.busyTime / 3600);
+    const completed = S.done.filter(c => c.out < t0 + 3600).length, unfinished = S.cups.filter(c => c.born >= t0).length;
     while (S.cups.some(c => c.born < t0 + 3600) && S.t < t0 + 3600 + 1800) S.step(dt);
     return { mode: S.mode, staff: S.staff, served: S.servedInHour, lost: S.lost, arrived: S.arrived, handovers,
-             times: S.done.map(c => c.out - c.born), workerBusy };
+             times: S.done.map(c => c.out - c.born), workerBusy, completed, unfinished, assisted: S.assisted || 0 };
   }
 
   function compare(Sim, Store, P, o) {
@@ -234,6 +263,19 @@
   }
 
   const median = x => { if (!x.length) return null; const s = [...x].sort((a, b) => a - b); return s[Math.floor(s.length / 2)]; };
+  const quantile = (x, q) => { if (!x.length) return null; const s = [...x].sort((a, b) => a - b); return s[Math.min(s.length - 1, Math.floor(q * s.length))]; };
+
+  // fixed responsibilities against flexible assistance: everything else held (crew, robots, customers, seeds, times)
+  function shareCompare(Sim, Store, P, o) {
+    const side = mode => {
+      const runs = Array.from({ length: o.seeds }, (_, k) => run(Sim, Store, P, { ...o, mode, assign: "best", seed: P.seed + k }));
+      const mean = f => runs.reduce((a, r) => a + f(r), 0) / runs.length, t = runs.flatMap(r => r.times);
+      return { mode, staff: runs[0].staff, arrived: mean(r => r.arrived), completed: mean(r => r.completed), unfinished: mean(r => r.unfinished),
+               lost: mean(r => r.lost), assisted: mean(r => r.assisted), median: median(t), p90: quantile(t, o.upper),
+               labour: runs[0].staff * P.wage };                               // the crew's paid hour, the same on both sides
+    };
+    return { fixed: side("fixed"), assist: side("assist") };
+  }
 
   // modes: brigade, fixed with the best assignment, fixed with the worst; mean over seeds P.seed .. P.seed + seeds - 1
   const MODES = [["brigade", {}], ["fixed_best", { mode: "fixed", assign: "best" }], ["fixed_worst", { mode: "fixed", assign: "worst" }]];
@@ -278,7 +320,7 @@
     });
   }
 
-  const api = { configure, presets, forecastDay, recommendStaff, dayCost, assignFixed, create, run, compare, grid, aiLayer, forecastError, peakHour, MODES };
+  const api = { configure, presets, forecastDay, recommendStaff, dayCost, assignFixed, create, run, compare, grid, aiLayer, forecastError, peakHour, shareCompare, quantile, MODES };
   if (typeof module !== "undefined" && module.exports) module.exports = api;
   else root.ChageeCounter = api;
 })(typeof window !== "undefined" ? window : globalThis);

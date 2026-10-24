@@ -573,7 +573,7 @@ html,body{margin:0;background:#E7E3DC;color:var(--ink);font-family:var(--sans);-
 .s3p h5{margin:4px 0 0;font:500 30px/1.15 var(--serif);color:var(--ink)} .s3p .what{margin:0;font:18px/1.4 var(--sans);color:var(--ink2)}
 .s3p .who{margin:auto 0 0;min-height:5.4em;box-sizing:border-box;background:#EEF5F0;border-left:4px solid #2F6B45;border-radius:8px;padding:10px 14px;font:16px/1.4 var(--sans);color:var(--ink)}
 .s3p .who b{display:block;font:600 11px/1.4 var(--sans);letter-spacing:.14em;text-transform:uppercase;color:#2F6B45;margin-bottom:2px}
-.o2tab{font-size:15.5px} .o2tab td{padding:8px 14px;white-space:nowrap} .o2tab th{padding:6px 14px;vertical-align:bottom} .o2tab th small{font-size:10.5px} .o2tab td:first-child{white-space:normal;width:40%}
+.o2tab{font-size:15px} .o2tab td{padding:6px 14px;white-space:nowrap} .o2tab th{padding:6px 14px;vertical-align:bottom} .o2tab th small{font-size:10.5px} .o2tab td:first-child{white-space:normal;width:40%}
 .o2tab .pick{background:#EEF5F0;color:#1F4D31;font-weight:600;border-left:2px solid #2F6B45;border-right:2px solid #2F6B45}
 .o2tab tr:last-child .pick{border-bottom:2px solid #2F6B45} .o2tab th.pick{border-top:2px solid #2F6B45;color:#2F6B45}
 .o2tab .rtag{display:block;width:fit-content;margin:0 0 5px auto;padding:2px 8px;border-radius:10px;background:#2F6B45;color:#fff;font:600 10.5px/1.4 var(--sans);letter-spacing:.1em}
@@ -742,6 +742,36 @@ html,body{margin:0;background:#E7E3DC;color:var(--ink);font-family:var(--sans);-
 .c5intro.static .ol1side{flex-direction:column;align-items:stretch} .c5intro.static .olph{display:none} .c5intro.static .oltool{max-height:110px}
 #ol .c5s[data-k="3"] .c5cap{padding-right:420px}
 .c5intro.static .olkey li{font-size:12px} .c5intro.static .olcards .c5card:last-child{grid-column:auto}
+/* slide 10: fixed responsibilities against flexible assistance (#sh) */
+.shq{margin:2px 0 0;font:italic 16px/1.35 var(--sans);color:var(--ink2)}
+.shflow{margin-top:6px;display:flex;align-items:stretch;gap:4px;font:11.5px/1.25 var(--sans)}
+.shflow .ph{flex:1;background:#fff;border:1px solid var(--line);border-radius:8px;padding:3px 8px;min-width:0}
+.shflow .ph b{display:block;font:600 12.5px var(--sans);color:var(--ink)} .shflow .ph span{display:block;color:var(--ink2);font-size:11.5px}
+.shflow .ph i{font-style:normal;font-weight:600} .shflow .ph i.m{color:var(--navy)} .shflow .ph i.p{color:var(--red)}
+.shflow .ar{align-self:center;color:var(--gold);font-size:16px}
+.shflow .vd{flex:2.1;background:#FFF7E3;border:1px dashed var(--gold);border-radius:8px;padding:3px 9px;line-height:1.3;font-size:11px;color:var(--ink2)} .shflow .vd b{color:#8A6416}
+.shpanel{padding-top:8px;padding-bottom:8px}
+.shbar{display:flex;align-items:center;gap:14px}
+.shclock{display:flex;align-items:baseline;gap:8px;background:var(--navy);color:#fff;border-radius:8px;padding:4px 12px}
+.shclock .clk{font:600 22px/1.1 var(--sans);font-variant-numeric:tabular-nums} .shclock .sub{font:12px var(--sans);opacity:.85}
+.shctl{display:flex;align-items:center;gap:6px}
+.shdem{flex:1;display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:0 10px;font:12.5px var(--sans);color:var(--ink);position:relative}
+.shdem .val{grid-column:3;font-weight:700;color:var(--red);min-width:36px;text-align:right} .shdem input{grid-column:2;grid-row:1;width:100%}
+.shdem .marks{grid-column:2;grid-row:2;position:relative;height:16px} .shdem .marks button{position:absolute;transform:translateX(-50%);font:10.5px var(--sans);color:var(--ink2);background:none;border:0;cursor:pointer;padding:0;white-space:nowrap}
+.shdem .marks button:hover{color:var(--red)} .shdemp{font:13px var(--sans);color:var(--ink)}
+.shcmp{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:6px;flex:1;min-height:0}
+.shopt{background:#fff;border:1px solid var(--line);border-radius:10px;padding:6px 10px 4px;display:flex;flex-direction:column;min-height:0}
+.shopt .oh{display:flex;align-items:center;gap:8px;font:600 13.5px var(--sans);color:var(--ink)} .shopt .oh small{font-weight:400;color:var(--taupe);font-size:11.5px}
+.shopt .badge{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;background:var(--ink);color:#fff;font:700 11px var(--sans)}
+.shopt svg{width:100%;flex:1;min-height:0}
+.shopt .live{display:flex;gap:14px;font:12.5px var(--sans);color:var(--ink2)} .shopt .live b{color:var(--ink)}
+.shmet{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:10px;margin-top:6px}
+.shmet .m{background:#fff;border:1px solid var(--line);border-radius:10px;padding:5px 10px}
+.shmet .m .l{display:block;font:600 10.5px var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--taupe)}
+.shmet .m .v{display:grid;grid-template-columns:auto 1fr;gap:1px 8px;align-items:baseline;font:12.5px var(--sans);color:var(--ink2)}
+.shmet .m .v b{font:600 16px var(--sans);color:var(--ink)} .shmet .m .v .w b{color:#2F6B45}
+.shmet .note{grid-column:1 / -1;margin:0;font:11.5px var(--sans);color:var(--taupe)}
+#aops .opsapx .res td,#aops .opsapx .res th{padding-top:2px;padding-bottom:2px} #aops .opsapx h5{margin:5px 0 1px} #aops .opsapx p{margin:3px 0 0}
 .s3v{flex:1;display:flex;align-items:center;justify-content:center;min-height:0} .s3v svg{width:100%;max-height:132px}
 .s3p .where{margin:0;font:600 12px/1.3 var(--sans);color:var(--red)} .s3a{display:grid;place-items:center;font:28px var(--serif);color:var(--gold)}
 /* 07: the demand-data demonstration, readable sizes */
@@ -1062,7 +1092,7 @@ aside.notes{display:none}
       <li data-go="c3"><span class="no">03</span><span class="nm">The data trail<span class="why">What is recorded, what is to confirm</span></span></li>
       <li data-go="c4"><span class="no">04</span><span class="nm">Our scope<span class="why">Grow demand → serve demand → expand access</span></span></li>
       <li data-go="m1"><span class="no">05–08</span><span class="nm">Grow demand<span class="why">Membership, squads and personalisation · CRM manager</span></span></li>
-      <li data-go="o1"><span class="no">09–12</span><span class="nm">Serve demand<span class="why">Forecast, machines, decision · brigade in appendix</span></span></li>
+      <li data-go="o1"><span class="no">09–12</span><span class="nm">Serve demand<span class="why">Forecast, sharing the work, machines, decision</span></span></li>
       <li data-go="ol"><span class="no">13</span><span class="nm">Online retailing optimisation<span class="why">Match online orders to pickup options · digital commerce manager</span></span></li>
       <li data-go="c5"><span class="no">14–15</span><span class="nm">Expand access<span class="why">Where a new outlet adds customers · expansion manager</span></span></li>
       <li data-go="rc"><span class="no">16</span><span class="nm">Our recommendation<span class="why">Three managers, three pilots</span></span></li>
@@ -1448,8 +1478,43 @@ aside.notes{display:none}
   <div class="foot"><span>OPIM639 · Group 3 · demand curve, roster rule and errors are illustrative assumptions · observed evidence marked</span><span class="rail"></span><span class="pg"></span></div>
   <aside class="notes">
     <p>Part two. A more engaging membership experience must be matched by reliable fulfilment. The business problem: demand changes by the hour, while the roster and fixed station assignments may not. What we have observed: a Chagee source who asked not to be named told us outlet teams deploy people on local expertise, and Vulcan Post reported long queues at the Singapore reopening. What we have not observed: Chagee's own wait times and walk-aways. Everything on the chart is simulated, on our assumptions.</p>
-    <p>Step one is the forecast: cups an hour from historical order shares and the calendar. App signals, like the squad signals on slide 07, could refine it nearer the time, but they are not in these numbers. Step two: keep the normal-day roster on a busier day and the peak runs short, in red, while the morning crew stands idle, in grey. Step three: the forecast roster follows demand. Keep three things apart: the forecast says how many people; the bucket brigade is a rule for how they share the work; machines decide which steps people do at all. The next slide compares automation setups; the bucket-brigade demonstration is in the appendix.</p>
+    <p>Step one is the forecast: cups an hour from historical order shares and the calendar. App signals, like the squad signals on slide 07, could refine it nearer the time, but they are not in these numbers. Step two: keep the normal-day roster on a busier day and the peak runs short, in red, while the morning crew stands idle, in grey. Step three: the forecast roster follows demand. Keep three things apart: the forecast says how many people; a sharing rule decides how they share the work; machines decide which steps people do at all. The next slide compares two ways for the same crew to share the work, then slide 11 compares automation setups; the bucket-brigade demonstration is in the appendix.</p>
     <p>Step four, the sensitivity. On a busy day, a forecast {{r.fe_bz_err|pct}} too low puts on {{r.fe_bz_lo_staff}} person at the peak instead of {{r.fe_bz_0_staff}}, and walk-aways go from {{r.fe_bz_0_lost|pct1}} to about {{r.fe_bz_lo_lost|pct}}. A forecast too high costs little: about S${{r.fe_ev_hi_extra}} more a day on an event day. The full table is behind Numbers. These error steps are scenarios, not Chagee's measured accuracy. About one minute.</p>
+  </aside>
+</section>
+
+<!-- ======================================================= 10 SERVE: SHARING THE WORK (fixed responsibilities vs flexible assistance) -->
+<section class="slide content" id="sh" data-chapter="Serve" data-title="Share the work at the peak">
+  <div class="leafart" aria-hidden="true"></div>
+  <div class="inner">
+    <p class="kicker">10 · Serve · sharing the work: same crew, same counter<span class="stg"><b>Serve</b><i>Problem</i><i class="on">Solution</i><i>Decision</i></span></p>
+    <h2 class="head">Use the same crew more effectively during peak periods</h2>
+    <p class="shq">Can the same crew serve peak demand better by changing how work is shared?</p>
+    <div class="shflow" aria-label="The counter as a sequence of steps, with who does each"></div>
+    <div class="body" style="grid-template-columns:1fr;margin-top:8px">
+      <div class="panel shpanel" data-kind="share2">
+        <div class="shbar">
+          <span class="shclock"><b class="clk"></b><span class="sub"></span></span>
+          <span class="shctl screenonly"><button class="btn primary" data-s="play">▶ Play</button><button class="btn" data-s="reset">Reset</button><span class="seg shspd"></span></span>
+          <label class="shdem screenonly">Orders an hour<span class="val"></span><input type="range" data-s="dem"><span class="marks"></span></label>
+          <span class="shdemp printonly"></span>
+          <button class="btn hiwb screenonly" data-hiw="sh">How it works</button>
+        </div>
+        <div class="shcmp"><div class="shopt" data-o="0"></div><div class="shopt" data-o="1"></div></div>
+        <div class="shmet"></div>
+        <div class="hiw screenonly" data-name="sh"><div class="ptop"><span class="ptitle">How it works · what is held, what changes, how it is measured</span><button class="btn" data-hiwx>✕ Close</button></div>
+          <div class="two"><div class="shhow1"></div><div class="shhow2"></div></div></div>
+      </div>
+    </div>
+    <div class="takeaway shtake" style="margin-top:8px"><span class="lab">TAKEAWAY</span><span class="t"></span></div>
+  </div>
+  <div class="foot"><span>OPIM639 · Group 3 · illustrative simulation on assumed task times · not observed at Chagee · tables: appendix</span><span class="rail"></span><span class="pg"></span></div>
+  <aside class="notes">
+    <p>The question for the operations manager: can the same crew serve peak demand better just by changing how the work is shared? The top strip is the counter as a sequence: order received, cup preparation, dispensing, finishing and sealing, collection, with machines on three steps and people on three. That split is our illustrative setup, to validate with Chagee; it is not Chagee's operation.</p>
+    <p>Be precise about the timing. The hand-over is an assumed {{sh.handover_step|int}}-second step, not the time to make a drink. If every step were done by hand, a cup would take {{sh.ref_human|int}} seconds of human work in total; in this setup people do {{sh.hand_work|int}} seconds of it. Work content, the time between finished cups and the customer's order-to-ready time are three different measures: the last one includes waiting in queues.</p>
+    <p>Counter A keeps fixed responsibilities: each of the {{sh.staff|int}} people stays on their own steps, using the split that balances the work best. Counter B allows flexible assistance: when a person's own steps have nothing waiting, they walk to another hand step with at least {{sh.trigger|int}} cups waiting and help, paying the walk and {{sh.handover_cost|int}} seconds of coordination on every cup; they go back as soon as their own step has work. This is a separate rule from the bucket brigade in the appendix. Same crew, machines, orders and drink times on both sides.</p>
+    <p>Play it at the event-day peak: on A, cups pile up at toppings while the colleague on cup and ice stands free. In the mean of {{a.seeds}} runs, B's median order-to-ready time is about {{sh.ev_med_b|mmss}} against {{sh.ev_med_a|mmss}}, and its upper percentile {{sh.ev_p90_b|mmss}} against {{sh.ev_p90_a|mmss}}, for the same paid hour. Move the demand to the normal-day peak: both rules perform the same, because no one is overloaded. These are simulation results under stated assumptions, not observations.</p>
+    <p>Forecast-informed staffing (slide 09) and machine investment (slide 11) are separate comparisons, so each improvement keeps its cause. The decision is on slide 12. About one and a half minutes.</p>
   </aside>
 </section>
 
@@ -1485,7 +1550,7 @@ aside.notes{display:none}
   </div>
   <div class="foot"><span>OPIM639 · Group 3 · explainer figures are illustrative assumptions · robot speeds and costs are assumptions, not Chagee data</span><span class="rail"></span><span class="pg"></span></div>
   <aside class="notes">
-    <p>The forecast set how many people, and the brigade how they share the work; this slide asks which counter steps go to machines. Side A opens on human-only: people do every step. Side B opens on machine-made drink: machines make the drink, people tag the order and hand it over. Both are our illustrative scenarios, not Chagee's disclosed setup. Chagee's own equipment cost is not public; its Singapore relaunch used semi-automated equipment, according to Vulcan Post.</p>
+    <p>The forecast set how many people, and slide 10 how they share the work; this slide asks which counter steps go to machines. Side A opens on human-only: people do every step. Side B opens on machine-made drink: machines make the drink, people tag the order and hand it over. Both are our illustrative scenarios, not Chagee's disclosed setup. Chagee's own equipment cost is not public; its Singapore relaunch used semi-automated equipment, according to Vulcan Post.</p>
     <p>Keep two things apart. Machine automation is the split, the equipment on each side. AI here is AI-assisted staffing: the demand forecast sets the crew. Numbers shows the AI layer on its own. Each side keeps its equipment, customers and sharing rule; only the crew moves from the normal-day roster to the forecast roster. On an event day, all by hand without AI has {{r.ai7_a_without_staff}} people, and about {{r.ai7_a_without_lostShare|pct}} of peak-hour orders walk away; with AI the forecast puts on {{r.ai7_a_with_staff}}, walk-aways fall to {{r.ai7_a_with_lostShare|pct1}}, median wait {{r.ai7_a_without_medianWait|mmss}} to {{r.ai7_a_with_medianWait|mmss}}, for S${{r.ai7_a_with_cost}} a day against S${{r.ai7_a_without_cost}}. On the machine-made drink the forecast keeps {{r.ai7_b_with_staff}} person, so AI changes nothing there: {{r.ai7_b_with_lostShare|pct1}} still walk away, and the split table adds a person to meet the limit. In our model, forecasting matters most where people do the work. The band follows the day and the equipment you pick; walk-aways and wait are the peak hour, mean of {{a.seeds}} runs; cost is the day's roster plus machines, without lost sales. Illustrative assumptions throughout.</p>
     <p>How to use it: choose a split for each side, or click any station to hand it to a robot or a person, then run the peak hour or press End to compare. Each side starts with the fewest people, from the forecast roster up, that keep walk-aways within {{sb.walkaway_target|pct}}.</p>
     <p>The bars on the right compare five options on the chosen day, cheapest first; the full table is behind Numbers, mean of {{a.seeds}} runs: today's split, the machine-made drink, all by hand, all robots, and one tea-and-milk machine from the machine ladder in the appendix. In our model, one tea-and-milk machine is the cheapest of the five on every day type, because it lets the roster drop a person off-peak at the cost of one machine unit. All robots is the fastest and the dearest: among these options robots buy a shorter wait, not a lower cost.</p>
@@ -1500,30 +1565,30 @@ aside.notes{display:none}
   <div class="leafart" aria-hidden="true"></div>
   <div class="inner">
     <p class="kicker">12 · Serve · the operations manager's decision<span class="stg"><b>Serve</b><i>Problem</i><i>Solution</i><i class="on">Decision</i></span></p>
-    <h2 class="head">Roster to the forecast, test the brigade, pilot one machine</h2>
+    <h2 class="head">Roster to the forecast, test flexible sharing, pilot one machine</h2>
     <div class="body" style="grid-template-columns:1fr 268px;gap:16px;margin-top:10px">
       <div class="panel" data-kind="opdec">
-        <div class="ptop"><span class="ptitle">One lever per column · peak hour · bucket brigade · <span class="o2day"></span> · mean of {{a.seeds}} runs</span></div>
+        <div class="ptop"><span class="ptitle">One lever per column · peak hour · <span class="o2day"></span> · mean of {{a.seeds}} runs</span></div>
         <table class="res o2tab"></table>
       </div>
       <div class="cards" style="gap:8px">
         <div class="cset screenonly" style="flex-direction:row;align-items:center;gap:10px;padding:7px 12px"><span class="lab">Day</span><span class="dslot"></span></div>
-        <div class="bc"><div class="k">Reading the table</div><p><b style="color:#2F6B45">Green</b> is the proposed pilot. Each column adds one lever: the forecast changes only the crew, the machine only the equipment. The last row swaps the brigade for fixed posts. Illustrative simulation.</p></div>
+        <div class="bc"><div class="k">Reading the table</div><p><b style="color:#2F6B45">Green</b> is the proposed pilot. Each column adds one lever: the forecast changes only the crew, the machine only the equipment. The upper rows share work by the bucket brigade (appendix); the last row compares the two slide 10 rules with that column's crew and machines. Illustrative simulation.</p></div>
         <div class="bc warn"><div class="k">If the forecast is off</div><p>A busy-day forecast {{r.fe_bz_err|pct}} too low leaves about <b>{{r.fe_bz_lo_lost|pct}}</b> walking away (slide 09).</p></div>
       </div>
     </div>
     <div class="mdec"><div class="who"><span class="lab">Manager's decision</span><b>Operations manager</b></div>
-      <div><span class="q">What crew and counter setup should we use?</span>
-        <span class="k">Proposed</span>Pilot in {{sb.pilot_outlets}} outlets: shadow the forecast, roster to it, then run one tea-and-milk machine against today's split.</div>
-      <div><span class="k">Proceed if</span><ul><li>waits within {{a.target_wait|min}}, walk-aways within {{sb.walkaway_target|pct}}</li><li>cups per labour hour and contribution at least today's</li><li>it holds when the forecast is off</li></ul></div></div>
+      <div><span class="q">Can we improve peak service by changing task allocation, or does the bottleneck require additional staff or equipment?</span>
+        <span class="k">Proposed, conditional</span>In {{sb.pilot_outlets}} outlets, try flexible assistance at the peak first; where queues remain, roster to the forecast or pilot one tea-and-milk machine. Simulated gains hold only under our assumptions.</div>
+      <div><span class="k">Measure in the pilot</span><ul><li>actual task times and equipment cycles</li><li>who works which step, and movement limits</li><li>order arrivals and order-to-ready times</li></ul></div></div>
     <p class="nextl"><b>Next</b>Reliable fulfilment also means matching each online order to an outlet with room.</p>
   </div>
   <div class="foot"><span>OPIM639 · Group 3 · counter simulation on illustrative assumptions · not Chagee's measured operations</span><span class="rail"></span><span class="pg"></span></div>
   <aside class="notes">
-    <p>The decision for part two belongs to the operations manager: what crew and counter setup should we use?</p>
-    <p>Read the table left to right; each column changes one lever. First, today: today's split and the normal-day roster. Second, the forecast changes only the crew. Third, a machine changes only the equipment, with the forecast crew. The last row keeps each setup but swaps the bucket brigade for fixed posts, so the sharing rule shows up on its own. That is how we keep forecast-informed staffing, the brigade and machine automation apart.</p>
+    <p>The decision for part two belongs to the operations manager: can we improve peak service by changing task allocation, or does the bottleneck require additional staff or equipment?</p>
+    <p>Read the table left to right; each column changes one lever. First, today: today's split and the normal-day roster. Second, the forecast changes only the crew. Third, a machine changes only the equipment, with the forecast crew. The upper rows share work by the bucket brigade, now in the appendix; the last row keeps each column's crew and machines and compares fixed responsibilities with flexible assistance, the slide 10 rules, so the sharing rule shows up on its own. That keeps task allocation, forecast staffing and machines apart.</p>
     <p>The criteria are the ones the brief asks for: waiting time, walk-aways, productivity as cups served per person at the peak, and operating contribution. And the forecast will be wrong sometimes: on a busy day a forecast {{r.fe_bz_err|pct}} too low lets about {{r.fe_bz_lo_lost|pct}} walk away, while a forecast too high costs only about S${{r.fe_ev_hi_extra}} a day on an event day.</p>
-    <p>Our proposal: roster to the forecast, test a brigade against fixed posts, and pilot one tea-and-milk machine against today's split in {{sb.pilot_outlets}} outlets: shadow the forecast first, then roster to it, then the machine. Proceed only if waits, walk-aways, cups per labour hour and contribution hold up, including when the forecast is off. Then the transition: serving customers better also means being where demand is still unserved. About one minute.</p>
+    <p>Our proposal is conditional. Try flexible assistance first, because it costs no extra paid hours: in the simulation it helps where one hand step queues while a colleague is free, as with the forecast crew on an event day, and changes little where no one is overloaded or where a machine already reshapes the work. Where queues remain, the fix is crew (roster to the forecast) or equipment (pilot one tea-and-milk machine against today's split), in {{sb.pilot_outlets}} outlets. Every gain here is a simulation result under stated assumptions. The pilot must measure actual task times, equipment cycles, who works which step and how far they can move, order arrivals and order-to-ready times. Then the transition: reliable fulfilment also means matching each online order to an outlet with room.</p>
   </aside>
 </section>
 
@@ -1828,7 +1893,7 @@ aside.notes{display:none}
         <p class="act"><span class="k">Recommend</span>Squads, and squads with personalised suggestions, against today's membership, at a reward the extra orders can pay for.</p>
         <p><span class="k">Proceed if</span>tier progression and orders rise, satisfaction holds, and contribution after reward and AI costs is positive.</p></div>
       <div class="c"><span class="own">Serve demand · operations manager</span><h5>What crew and counter setup should we use?</h5>
-        <p class="act"><span class="k">Recommend</span>Roster to the forecast, test a bucket brigade, and pilot one tea-and-milk machine against today's split in {{sb.pilot_outlets}} outlets.</p>
+        <p class="act"><span class="k">Recommend</span>Roster to the forecast, test flexible sharing at the peak, and pilot one tea-and-milk machine against today's split in {{sb.pilot_outlets}} outlets.</p>
         <p><span class="k">Proceed if</span>waits, walk-aways, cups per labour hour and contribution beat today's, even when the forecast is off.</p></div>
       <div class="c"><span class="own">Expand access · expansion manager</span><h5>Which location justifies investment?</h5>
         <p class="act"><span class="k">Recommend</span>Investigate the cluster near {{s.top_hub}} on Chagee's real app logs before any lease.</p>
@@ -1840,7 +1905,7 @@ aside.notes{display:none}
   <aside class="notes">
     <p>Our recommendation mirrors the three chapters: three decisions, three owners, and each one is a pilot judged on its own evidence.</p>
     <p>For the CRM manager: the Membership Operations team wants to move customers up the tiers, and customers may not find it worth the effort. Pilot squads, and squads with personalised suggestions, against today's membership, at a reward level the extra orders can pay for. Proceed if tier progression rises, satisfaction holds, and the extra orders cover the reward and the AI cost.</p>
-    <p>For the outlet GM or operations manager: demand moves by the hour, and the roster should too. Roster to the forecast, test a bucket brigade against fixed posts, and pilot one tea-and-milk machine against today's split. Proceed if waits, walk-aways, productivity and contribution beat today's, including when the forecast is wrong.</p>
+    <p>For the outlet GM or operations manager: demand moves by the hour, and the roster should too. Roster to the forecast, test flexible sharing against fixed responsibilities, and pilot one tea-and-milk machine against today's split. Proceed if waits, walk-aways, productivity and contribution beat today's, including when the forecast is wrong.</p>
     <p>For the expansion manager: count the cups a new outlet adds, not the ones it sells. Investigate the cluster near {{s.top_hub}} on Chagee's real app logs before any lease, and proceed only if its incremental returns justify the investment with an acceptable downside.</p>
     <p>One caution to say out loud: these parts connect as a story, but we never add their simulated benefits together or carry membership uplift into the counter or expansion numbers. About forty-five seconds.</p>
   </aside>
