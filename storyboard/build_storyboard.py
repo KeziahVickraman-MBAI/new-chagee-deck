@@ -513,7 +513,7 @@ USED = [  # (section, key, label) shown in the appendix: every input the storybo
     ("costs", "machine_cost_per_unit_per_month", "Robot cost per station unit per month (SGD)"),
     ("people", "all_machine_attendant_per_open_hour", "Attendant hours, all-robot counter"),
     ("storyboard", "walkaway_target", "Walk-away limit for the GM's split table"),
-    ("sitepick", "events", "Synthetic app-intent dots (slide 14)"),
+    ("sitepick", "events", "Synthetic app-intent dots (slide 08)"),
     ("sitepick", "walk_km", "Walking distance to collect"),
     ("sitepick", "decay_share", "Distance decay, share of the walking distance"),
     ("sitepick", "outside_option", "Pull of not buying"),
@@ -610,9 +610,9 @@ def mb_appendix(d: dict) -> tuple:
     c = ["<h5>Break-even of the group-order credit</h5>",
          f"<p>Contribution per member a month = price x (margin x E - credit x (B + E)), with E extra orders and B group orders a member would place anyway. "
          f"Break-even E* = credit x B / (margin - credit); none if the credit reaches the margin. Price S${BE['price']:.2f}, credit {BE['credit']:.0%}, B {BE['base']:g}, E {BE['extra']:g}.</p>",
-         "<table class='res mbt'><tr><th>Gross margin</th><th>Extra orders needed a month</th><th>With AI cost (slide 08)</th><th>Contribution a member a month at E</th></tr>" +
+         "<table class='res mbt'><tr><th>Gross margin</th><th>Extra orders needed a month</th><th>With AI cost (CRM manager's decision)</th><th>Contribution a member a month at E</th></tr>" +
          "".join(f"<tr><td>{BE[q]['margin']:.0%}</td><td>{need(BE[q])}</td><td>{need(D['breakEvenAi'][q])}</td><td>S${BE[q]['netPerMember']:.2f}</td></tr>" for q in ("low", "mid", "high")) + "</table>",
-         f"<p>With personalised suggestions (slide 08) a flat AI cost a of S${D['breakEvenAi']['ai']:.2f} a member a month is added: E* = (credit x B + a / price) / (margin - credit). "
+         f"<p>With personalised suggestions (the CRM manager's decision) a flat AI cost a of S${D['breakEvenAi']['ai']:.2f} a member a month is added: E* = (credit x B + a / price) / (margin - credit). "
          f"Personalisation must add a / (price x (margin - credit)) = {D['aiHurdle']:.2f} orders a month on top of squads alone at the base margin.</p>",
          "<h5>New inputs (assumptions.json members; assumption, not Chagee data)</h5>"]
     for k in ("group_credit_share", "extra_orders_per_member_month", "base_group_orders_per_member_month", "ai_cost_per_member_month", "squad_size", "example_interest", "app_rules", "network"):
@@ -622,13 +622,13 @@ def mb_appendix(d: dict) -> tuple:
 
 
 def ops_appendix(d: dict) -> str:
-    """Appendix for the Serve chapter (slides 09 to 12): the tables moved off the slides, every day type."""
+    """Appendix for the Serve chapter (slides 04 to 07): the tables moved off the slides, every day type."""
     SBv = RAW["storyboard"]; days = list(RAW["surge"]["surge_multiplier"]["value"]); lab = SBv["day_type_labels"]["value"]
     p1 = lambda x: "–" if x is None else f"{100 * x:.1f}%"
     ms = lambda x: "–" if x is None else f"{int(x // 60)}:{int(round(x % 60)):02d}"
     sg = lambda x: f"S${x:,.0f}"
     hd = lambda first, sub: "<tr><th>" + first + "</th>" + "".join(f"<th>{lab[k]}<br><small>{sub}</small></th>" for k in days) + "</tr>"
-    out = ["<h5>Slide 09 · forecast error: the roster follows a wrong forecast, the customers do not (today's split, bucket brigade)</h5>",
+    out = ["<h5>Slide 04 · forecast error: the roster follows a wrong forecast, the customers do not (today's split, bucket brigade)</h5>",
            "<table class='res mbt'>" + hd("Forecast", "crew · away · S$/day")]
     for i, r0 in enumerate(d["forecastErr"][days[0]]):
         e = r0["e"]; name = "exact" if e == 0 else f"{abs(e):.0%} {'high' if e > 0 else 'low'}"
@@ -640,7 +640,7 @@ def ops_appendix(d: dict) -> str:
         out.append(f"<tr><td>{nm}</td>" + "".join(f"<td>{d['aiLayer'][k]['today'][k_]['with']['staff']} · {p1(d['aiLayer'][k]['today'][k_]['with']['lostShare'])} · {ms(d['aiLayer'][k]['today'][k_]['with']['medianWait'])}</td>" for k in days) + "</tr>")
     out.append("</table>")
     SH = d["sharing"]; up = RAW["sharing"]["upper_percentile"]["value"]
-    out += [f"<h5>Slide 10 · same crew of {SH['staff']}, fixed responsibilities against flexible assistance, at each day type's peak hour</h5>",
+    out += [f"<h5>Slide 05 · same crew of {SH['staff']}, fixed responsibilities against flexible assistance, at each day type's peak hour</h5>",
             "<table class='res mbt'><tr><th>Rule</th>" + "".join(f"<th>{lab[k]} peak, {SH['levels'][k]['perHour']:.0f} orders an hour<br><small>median · {up:.0%} · completed · unfinished · away</small></th>" for k in days) + "</tr>"]
     for k_, nm in (("fixed", "A · fixed responsibilities"), ("assist", "B · flexible assistance")):
         out.append(f"<tr><td>{nm}</td>" + "".join((lambda r: f"<td>{ms(r['median'])} · {ms(r['p90'])} · {r['completed']:.0f} · {r['unfinished']:.0f} · {r['lost']:.0f}</td>")(SH['levels'][k][k_]) for k in days) + "</tr>")
@@ -651,7 +651,7 @@ def ops_appendix(d: dict) -> str:
         cost = r["cost"] if k == "single" else r["cost"]["total"]
         if k != "single" and not r["meets"]: return f"over the limit · {sg(cost)}"
         return f"{r['staff'] if r['staff'] else '–'} · {p1(r['lostShare'])} · {ms(r['medianWait'])} · {sg(cost)}"
-    out += [f"<h5>Slide 11 · five setups: the fewest people that keep walk-aways within {SBv['walkaway_target']['value']:.0%}</h5>", "<table class='res mbt'>" + hd("Setup", "people · away · wait · S$/day")]
+    out += [f"<h5>Slide 06 · five setups: the fewest people that keep walk-aways within {SBv['walkaway_target']['value']:.0%}</h5>", "<table class='res mbt'>" + hd("Setup", "people · away · wait · S$/day")]
     for k in names:
         out.append(f"<tr><td>{names[k]}</td>" + "".join(f"<td>{row(day, k)}</td>" for day in days) + "</tr>")
     out.append("</table>")
@@ -767,7 +767,7 @@ def tiers_table() -> str:
     for i, t in enumerate(T["tiers"], 1):
         if t["id"] == "arm":                                   # the baseline sits where it does on the slide ladder
             rows.append(f'<tr class="base"><td>–</td><td><b>{esc(base["label"])}</b></td>'
-                        f'<td><b>{", ".join(STEP[s] for s in mixed)}</b>. A scenario of ours (slides 10 and 11), not Chagee\'s disclosed setup</td>'
+                        f'<td><b>{", ".join(STEP[s] for s in mixed)}</b>. A scenario of ours (slides 05 and 06), not Chagee\'s disclosed setup</td>'
                         f'<td>Model: S${RAW["costs"]["machine_cost_per_unit_per_month"]["value"]:,.0f} a month per station unit</td>'
                         f'<td></td><td>{tag(base["reliability"])}</td><td>assumptions.json</td></tr>')
         n = len(t["examples"])

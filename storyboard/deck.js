@@ -55,7 +55,7 @@
     cur = Math.max(0, Math.min(slides.length - 1, i));
     slides.forEach((s, k) => s.classList.toggle("active", k === cur));
     buildTo(slides[cur], fromEnd || revealAll || editingNow() ? Infinity : -1);
-    slides[cur]._intro?.enter(fromEnd);                             // a slide with its own overview (slides 13, 14) starts there
+    slides[cur]._intro?.enter(fromEnd);                             // a slide with its own overview (slides 03, 08) starts there
     const gt = $(document, "#goto"); if (document.activeElement !== gt) gt.value = cur + 1; $(document, "#count .tot").textContent = `/ ${slides.length}`;
     const n = $(slides[cur], "aside.notes");
     $(document, "#notes .nb").innerHTML = n ? n.innerHTML : "";
@@ -608,7 +608,7 @@
         ? `At ${Math.round(st.per)} orders an hour both rules keep up: no step is overloaded, so changing how work is shared changes little.`
         : dp > 10 && dm >= 0
         ? `At ${Math.round(st.per)} orders an hour the same ${staff} people, sharing flexibly: median ${mmss(a.median)} → <b>${mmss(b.median)}</b>, ${Math.round(UP * 100)}th percentile ${mmss(a.p90)} → <b>${mmss(b.p90)}</b>, ${a.completed.toFixed(0)} → <b>${b.completed.toFixed(0)}</b> orders completed, same paid hour. A simulation result under our assumptions.`
-        : `At ${Math.round(st.per)} orders an hour flexible assistance does not clearly help (${mmss(a.p90)} against ${mmss(b.p90)} at the ${Math.round(UP * 100)}th percentile): the queue needs more staff (slide 09) or equipment (slide 11).`;
+        : `At ${Math.round(st.per)} orders an hour flexible assistance does not clearly help (${mmss(a.p90)} against ${mmss(b.p90)} at the ${Math.round(UP * 100)}th percentile): the queue needs more staff (slide 04) or equipment (slide 06).`;
     }
     function how() {
       const rows = LV.map(([k, L]) => `<tr><td>${DAY_LABEL[k]} peak · ${Math.round(L.perHour)}/h</td>` + ["fixed", "assist"].map(m => { const r = L[m];
@@ -618,7 +618,7 @@
         `<h5>The two rules</h5><p><b>A, fixed responsibilities</b>: each person keeps their own steps, using the split that balances the work best (the faster person takes the heavier steps).</p>` +
         `<p><b>B, flexible assistance</b>: when a person's own steps have nothing waiting, they walk to another hand step with at least ${AS.trigger} cups waiting and help, paying the walk and ${AS.handoverSec} s of coordination on every cup they make there; they go back as soon as their own steps have work. Not the bucket brigade, which is in the appendix.</p>` +
         `<h5>The measurement window</h5><p>Orders placed ${clock(0).slice(0, 5)}–${clock(3600).slice(0, 5)} (simulated). <b>Completed</b>: ready within the hour. <b>Unfinished</b>: still at the counter at ${clock(3600).slice(0, 5)}; they are followed until ready for the order-to-ready times. <b>Walked away</b>: left on arrival because more than ${P.targetWait} minutes of work was already queued (the model's rule).</p>`;
-      $(sl, ".shhow2").innerHTML = `<h5>Held on both sides</h5><p>${staff} people (the event-day forecast crew), the same machines, the same orders (same random seed), drink mix, step times, walking speed and walk-away rule. Machine investment (slide 11) and forecast staffing (slide 09) are separate comparisons.</p>` +
+      $(sl, ".shhow2").innerHTML = `<h5>Held on both sides</h5><p>${staff} people (the event-day forecast crew), the same machines, the same orders (same random seed), drink mix, step times, walking speed and walk-away rule. Machine investment (slide 06) and forecast staffing (slide 04) are separate comparisons.</p>` +
         `<h5>Mean of ${SEEDS} runs at each day type's peak · median / ${Math.round(UP * 100)}th</h5><table class="res"><tr><th>Demand</th><th>A · fixed</th><th>B · flexible</th></tr>${rows}</table>` +
         `<h5>To validate with Chagee</h5><p>Which steps machines do; actual task times and equipment cycles; who is trained on which step; walking distances and movement limits behind the counter; the coordination cost of helping; order arrivals and order-to-ready times.</p>`;
     }
@@ -854,7 +854,7 @@
         <div class="big">+${Math.round(f.netNew).toLocaleString("en-SG")}<small>cups a day for Chagee</small></div>
         <div class="why2">The new store sells ${Math.round(f.cups)} a day (${(f.cups / avg).toFixed(1)}× an average outlet). ${Math.round(f.cannibal)} of those move from outlets nearby${f.hit.length ? ":" : "."}</div>
         <dl>${f.hit.slice(0, 2).map(h => `<dt title="${Math.round(M.storeCups[h.j])} → ${Math.round(M.storeCups[h.j] - h.cups)} cups a day">${oname(h.j)}, ${h.km.toFixed(1)} km</dt><dd>−${Math.round(h.cups)}</dd>`).join("")}</dl>
-        <div class="peak">Peak hour ${hourLabel(pf.peak)}: <b>${Math.round(pf.peakCups)} cups</b> → <b>${pf.peakStaff} ${pf.peakStaff === 1 ? "person" : "people"}</b> on today's counter (slides 09 to 11).</div>
+        <div class="peak">Peak hour ${hourLabel(pf.peak)}: <b>${Math.round(pf.peakCups)} cups</b> → <b>${pf.peakStaff} ${pf.peakStaff === 1 ? "person" : "people"}</b> on today's counter (slides 04 to 06).</div>
         <button class="btn primary screenonly pnlb" data-act="pnl" title="Five years of this outlet here against beside the nearest outlet">What does this mean for P&amp;L?</button>`;
       if (pnlOn) pnlRender();
       $$(ctlEl, "[data-v]").forEach(el => { const d = sl.find(x => x[0] === el.dataset.v); el.textContent = d[4](par[d[0]]); });
@@ -1868,7 +1868,7 @@
         ["Shared", "Who is in the squad and what each confirmed. Private order history stays private."], ["Progress", `Everyone in the squad: your drink gives you ${AR.points_own_drink}; each drink in the order gives every member ${AR.points_per_squad_drink}.`],
         ["Privacy", `The sender never sees the recipient's history.`], ["Reward", "A gifted drink counts as a squad drink when collected, so it moves the whole squad."]];
       const WHY2 = ["Your progress is yours; the squad is how friends' orders start to count for you.", "Joining is one tap for a friend: the effort, p, the squad has to keep low.",
-        "Easier choices may lower the effort, p, further. A hypothesis to test, like k.", "A drink counts only once its chooser confirms it: that is the confirmed demand slide 07 forecasts from.",
+        "Easier choices may lower the effort, p, further. A hypothesis to test, like k.", "A drink counts only once its chooser confirms it: that is the confirmed demand the group-orders slide forecasts from.",
         `The reward: ${AR.points_per_squad_drink} points a squad drink to every member, and ${pct(credit)} credit on each group-order drink.`, "Gifting brings a friend in without asking them to set anything up.",
         "An unredeemed gift is not a drink yet; only redemption confirms it."];
       let cur2 = 2;
@@ -1907,7 +1907,7 @@
         s += T(L, 11, "without squads", `font-size="10" fill="${COL.taupe}"`) + T(L + 84, 11, "with squads", `font-size="10" font-weight="700" fill="${COL.navy}"`) + T(W - R, 11, `effort ${f2(pw)}`, `font-size="10" fill="${COL.red}" text-anchor="end"`);
         svg.innerHTML = s;
         const tp = e => (e ? pct(e.low) : "none (stalls)");
-        $(m2, ".mbtake .t").innerHTML = `At slide 05's effort of <b>${f2(p)}</b>, squads (assumed k ${f2(k)} → ${f2(kw)})${inc.checked ? ` plus a launch incentive (effort → ${f2(pw)})` : ""} would move the tipping point from <b>${tp(e0)}</b> to <b>${tp(e1)}</b>` +
+        $(m2, ".mbtake .t").innerHTML = `At the members slide's effort of <b>${f2(p)}</b>, squads (assumed k ${f2(k)} → ${f2(kw)})${inc.checked ? ` plus a launch incentive (effort → ${f2(pw)})` : ""} would move the tipping point from <b>${tp(e0)}</b> to <b>${tp(e1)}</b>` +
           (!e0 && e1 ? `: without squads the app never takes off; with them it can.` : e0 && e1 ? `: fewer friends need to be on before joining feels worth it.` : `.`) + ` Assumptions to test, not measured effects.`;
       }
       inc.addEventListener("change", model);
@@ -2172,14 +2172,14 @@
       const rc = i => (i === cols.length - 1 ? ` class="pick"` : "");
       $(sl, ".o2tab").innerHTML = `<tr><th>Criterion</th>${cols.map((c, i) => `<th${rc(i)}>${i === cols.length - 1 ? `<span class="rtag">Proposed pilot</span>` : ""}${c.h}<br><small style="text-transform:none;letter-spacing:0">${c.sub}</small></th>`).join("")}</tr>` +
         ROWS.map(([lab, f]) => `<tr><td>${lab}</td>${cols.map((c, i) => `<td${rc(i)}>${f(c.r)}</td>`).join("")}</tr>`).join("") +
-        `<tr><td>Flexible sharing, same crew: median ready time (slide 10)</td>${["today", "forecast", "single"].map((k, i) => { const x = DATA.sharing.decision[d][k];
+        `<tr><td>Flexible sharing, same crew: median ready time (slide 05)</td>${["today", "forecast", "single"].map((k, i) => { const x = DATA.sharing.decision[d][k];
           return `<td${rc(i)}>${x.fixed.staff < 2 ? "one person, no one to help" : `${mmss(x.fixed.median)} → ${mmss(x.assist.median)}`}</td>`; }).join("")}</tr>`;
       $$(sl, ".o2day").forEach(e => (e.textContent = DAY_LABEL[d]));
     }
     BUS.fns.push(draw); printers.push(draw); draw();
   })();
 
-  /* ---------------------------------------------------------------- three-step overviews (slides 13 and 14), then the
+  /* ---------------------------------------------------------------- three-step overviews (slides 03 and 08), then the
      slide's interactive panel. Next steps 1 → 2 → 3, then opens the panel at its starting state; Previous from there
      returns to step 3; "← Overview" goes back to step 1. Print: the panel prints on the slide's page, a static copy of the
      overview on the page before it. */
