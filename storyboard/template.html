@@ -1074,6 +1074,14 @@ html,body{margin:0;background:#E7E3DC;color:var(--ink);font-family:var(--sans);-
 #intro .own-up{grid-column:1/3;background:#FCFBF8;border:1px solid #ECE6DA;color:#8D867A} #intro .own-up b{color:var(--ink2)}
 #intro .own-dn{grid-column:3/5;background:#FBE6E2;color:#6E4A46} #intro .own-dn b{color:var(--red)}
 #intro .takeaway{margin-top:14px}
+/* 01: farm to cup builds in chunks (deck.js, data-chunk): upstream, then downstream with its shaded zone, then the focus */
+#intro [data-chunk]{transition:opacity .5s ease,transform .5s ease}
+#intro [data-chunk].bh{transform:translateY(10px)}
+#intro .intro-chain .node[data-chunk]:nth-of-type(2),#intro .intro-chain .c-mile{transition-delay:.15s}
+#intro .intro-chain [class^="own-"]{transition-delay:.3s}
+#intro .intro-chain::before{transition:opacity .5s ease}
+@media screen{#intro .intro-chain:has(.c-out.bh)::before,#intro .intro-chain:has(.c-out.bh) .node:nth-of-type(2)::after,#intro .intro-chain:has(.c-out.bh) .node:nth-of-type(2)::before{opacity:0}}
+@media print{#intro [data-chunk]{transform:none!important}}
 /* 02: Mei and what she told us (a speech bubble), then the three problems with our proposals below */
 #es .es-case{display:grid;grid-template-columns:84px 270px 1fr;gap:18px;align-items:center;margin-top:16px}
 #es .es-av svg{width:84px;height:84px;display:block}
@@ -1211,13 +1219,13 @@ aside.notes{display:none}
 </section>
 
 <!-- ======================================================= 01 INTRODUCTION: CHAGEE SINGAPORE AND OUR SCOPE -->
-<section class="slide content" id="intro" data-chapter="Introduction" data-reveal="all" data-title="Chagee Singapore and our scope">
+<section class="slide content" id="intro" data-chapter="Introduction" data-title="Chagee Singapore and our scope">
   <div class="leafart" aria-hidden="true"></div>
   <div class="inner">
     <p class="kicker">01 · Introduction</p>
     <h2 class="head">Today, we're presenting Chagee</h2>
     <p class="sub lede">A tea brand most of you know: order in the app, collect at the counter, or have it delivered to your location.</p>
-    <div class="pair">
+    <div class="pair keep">
       <div class="emb"><img src="{img:emblem}" alt="Chagee"></div>
       <div class="tcard"><h4 class="tl">Our scope</h4>
         <p class="stmt">Chagee Singapore's management and its customers</p>
@@ -1233,16 +1241,16 @@ aside.notes{display:none}
     <div class="flow">
       <div class="ftitle">From farm to cup <span>· our project focus is downstream</span></div>
       <div class="chain intro-chain">
-        <div class="node up"><div class="ic"><svg viewBox="0 0 32 32"><path d="M6 26 C6 12 16 6 27 5 C26 17 20 26 6 26 Z"/><path d="M6 26 L18 14"/></svg></div>
+        <div class="node up" data-chunk="1"><div class="ic"><svg viewBox="0 0 32 32"><path d="M6 26 C6 12 16 6 27 5 C26 17 20 26 6 26 Z"/><path d="M6 26 L18 14"/></svg></div>
           <h5>Source</h5><div class="what">Yunnan tea; local milk and fruit</div></div>
-        <div class="node up"><div class="ic"><svg viewBox="0 0 32 32"><path d="M4 13 L16 6 L28 13 V27 H4 Z"/><path d="M10 27 V18 H22 V27 M10 22 H22"/></svg></div>
+        <div class="node up" data-chunk="1"><div class="ic"><svg viewBox="0 0 32 32"><path d="M4 13 L16 6 L28 13 V27 H4 Z"/><path d="M10 27 V18 H22 V27 M10 22 H22"/></svg></div>
           <h5>Warehouse</h5><div class="what">Restocking from forecasts</div></div>
-        <div class="node now c-out"><div class="ic"><svg viewBox="0 0 32 32"><path d="M5 12 H27 L25 6 H7 Z"/><path d="M6 12 V27 H26 V12 M13 27 V19 H19 V27"/></svg></div>
+        <div class="node now c-out" data-chunk="2"><div class="ic"><svg viewBox="0 0 32 32"><path d="M5 12 H27 L25 6 H7 Z"/><path d="M6 12 V27 H26 V12 M13 27 V19 H19 V27"/></svg></div>
           <h5>Outlets</h5><div class="what">Make and hand over</div><span class="via"><svg viewBox="0 0 32 32"><rect x="10" y="3" width="12" height="26" rx="2.5"/><path d="M14 25 H18"/></svg>via Chagee App</span></div>
-        <div class="node now c-mile"><div class="ic"><svg viewBox="0 0 32 32"><circle cx="8" cy="23" r="4"/><circle cx="25" cy="23" r="4"/><path d="M8 23 H16 L20 13 H25 L25 23 M13 13 H20"/></svg></div>
+        <div class="node now c-mile" data-chunk="2"><div class="ic"><svg viewBox="0 0 32 32"><circle cx="8" cy="23" r="4"/><circle cx="25" cy="23" r="4"/><path d="M8 23 H16 L20 13 H25 L25 23 M13 13 H20"/></svg></div>
           <h5>Last mile</h5><div class="what">Collection or delivery</div></div>
-        <div class="own-up"><span>Upstream data and decisions sit with <b>Chagee corporate</b></span></div>
-        <div class="own-dn"><span>Downstream data is analysed and decisions are made by <b>Chagee SG</b> (APAC HQ)</span></div>
+        <div class="own-up" data-chunk="1"><span>Upstream data and decisions sit with <b>Chagee corporate</b></span></div>
+        <div class="own-dn" data-chunk="2"><span>Downstream data is analysed and decisions are made by <b>Chagee SG</b> (APAC HQ)</span></div>
       </div>
     </div>
     <div class="takeaway"><span class="lab">OUR FOCUS</span><span>The downstream operational challenges: some of the most pressing issues for Chagee Singapore's management.</span></div>

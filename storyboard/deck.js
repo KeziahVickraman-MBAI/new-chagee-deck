@@ -94,6 +94,10 @@
             else add([b]);
           });
         } else if (c.matches(".rec3")) [...c.children].forEach(k => add([k]));
+        else if (c.querySelector("[data-chunk]")) {                // a block revealed in chunks (slide 01's farm to cup): one Next per data-chunk value
+          const g = {}; $$(c, "[data-chunk]").forEach(e => (g[e.dataset.chunk] ||= []).push(e));
+          Object.keys(g).sort().forEach(k => add(g[k]));
+        }
         else add([c], { rv: c.matches(".vs.clickrev") ? c : null });
       });
     }
