@@ -1284,9 +1284,9 @@ html,body{margin:0;background:#E7E3DC;color:var(--ink);font-family:var(--sans);-
   .p1row{display:grid!important} .p1row p{display:block!important} .p1row{animation:none!important;background:none!important;box-shadow:none!important;padding:3px 8px 3px 4px} .p1row p{font-size:12px}
   .p1gains{display:block!important;animation:none!important;margin-top:6px} .p1scene .hs{opacity:1!important} .p1scene *{animation:none!important} .p1scene .np0{opacity:1} .p1tip{display:none}
 }
-/* ---------------------------------------------------------------- slides 06 to 08: Proposal 2, the manager's bottleneck tool
-   06 a clickable counter at the rush (side list reuses slide 03's classes); 07 three steps (the .c5intro look, as slide 04);
-   08 the manager's tablet, live on sim/crewtool.js */
+/* ---------------------------------------------------------------- slide 06, Proposal 2's business problem, and the flexible-assistance tablet
+   (appendix, was slides 07 and 08). 06 a clickable counter at the peak, live on sim/toppings.js (side list reuses slide 03's classes);
+   the tablet's how-it-works in three steps (the .c5intro look, as slide 04), and the tablet, live on sim/crewtool.js */
 .p2panel{position:relative;margin-top:10px;height:452px;display:grid;grid-template-columns:640px 1fr;gap:20px;background:var(--cream);border-radius:14px;padding:14px 20px 14px 14px}
 .p2panel .p1side{padding-bottom:44px} .p2panel .p1row h5{font-size:17.5px} .p2panel .p1ghd{font-size:17.5px} .p2panel .p1ghd .odtag{vertical-align:2px}
 .p2panel[data-k="5"] .p1gains{display:block}
@@ -1309,7 +1309,7 @@ html,body{margin:0;background:#E7E3DC;color:var(--ink);font-family:var(--sans);-
 .p2scene.paused *{animation-play-state:paused!important}
 @media print{.p2scene *{animation:none!important} .p2scene .hs{opacity:1!important} .p2scene .np{opacity:0!important} .p1tip{display:none}}
 @media (prefers-reduced-motion:reduce){.p2scene *,:is(#s2b,#s2t) .s2bi *,:is(#s2b,#s2t) .tab2 *{animation:none!important;transition:none!important}}
-/* 07: three steps, as slide 04 */
+/* the tablet, how it works (appendix): three steps, as slide 04 */
 #s2b .c5intro{height:448px;padding:12px 22px}
 #s2b .sx{display:flex;align-items:center;gap:10px;margin:0;padding:0;list-style:none}
 #s2b .sx li{position:relative;display:flex;align-items:center;gap:8px;padding:5px 14px 5px 6px;border-radius:20px;border:1.5px solid var(--line);background:#fff;font:600 14px var(--sans);color:var(--taupe);cursor:pointer;transition:all .3s}
@@ -1401,7 +1401,7 @@ html,body{margin:0;background:#E7E3DC;color:var(--ink);font-family:var(--sans);-
   #s2b .c5s{display:none!important} #s2b .c5s[data-k="3"]{display:flex!important;margin-top:0} #s2b .sx,#s2b .pop,#s2b .c5cap,#s2b .ii,#s2b .acts{display:none!important}
   #s2b .sc3{height:auto} #s2b .btake{visibility:visible;animation:none!important;margin-top:8px;padding:8px 20px}
 }
-/* 08: the manager's tablet */
+/* the tablet itself (appendix) */
 :is(#s2b,#s2t) .tab2{position:relative;margin-top:10px;height:410px;background:#2B2320;border-radius:28px;padding:12px 14px;box-shadow:0 14px 30px -12px rgba(36,64,107,.35)}
 :is(#s2b,#s2t) .tscreen{height:100%;background:#FBFAF7;border-radius:16px;overflow:hidden;display:grid;grid-template-rows:40px minmax(0,1fr) 24px}
 :is(#s2b,#s2t) .tbar{display:flex;align-items:center;gap:22px;padding:0 16px;background:var(--navy);color:#fff;font:12.5px var(--sans)}
@@ -1476,7 +1476,7 @@ html,body{margin:0;background:#E7E3DC;color:var(--ink);font-family:var(--sans);-
 #s2r .rules{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:9px}
 #s2r .rules li{display:grid;grid-template-columns:30px 1fr;gap:10px;align-items:start;background:#fff;border-radius:12px;padding:10px 12px;border:2px solid transparent;opacity:.55;transition:opacity .35s,border-color .35s}
 #s2r .rules li.on{opacity:1;border-color:var(--red)} #s2r .rules li.done{opacity:1}
-#s2r .rn{display:grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--navy);color:#fff;font:700 14px var(--sans)} #s2r .rules li.on .rn{background:var(--red)}
+#s2r .rules .num{display:grid;place-items:center;margin:0;width:28px;height:28px;border-radius:50%;background:var(--navy);color:#fff;font:700 14px var(--sans)} #s2r .rules li.on .num{background:var(--red)}
 #s2r .rules b{display:block;font:600 16px/1.2 var(--sans);color:var(--ink)} #s2r .rules p{margin:3px 0 0;font:13.5px/1.38 var(--sans);color:var(--ink2)}
 #s2r .needs{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;height:100%}
 #s2r .nd{display:grid;grid-template-columns:46px 1fr;gap:12px;align-items:start;background:#fff;border-radius:12px;padding:14px;border-top:4px solid var(--navy);animation:c5fade .4s ease-out both}
@@ -1893,7 +1893,7 @@ aside.notes{display:none}
       <div class="es-col k1" data-chunk="1"><div class="es-box"><span class="es-lab">Key challenge</span><h5>Online retailing</h5><p>Use data for better sales, customer loyalty and cost management. Customer management and reduction of wastage.</p></div>
         <div class="es-slot"><span class="es-lab">Proposal 1 · our team</span><p class="es-prop">AI-enabled demand management: offer customers an outlet with room, and recommend delivery actions for managers to approve <span class="golink" data-go="p1p">slides 03 to 05</span></p><span class="es-own"><svg class="es-ico" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="16"/><circle cx="16" cy="12.2" r="4.6" fill="#fff"/><path d="M7.6 25.2 C8.6 19.8 12 17.9 16 17.9 C20 17.9 23.4 19.8 24.4 25.2 Z" fill="#fff"/></svg><span><i>Decision-maker</i><b>Digital commerce manager, with operations</b></span></span></div></div>
       <div class="es-col k2" data-chunk="2"><div class="es-box"><span class="es-lab">Key challenge</span><h5>In-store management</h5><p>A faster, smoother counter: in-store operations management for shorter waits and a crew matched to demand.</p></div>
-        <div class="es-slot"><span class="es-lab">Proposal 2 · our team</span><p class="es-prop">A manager's tablet that spots where work is building up and recommends whether to move a trained colleague, keep the allocation or escalate <span class="golink" data-go="s2p">slides 06 to 08</span></p><span class="es-own"><svg class="es-ico" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="16"/><circle cx="16" cy="12.2" r="4.6" fill="#fff"/><path d="M7.6 25.2 C8.6 19.8 12 17.9 16 17.9 C20 17.9 23.4 19.8 24.4 25.2 Z" fill="#fff"/></svg><span><i>Decision-maker</i><b>Operations manager / outlet GM</b></span></span></div></div>
+        <div class="es-slot"><span class="es-lab">Proposal 2 · our team</span><p class="es-prop">As toppings come in, test whether a bucket brigade lets the same crew absorb the extra work, before adding dedicated staff or equipment <span class="golink" data-go="s2p">slides 06 to 08</span></p><span class="es-own"><svg class="es-ico" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="16"/><circle cx="16" cy="12.2" r="4.6" fill="#fff"/><path d="M7.6 25.2 C8.6 19.8 12 17.9 16 17.9 C20 17.9 23.4 19.8 24.4 25.2 Z" fill="#fff"/></svg><span><i>Decision-maker</i><b>Operations manager / outlet GM</b></span></span></div></div>
       <div class="es-col k3" data-chunk="3"><div class="es-box"><span class="es-lab">Strategic expansion decision</span><h5>New store openings</h5><p>Where to open next, so a new store is profitable and adds customers instead of moving them.</p></div>
         <div class="es-slot"><span class="es-lab">Proposal 3 · our team</span><p class="es-prop">Identify underserved search clusters, evaluate candidate locations and assess net additional demand and financial outcomes <span class="golink" data-go="c5">slides 09 and 10</span></p><span class="es-own"><svg class="es-ico" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="16"/><circle cx="16" cy="12.2" r="4.6" fill="#fff"/><path d="M7.6 25.2 C8.6 19.8 12 17.9 16 17.9 C20 17.9 23.4 19.8 24.4 25.2 Z" fill="#fff"/></svg><span><i>Decision-maker</i><b>Expansion manager</b></span></span></div></div>
     </div>
@@ -1903,7 +1903,7 @@ aside.notes{display:none}
     <p>Our business plan starts from Chagee's own problem statements. We interviewed a member of Chagee's Membership Operations team for APAC, shown here as a persona, "Mei": the name is changed and the interviewee asked not to be cited openly.</p>
     <p>Through the interview, we learnt about Chagee's business model, its local operations, and some of its most pressing concerns and strategic needs, which AI could potentially help solve.</p>
     <p>We frame them as two key challenges and one strategic decision point. Challenge one, online retailing: using data for better sales, customer loyalty and cost management, through customer management and reducing wastage. Challenge two, in-store management: a faster, smoother counter, through in-store operations management for shorter waits and a crew matched to demand. And the strategic decision: new store openings, where to open next so a new store is profitable and adds customers rather than moving them from nearby outlets.</p>
-    <p>The top of each column is what we heard; the shaded part below is our team's proposal, not something Chagee asked for, with its decision-maker in green. Solution one, online retailing: AI-enabled demand management, offering customers an outlet with room and recommending delivery actions for managers to approve, for the digital commerce manager with operations. Solution two, in-store management: a manager's tablet that spots where work is building up at the counter and recommends whether to move a trained colleague, keep the allocation or escalate, for the operations manager or outlet GM. Solution three, new store expansion: identify underserved search clusters, evaluate candidate locations and assess net additional demand and financial outcomes, for the expansion manager. We do not address wastage in this deck; the membership-squad analysis is in the appendix. We walk through them in this order next. About forty-five seconds.</p>
+    <p>The top of each column is what we heard; the shaded part below is our team's proposal, not something Chagee asked for, with its decision-maker in green. Solution one, online retailing: AI-enabled demand management, offering customers an outlet with room and recommending delivery actions for managers to approve, for the digital commerce manager with operations. Solution two, in-store management: as toppings come in, a possible menu change we still need to confirm with Chagee, test whether a bucket brigade lets the same crew absorb the extra work before adding dedicated staff or equipment, for the operations manager or outlet GM. Solution three, new store expansion: identify underserved search clusters, evaluate candidate locations and assess net additional demand and financial outcomes, for the expansion manager. We do not address wastage in this deck; the membership-squad analysis is in the appendix. We walk through them in this order next. About forty-five seconds.</p>
   </aside>
 </section>
 
@@ -2188,9 +2188,9 @@ aside.notes{display:none}
           <div class="bbox"><div class="bclock"><span class="lab">Simulated time</span><b data-r="clock"></b><span class="spd" data-r="speed"></span></div>
             <svg class="bsvg" viewBox="0 0 1000 250" aria-label="The counter in our simulation, played slowly: Cai hands over an order, walks back and takes Ben's cup; Ben walks back and takes Ana's cup; Ana starts the next order"><g data-r="strip"></g></svg>
             <p class="bcap" data-r="cap"></p></div>
-          <ol class="rules"><li data-rule="1"><span class="rn">1</span><div><b>Carry forward</b><p>Each person carries an order forward through the steps they are trained for.</p></div></li>
-            <li data-rule="2"><span class="rn">2</span><div><b>Return and take over</b><p>When the last person hands an order over, they walk back and take over the upstream colleague's cup, as soon as that colleague finishes the step in hand.</p></div></li>
-            <li data-rule="3"><span class="rn">3</span><div><b>The chain continues</b><p>That hand-over sends the colleague back to take over earlier work; the first person starts the next order.</p></div></li></ol>
+          <ol class="rules"><li data-rule="1"><span class="num">1</span><div><b>Carry forward</b><p>Each person carries an order forward through the steps they are trained for.</p></div></li>
+            <li data-rule="2"><span class="num">2</span><div><b>Return and take over</b><p>When the last person hands an order over, they walk back and take over the upstream colleague's cup, as soon as that colleague finishes the step in hand.</p></div></li>
+            <li data-rule="3"><span class="num">3</span><div><b>The chain continues</b><p>That hand-over sends the colleague back to take over earlier work; the first person starts the next order.</p></div></li></ol>
         </div>
         <p class="c5cap">One complete cycle, played slowly from our simulation: follow the cup numbers.</p>
       </div>
@@ -2245,7 +2245,7 @@ aside.notes{display:none}
     <div class="tcmp keep">
       <div class="tcbar">
         <label class="tsh"><span class="l">Share of orders with toppings<small>in a pilot, the AI forecast; here you set it</small></span><input type="range" data-c="share" aria-label="Share of orders with toppings"><b data-c="sharev"></b></label>
-        <div class="tclk"><span class="lab">Simulated peak</span><b data-c="clock">0:00</b><span class="of" data-c="of"></span><span class="pb" data-c="pb"></span></div>
+        <div class="tclk"><span class="lab">Simulated peak</span><b data-c="clock"></b><span class="of" data-c="of"></span><span class="pb" data-c="pb"></span></div>
         <div class="tply screenonly"><button class="btn" data-c="play" title="Play or pause">❚❚</button><button class="btn" data-c="restart" title="Restart the hour">↺</button><span class="spd" data-c="spd"></span><button class="btn" data-c="end" title="Skip to the end of the hour">Skip to end</button></div>
         <button class="btn asmb screenonly" data-c="asm">Assumptions</button>
       </div>
@@ -2471,8 +2471,8 @@ aside.notes{display:none}
         <p class="act"><span class="k">Recommend</span>Pilot AI-enabled demand management in one zone: shadow mode first, then customer choices and manager-approved delivery actions, over the online roadmap's three phases.</p>
         <p><span class="k">Proceed if</span>at Gate 2, collection is faster, walk-aways fall, support outlets stay reliable and incremental contribution after incentives is positive, against normal checkout.</p></div>
       <div class="c"><span class="own">In-store management · operations manager / outlet GM</span><h5>How should that outlet fulfil it?</h5>
-        <p class="act"><span class="k">Recommend</span>Validate the counter, then run the bottleneck tablet in shadow mode in {{sb.pilot_outlets}} outlets before piloting manager-approved moves: reassign, keep or escalate.</p>
-        <p><span class="k">Proceed if</span>order-to-ready time and orders completed improve at the rush, the original step is not disrupted, and managers rarely need to override it.</p></div>
+        <p class="act"><span class="k">Recommend</span>As toppings launch, trial a bucket brigade against fixed responsibilities in {{sb.pilot_outlets}} outlets, with a topping-share forecast in shadow mode.</p>
+        <p><span class="k">Proceed if</span>order-to-ready time and orders completed hold as topping share rises, with the same crew; if not, cost dedicated topping staff or equipment.</p></div>
       <div class="c"><span class="own">Expand access · expansion manager</span><h5>Which location justifies investment?</h5>
         <p class="act"><span class="k">Recommend</span>Investigate the cluster near {{s.top_hub}} on Chagee's real app logs before any lease.</p>
         <p><span class="k">Proceed if</span>it adds net new customers, and its profit covers the investment with an acceptable downside.</p></div>
@@ -2483,7 +2483,7 @@ aside.notes{display:none}
   <aside class="notes">
     <p>Our recommendation mirrors the three chapters: three decisions, three owners, and each one is a pilot judged on its own evidence.</p>
     <p>For the digital commerce manager, with operations: pilot AI-enabled demand management in one zone, a busy outlet and a nearby support outlet. Confirm data access, run forecasts and recommendations in shadow mode, then pilot customer choices and manager-approved delivery actions, through the online roadmap's three phases and two gates. Proceed at Gate 2 only if collection is faster, walk-aways fall, support outlets stay reliable and incremental contribution after incentives is positive against normal checkout. The earlier online initiatives and their business case are in the appendix.</p>
-    <p>For the outlet GM or operations manager: at the rush, put help where the constraint is. First observe and validate the counter and confirm the data, then run the bottleneck tablet in shadow mode in {{sb.pilot_outlets}} outlets, then pilot manager-approved moves: reassign a trained colleague, keep the allocation, or escalate. Proceed if order-to-ready time and orders completed improve at the rush without disrupting the original step, and managers rarely need to override it. Equipment purchases stay a separate investigation in the appendix.</p>
+    <p>For the outlet GM or operations manager: if toppings come in, a plan we still need to confirm with Chagee, the extra work lands unevenly. First confirm the toppings plan and time the counter, and check training, space and safe hand-over points. Then, as toppings launch, trial a bucket brigade against fixed responsibilities in {{sb.pilot_outlets}} outlets, with the topping-share forecast in shadow mode. Proceed if order-to-ready time and orders completed hold as the topping share rises, with the same crew and paid hours. If they do not, or the topping bar is the limit, cost dedicated topping staff or topping-dispensing equipment; a robotic arm stays an investigation in the appendix.</p>
     <p>For the expansion manager: count the cups a new outlet adds, not the ones it sells. Investigate the cluster near {{s.top_hub}} on Chagee's real app logs before any lease, and proceed only if its incremental returns justify the investment with an acceptable downside.</p>
     <p>One caution to say out loud: these parts connect as a story, but we never add their simulated benefits together or count an order retained by online rerouting again in the counter or expansion numbers. About forty-five seconds.</p>
   </aside>

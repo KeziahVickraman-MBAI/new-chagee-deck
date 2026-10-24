@@ -2680,6 +2680,264 @@
      clickable counter at the rush; 07 three steps; 08 the tablet. The recommendation is crewtool's projection and rules (AI
      predicts, rules compare feasible actions); the comparison is its seeded simulation, run live, with the same drinks for every
      allocation, so the recommended move can lose. The manager decides. All values: assumptions.json ops_tool. */
+  /* ---------------------------------------------------------------- slides 06 to 08: can the same crew absorb toppings? (sim/toppings.js)
+     06 the counter at the peak, one simulated run under fixed responsibilities: standard drinks, toppings come in, cups wait for Ben
+     while Ana has time to spare, the manager's question, the proposal. 07 one bucket-brigade hand-over cycle, played slowly from the
+     same model, then what it needs and the roles. 08 fixed responsibilities against the brigade: two live counters on the same
+     orders, the outcomes over the seeds, the assumptions behind them */
+  (function toppings() {
+    const TM = window.ChageeToppings; if (!TM || !RAW.toppings) return;
+    const E = TM.inputs(RAW, Sim), TR = RAW.toppings, SC = TR.scene.value, DEF = E.share.value;
+    const nm = id => E.crew.find(c => c.id === id).name, LOC = k => E.steps[k].loc;
+    const K = id => TM.STEPS.indexOf(id), TOP = K("topping"), FIN = K("finish");
+    const advance = (S, to) => { while (S.t < to - 1e-9) S.step(); };
+    // steps a simulation at real time x speed while its slide shows; tick(dt) does the stepping and drawing
+    function player(sl, tick) {
+      let on = false, last = 0, raf = 0;
+      const frame = ts => {
+        if (!on || !sl.classList.contains("active")) { on = false; return; }
+        const dt = Math.min(0.1, (ts - last) / 1000); last = ts;
+        if (tick(dt) === false) { on = false; return; }
+        raf = requestAnimationFrame(frame);
+      };
+      return { start() { if (on || reduce || PRINTING) return; on = true; last = performance.now(); raf = requestAnimationFrame(frame); },
+               stop() { on = false; cancelAnimationFrame(raf); }, get on() { return on; } };
+    }
+    const stepBy = (S, dt, speed, cap = Infinity) => { S._acc = (S._acc || 0) + dt * speed; while (S._acc >= E.dt && S.t < cap - 1e-9) { S.step(); S._acc -= E.dt; } };
+
+    /* drawing: people as on slide 06, cups with their order number, three pearls on a cup with toppings */
+    const HAIR = { ana: "#3B2F2A", ben: "#2A2220", cai: "#5A3E2B" }, SKIN = { ana: "#F1D3B8", ben: "#E8C4A0", cai: "#F1D3B8" };
+    const f1 = x => (+x).toFixed(1);
+    const pearls = (x, y, r = 1.7, g = 3.5) => [-g, 0, g].map((d, i) => `<circle cx="${f1(x + d)}" cy="${f1(y + (i === 1 ? .8 : 0))}" r="${r}" fill="#3B2F2A"/>`).join("");
+    const cup = (c, x, y, s = 1, lab = true, fs = 8) => `<g transform="translate(${f1(x)} ${f1(y)}) scale(${s})"><path d="M-7 0 L-8.5 -15 H8.5 L7 0 Z" fill="${c.top ? "#D9B38C" : "#E3C29B"}" stroke="#fff" stroke-width=".8"/>${c.top ? pearls(0, -3) : ""}</g>` +
+      (lab ? `<text x="${f1(x)}" y="${f1(y - 15 * s - 3)}" text-anchor="middle" font-size="${fs}" font-weight="700" fill="#24406B">#${c.id}</text>` : "");
+    const person = (id, x, foot, s, faded) => `<g transform="translate(${f1(x)} ${f1(foot - 34 * s)}) scale(${s})"${faded ? ' opacity=".55"' : ""}>` +
+      `<path d="M-11 34 C-11 18 -7 12 0 12 C7 12 11 18 11 34 Z" fill="#2E3A55"/><path d="M-7 34 L-7 21 Q0 18 7 21 L7 34 Z" fill="#F6ECDD"/><circle cy="2" r="9" fill="${SKIN[id]}"/>` +
+      `<path d="M-9 0 C-9 -9 9 -9 9 0 C6 -4 -6 -4 -9 0 Z" fill="${HAIR[id]}"/><circle cx="-3.5" cy="2" r="1.1" fill="#3B2F2A"/><circle cx="3.5" cy="2" r="1.1" fill="#3B2F2A"/></g>`;
+    const state = w => w.mode === "work" ? "working" : w.mode === "take" ? "taking over" : ["wait", "idle", "hold"].includes(w.mode) || (w.mode === "go" && Math.abs(w.x - LOC(w.k)) < 1e-6) ? "waiting" : "walking";
+    // one counter as a strip: the order screen, five spots, people, the cups they hold, pass shelves (fixed) and the last cups ready
+    function strip(S, g) {
+      const X = L => g.x0 + L * g.gap, y = g.foot, o = [], s = g.s;
+      o.push(`<rect x="${g.x0 - 50}" y="${y}" width="${1000 - g.x0 + 44}" height="6" rx="2" fill="#B8957A"/><rect x="${g.x0 - 46}" y="${y + 6}" width="${1000 - g.x0 + 36}" height="${g.front}" rx="3" fill="#9C7A5B"/>`);
+      [["cup_ice", "Cup and ice"], ["tea_milk", "Tea and milk"], ["topping", "Toppings and finishing"], ["shake_seal", "Sealer"], ["handover", "Hand-over"]].forEach(([id, t]) =>
+        o.push(`<text x="${f1(X(LOC(K(id))))}" y="${y + 6 + g.front * .62}" text-anchor="middle" font-size="${g.lf}" font-weight="700" fill="#FFF8EC">${t}</text>`));
+      for (const id of ["tea_milk", "shake_seal"]) { const x = X(LOC(K(id))), h = g.mh; o.push(`<rect x="${f1(x - h * .42)}" y="${y - h}" width="${f1(h * .84)}" height="${h}" rx="4" fill="#24406B"/><rect x="${f1(x - h * .3)}" y="${f1(y - h * .86)}" width="${f1(h * .6)}" height="${f1(h * .2)}" rx="2" fill="#3D5C8F"/>`); }
+      const bx = X(LOC(TOP)), bar = S.C.bar;
+      for (let j = 0; j < 3; j++) o.push(`<rect x="${f1(bx + g.gap * .14 + j * 9 * s)}" y="${f1(y - 10 * s)}" width="${f1(8 * s)}" height="${f1(10 * s)}" rx="1.5" fill="#F6ECDD" stroke="#9C7A5B" stroke-width=".8"/><circle cx="${f1(bx + g.gap * .14 + j * 9 * s + 4 * s)}" cy="${f1(y - 7 * s)}" r="${f1(2 * s)}" fill="${["#3B2F2A", "#D99A93", "#C8A96A"][j]}"/>`);
+      o.push(`<text x="${f1(bx + g.gap * .14 + 13 * s)}" y="${f1(y - 12 * s - 3)}" text-anchor="middle" font-size="${g.lf - 1.5}" fill="#9A9387">${bar === 1 ? "one person at a time" : "two people side by side"}</text>`);
+      // the order screen
+      const sw = g.sw, sh = g.sh, sy = g.sy;
+      o.push(`<rect x="6" y="${sy}" width="${sw}" height="${sh}" rx="6" fill="#24406B"/><rect x="10" y="${sy + 4}" width="${sw - 8}" height="${sh - 8}" rx="3" fill="#EEF1F6"/><text x="16" y="${sy + 15}" font-size="${g.lf - 1}" font-weight="700" letter-spacing="1" fill="#24406B">ORDERS · ${S.screen.length}</text>`);
+      S.screen.slice(0, g.rows).forEach((c, j) => { const ry = sy + 20 + j * g.rh;
+        o.push(`<rect x="14" y="${ry}" width="${sw - 16}" height="${g.rh - 3}" rx="3" fill="#fff" stroke="#C9D3E3"/><text x="20" y="${ry + g.rh * .62}" font-size="${g.lf - 1}" font-weight="700" fill="#262626">#${c.id}</text>` +
+          (c.top ? `${pearls(sw - 18, ry + g.rh * .45, 1.8, 4)}<text x="${sw - 30}" y="${ry + g.rh * .62}" text-anchor="end" font-size="${g.lf - 2}" fill="#4A4A4A">toppings</text>` : `<text x="${sw - 10}" y="${ry + g.rh * .62}" text-anchor="end" font-size="${g.lf - 2}" fill="#9A9387">standard</text>`)); });
+      if (S.screen.length > g.rows) o.push(`<text x="${6 + sw / 2}" y="${sy + sh - 6}" text-anchor="middle" font-size="${g.lf - 1.5}" fill="#24406B">+${S.screen.length - g.rows} more</text>`);
+      // pass shelves (fixed responsibilities): cups waiting for the next owner
+      if (S.mode === "fixed") S.workers.forEach(w => { if (!w.inq.length || w.i === 0) return;
+        const x0 = X(LOC(w.seg[0])) - g.gap * .26, n = w.inq.length;
+        w.inq.slice(0, 4).forEach((c, j) => o.push(cup(c, x0 - j * 13 * s, y, s * .8, j === 0, g.lf - 2)));
+        if (n >= 2) o.push(`<text x="${f1(x0 - 20 * s)}" y="${f1(y - 30 * s)}" text-anchor="middle" font-size="${g.lf - 1}" font-weight="700" fill="${n >= 3 ? "#B8322B" : "#4A4A4A"}">${n} waiting</text>`); });
+      // ready
+      S.delivered.slice(-2).forEach((c, j, a) => o.push(cup(c, 1000 - 22 - (a.length - 1 - j) * 22 * s, y, s * .8, j === a.length - 1, g.lf - 2)));
+      o.push(`<text x="${1000 - 8}" y="${y + 6 + g.front * .62}" text-anchor="end" font-size="${g.lf - 1}" fill="#F1E5D2">ready ${S.delivered.length}</text>`);
+      // people, side by side when they stand at the same spot
+      const xs = S.workers.map(w => X(w.x));
+      S.workers.forEach((w, i) => { if (i && Math.abs(xs[i] - xs[i - 1]) < 14 * s) xs[i] = xs[i - 1] + 26 * s; });
+      S.workers.forEach((w, i) => {
+        const x = xs[i], st = state(w);
+        o.push(person(w.id, x, y, s, st === "walking"));
+        o.push(`<text x="${f1(x)}" y="${f1(y - 34 * s - 12 * s)}" text-anchor="middle" font-size="${g.nf}" font-weight="700" fill="#262626">${w.name}${g.status && st !== "working" ? `<tspan font-weight="400" fill="${st === "waiting" ? "#2F6B45" : "#9A9387"}"> · ${st}</tspan>` : ""}</text>`);
+        if (w.cup) o.push(cup(w.cup, x + 14 * s, y, s * .9, true, g.lf - 1));
+      });
+      return o.join("");
+    }
+
+    /* 06: the counter at the peak, four points and the proposal */
+    const sp = document.getElementById("s2p");
+    if (sp) {
+      const panel = $(sp, ".p2panel"), sc = $(sp, ".p2scene"), tip = $(sp, ".p1tip"), rows = $$(sp, ".p1row"), N = rows.length + 1;
+      const TIPS = {
+        screen: ["Order screen", "Each order lands with a number. Once toppings come in, some carry the topping icon: those cups need an extra manual step at the topping bar."],
+        ben: ["Ben · toppings and finishing", "Also runs tea and milk. Under fixed responsibilities every topping lands on Ben, so cups wait on the shelf in front of Ben."],
+        ana: ["Ana · cup and ice", "Trained on toppings and finishing, and has time to spare once toppings arrive: the cups wait elsewhere."],
+        cai: ["Cai · sealer and hand-over", "Newer: toppings-and-finishing training not complete."],
+        mach: ["Machines", "Tea and milk, and the sealer: whoever carries the cup attends each short cycle, one cup at a time. Which steps machines do is our illustrative split, not Chagee's disclosed setup."],
+        mgr: ["The outlet manager", "Sees toppings coming, but not whether the crew can share the extra work, or when dedicated capacity would be needed."] };
+      const G = { scr: $(sp, ".dscr"), ana: $(sp, ".dana"), shelf: $(sp, ".dshelf"), ben: $(sp, ".dben"), cai: $(sp, ".dcai"), ready: $(sp, ".dready"), clock: $(sp, ".dclock text") };
+      let k = 1, S = null;
+      const fresh = () => { S = TM.create(E, Sim, { mode: "fixed", seed: SC.seed, share: 0 }); advance(S, 60); };
+      const built = () => { fresh(); advance(S, SC.plain_minutes * 60); S.share = DEF; advance(S, SC.build_minute * 60); };
+      function draw() {
+        const [ana, ben, cai] = S.workers;
+        G.scr.innerHTML = S.screen.slice(0, 5).map((c, j) => `<g class="tk"><rect x="40" y="${94 + 12 * j}" width="116" height="10" rx="3" fill="#fff" stroke="#C9D3E3"/><text x="45" y="${101.5 + 12 * j}" font-size="7.5" font-weight="700" fill="#262626">#${c.id}</text>` +
+          (c.top ? `${pearls(146, 98.8 + 12 * j, 1.6, 3.6)}<text x="136" y="${101.5 + 12 * j}" text-anchor="end" font-size="7" fill="#4A4A4A">toppings</text>` : `<text x="152" y="${101.5 + 12 * j}" text-anchor="end" font-size="7" fill="#9A9387">standard</text>`) + "</g>").join("");
+        G.ana.innerHTML = ana.cup ? cup(ana.cup, ana.mode === "drop" ? 236 : 222, 226, 1, true, 8) : "";
+        G.shelf.innerHTML = ben.inq.slice(0, 5).map((c, j) => cup(c, 300 + 14 * j, 226, .85, j < 3, 6.5)).join("") + (ben.inq.length > 5 ? `<text x="372" y="222" font-size="8" font-weight="700" fill="#B8322B">+${ben.inq.length - 5}</text>` : "");
+        G.ben.innerHTML = ben.cup ? cup(ben.cup, ben.k === K("tea_milk") ? 264 : ben.mode === "drop" ? 428 : 424, 226, 1, true, 8) : "";
+        G.cai.innerHTML = cai.inq.slice(0, 2).map((c, j) => cup(c, 492 + 14 * j, 226, .85, j === 0, 6.5)).join("") + (cai.cup ? cup(cai.cup, cai.k === K("shake_seal") ? 455 : 588, cai.k === K("shake_seal") ? 224 : 208, 1, true, 8) : "");
+        G.ready.innerHTML = S.delivered.slice(-2).map((c, j, a) => cup(c, 606 - (a.length - 1 - j) * 15, 208, .85, j === a.length - 1, 6.5)).join("");
+        $(sp, ".free").classList.toggle("on", k >= 3 && ana.mode === "idle");
+        $(sp, ".busy").classList.toggle("on", k >= 3 && ben.inq.length >= 3);
+        G.clock.textContent = `Simulated peak · minute ${mmss(Math.floor(S.t))} · ${SC.speed}× speed`;
+      }
+      const P2 = player(sp, dt => { stepBy(S, dt, SC.speed, S.H); draw(); return S.t < S.H; });
+      const paint = () => {
+        panel.dataset.k = k; if (k < N) sc.dataset.f = k; else delete sc.dataset.f;
+        rows.forEach((r, i) => { r.classList.toggle("seen", i < k); r.classList.toggle("cur", i === k - 1); });
+        $$(sp, ".p1dots i").forEach((d, i) => d.classList.toggle("on", i < k));
+        $(sp, ".p1n").textContent = `${k} / ${N}`; $(sp, '[data-p2="next"]').textContent = k < N ? "Next ▶" : "Next slide ▶"; tip.innerHTML = "";
+      };
+      // each point sets the run: 1 standard drinks from the start; 2 toppings come in from now; 3 on to the build-up minute
+      const go = (to, from) => {
+        k = to;
+        if (k === 1) fresh();
+        else if (k === 2) { if (from !== 1) { fresh(); advance(S, SC.plain_minutes * 60); } S.share = DEF; }
+        else if (from < 3) built();
+        paint(); draw();
+      };
+      const setPlay = on => { sc.classList.toggle("paused", !on); $(sp, '[data-p2="play"]').textContent = on ? "❚❚ Pause" : "▶ Play"; on ? P2.start() : P2.stop(); };
+      sp._intro = { enter: fromEnd => { go(fromEnd ? N : 1, 0); setPlay(!reduce); },
+        next: () => { if (k < N) { go(k + 1, k); return true; } return false; },
+        prev: () => { if (k > 1) { go(k - 1, k); return true; } return false; } };
+      sp.addEventListener("click", e => {
+        const b = e.target.closest("[data-p2]"), row = e.target.closest(".p1row"), hs = e.target.closest(".hs");
+        if (b) { b.blur(); const a = b.dataset.p2;
+          if (a === "next") { if (!sp._intro.next()) show(cur + 1); }
+          else if (a === "play") setPlay(sc.classList.contains("paused"));
+          else if (a === "replay") { go(1, 0); setPlay(!reduce); } }
+        else if (row) go(rows.indexOf(row) + 1, k);
+        else if (hs && TIPS[hs.dataset.hs]) { const [h, t] = TIPS[hs.dataset.hs]; tip.innerHTML = `<b>${h}</b>${t}`; }
+      });
+      printers.push(() => { P2.stop(); k = N; built(); paint(); draw(); });
+      go(1, 0);
+    }
+
+    /* 07: one hand-over cycle, what it needs, AI against the rule */
+    const sr = document.getElementById("s2r");
+    if (sr) {
+      const box = $(sr, ".c5intro"), N = $$(box, ".c5s").length, g = $(sr, '[data-r="strip"]'), capEl = $(sr, '[data-r="cap"]'), rules = $$(sr, ".rules li");
+      const GEO = { x0: 215, gap: 170, foot: 170, front: 52, s: 2, lf: 12, nf: 15, mh: 46, sw: 150, sh: 128, sy: 22, rows: 4, rh: 24, status: true };
+      let st = 1, S = null, phase = 0, end = null;
+      const cyc = () => {
+        S = TM.create(E, Sim, { mode: "brigade", share: 0, events: true }); S.stage(TR.cycle_stage.value); phase = 0; end = null;
+        const [ana, ben, cai] = S.workers;
+        S._open = `Cai is handing over #${cai.cup.id}; Ben is adding toppings to #${ben.cup.id}; Ana is on cup and ice with #${ana.cup.id}; #${S.screen[0].id} waits on the screen.`;
+      };
+      const ev = (type, w) => S.events.find(e => e.type === type && e.who === w);
+      function caption() {
+        const r = ev("ready", "cai"), pc = ev("pass", "cai"), pb = ev("pass", "ben"), sa = ev("start", "ana"), cai = S.workers[2];
+        let c = S._open, on = 1;
+        if (r) { c = `<i>①</i> Cai hands #${r.order} to the customer and walks back.`; on = 2; }
+        if (r && !pc && cai.mode === "wait" && cai.zone.lo > 0) c = `<i>①</i> Cai stops at the sealer: not yet trained on toppings and finishing, so Cai waits there for Ben's cup.`;
+        if (pc) { c = `<i>②</i> Ben finishes the step in hand; Cai takes over #${pc.order}. Ben walks back.`; on = 3; }
+        if (pb) { c = `<i>③</i> Ben takes over #${pb.order} from Ana at a safe point. Ana walks back.`; on = 3; }
+        if (sa) { c = `Ana starts #${sa.order}. One cycle: everyone moved back to earlier work, and nobody was told where to help.`; on = 4; if (end == null) end = S.t; }
+        capEl.innerHTML = c;
+        rules.forEach((li, i) => { li.classList.toggle("on", i + 1 === on); li.classList.toggle("done", i + 1 < on); });
+      }
+      const draw = () => { g.innerHTML = strip(S, GEO); caption(); $(sr, '[data-r="clock"]').textContent = mmss(Math.floor(S.t)); $(sr, '[data-r="speed"]').textContent = `playback ${SC.cycle_speed}×, real time`; };
+      const P7 = player(sr, dt => { stepBy(S, dt, SC.cycle_speed); draw(); return end == null || S.t < end + 4; });
+      const play = () => { box.classList.remove("play"); void box.offsetWidth; box.classList.add("play"); if (st === 1) { cyc(); draw(); P7.start(); } };
+      const paint = () => {
+        box.dataset.st = st; $(box, ".c5n").textContent = `${st} / ${N}`; $(box, '[data-c5="prev"]').disabled = st === 1;
+        $$(box, ".sx li").forEach((l, i) => { l.classList.toggle("cur", i === st - 1); l.classList.toggle("done", i < st - 1); });
+        $(box, '[data-c5="next"]').textContent = st < N ? "Next ▶" : "Compare the two rules →"; if (st !== 1) P7.stop(); play();
+      };
+      sr._intro = { enter: fromEnd => { st = fromEnd ? N : 1; paint(); },
+        next: () => { if (st < N) { st++; paint(); return true; } return false; },
+        prev: () => { if (st > 1) { st--; paint(); return true; } return false; } };
+      box.addEventListener("click", e => {
+        const b = e.target.closest("button,[data-s]"); if (!b) return; b.blur?.();
+        if (b.dataset.c5 === "next") { if (!sr._intro.next()) show(cur + 1); }
+        else if (b.dataset.c5 === "prev") sr._intro.prev();
+        else if (b.dataset.c5 === "replay") play();
+        else if (b.dataset.s) { st = +b.dataset.s; paint(); }
+      });
+      // print: the cycle stopped just after Ben takes over from Ana, every rule shown
+      printers.push(() => { P7.stop(); st = 1; box.dataset.st = 1; cyc(); while (!ev("pass", "ben") && S.t < 600) S.step(); draw(); rules.forEach(li => li.classList.add("done")); });
+      cyc(); draw();
+    }
+
+    /* 08: fixed responsibilities against the brigade */
+    const sc8 = document.getElementById("s2c");
+    if (sc8) {
+      const tc = $(sc8, ".tcmp"), sh = $(sc8, '[data-c="share"]'), asmb = $(sc8, '[data-c="asmb"]');
+      const GEO = { x0: 215, gap: 168, foot: 84, front: 30, s: 1.25, lf: 10.5, nf: 11.5, mh: 30, sw: 144, sh: 80, sy: 4, rows: 3, rh: 16, status: true };
+      const SPD = SC.compare_speeds, base = () => ({ share: DEF, toppingSec: E.toppingSec.value, walkSec: E.walkSec.value, handSec: E.handSec.value, bar: E.bar.value,
+        speeds: Object.fromEntries(E.crew.map(c => [c.id, c.v])), trained: Object.fromEntries(E.crew.map(c => [c.id, c.trained])) });
+      let O = base(), speed = SC.compare_speed, L = null, R = null, t = 0, timer = 0;
+      const cache = new Map();
+      sh.min = E.share.range[0]; sh.max = E.share.range[1]; sh.step = E.share.step;
+      $(sc8, '[data-c="spd"]').innerHTML = SPD.map(v => `<button data-sp="${v}">${v}×</button>`).join("");
+      // the two counters on the run's orders, brought to the clock's time (a change of settings keeps the minute)
+      const lanes = () => { const H = E.minutes * 60; L = ["fixed", "brigade"].map(mode => TM.create(E, Sim, { ...O, mode, seed: E.seed })); L.forEach(S => advance(S, Math.min(t, H))); };
+      const results = () => { const key = JSON.stringify(O); if (!cache.has(key)) cache.set(key, TM.compare(E, Sim, O)); R = cache.get(key); };
+      const chip = (d, unit, txt, goodNeg) => Math.abs(d) < unit ? `<em class="dch">about the same</em>` : `<em class="dch ${(d < 0) === goodNeg ? "g" : "r"}">${txt(d)}</em>`;
+      function drawLanes() {
+        $$(sc8, ".lane").forEach((ln, i) => { const S = L[i], busy = S.orders.filter(c => c.top != null && c.ready == null).length;
+          $(ln, "svg g").innerHTML = strip(S, GEO);
+          $(ln, ".lr").textContent = `ready ${S.delivered.filter(c => c.ready <= S.H).length} · in progress ${busy}`; });
+        const H = E.minutes * 60, tt = Math.min(t, H);
+        $(sc8, '[data-c="clock"]').textContent = mmss(Math.floor(tt)); $(sc8, '[data-c="of"]').textContent = `of ${mmss(H)}`;
+        $(sc8, '[data-c="pb"]').textContent = tt >= H ? "end of the peak hour" : `playback ${speed}×`;
+        $$(sc8, "[data-sp]").forEach(b => b.classList.toggle("on", +b.dataset.sp === speed));
+      }
+      function drawOut() {
+        const A = R.fixed, B = R.brigade, ct = R.content, C_ = TM.setup(E, O), barLoad = (C_.sec[FIN] + O.share * C_.sec[TOP]) * C_.perHour / 3600 / O.bar;
+        const ms = x => mmss(Math.round(x)), cost = `S$${Math.round(R.cost)}`;
+        $(sc8, '[data-c="out"]').innerHTML =
+          `<div class="mc"><p class="mh">Order-to-ready time<small>median · 90th percentile</small></p><div class="mv"><span class="a"><i>A</i><b>${ms(A.median)}</b><small>${ms(A.p90)}</small></span><span class="b"><i>B</i><b>${ms(B.median)}</b><small>${ms(B.p90)}</small></span>` +
+          chip(B.median - A.median, 5, d => `B ${Math.round(Math.abs(d))} s ${d < 0 ? "faster" : "slower"}`, true) + `</div></div>` +
+          `<div class="mc"><p class="mh">Orders completed in the peak<small>of ${Math.round(A.placed)} placed</small></p><div class="mv"><span class="a"><i>A</i><b>${Math.round(A.completed)}</b></span><span class="b"><i>B</i><b>${Math.round(B.completed)}</b></span>` +
+          chip(B.completed - A.completed, 0.5, d => `${d > 0 ? "+" : "−"}${Math.round(Math.abs(d))} with B`, false) + `</div></div>` +
+          `<div class="mc"><p class="mh">Paid labour cost, this hour<small>${R.people} people × S$${E.wage.toFixed(2)}</small></p><div class="mv"><span class="a"><i>A</i><b>${cost}</b></span><span class="b"><i>B</i><b>${cost}</b></span><em class="dch">same crew · S$${(R.cost / A.completed).toFixed(2)} vs S$${(R.cost / B.completed).toFixed(2)} an order</em></div></div>`;
+        const lim = barLoad >= 0.9 ? `<span class="lim">Topping bar at its limit: it would need ${pct(barLoad)} of its time with ${O.bar === 1 ? "one person at a time" : "two positions"}. Moving people cannot add bar time; ${O.bar === 1 ? "a second position, " : ""}topping-dispensing equipment or a shorter recipe would.</span> ` : "";
+        $(sc8, '[data-c="def"]').innerHTML = lim + `<b>Task:</b> toppings add ${Math.round(ct.toppingSec)} s to one step · <b>Work content:</b> ${Math.round(ct.standard)} s a standard order, ${Math.round(ct.topped)} s with toppings, the same under A and B · <b>Customer waiting:</b> order to ready, including time queued: the rules change only this · average of ${E.seeds} simulated peak hours; the animation plays one`;
+      }
+      function asmForm() {
+        const r = (k, lo, hi, st, v, u) => `<label><input type="range" data-a="${k}" min="${lo}" max="${hi}" step="${st}" value="${v}"><b>${v} ${u}</b></label>`;
+        const sp = E.crew.map(c => { const opts = [-1, 0, 1].map(d => { const v = +(1 + d * E.spread).toFixed(2); return `<option value="${v}"${Math.abs(v - O.speeds[c.id]) < 1e-9 ? " selected" : ""}>${["slower", "average", "faster"][d + 1]} (${v.toFixed(1)})</option>`; }).join("");
+          const own = E.fixed[c.id].some(k => E.steps[k].skill);
+          return `<tr><td><b>${c.name}</b></td><td><select data-sp-w="${c.id}">${opts}</select></td><td><label><input type="checkbox" data-tr="${c.id}"${O.trained[c.id] ? " checked" : ""}${own ? " disabled" : ""}> trained on toppings and finishing${own ? " (owns them under A)" : ""}</label></td></tr>`; }).join("");
+        const sec = E.steps.filter(s => !s.topping).map(s => `${s.label.toLowerCase()} ${s.sec} s${s.machine ? " (machine)" : ""}`).join(", ");
+        asmb.innerHTML = `<div class="ag"><h6>Extra work per topping order</h6>${r("toppingSec", E.toppingSec.range[0], E.toppingSec.range[1], E.toppingSec.step, O.toppingSec, "s")}<p style="margin:2px 0 0">Added only to orders with toppings; finishing applies to every order. No Chagee timing exists.</p></div>` +
+          `<div class="ag"><h6>Worker speeds and task eligibility</h6><table>${sp}</table></div>` +
+          `<div class="ag"><h6>Walking and hand-over time</h6>${r("walkSec", E.walkSec.range[0], E.walkSec.range[1], E.walkSec.step, O.walkSec, "s")}<span>walking one station, empty-handed or carrying</span>${r("handSec", E.handSec.range[0], E.handSec.range[1], E.handSec.step, O.handSec, "s")}<span>to take a cup from a colleague or the pass shelf</span></div>` +
+          `<div class="ag"><h6>Shared preparation space</h6><label><input type="radio" name="tpbar" data-bar="1"${O.bar === 1 ? " checked" : ""}> one person at the topping bar at a time</label><label><input type="radio" name="tpbar" data-bar="2"${O.bar === 2 ? " checked" : ""}> two people side by side</label><p style="margin:2px 0 0">The dispenser and the sealer take one cup at a time on both sides.</p></div>` +
+          `<div class="ag fx"><b>Held fixed:</b> ${E.perHour} orders an hour; ${sec}; task-time variation ±${pct(E.cv)}; three people at S$${E.wage.toFixed(2)} an hour. All illustrative, to validate with Chagee.</div>`;
+      }
+      const P8 = player(sc8, dt => { const H = E.minutes * 60; t = Math.min(H, t + dt * speed); L.forEach(S => advance(S, t)); drawLanes(); return t < H; });
+      const setPlay = on => { $(sc8, '[data-c="play"]').textContent = on ? "❚❚" : "▶"; on ? P8.start() : P8.stop(); };
+      const update = (delay = 0) => { clearTimeout(timer); lanes(); drawLanes(); $(sc8, '[data-c="sharev"]').textContent = pct(O.share); sh.value = O.share;
+        timer = setTimeout(() => { results(); drawOut(); }, delay); };
+      sc8._intro = { enter: () => { if (t >= E.minutes * 60) t = 0; update(); setPlay(true); }, next: () => false, prev: () => false };
+      sh.addEventListener("input", () => { O.share = +sh.value; update(120); });
+      sc8.addEventListener("click", e => {
+        const b = e.target.closest("[data-c],[data-sp]"); if (!b || b.disabled) return; b.blur?.();
+        if (b.dataset.sp) { speed = +b.dataset.sp; drawLanes(); return; }
+        const a = b.dataset.c;
+        if (a === "play") setPlay(!P8.on);
+        else if (a === "restart") { t = 0; update(); setPlay(true); }
+        else if (a === "end") { setPlay(false); t = E.minutes * 60; update(); }
+        else if (a === "asm") { tc.classList.toggle("asm"); asmForm(); }
+        else if (a === "asmx") tc.classList.remove("asm");
+        else if (a === "asmreset") { const s_ = O.share; O = { ...base(), share: s_ }; asmForm(); update(); }
+      });
+      asmb.addEventListener("input", e => {
+        const x = e.target;
+        if (x.dataset.a) { O[x.dataset.a] = +x.value; x.nextElementSibling.textContent = `${x.value} s`; }
+        else if (x.dataset.spW) O.speeds = { ...O.speeds, [x.dataset.spW]: +x.value };
+        else if (x.dataset.tr) O.trained = { ...O.trained, [x.dataset.tr]: x.checked };
+        else if (x.dataset.bar) O.bar = +x.dataset.bar;
+        update(150);
+      });
+      addEventListener("keydown", e => { if (e.key === "Escape") tc.classList.remove("asm"); });
+      new MutationObserver(() => { if (!sc8.classList.contains("active")) { tc.classList.remove("asm"); P8.stop(); } }).observe(sc8, { attributes: true, attributeFilter: ["class"] });
+      printers.push(() => { P8.stop(); O = base(); t = E.minutes * 60; tc.classList.remove("asm"); lanes(); drawLanes(); results(); drawOut(); $(sc8, '[data-c="sharev"]').textContent = pct(O.share); });
+      lanes(); drawLanes(); $(sc8, '[data-c="sharev"]').textContent = pct(O.share); sh.value = O.share; results(); drawOut();
+    }
+  })();
+
   (function crewTool() {
     const CT = window.ChageeCrewTool; if (!CT || !RAW.ops_tool) return;
     const E = CT.inputs(RAW, Sim), D0 = E.demand.value, OT = RAW.ops_tool, still = matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -2723,41 +2981,7 @@
       }).join("");
     }
 
-    /* 06: the counter at the rush, four points and the proposal */
-    const sp = document.getElementById("s2p");
-    if (sp) {
-      const panel = $(sp, ".p2panel"), sc = $(sp, ".p2scene"), tip = $(sp, ".p1tip"), rows = $$(sp, ".p1row"), N = rows.length + 1;
-      const TIPS = {
-        screen: ["Order screen", "New app and counter orders keep landing. It shows the longest list, but this step is quick: those orders are only waiting to start."],
-        ben: ["Cups at finishing", "Topped and fruit drinks take longer to finish. In this rush, cups wait in front of Ben while the other steps keep up."],
-        ana: ["Ana · cup and ice", "Has just cleared the cups at cup and ice, so has time to spare for a while. Trained on finishing."],
-        cai: ["Cai · hand-over", "Busy handing drinks to customers and riders. Still in training for finishing."],
-        mach: ["Machines", "Tea and milk, and the sealer, keep pace in this scene. Which steps machines do is our illustrative split, not Chagee's disclosed setup."],
-        mgr: ["The outlet manager", "Sees the rush, but not where the next queue will form, who could help, or for how long."] };
-      let k = 1;
-      const paint = () => {
-        panel.dataset.k = k; if (k < N) sc.dataset.f = k; else delete sc.dataset.f;
-        rows.forEach((r, i) => { r.classList.toggle("seen", i < k); r.classList.toggle("cur", i === k - 1); });
-        $$(sp, ".p1dots i").forEach((d, i) => d.classList.toggle("on", i < k));
-        $(sp, ".p1n").textContent = `${k} / ${N}`; $(sp, '[data-p2="next"]').textContent = k < N ? "Next ▶" : "Next slide ▶"; tip.innerHTML = "";
-      };
-      const setPlay = on => { sc.classList.toggle("paused", !on); $(sp, '[data-p2="play"]').textContent = on ? "❚❚ Pause" : "▶ Play"; };
-      sp._intro = { enter: fromEnd => { k = fromEnd ? N : 1; paint(); },
-        next: () => { if (k < N) { k++; paint(); return true; } return false; },
-        prev: () => { if (k > 1) { k--; paint(); return true; } return false; } };
-      sp.addEventListener("click", e => {
-        const b = e.target.closest("[data-p2]"), row = e.target.closest(".p1row"), hs = e.target.closest(".hs");
-        if (b) { b.blur(); const a = b.dataset.p2;
-          if (a === "next") { if (!sp._intro.next()) show(cur + 1); }
-          else if (a === "play") setPlay(sc.classList.contains("paused"));
-          else if (a === "replay") { const s = $(sc, "svg"); s.replaceWith(s.cloneNode(true)); k = 1; paint(); setPlay(!still); } }
-        else if (row) { k = rows.indexOf(row) + 1; paint(); }
-        else if (hs && TIPS[hs.dataset.hs]) { const [h, t] = TIPS[hs.dataset.hs]; tip.innerHTML = `<b>${h}</b>${t}`; }
-      });
-      printers.push(() => { k = N; paint(); }); paint(); setPlay(!still);
-    }
-
-    /* 07: see the workload, predict the constraint, recommend a feasible response */
+    /* the tablet, how it works (appendix, was slide 07): see the workload, predict the constraint, recommend a feasible response */
     const sb = document.getElementById("s2b");
     if (sb) {
       const box = $(sb, ".c5intro"), N = $$(box, ".c5s").length, pop = $(box, ".pop"), IN = OT.inputs.value; let st = 1;
@@ -2817,7 +3041,7 @@
       printers.push(() => { st = N; decide(null); paint(); }); decide(null); paint();
     }
 
-    /* 08: the tablet. Demand and the equipment toggle feed the prediction; staff cards set one help step per person (trained
+    /* the tablet (appendix, was slide 08). Demand and the equipment toggle feed the prediction; staff cards set one help step per person (trained
        steps only); Try runs the current allocation against this one, Keep runs the current one alone, Reset restores */
     const tt = document.getElementById("s2t");
     if (tt) {

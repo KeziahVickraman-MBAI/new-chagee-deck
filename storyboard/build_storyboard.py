@@ -762,6 +762,32 @@ def p2_steps() -> tuple:
     return steps, page
 
 
+def tp_page(d: dict) -> str:
+    """Proposal 2's execution page (slides 06 to 08): the four steps, then every setting of slide 08's comparison and its source."""
+    T, ST, PE = RAW["toppings"], RAW["stations"], RAW["people"]; v = lambda k: T[k]["value"]; lab = v("step_labels")
+    hs, ms = ST["human_seconds_per_cup"]["value"], ST["machine_seconds_per_cup"]["value"]
+    cells = "".join(f"<div><span class='n'>{i + 1}</span><h5>{s['step']}</h5><p style='margin:0'>{s['detail']}</p></div>" for i, s in enumerate(v("execution_steps")))
+    crew = RAW["ops_tool"]["crew"]["value"]; sp = PE["worker_speed_spread"]["value"]
+    own = "; ".join(f"{c['name']}: {', '.join(lab[k].lower() for k in v('fixed_assignment')[c['id']])}" for c in crew)
+    rows = [("Toppings plan", v("plan_status")),
+            ("Counter", f"{lab['cup_ice'].lower()} {hs['cup_ice']} s and {lab['handover'].lower()} {hs['handover']} s by hand (stations.human_seconds_per_cup); {lab['tea_milk'].lower()} {ms['tea_milk']} s and the {lab['shake_seal'].lower()} {ms['shake_seal']} s by machine (stations.machine_seconds_per_cup), attended by whoever carries the cup, one cup at a time"),
+            ("Finishing and toppings", f"finishing {v('finish_sec')} s on every order; toppings {v('topping_sec')} s more on orders with toppings (Assumptions: {T['topping_sec']['range'][0]}–{T['topping_sec']['range'][1]} s). Together they replace the deck's {hs['topping_finish']} s topping/finish step on these slides, so topping work is not counted twice"),
+            ("Crew", "; ".join(f"{c['name']} speed {1 + c['speed_step'] * sp:.1f}, {'trained' if 'topping_finish' in c['trained'] else 'not yet trained'} on toppings and finishing" for c in crew) + " (ops_tool.crew)"),
+            ("A: fixed responsibilities", own + "; cups pass on a shelf"),
+            ("B: bucket brigade", "Week 5's rules with safe hand-overs: carry forward through trained steps; the last person walks back and takes over the upstream colleague's cup when that colleague finishes the step in hand; nobody overtakes"),
+            ("Moving and passing", f"{v('walk_sec_per_station'):g} s to walk one station; {v('handover_sec')} s for every pass between people, on both sides"),
+            ("Topping bar", f"{v('bar_positions')} person at a time by default; Assumptions tries two"),
+            ("Orders", f"{v('peak_orders_per_hour')} an hour, one drink each, Poisson arrivals; task-time variation ±{PE['human_speed_variation_cv']['value']:.0%}; the same order sequence and topping draws on A and B; an order has toppings when its draw is below the share"),
+            ("Measured", f"one {v('peak_minutes')}-minute peak from an empty counter; orders placed in it followed up to {v('follow_minutes')} more minutes; {v('seeds')} runs per setting"),
+            ("Paid labour", f"{len(crew)} people × S${RAW['costs']['labour_cost_per_hour']['value']:.2f} an hour (costs.labour_cost_per_hour), the same on both sides")]
+    return (f"<div class='p1xs'>{cells}</div>"
+            "<p class='p2xnote'><b>Decision-maker:</b> the operations manager or outlet GM decides after each step whether to continue. Dedicated staff and topping-dispensing equipment are follow-up alternatives; a robotic arm stays an investigation needing evidence on topping compatibility, cleaning, space, safety, throughput and cost "
+            "(<span class='golink' data-go='c7'>equipment, appendix</span>). No labour saving, sales or profit is estimated.</p>"
+            "<h5>Slide 08's comparison: every setting (assumptions.json toppings; illustrative, to validate with Chagee)</h5><table class='res mbt'>" + "".join(f"<tr><td>{a}</td><td>{b}</td></tr>" for a, b in rows) + "</table>"
+            "<p>The AI forecast of topping demand is proposed, not built: on slide 08 the share is set by hand. The alternative, flexible assistance with a manager's tablet, is kept on its own pages: "
+            "<span class='golink' data-go='s2b'>how the tablet works</span>. <span class='golink' data-go='s2c'>Back to the comparison</span></p>")
+
+
 def online_appendix(d: dict) -> tuple:
     """Appendix for slides 03 to 07 (online retailing): inputs, each initiative, the brief reconciled; policy, plan, team, sources."""
     ON, OC, F, SBv, ST, X = d["online"], RAW["online_case"], RAW["facts"], RAW["storyboard"], RAW["store"], RAW["site_ext"]
@@ -1054,7 +1080,7 @@ def build() -> Path:
     html = html.replace("<!--SQAPPX-->", sq_appendix(d))
     html = html.replace("<!--OPSAPPX-->", ops_appendix(d))
     p2 = p2_steps()
-    html = html.replace("<!--P2XSTEPS-->", p2[0]).replace("<!--P2XPAGE-->", p2[1])
+    html = html.replace("<!--P2XSTEPS-->", p2[0]).replace("<!--P2XPAGE-->", p2[1]).replace("<!--TPXPAGE-->", tp_page(d))
     ps = p1_steps()
     html = html.replace("<!--P1XSTEPS-->", ps[0]).replace("<!--P1XPAGE-->", ps[1])
     oa = online_appendix(d)
