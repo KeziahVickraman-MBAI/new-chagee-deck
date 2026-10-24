@@ -2997,5 +2997,256 @@
       "source": "assumption",
       "rationale": "Gate months and names reuse online_case.gates; these tests are ours for Proposal 1."
     }
+  },
+  "ops_tool": {
+    "_note": {
+      "value": "Slides 06 to 08: Proposal 2, the manager's bottleneck tool (problem, how it works, the tablet)",
+      "unit": "text",
+      "range": null,
+      "source": "assumption",
+      "rationale": "One illustrative rush at one counter. The counter layout is today's split (our scenario, not Chagee's disclosed setup); station times, worker speeds, walking speed and the per-cup coordination cost are the deck's own (stations, people, illustration.walk_back_speed, sharing.assist_handover_sec). Every value in this section is ours, to validate with Chagee by observing the counter. Nothing here says Chagee's counter is inefficient; no labour saving or profit is claimed."
+    },
+    "outlet_label": {
+      "value": "A busy outlet at the lunch rush",
+      "unit": "text",
+      "range": null,
+      "source": "assumption, illustrative, to validate with Chagee",
+      "rationale": "Display only; no outlet is named, because no outlet was observed."
+    },
+    "clock": {
+      "value": "12:05",
+      "unit": "time of day on the manager's tablet",
+      "range": null,
+      "source": "assumption, illustrative, to validate with Chagee",
+      "rationale": "Display only."
+    },
+    "station_labels": {
+      "value": {
+        "ticket": "Order screen",
+        "cup_ice": "Cup and ice",
+        "tea_milk": "Tea and milk",
+        "topping_finish": "Finishing",
+        "shake_seal": "Sealer",
+        "handover": "Hand-over"
+      },
+      "unit": "text",
+      "range": null,
+      "source": "assumption",
+      "rationale": "Display names for stations.list on slides 06 to 08. Finishing is stations' topping_finish step."
+    },
+    "crew": {
+      "value": [
+        {
+          "id": "ana",
+          "name": "Ana",
+          "home": "cup_ice",
+          "trained": [
+            "cup_ice",
+            "topping_finish",
+            "handover"
+          ],
+          "speed_step": 1,
+          "note": "experienced; trained on every hand step"
+        },
+        {
+          "id": "ben",
+          "name": "Ben",
+          "home": "topping_finish",
+          "trained": [
+            "cup_ice",
+            "topping_finish",
+            "handover"
+          ],
+          "speed_step": 0,
+          "note": "trained on every hand step"
+        },
+        {
+          "id": "cai",
+          "name": "Cai",
+          "home": "handover",
+          "trained": [
+            "handover",
+            "cup_ice"
+          ],
+          "speed_step": -1,
+          "note": "newer; finishing training not complete"
+        }
+      ],
+      "unit": "people on the counter, each with one assigned step and the steps they are trained for; speed = 1 + speed_step x people.worker_speed_spread",
+      "range": null,
+      "source": "assumption, illustrative, to validate with Chagee",
+      "rationale": "Three people, one per hand step. Names are invented. Skills are a scenario: the tool needs a real skills record (proposed input)."
+    },
+    "drink_mix": {
+      "value": [
+        {
+          "id": "milk_tea",
+          "label": "Milk teas",
+          "share": 0.5,
+          "finish_mult": 0.75
+        },
+        {
+          "id": "topped",
+          "label": "Fruit and topped teas",
+          "share": 0.5,
+          "finish_mult": 1.5
+        }
+      ],
+      "unit": "share of drinks in this rush, and the finishing time of each as a multiple of stations.human_seconds_per_cup.topping_finish",
+      "range": null,
+      "source": "assumption, illustrative, to validate with Chagee",
+      "rationale": "A topping-heavy rush: finishing takes longer on average than the deck-wide figure. The same drinks, in the same order, reach every allocation compared."
+    },
+    "demand_per_hour": {
+      "value": 260,
+      "unit": "drinks an hour arriving at the counter during the rush (the tablet's slider)",
+      "range": [
+        150,
+        380
+      ],
+      "source": "assumption, illustrative, to validate with Chagee",
+      "rationale": "Default for the illustrative rush at a busy outlet; above the deck's average-outlet peaks, which is why finishing builds up. Not a Chagee figure."
+    },
+    "demand_step": {
+      "value": 10,
+      "unit": "drinks an hour per slider step",
+      "range": null,
+      "source": "assumption",
+      "rationale": "Display only."
+    },
+    "forecast_band": {
+      "value": 0.2,
+      "unit": "± share around the incoming-demand forecast",
+      "range": null,
+      "source": "assumption, illustrative, to validate with Chagee",
+      "rationale": "The forecast's uncertainty: the tool projects the next window at the low, base and high end and says whether its recommendation holds across them."
+    },
+    "window_min": {
+      "value": 15,
+      "unit": "minutes compared after the decision (the comparison period and the projection horizon)",
+      "range": null,
+      "source": "assumption, illustrative, to validate with Chagee",
+      "rationale": "Long enough for a move, the help and the review to play out; short enough that the rush is one demand level."
+    },
+    "snapshot": {
+      "value": {
+        "ticket": 7,
+        "cup_ice": 1,
+        "tea_milk": 1,
+        "topping_finish": 6,
+        "shake_seal": 0,
+        "handover": 1
+      },
+      "unit": "drinks waiting at each step when the manager checks",
+      "range": null,
+      "source": "assumption, illustrative, to validate with Chagee",
+      "rationale": "The order screen shows the longest list, but its step is fast (a machine): those orders are only waiting to start. The constraint is where capacity falls short, not where the list is longest."
+    },
+    "switch_sec": {
+      "value": 20,
+      "unit": "seconds each time a person changes step: hand over, wash hands or change gloves, get set up",
+      "range": null,
+      "source": "assumption, illustrative, to validate with Chagee",
+      "rationale": "Paid on every move, out and back, on top of walking (illustration.walk_back_speed) and the per-cup coordination cost away from one's own step (sharing.assist_handover_sec)."
+    },
+    "return_trigger": {
+      "value": 3,
+      "unit": "drinks waiting at a helper's own step that send them back to it",
+      "range": null,
+      "source": "assumption, illustrative, to validate with Chagee",
+      "rationale": "The original step is reassessed throughout: a helper returns when their own work queues, and goes back to help once it is clear."
+    },
+    "clear_level": {
+      "value": 1,
+      "unit": "drinks waiting at the constraint at or below which the help ends",
+      "range": null,
+      "source": "assumption, illustrative, to validate with Chagee",
+      "rationale": "The review: once the backlog has cleared, the helper returns to their own step and the allocation is back to normal."
+    },
+    "spare_min": {
+      "value": 0.2,
+      "unit": "smallest predicted spare share of a person's time, over the window, for the tool to suggest them as a helper",
+      "range": null,
+      "source": "assumption, illustrative, to validate with Chagee",
+      "rationale": "Below it, moving the person would only move the queue to their own step."
+    },
+    "equipment": {
+      "value": {
+        "station": "shake_seal",
+        "label": "Sealer running slow",
+        "slow_factor": 2.5
+      },
+      "unit": "the equipment scenario: which machine step slows, and its seconds per drink as a multiple of stations.machine_seconds_per_cup",
+      "range": null,
+      "source": "assumption, illustrative, to validate with Chagee",
+      "rationale": "A presenter toggle, to show a case where people cannot fix the constraint. Not an observed fault."
+    },
+    "seeds": {
+      "value": 24,
+      "unit": "seeded runs averaged for each allocation compared",
+      "range": null,
+      "source": "assumption",
+      "rationale": "Each run draws the same arrivals, drink mix and task-time variation for both allocations; only who does which step differs."
+    },
+    "inputs": {
+      "value": [
+        {
+          "id": "orders",
+          "label": "Outstanding orders and drink mix",
+          "detail": "orders placed, drinks on each, and which are not ready yet",
+          "status": "recorded",
+          "tag": "orders recorded · drink detail to confirm"
+        },
+        {
+          "id": "times",
+          "label": "Task times and equipment status",
+          "detail": "when each drink finishes each step; whether a machine is slow or down",
+          "status": "proposed",
+          "tag": "proposed · needs step timestamps"
+        },
+        {
+          "id": "staff",
+          "label": "Staff assignments and skills",
+          "detail": "who is on which step, and who is trained for what",
+          "status": "proposed",
+          "tag": "roster to confirm · skills record to build"
+        },
+        {
+          "id": "demand",
+          "label": "Expected incoming demand",
+          "detail": "orders forecast for the next quarter of an hour, with a range",
+          "status": "recorded",
+          "tag": "forecast from recorded orders"
+        }
+      ],
+      "unit": "the four inputs on the manager's tablet; recorded = data Chagee holds today as far as we know, proposed = needs instrumentation or a new record",
+      "range": null,
+      "source": "assumption",
+      "rationale": "Orders by outlet and time are recorded today, as far as we know (Proposal 1). Step-level timestamps, equipment status and a skills record are proposed."
+    },
+    "execution_steps": {
+      "value": [
+        {
+          "step": "Observe and validate the counter",
+          "detail": "Watch real rushes: the steps, who does what, task times and how often one step queues while another is free."
+        },
+        {
+          "step": "Confirm the data",
+          "detail": "Order and drink detail, equipment status, the roster and a skills record: what exists, what needs logging."
+        },
+        {
+          "step": "Run in shadow mode",
+          "detail": "The tablet predicts and recommends, but nothing is shown to the crew; compare its calls with what managers did and what happened."
+        },
+        {
+          "step": "Pilot manager-approved actions",
+          "detail": "Managers approve or decline. Measure order-to-ready time, orders completed, disruption to the original step, and how often managers override."
+        }
+      ],
+      "unit": "the four execution steps for Proposal 2",
+      "range": null,
+      "source": "assumption",
+      "rationale": "Ours, from the brief. No timing or cost is estimated."
+    }
   }
 }

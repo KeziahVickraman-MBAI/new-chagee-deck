@@ -2467,9 +2467,20 @@
           s += `<g class="ol" data-j="${j}"><circle cx="${x}" cy="${y - 14}" r="${me ? 22 : 17}" fill="${off ? "#B9B2A6" : me ? COL.red : COL.navy}" stroke="#fff" stroke-width="3"/>` +
                T(x, y - 8, GEO.numbers[j], `font-size="${me ? 19 : 16}" font-weight="700" fill="#fff" text-anchor="middle"`) + `</g>`;
         });
-        if (S.on) top.forEach(r => { const [x, y] = GEO.outlets[r.j], w = 96;
-          s += `<g class="rv"><rect x="${x + 20}" y="${y - 58}" width="${w}" height="34" rx="8" fill="#fff" stroke="#2F6B45" stroke-width="2.5"/>` +
-               T(x + 20 + w / 2, y - 33, `+${n(r.cups)}`, `font-size="23" font-weight="700" fill="#2F6B45" text-anchor="middle"`) + `</g>`; });
+        // each label sits beyond its outlet, pointing away from the unavailable one, nudged outward until it clears
+        // the unavailable outlet, every outlet marker and the labels already placed
+        const w = 96, h = 34, hit = (a, b) => Math.abs(a.x - b.x) < (a.w + b.w) / 2 && Math.abs(a.y - b.y) < (a.h + b.h) / 2;
+        const busy = GEO.outlets.map(([x, y]) => ({ x, y: y - 14, w: 34, h: 34 })); busy.push({ x: ox, y: oy - 14, w: 60, h: 60 });
+        if (S.on) top.forEach(r => { const [x, y] = GEO.outlets[r.j], dx = x - ox, dy = y - oy, d = Math.hypot(dx, dy) || 1;
+          let b;
+          for (let k = 0; k < 14; k++) {
+            b = { x: Math.max(w / 2, Math.min(1672 - w / 2, x + dx / d * (66 + 18 * k))), y: Math.max(h / 2, Math.min(640 - h / 2, y - 14 + dy / d * (40 + 18 * k))), w, h };
+            if (!busy.some(o => hit(b, o))) break;
+          }
+          busy.push(b);
+          s += `<g class="rv"><line x1="${x}" y1="${y - 14}" x2="${b.x}" y2="${b.y}" stroke="#2F6B45" stroke-width="1.5" opacity=".6"/>` +
+               `<rect x="${b.x - w / 2}" y="${b.y - h / 2}" width="${w}" height="${h}" rx="8" fill="#fff" stroke="#2F6B45" stroke-width="2.5"/>` +
+               T(b.x, b.y + 8, `+${n(r.cups)}`, `font-size="23" font-weight="700" fill="#2F6B45" text-anchor="middle"`) + `</g>`; });
         if (S.on) s += `<path class="rv" d="M${ox - 13} ${oy - 27} l26 26 M${ox + 13} ${oy - 27} l-26 26" stroke="${COL.red}" stroke-width="5" stroke-linecap="round"/>`;
         layer.innerHTML = s;
         const m = (l, v, cls = "") => `<dt>${l}</dt><dd class="${cls}">${S.on ? v : "—"}</dd>`;
@@ -2619,7 +2630,7 @@
         if (S.pick === "switch") ph += `<div class="hero">Switched</div><div class="pc ok"><span class="chip">Confirmed · simulated</span><b>Collect at ${AL} in about ${ac} min</b>Switch perk added: ${inc.toLowerCase()}.</div><button class="pb alt sm" data-cx="undo">Undo</button>`;
         else if (S.pick === "keep") ph += `<div class="hero">Your tea</div><div class="pc ok"><span class="chip">Confirmed · simulated</span><b>Collect at ${B} in about ${bc} min</b>You kept your outlet; nothing else changes.</div><button class="pb alt sm" data-cx="undo">Undo</button>`;
         else if (offer) ph += `<div class="hero">Your tea, sooner</div><div class="pc sug"><span class="chip">Suggested for you</span><b>Collect at ${AL} in about ${ac} min</b>instead of ${bc} min at ${B}.</div>
-          <div class="pc perk"><span class="chip">Switch perk</span><br>${inc}.</div><button class="pb go" data-cx="sw">Switch to ${AL}</button><button class="pb alt" data-cx="kp">Keep ${B}</button>`;
+          <div class="pc perk"><span class="chip">Switch perk</span>${inc}.</div><button class="pb go" data-cx="sw">Switch to ${AL}</button><button class="pb alt" data-cx="kp">Keep ${B}</button>`;
         else ph += `<div class="hero">Your tea</div><div class="pc no"><span class="chip">No suggestion right now</span><b>Collect at ${B} in about ${bc} min</b>${AL} is busy too, so no switch is offered.</div><button class="pb alt" data-cx="kp">Continue at ${B}</button>`;
         $(pa, '[data-cx="pphone"]').innerHTML = ph;
         $(pa, '[data-cx="ptext"]').innerHTML = `<h4>${offer || S.pick ? "A faster outlet, offered" : "No faster outlet, no offer"}</h4>
