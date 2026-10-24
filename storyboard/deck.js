@@ -55,6 +55,7 @@
     cur = Math.max(0, Math.min(slides.length - 1, i));
     slides.forEach((s, k) => s.classList.toggle("active", k === cur));
     buildTo(slides[cur], fromEnd || revealAll || editingNow() ? Infinity : -1);
+    slides[cur]._intro?.enter(fromEnd);                             // a slide with its own overview (slide 13) starts there
     const gt = $(document, "#goto"); if (document.activeElement !== gt) gt.value = cur + 1; $(document, "#count .tot").textContent = `/ ${slides.length}`;
     const n = $(slides[cur], "aside.notes");
     $(document, "#notes .nb").innerHTML = n ? n.innerHTML : "";
@@ -67,7 +68,7 @@
   /* slide build, one-by-one mode: the kicker and headline open the slide; each Next brings in the next block in reading
      order (business problem, the explainer panel and its own steps, each card, the reveal band, takeaway or decision
      strip, transition line). A slide-level stepper (.inner.stepper) keeps driving its own [data-s] elements as one block. */
-  const KEEP = ".kicker,.head,.sub,.revctl,.leafart";
+  const KEEP = ".kicker,.head,.sub,.revctl,.leafart,.keep";
   function unitsOf(sl) {
     if (sl._units) return sl._units;
     const U = [], inner = $(sl, ".inner"), ss = sl.classList.contains("content") && sl.dataset.chapter !== "Appendix" && inner;
@@ -107,12 +108,14 @@
   }
   const stepping = () => !revealAll && !editingNow();
   function next() { const sl = slides[cur], U = unitsOf(sl), u = U[sl._b];
+    if (sl._intro?.next()) return;
     if (!stepping() || !U.length) { const st = sl._stepper; if (stepping() && st && st.cur < st.N) return st.go(st.cur + 1); return cur < slides.length - 1 && show(cur + 1); }
     if (u && u.S && u.S.cur < u.S.N) return u.S.go(u.S.cur + 1);
     if (u && u.rv && u.rv._r < 2) return setRev(u.rv, u.rv._r + 1);
     if (sl._b < U.length - 1) { sl._b++; U[sl._b].els.forEach(e => e.classList.remove("bh")); return; }
     if (cur < slides.length - 1) show(cur + 1); }
   function prev() { const sl = slides[cur], U = unitsOf(sl), u = U[sl._b];
+    if (sl._intro?.prev()) return;
     if (!stepping() || !U.length) { const st = sl._stepper; if (stepping() && st && st.cur > 1) return st.go(st.cur - 1); return cur > 0 && show(cur - 1, true); }
     if (u && u.rv && u.rv._r > 0) return setRev(u.rv, u.rv._r - 1);
     if (u && u.S && u.S.cur > 1) return u.S.go(u.S.cur - 1);
@@ -2039,6 +2042,49 @@
       $$(sl, ".o2day").forEach(e => (e.textContent = DAY_LABEL[d]));
     }
     BUS.fns.push(draw); printers.push(draw); draw();
+  })();
+
+  /* ---------------------------------------------------------------- slide 13: three-step overview, then the forecaster.
+     Next steps 1 → 2 → 3, then opens the forecaster at its starting state; Previous from there returns to step 3. */
+  (function siteIntro() {
+    const sl = document.getElementById("c5"), box = sl && $(sl, ".c5intro"); if (!box) return;
+    const N = $$(box, ".c5s").length, I = { on: false, st: 1 };
+    const play = () => { box.classList.remove("play"); void box.offsetWidth; box.classList.add("play"); };
+    const paint = () => {
+      box.dataset.st = I.st; $(box, ".c5n").textContent = `${I.st} / ${N}`;
+      $(box, '[data-c5="prev"]').disabled = I.st === 1;
+      $(box, '[data-c5="next"]').textContent = I.st < N ? "Next ▶" : "Open the forecaster ▶";
+      play();
+    };
+    I.open = st => { I.on = true; I.st = st; sl.classList.add("c5ov"); if (stepping()) buildTo(sl, -1); paint(); };
+    I.close = () => { I.on = false; sl.classList.remove("c5ov"); box.classList.remove("play"); buildTo(sl, stepping() ? 0 : Infinity); };
+    I.enter = fromEnd => { if (fromEnd) { I.on = false; sl.classList.remove("c5ov"); } else I.open(1); };
+    I.next = () => { if (!I.on) return false; if (I.st < N) { I.st++; paint(); } else I.close(); return true; };
+    I.prev = () => {
+      if (I.on) { if (I.st > 1) { I.st--; paint(); return true; } return false; }
+      const u0 = unitsOf(sl)[0];
+      if (!stepping() || (sl._b <= 0 && (!u0?.S || u0.S.cur <= 1))) { I.open(N); return true; }
+      return false;
+    };
+    sl._intro = I;
+    box.addEventListener("click", e => {
+      const b = e.target.closest("button"); if (!b) return; b.blur();     // so the arrow keys keep driving the slide
+      if (b.dataset.c5 === "next") I.next(); else if (b.dataset.c5 === "prev") I.prev(); else if (b.dataset.c5 === "replay") play();
+      else if (b.classList.contains("c5card")) {
+        $$(box, ".c5card").forEach(c => c.classList.toggle("on", c === b));
+        $(box, ".c5why").innerHTML = `<b>${$(b, ".lb").textContent}</b>: ${b.dataset.why}`;
+      }
+    });
+    $(sl, ".c5back").addEventListener("click", e => { e.currentTarget.blur(); I.open(1); });
+    // print: the forecaster prints on the slide's own page; a static copy of the overview prints on the page before it
+    const pg = document.createElement("section"); pg.className = "slide content"; pg.id = "c5p"; pg.dataset.chapter = "Expand";
+    pg.innerHTML = `<div class="leafart" aria-hidden="true"></div><div class="inner"></div>`;
+    [".kicker", ".head", ".bprob"].forEach(q => $(pg, ".inner").appendChild($(sl, q).cloneNode(true)));
+    const ov = box.cloneNode(true); ov.className = "c5intro static"; ov.removeAttribute("data-st");
+    $$(ov, ".c5nav").forEach(n => n.remove()); $$(ov, ".c5k").forEach((k, i) => (k.textContent = `${i + 1}`));
+    $(pg, ".inner").appendChild(ov); pg.appendChild($(sl, ".foot").cloneNode(true)); sl.before(pg);
+    printers.push(() => sl.classList.remove("c5ov"));
+    addEventListener("afterprint", () => { if (I.on) sl.classList.add("c5ov"); });
   })();
 
   /* ---------------------------------------------------------------- "How it works" / "Numbers" panels: [data-hiw] opens the
