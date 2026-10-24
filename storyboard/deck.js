@@ -2482,39 +2482,60 @@
 
     const pb = document.getElementById("p1b");
     if (pb) {
-      const box = $(pb, ".c5intro"), N = $$(box, ".c5s").length; let st = 1;
-      const play = () => { box.classList.remove("play"); void box.offsetWidth; box.classList.add("play"); };
-      const paint = () => { box.dataset.st = st; $(box, ".c5n").textContent = `${st} / ${N}`; $(box, '[data-c5="prev"]').disabled = st === 1;
-        $(box, '[data-c5="next"]').textContent = st < N ? "Next ▶" : "Try the customer experience →"; play(); };
+      const box = $(pb, ".c5intro"), N = $$(box, ".c5s").length, pop = $(box, ".pop"); let st = 1;
+      $$(pb, '[data-p1b="busy"]').forEach(e => (e.textContent = B)); $$(pb, '[data-p1b="alt"]').forEach(e => (e.textContent = AL));
+      const DET = {
+        app: ["App and sales", "Orders by outlet and time are recorded today. Customer location, only with permission, shows which outlets someone could reach; margin per drink keeps suggestions sensible. Location and margins: access to confirm."],
+        ops: ["Outlet operations", "Open orders show the work already committed; crew on shift and machine status show how fast each outlet can prepare. Crew and machine data: access to confirm."],
+        dlv: ["Delivery apps", "Delivery orders and how long riders wait at the collection shelf. The platforms hold this data; what they would share is to confirm."],
+        past: ["Past outcomes", "Earlier recommendations, what customers and managers decided, and what happened next. Not logged today; it would have to be built."],
+        pred: ["Prediction", `Forecasts of the wait at each outlet, from orders, crew and machines, with a range of uncertainty. The trigger, ${THR.value} minutes here, is illustrative: a setting managers would choose and test, not a validated rule.`],
+        rec: ["The AI's proposal", "Within rules managers approve: suggest a nearby outlet only where it saves the customer enough time, walk included, and only while that outlet has room."],
+        exp: ["Explanation", "Generative AI turns the structured recommendation into plain words. It must not invent readiness times, incentives or reasons: every figure comes from the models and the approved rules."],
+        cust: ["Customer", "The customer decides before paying; nothing changes without acceptance, and keeping the original pickup is always an option."],
+        mgr: ["Zone manager", "Delivery-channel actions, a short pause or a promotion of the outlet with room, go to the zone manager to approve or decline. The platforms control their own ranking; permissions are to confirm."],
+        placed: ["Placed orders stay", "Orders already confirmed stay where they were placed; only new orders see the suggestion."],
+        load: ["Spare capacity, while it lasts", "The busy outlet stays busy, just less so. If the support outlet would fill up, the time saved shrinks and the suggestion is withdrawn. Workloads shown are illustrative."],
+        fb: ["Evaluate outcomes and update the model", "Each recommendation, decision and outcome is logged, to check whether it helped and to update the model periodically. More data alone does not guarantee better recommendations."],
+        shape: ["Demand shaping", "Options and small incentives move some demand in place and time, from the busy outlet to one with room. Customers keep the choice."],
+        pool: ["Capacity pooling", "Nearby outlets act as one pool of capacity, limited by walking time, delivery coverage and how many customers are willing to switch."],
+        bott: ["Bottleneck management", "Act where the queue builds, before it peaks: the busy outlet's counter and collection shelf."] };
+      const closePop = () => { pop.classList.remove("on"); $$(box, ".src.on,.con.on").forEach(e => e.classList.remove("on")); };
+      const play = () => { box.classList.remove("play"); void box.offsetWidth; box.classList.add("play"); $(box, "svg.flw").setCurrentTime?.(0); };
+      const paint = () => {
+        box.dataset.st = st; $(box, ".c5n").textContent = `${st} / ${N}`; $(box, '[data-c5="prev"]').disabled = st === 1;
+        $$(box, ".sx li").forEach((l, i) => { l.classList.toggle("cur", i === st - 1); l.classList.toggle("done", i < st - 1); });
+        $(box, '[data-c5="next"]').textContent = st < N ? "Next ▶" : "Try the customer experience →"; closePop(); play();
+      };
       pb._intro = { enter: fromEnd => { st = fromEnd ? N : 1; paint(); },
         next: () => { if (st < N) { st++; paint(); return true; } return false; },
         prev: () => { if (st > 1) { st--; paint(); return true; } return false; } };
       box.addEventListener("click", e => {
-        const b = e.target.closest("button"); if (!b) return; b.blur();
+        const b = e.target.closest("button,[data-d],[data-s]"); if (!b) return closePop(); b.blur?.();
         if (b.dataset.c5 === "next") { if (!pb._intro.next()) show(cur + 1); }
         else if (b.dataset.c5 === "prev") pb._intro.prev();
-        else if (b.dataset.c5 === "replay") play();
-        else if (b.classList.contains("c5card")) { const s = b.closest(".c5s");
-          $$(s, ".c5card").forEach(c => c.classList.toggle("on", c === b)); $(s, ".c5why").innerHTML = `<b>${$(b, ".lb").textContent}</b>: ${b.dataset.why}`; }
+        else if (b.dataset.c5 === "replay") { closePop(); play(); }
+        else if (b.dataset.s) { st = +b.dataset.s; paint(); }
+        else if (b.classList.contains("x")) closePop();
+        else if (DET[b.dataset.d]) { const [h, t] = DET[b.dataset.d]; closePop(); b.classList.add("on"); $(pop, "b").textContent = h; $(pop, "p").textContent = t;
+          // beside the item clicked: below it in the top half of the panel, above it in the bottom half
+          const R = box.getBoundingClientRect(), r = b.getBoundingClientRect(), s = R.width / box.offsetWidth;
+          pop.style.left = `${Math.max(12, Math.min(box.offsetWidth - 482, (r.left - R.left) / s))}px`;
+          if ((r.top + r.bottom) / 2 - R.top < R.height / 2) { pop.style.top = `${(r.bottom - R.top) / s + 8}px`; pop.style.bottom = ""; }
+          else { pop.style.bottom = `${(R.bottom - r.top) / s + 8}px`; pop.style.top = ""; }
+          pop.classList.add("on"); }
       });
-      // the trigger: the illustrative predicted wait against an adjustable threshold
-      const W = v("predicted_wait"), [h0, m0] = v("now_clock").split(":").map(Number), inp = $(pb, '[data-p1b="thr"]'), svg = $(pb, ".p1tc");
-      inp.min = THR.range[0]; inp.max = THR.range[1]; inp.step = v("threshold_step"); inp.value = THR.value;
+      // the trigger: the illustrative predicted wait rising past the threshold
+      const W = v("predicted_wait"), [h0, m0] = v("now_clock").split(":").map(Number), svg = $(pb, ".p1tc"), th = THR.value;
       const clk = i => { const t = h0 * 60 + m0 + i * 10; return `${String(Math.floor(t / 60)).padStart(2, "0")}:${String(t % 60).padStart(2, "0")}`; };
-      const chart = () => {
-        const th = +inp.value, top = Math.max(70, ...W), x = i => 34 + i * (284 / (W.length - 1)), y = m => 140 - m / top * 118, hit = W.findIndex(w => w >= th);
-        svg.innerHTML = `<line x1="34" x2="318" y1="140" y2="140" stroke="#C9C2B6"/>` +
-          W.map((w, i) => i % 2 ? "" : `<text x="${x(i)}" y="156" font-size="10" fill="#9A9387" text-anchor="middle">${clk(i)}</text>`).join("") +
-          `<line x1="34" x2="318" y1="${y(th)}" y2="${y(th)}" stroke="#B8322B" stroke-width="1.6" stroke-dasharray="5 4"/><text x="36" y="${y(th) - 5}" font-size="10.5" fill="#B8322B">threshold · ${th} min</text>` +
-          `<polyline points="${W.map((w, i) => `${x(i)},${y(w)}`).join(" ")}" fill="none" stroke="#24406B" stroke-width="2.5"/>` +
-          `<path d="${W.map((w, i) => `${i ? "L" : "M"}${x(i)},${y(w * 1.15)}`).join(" ")} ${[...W].reverse().map((w, j) => `L${x(W.length - 1 - j)},${y(w * 0.85)}`).join(" ")} Z" fill="#24406B" opacity=".08"/>` +
-          `<text x="318" y="14" font-size="10.5" fill="#24406B" text-anchor="end">predicted wait at ${B}, minutes · shaded: uncertainty</text>` +
-          (hit >= 0 ? `<circle cx="${x(hit)}" cy="${y(W[hit])}" r="6" fill="#B8322B"/><text x="${x(hit)}" y="${y(W[hit]) - 10}" font-size="11" font-weight="700" fill="#B8322B" text-anchor="middle">trigger ${clk(hit)}</text>`
-                    : `<text x="176" y="80" font-size="12" fill="#B8322B" text-anchor="middle">no trigger: the forecast stays below</text>`);
-        $(pb, '[data-p1b="th"]').textContent = `${th} min`;
-      };
-      inp.addEventListener("input", chart); chart();
-      printers.push(() => { st = 1; paint(); }); paint();
+      const top = Math.max(70, ...W), x = i => 30 + i * (330 / (W.length - 1)), y = m => 126 - m / top * 112, hit = W.findIndex(w => w >= th);
+      svg.innerHTML = `<line x1="30" x2="360" y1="126" y2="126" stroke="#C9C2B6"/>` +
+        W.map((w, i) => i % 2 ? "" : `<text x="${x(i)}" y="144" font-size="11" fill="#9A9387" text-anchor="middle">${clk(i)}</text>`).join("") +
+        `<path d="${W.map((w, i) => `${i ? "L" : "M"}${x(i)},${y(w * 1.15)}`).join(" ")} ${[...W].reverse().map((w, j) => `L${x(W.length - 1 - j)},${y(w * 0.85)}`).join(" ")} Z" fill="#24406B" opacity=".08"/>` +
+        `<line x1="30" x2="360" y1="${y(th)}" y2="${y(th)}" stroke="#B8322B" stroke-width="1.6" stroke-dasharray="5 4"/><text x="32" y="${y(th) - 6}" font-size="11.5" fill="#B8322B">trigger · ${th} min, illustrative</text>` +
+        `<polyline class="ln" pathLength="1" points="${W.map((w, i) => `${x(i)},${y(w)}`).join(" ")}"/>` +
+        (hit >= 0 ? `<circle class="hit" cx="${x(hit)}" cy="${y(W[hit])}" r="6.5" fill="#B8322B"/>` : "");
+      printers.push(() => { st = N; paint(); }); paint();
     }
 
     const pa = document.getElementById("p1a");

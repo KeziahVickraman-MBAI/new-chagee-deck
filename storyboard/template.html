@@ -1040,28 +1040,129 @@ html,body{margin:0;background:#E7E3DC;color:var(--ink);font-family:var(--sans);-
 .p1nav{position:absolute;right:20px;bottom:12px;display:flex;align-items:center;gap:8px}
 .p1dots{display:flex;gap:5px} .p1dots i{width:8px;height:8px;border-radius:50%;background:#D8D0C2} .p1dots i.on{background:var(--red)}
 .p1n{font:600 13px var(--sans);color:var(--taupe);min-width:40px}
-/* 04 */
-.p1g1{grid-template-columns:1.25fr 300px} .p1cards{grid-template-columns:1fr 1fr} .p1cards .c5card .tg{white-space:normal;line-height:1.2}
-.p1g2{grid-template-columns:340px 1fr;align-items:start} .p1stages{grid-template-columns:1fr 1fr}
-.p1stages .c5card.trig{border-color:var(--red)} .p1stages .c5card.trig .tg{background:var(--red)}
-.p1trig{display:flex;flex-direction:column;gap:6px} .p1tc{width:100%;height:auto;background:#fff;border-radius:10px;border:1px solid var(--line)}
-.p1th{display:grid;grid-template-columns:1fr auto;gap:2px 8px;font:600 11px var(--sans);letter-spacing:.06em;text-transform:uppercase;color:var(--taupe)} .p1th span{color:var(--red);font-size:13px} .p1th input{grid-column:1 / -1;accent-color:var(--red)}
-.p1gen{margin:0;padding:7px 10px;border-radius:9px;background:#fff;border-left:4px solid #C8A96A;font:12.5px/1.38 var(--sans);color:var(--ink2)} .p1gen b{color:var(--navy)}
-.p1g3{grid-template-columns:1.2fr 1fr;align-items:center}
-.p1loop{display:grid;grid-template-columns:1fr 70px 1fr;align-items:center;gap:6px}
-.p1acts{display:flex;flex-direction:column;gap:8px} .p1fb{display:flex;flex-direction:column;gap:16px}
-.p1act{padding:9px 11px;border-radius:10px;background:#fff;border:1.5px solid var(--navy);font:12px/1.35 var(--sans);color:var(--ink2)} .p1act b{display:block;font-size:13.5px;color:var(--navy)}
-.p1fb .p1dec+.p1dec{position:relative} .p1fb .p1dec+.p1dec::before{content:"↓";position:absolute;left:50%;top:-15px;font:600 12px var(--sans);color:#C8A96A}
-.p1dec{padding:8px 11px;border-radius:10px;background:#fff;border:1.5px dashed #C8A96A;font:600 13.5px/1.3 var(--sans);color:var(--ink)} .p1dec small{display:block;font-weight:400;font-size:11.5px;color:var(--ink2)} .p1dec.d{border-style:solid;border-color:#2F6B45;color:#2F6B45}
-.p1lp{width:70px;height:180px}
-.p1cons{display:flex;flex-direction:column;gap:8px}
-.p1clab{margin:0;padding:7px 10px;border-radius:9px;background:#fff;font:12.5px/1.38 var(--sans);color:var(--ink2)} .p1clab b{display:block;font-size:13.5px;color:var(--navy)}
-.p1note{margin:2px 0 0;font:12.5px/1.4 var(--sans);color:var(--ink)}
-.c5intro.play .p1cards .c5card,.c5intro.play .p1stages .c5card{animation:c5in .4s ease-out both;animation-delay:calc(var(--i) * .14s)}
-.c5intro.play .p1act{animation:c5in .45s ease-out both;animation-delay:calc(var(--i) * .25s)}
-.c5intro.play .p1dec{animation:c5fade .45s ease-out both;animation-delay:.9s} .c5intro.play .p1dec+.p1dec{animation-delay:1.15s} .c5intro.play .p1dec.d{animation-delay:1.4s}
-.c5intro.play .p1clab{animation:c5fade .45s ease-out both;animation-delay:1.6s}
-.p1bprint{display:none}
+/* 04: three animated scenes, data in, AI recommends and people decide, demand rebalanced */
+#p1b .c5intro{height:448px;padding:12px 22px}
+#p1b .sx{display:flex;align-items:center;gap:10px;margin:0;padding:0;list-style:none}
+#p1b .sx li{display:flex;align-items:center;gap:8px;padding:5px 14px 5px 6px;border-radius:20px;border:1.5px solid var(--line);background:#fff;font:600 14px var(--sans);color:var(--taupe);cursor:pointer;transition:all .3s}
+#p1b .sx li+li::before{content:"";width:26px;height:2px;background:var(--line);margin-left:-36px;margin-right:2px}
+#p1b .sx li{position:relative} #p1b .sx li+li{margin-left:26px}
+#p1b .sx li .num{background:#D8D0C2;margin:0;width:22px;height:22px;font-size:12px}
+#p1b .sx li.done{color:var(--navy);border-color:#C9D3E3} #p1b .sx li.done .num{background:var(--navy)}
+#p1b .sx li.cur{color:#fff;background:var(--red);border-color:var(--red)} #p1b .sx li.cur .num{background:#fff;color:var(--red)}
+#p1b .c5s{margin-top:8px}
+#p1b .sc{position:relative;height:300px;flex:none}
+#p1b .c5cap{margin:8px 0 0;font-size:16px;padding-right:470px;white-space:nowrap}
+#p1b .ii{display:inline-grid;place-items:center;width:18px;height:18px;border-radius:50%;border:1.5px solid var(--navy);color:var(--navy);font:italic 700 11px/1 Georgia,serif;cursor:pointer;flex:none}
+#p1b .ii:hover{background:var(--navy);color:#fff}
+/* step 1 */
+#p1b .flw{position:absolute;inset:0;width:100%;height:100%} #p1b .flw path{fill:none;stroke:#C8A96A;stroke-width:3;stroke-dasharray:6 6}
+#p1b .flw .dots circle{fill:var(--red)}
+#p1b .src{all:unset;box-sizing:border-box;position:absolute;width:320px;height:104px;display:grid;grid-template-columns:52px 1fr 18px;gap:12px;align-items:center;padding:12px 14px;background:#fff;border:2px solid var(--navy);border-radius:14px;cursor:pointer}
+#p1b .src.prop{border-style:dashed;border-color:#8A97AE} #p1b .src:hover,#p1b .src.on{box-shadow:0 0 0 4px rgba(184,50,43,.14);border-color:var(--red)}
+#p1b .src .ii{align-self:start}
+#p1b .ic{display:grid;place-items:center;width:52px;height:52px;border-radius:50%;background:#EEF1F6} #p1b .ic svg{width:28px;height:28px;fill:none;stroke:var(--navy);stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+#p1b .tx{display:flex;flex-direction:column;gap:3px;min-width:0} #p1b .tx b{font:600 17px/1.2 var(--sans);color:var(--ink)} #p1b .tx small{font:13.5px/1.3 var(--sans);color:var(--ink2)}
+#p1b .src .tg{align-self:flex-start;margin-top:3px;font:600 11px/1 var(--sans);white-space:nowrap;padding:3px 7px;border-radius:6px;color:var(--ink2);border:1px dashed var(--taupe)}
+#p1b .src.part .tg{color:#fff;background:var(--navy);border:0}
+#p1b .ws{position:absolute;left:406px;top:80px;width:280px;height:140px;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;background:var(--navy);border-radius:16px;color:#fff;text-align:center}
+#p1b .ws svg{width:34px;height:34px;fill:none;stroke:#C8A96A;stroke-width:1.7;stroke-linejoin:round} #p1b .ws b{font:500 23px/1.15 var(--serif)} #p1b .ws small{font:13px/1.3 var(--sans);color:#DCE2EC}
+#p1b .ws .ring{position:absolute;inset:-6px;border-radius:20px;border:2px solid #C8A96A;opacity:0}
+#p1b .leg{position:absolute;left:0;right:0;bottom:-2px;margin:0;text-align:center;font:12.5px var(--sans);color:var(--taupe)}
+#p1b .leg i{display:inline-block;width:16px;height:11px;border-radius:3px;margin:0 6px -1px 14px;border:2px solid var(--navy)} #p1b .leg i.d{border:2px dashed #8A97AE}
+/* step 2 */
+#p1b .sc2{display:grid;grid-template-columns:400px 36px 280px 36px 1fr;align-items:center}
+#p1b .zcol{display:flex;flex-direction:column;gap:8px;height:100%}
+#p1b .rt{align-self:flex-start;font:700 11px/1 var(--sans);letter-spacing:.1em;text-transform:uppercase;padding:5px 9px;border-radius:7px;color:#fff}
+#p1b .rt.pred{background:var(--navy)} #p1b .rt.exp{background:#A88539} #p1b .rt.hum{background:var(--dmg)}
+#p1b .zc{position:relative;background:#fff;border-radius:12px;border:1.5px solid var(--line);padding:9px 12px}
+#p1b .zc>.ii{position:absolute;top:8px;right:8px}
+#p1b .zh{margin:0;font:600 13.5px var(--sans);color:var(--ink)}
+#p1b .p1tc{display:block;width:100%;height:auto}
+#p1b .p1tc .ln{fill:none;stroke:var(--navy);stroke-width:2.6;stroke-dasharray:1;stroke-dashoffset:0}
+#p1b .al{position:absolute;right:34px;top:6px;display:flex;align-items:center;gap:4px;padding:3px 9px 3px 6px;border-radius:12px;background:var(--red);color:#fff;font:700 12px var(--sans)}
+#p1b .al svg{width:16px;height:16px;fill:none;stroke:#fff;stroke-width:2;stroke-linejoin:round}
+#p1b .zc.chart{border-color:#C9D3E3}
+#p1b .zc.rec{border:2px solid var(--navy);padding:10px 30px 10px 12px} #p1b .zc.rec b{display:block;font:500 20px/1.2 var(--serif);color:var(--navy)}
+#p1b .zl{display:block;font:700 10.5px var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--taupe);margin-bottom:3px}
+#p1b .zar{width:36px;height:40px} #p1b .zar path{fill:none;stroke:#C8A96A;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+#p1b .zc.bub{margin-top:auto;margin-bottom:auto;background:#FBF6EA;border:2px solid #C8A96A;border-radius:16px;padding:14px 16px}
+#p1b .bub .spk{width:24px;height:24px;fill:#C8A96A} #p1b .bub p{margin:6px 0 8px;font:500 19px/1.3 var(--serif);color:var(--ink)} #p1b .bub small{font:12.5px/1.35 var(--sans);color:var(--ink2)}
+#p1b .zc.who{display:grid;grid-template-columns:52px 1fr;gap:12px;align-items:center;border:2px solid var(--dmg);padding:12px 30px 12px 12px}
+#p1b .who .ic{background:#E7F0EA} #p1b .who .ic svg{stroke:var(--dmg)}
+#p1b .who .tx small{font-size:13px}
+#p1b .ch{display:flex;gap:6px;margin-top:5px} #p1b .ch i{font:600 12px var(--sans);font-style:normal;padding:4px 10px;border-radius:12px;border:1.5px solid var(--dmg);color:var(--dmg)} #p1b .ch i.y{background:var(--dmg);color:#fff}
+#p1b .sc2>.zcol:last-child .zc+.zc{margin-top:4px}
+/* step 3 */
+#p1b .fbk{position:absolute;inset:0;width:100%;height:100%;overflow:visible} #p1b .fbk path{fill:none;stroke:#C8A96A;stroke-width:2.5;stroke-linejoin:round;stroke-linecap:round}
+#p1b .fbk .fl{stroke-dasharray:1;stroke-dashoffset:0}
+#p1b .o{position:absolute;top:0;height:236px;box-sizing:border-box;background:#fff;border-radius:14px;border:2px solid var(--line);padding:10px 14px}
+#p1b .o.busy{left:0;width:330px;border-color:#E2B4AE} #p1b .o.alt{left:600px;width:300px;border-color:#B9D3C2}
+#p1b .oh{display:flex;align-items:center;gap:8px;margin:0} #p1b .oh .ic{width:34px;height:34px} #p1b .oh .ic svg{width:21px;height:21px}
+#p1b .oh b{font:600 17px var(--sans);color:var(--ink)} #p1b .oh .tg{margin-left:auto;font:700 10px/1 var(--sans);letter-spacing:.08em;text-transform:uppercase;padding:4px 8px;border-radius:7px;color:#fff;background:var(--red)}
+#p1b .alt .oh .tg{background:#2F6B45}
+#p1b .q{display:flex;gap:7px;height:46px;align-items:flex-end;margin:8px 0 2px 4px}
+#p1b .q i{width:16px;height:38px;background:radial-gradient(circle at 50% 7px,#9A9387 6.5px,transparent 7px),linear-gradient(#9A9387,#9A9387) 50% 100%/14px 22px no-repeat;border-radius:2px}
+#p1b .busy .q i{background:radial-gradient(circle at 50% 7px,#C46A62 6.5px,transparent 7px),linear-gradient(#C46A62,#C46A62) 50% 100%/14px 22px no-repeat}
+#p1b .nl{margin:2px 0 0;height:34px;display:flex;align-items:center;font:600 11px var(--sans);letter-spacing:.06em;text-transform:uppercase;color:var(--taupe)}
+#p1b .wl{display:grid;grid-template-columns:70px 1fr;grid-template-rows:auto auto;column-gap:8px;align-items:center;margin-top:12px}
+#p1b .wl span{font:600 11px var(--sans);letter-spacing:.06em;text-transform:uppercase;color:var(--taupe)}
+#p1b .wl i{position:relative;height:14px;border-radius:7px;background:#EFEBE3;background-image:linear-gradient(var(--c),var(--c));background-size:var(--w) 100%;background-repeat:no-repeat}
+#p1b .wl i::after{content:"";position:absolute;left:var(--w0);top:-4px;bottom:-4px;border-left:2px dashed var(--ink2)}
+#p1b .wl i::before{content:"before";position:absolute;left:var(--w0);top:-15px;transform:translateX(-50%);font:600 9.5px/1 var(--sans);color:var(--ink2)}
+#p1b .busy .wl i{--c:#C46A62} #p1b .alt .wl i{--c:#4F8A64}
+#p1b .wl em{grid-column:2;font:italic 12.5px var(--sans);color:var(--ink2);margin-top:3px}
+#p1b .po{display:flex;align-items:center;gap:7px;margin:10px 0 0;font:600 12.5px var(--sans);color:var(--ink)} #p1b .po>svg{width:16px;height:16px;fill:none;stroke:var(--ink2);stroke-width:2}
+#p1b .po .rc{display:flex;gap:4px} #p1b .po .rc i{width:14px;height:18px;border-radius:2px;background:#fff;border:1.5px solid var(--ink2)}
+#p1b .po .ii{margin-left:auto} #p1b .po.soft{font-weight:400;color:var(--ink2)}
+#p1b .ph{position:absolute;left:400px;top:0;width:130px;text-align:center} #p1b .ph svg{width:60px;height:96px;fill:none;stroke:var(--ink);stroke-width:3}
+#p1b .ph .scr{fill:#EEF1F6;stroke:none} #p1b .ph p{margin:4px 0 0;font:600 12px var(--sans);color:var(--ink2)}
+#p1b .tok{position:absolute;width:30px;height:30px;border-radius:50%;background:var(--navy) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M7 8 H17 L15.8 20 H8.2 Z M6 8 H18 M12 8 V4 l3 -1' fill='none' stroke='white' stroke-width='1.8' stroke-linejoin='round' stroke-linecap='round'/%3E%3C/svg%3E") center/20px no-repeat}
+#p1b .tok.s{background-color:#2F6B45;box-shadow:0 0 0 3px #CFE3D6}
+#p1b .fbx{position:absolute;left:928px;top:30px;width:144px;height:100px;box-sizing:border-box;border:2px solid var(--navy);border-radius:12px;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px}
+#p1b .fbx .mini{display:grid;grid-template-columns:repeat(4,22px);gap:6px} #p1b .fbx .mini svg{width:22px;height:22px;fill:none;stroke:var(--navy);stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+#p1b .fbx b{font:600 13px var(--sans);color:var(--navy)}
+#p1b .fbl{position:absolute;left:928px;top:142px;width:150px;margin:0;font:500 17px/1.25 var(--serif);color:#7A5F22}
+#p1b .fbl .ii{display:inline-grid;margin-left:5px;vertical-align:1px}
+#p1b .cons{position:absolute;left:0;top:266px;display:flex;align-items:center;gap:10px}
+#p1b .cons>span{font:700 11px var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--taupe)}
+#p1b .con{all:unset;cursor:pointer;display:flex;align-items:center;gap:7px;padding:5px 8px 5px 12px;border-radius:16px;background:#fff;border:1.5px solid #C8A96A;font:600 14px var(--sans);color:var(--ink)}
+#p1b .con:hover,#p1b .con.on{border-color:var(--red)}
+/* the detail popover, the execution link, the takeaway */
+#p1b .pop{display:none;position:absolute;width:470px;box-sizing:border-box;padding:10px 34px 10px 14px;background:#fff;border-radius:12px;border-left:5px solid var(--red);box-shadow:0 6px 22px rgba(36,64,107,.2);font:14px/1.4 var(--sans);color:var(--ink2);z-index:5}
+#p1b .pop.on{display:block;animation:c5fade .25s ease-out both} #p1b .pop b{display:block;color:var(--ink);font-size:14.5px} #p1b .pop p{margin:2px 0 0}
+#p1b .pop .x{all:unset;position:absolute;right:10px;top:6px;cursor:pointer;font:18px var(--sans);color:var(--taupe)}
+#p1b .xl{position:absolute;left:928px;top:274px;font:600 13.5px var(--sans)} #p1b .play .xl{animation:c5fade .4s ease-out 5.4s both}
+#p1b .btake{margin-top:12px;visibility:hidden} #p1b .c5intro[data-st="3"]~.btake{visibility:visible;animation:c5fade .5s ease-out 4.4s both}
+#p1b .btake small{display:block;font-size:12.5px;color:#C9D3E3;margin-top:1px}
+#p1b .bsum{display:none}
+/* animation, on each step's entry (Replay restarts it); the resting state is the final frame, so print and reduced motion show it */
+@keyframes bdraw{from{stroke-dashoffset:1}} @keyframes bring{0%{opacity:.9;transform:scale(1)}100%{opacity:0;transform:scale(1.12)}}
+@keyframes bfly{0%{opacity:0;transform:translate(var(--fx),var(--fy)) scale(.6)}20%{opacity:1;transform:translate(var(--fx),var(--fy)) scale(1)}}
+@keyframes bbar{from{background-size:var(--w0) 100%}} @keyframes bnudge{0%,100%{transform:translateX(0)}50%{transform:translateX(5px)}}
+#p1b .play .c5s[data-k="1"] .src{animation:c5pop .45s ease-out both;animation-delay:calc(var(--i) * .15s)}
+#p1b .play .c5s[data-k="1"] .ws{animation:c5pop .5s ease-out .7s both} #p1b .play .c5s[data-k="1"] .ws .ring{animation:bring 1.8s ease-out 1.4s infinite}
+#p1b .play .c5s[data-k="1"] .flw path{animation:c5dash .8s linear infinite} #p1b .play .c5s[data-k="1"] .dots{animation:c5fade .4s ease-out 1s both}
+#p1b .play .c5s[data-k="2"] .rt{animation:c5fade .4s ease-out both} #p1b .play .c5s[data-k="2"] .zcol:nth-child(3) .rt{animation-delay:2.3s} #p1b .play .c5s[data-k="2"] .zcol:nth-child(5) .rt{animation-delay:3.3s}
+#p1b .play .p1tc .ln{animation:bdraw 1.4s ease-in-out .2s both} #p1b .play .p1tc .hit{animation:c5pop .4s ease-out 1.5s both;transform-box:fill-box;transform-origin:center}
+#p1b .play .al{animation:c5pop .4s ease-out 1.6s both}
+#p1b .play .zc.rec{animation:c5fade .5s ease-out 1.9s both} #p1b .play .zar.a1{animation:c5fade .4s ease-out 2.2s both,bnudge 1.4s ease-in-out 2.6s infinite}
+#p1b .play .zc.bub{animation:c5rise .6s ease-out 2.5s both} #p1b .play .zar.a2{animation:c5fade .4s ease-out 3.1s both,bnudge 1.4s ease-in-out 3.5s infinite}
+#p1b .play .zc.c1{animation:c5in .45s ease-out 3.4s both} #p1b .play .zc.c2{animation:c5in .45s ease-out 3.7s both}
+#p1b .play .c5s[data-k="3"] .o,#p1b .play .c5s[data-k="3"] .ph{animation:c5fade .45s ease-out both}
+#p1b .play .tok{animation:bfly 1s ease-in-out var(--d) both}
+#p1b .play .wl i{animation:bbar 1s ease-in-out 2.7s both}
+#p1b .play .wl em{animation:c5fade .4s ease-out 3.4s both}
+#p1b .play .fbk .fl{animation:bdraw 1.2s ease-in-out 3.6s both} #p1b .play .fbk .hd{animation:c5fade .3s ease-out 4.6s both}
+#p1b .play .fbx{animation:c5fade .4s ease-out 3.4s both} #p1b .play .fbl{animation:c5fade .4s ease-out 4.6s both}
+#p1b .play .cons>*{animation:c5fade .4s ease-out both;animation-delay:5s} #p1b .play .cons>*:nth-child(3){animation-delay:5.2s} #p1b .play .cons>*:nth-child(4){animation-delay:5.4s}
+@media (prefers-reduced-motion:reduce){#p1b .flw .dots{display:none} #p1b .btake{animation:none!important}}
+@media print{
+  #p1b .bsum{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:10px}
+  #p1b .bsum>div{background:var(--cream);border-radius:10px;padding:7px 11px} #p1b .bsum h5{display:flex;align-items:center;gap:6px;margin:0 0 3px;font:600 14px var(--sans);color:var(--navy)} #p1b .bsum p{margin:0;font:11.5px/1.38 var(--sans);color:var(--ink2)}
+  #p1b .c5intro{display:flex!important;height:auto;margin-top:8px;padding:10px 22px} #p1b .c5intro *{animation:none!important}
+  #p1b .c5s{display:none!important} #p1b .c5s[data-k="3"]{display:flex!important;margin-top:0} #p1b .sx,#p1b .pop,#p1b .c5cap,#p1b .ii{display:none!important}
+  #p1b .btake{visibility:visible;animation:none!important;margin-top:8px;padding:8px 20px}
+}
 /* 05 */
 .cxpanel{position:relative;margin-top:10px;height:458px;background:var(--cream);border-radius:14px;padding:10px 18px 12px;display:flex;flex-direction:column;gap:8px}
 .cxbar{display:flex;align-items:center;justify-content:space-between;gap:10px}
@@ -1107,8 +1208,6 @@ html,body{margin:0;background:#E7E3DC;color:var(--ink);font-family:var(--sans);-
 @media print{
   .p1row{display:grid!important} .p1row p{display:block!important} .p1row{animation:none!important;background:none!important;box-shadow:none!important;padding:3px 8px 3px 4px} .p1row p{font-size:12px}
   .p1gains{display:block!important;animation:none!important;margin-top:6px} .p1scene .hs{opacity:1!important} .p1scene *{animation:none!important} .p1scene .np0{opacity:1} .p1tip{display:none}
-  .p1bi{display:none!important} .p1bprint{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:12px}
-  .p1bprint>div{background:var(--cream);border-radius:12px;padding:12px 14px} .p1bprint h5{margin:0 0 6px;font:500 20px var(--serif);color:var(--navy)} .p1bprint ul{margin:0;padding-left:16px;font:13px/1.45 var(--sans);color:var(--ink2)}
   .cxpanel{height:auto} .cxexecp{display:none!important} .cxch{display:grid!important;gap:12px} .cxpanel{display:grid;grid-template-columns:1fr 1.25fr;gap:14px}
   .cxpanel{padding:10px 14px} .cxch{align-items:start;align-content:start}
   .cxch[data-ch="pick"]{grid-template-columns:180px 1fr;grid-template-areas:"lab lab" "ph side"} .cxch[data-ch="pick"] .cxph{grid-area:ph} .cxch[data-ch="pick"] .cxside{grid-area:side;justify-content:flex-start}
@@ -1521,65 +1620,102 @@ aside.notes{display:none}
   <div class="leafart" aria-hidden="true"></div>
   <div class="inner">
     <p class="kicker">04 · Online retailing · how the solution works<span class="stg"><b>Online</b><i>Problem</i><i class="on">Solution</i><i>Decision</i></span><span class="dm"><i>Decision-maker</i>Digital commerce manager, with operations</span></p>
-    <h2 class="head">From Chagee's data to demand spread across outlets</h2>
-    <p class="bprob keep"><b>The solution</b><span>Predictive AI recommends, generative AI explains, and people make the final call.</span></p>
+    <h2 class="head">From Chagee's data to better-balanced demand</h2>
+    <p class="bprob keep"><b>The solution</b><span>Predictive AI recommends, generative AI explains, and people decide.</span></p>
+    <div class="bsum printonly">
+      <div><h5><span class="num">1</span>Data flows in</h5><p>App and sales, outlet operations, delivery apps and past outcomes feed one planning workspace. Only orders by outlet and time are recorded today; the rest is access to confirm.</p></div>
+      <div><h5><span class="num">2</span>AI recommends; people decide</h5><p>A predicted wait crossing an illustrative trigger prompts the proposal "Offer a nearby outlet with available capacity". Generative AI explains it; the customer accepts or keeps the pickup, and the zone manager approves or declines any delivery pause or promotion.</p></div>
+      <div><h5><span class="num">3</span>Demand is better distributed</h5><p>Some new orders move to the outlet with room; placed orders stay. Outcomes are logged to evaluate and update the model.</p></div>
+    </div>
     <div class="c5intro keep p1bi" data-st="1" aria-label="How the solution works, in three steps">
+      <ol class="sx"><li data-s="1"><span class="num">1</span>Data flows in</li><li data-s="2"><span class="num">2</span>AI recommends; people decide</li><li data-s="3"><span class="num">3</span>Demand is better distributed</li></ol>
+
       <div class="c5s" data-k="1">
-        <div class="c5h"><span class="c5tag">The data</span><h3>What the tool can draw on.</h3>
-          <span class="c5lg"><i class="rec"></i>available today<i class="prop"></i>proposed, needs access or logging</span></div>
-        <div class="c5g p1g1">
-          <div class="c5cl"><div class="c5cards p1cards"><button class="c5card rec" data-why="When and where demand peaks, outlet by outlet: the base for every forecast." style="--i:0"><svg viewBox="0 0 22 22" aria-hidden="true"><path d="M3 19 H20 M6 16 V10 M10 16 V6 M14 16 V9 M18 16 V4"/></svg><span class="lb">Orders by outlet and time</span><span class="tg">Recorded today</span></button><button class="c5card prop" data-why="Which nearby outlets a customer could realistically reach, so travel time is counted. Only with the customer's consent." style="--i:1"><svg viewBox="0 0 22 22" aria-hidden="true"><path d="M11 20 c-5 -6 -7 -9 -7 -12 a7 7 0 0 1 14 0 c0 3 -2 6 -7 12 Z"/><circle cx="11" cy="8" r="2.4"/></svg><span class="lb">Customer location, with permission</span><span class="tg">Needs permission</span></button><button class="c5card prop" data-why="Lets the tool prefer options that keep contribution, so an incentive is suggested only where it can pay." style="--i:2"><svg viewBox="0 0 22 22" aria-hidden="true"><path d="M4 18 L18 4 M6 6 h.01 M16 16 h.01"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="15.5" cy="15.5" r="2.5"/></svg><span class="lb">Margin per drink</span><span class="tg">Needs access</span></button><button class="c5card prop" data-why="The live queue and who and what is working set how soon each outlet can make a new order." style="--i:3"><svg viewBox="0 0 22 22" aria-hidden="true"><circle cx="8" cy="7" r="3"/><path d="M2.5 19 Q2.5 12 8 12 Q13.5 12 13.5 19"/><rect x="15" y="10" width="5" height="9" rx="1"/></svg><span class="lb">Open orders, crew and equipment availability</span><span class="tg">Orders recorded; crew and equipment need access</span></button><button class="c5card prop" data-why="Delivery demand the counter must also make, and how long riders wait, if the platforms share it." style="--i:4"><svg viewBox="0 0 22 22" aria-hidden="true"><circle cx="5" cy="16" r="3"/><circle cx="17" cy="16" r="3"/><path d="M5 16 H12 L15 9 H18 M12 16 L10 10 H6"/></svg><span class="lb">Delivery orders and rider waits</span><span class="tg">Where platforms share it</span></button><button class="c5card prop" data-why="What was suggested, who accepted, and what happened: needed to evaluate the tool and to update its models." style="--i:5"><svg viewBox="0 0 22 22" aria-hidden="true"><path d="M4 4 H14 L18 8 V19 H4 Z M14 4 V8 H18 M7 12 H15 M7 15 H12"/></svg><span class="lb">Previous recommendations, decisions and outcomes</span><span class="tg">Needs logging</span></button></div><p class="c5why">Click a data source to see what it contributes.</p></div>
-          <svg class="c5art p1ws" viewBox="0 0 300 220" aria-label="Data flows into the planning workspace">
-            <path class="flow" d="M0 40 C60 40 60 100 110 104 M0 110 H110 M0 180 C60 180 60 120 110 116" stroke="#C8A96A" stroke-width="3" fill="none" stroke-dasharray="6 6"/>
-            <rect x="110" y="56" width="180" height="108" rx="14" fill="#fff" stroke="#24406B" stroke-width="2.5"/>
-            <text x="200" y="90" font-size="15" font-weight="700" fill="#24406B" text-anchor="middle">Workspace</text>
-            <text x="200" y="112" font-size="11.5" fill="#4A4A4A" text-anchor="middle">forecasts, readiness,</text><text x="200" y="128" font-size="11.5" fill="#4A4A4A" text-anchor="middle">outlet options, rules</text>
-            <text x="200" y="150" font-size="10.5" fill="#9A9387" text-anchor="middle">dashed inputs need access</text></svg>
+        <div class="sc sc1">
+          <svg class="flw" viewBox="0 0 1092 300" aria-hidden="true">
+            <path id="p1fa" d="M344 70 C380 70 376 128 406 128"/><path id="p1fb" d="M344 230 C380 230 376 172 406 172"/>
+            <path id="p1fc" d="M748 70 C712 70 716 128 686 128"/><path id="p1fd" d="M748 230 C712 230 716 172 686 172"/>
+            <g class="dots"><circle r="4.5"><animateMotion dur="1.8s" repeatCount="indefinite" begin="0s"><mpath href="#p1fa"/></animateMotion></circle><circle r="4.5"><animateMotion dur="1.8s" repeatCount="indefinite" begin="-0.9s"><mpath href="#p1fa"/></animateMotion></circle>
+              <circle r="4.5"><animateMotion dur="1.8s" repeatCount="indefinite" begin="-0.4s"><mpath href="#p1fb"/></animateMotion></circle><circle r="4.5"><animateMotion dur="1.8s" repeatCount="indefinite" begin="-1.3s"><mpath href="#p1fb"/></animateMotion></circle>
+              <circle r="4.5"><animateMotion dur="1.8s" repeatCount="indefinite" begin="-0.2s"><mpath href="#p1fc"/></animateMotion></circle><circle r="4.5"><animateMotion dur="1.8s" repeatCount="indefinite" begin="-1.1s"><mpath href="#p1fc"/></animateMotion></circle>
+              <circle r="4.5"><animateMotion dur="1.8s" repeatCount="indefinite" begin="-0.6s"><mpath href="#p1fd"/></animateMotion></circle><circle r="4.5"><animateMotion dur="1.8s" repeatCount="indefinite" begin="-1.5s"><mpath href="#p1fd"/></animateMotion></circle></g>
+          </svg>
+          <button class="src part" data-d="app" style="left:24px;top:18px;--i:0"><span class="ic"><svg viewBox="0 0 24 24"><rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M10 18 h4"/></svg></span><span class="tx"><b>App and sales</b><small>orders, location, drink margins</small><span class="tg">orders recorded · rest to confirm</span></span><i class="ii">i</i></button>
+          <button class="src prop" data-d="ops" style="left:24px;top:178px;--i:1"><span class="ic"><svg viewBox="0 0 24 24"><path d="M3 9 L5 4 H19 L21 9 Z M4 9 V20 H20 V9 M9 20 V14 H15 V20"/></svg></span><span class="tx"><b>Outlet operations</b><small>open orders, crew, machines</small><span class="tg">crew and machines to confirm</span></span><i class="ii">i</i></button>
+          <button class="src prop" data-d="dlv" style="left:748px;top:18px;--i:2"><span class="ic"><svg viewBox="0 0 24 24"><circle cx="6" cy="17" r="3"/><circle cx="18" cy="17" r="3"/><path d="M6 17 H13 L16 8 H19 M13 17 L11 11 H7"/></svg></span><span class="tx"><b>Delivery apps</b><small>orders, rider waits</small><span class="tg">platform access to confirm</span></span><i class="ii">i</i></button>
+          <button class="src prop" data-d="past" style="left:748px;top:178px;--i:3"><span class="ic"><svg viewBox="0 0 24 24"><path d="M4 12 a8 8 0 1 0 2.5 -5.8 M4 4 V8 H8 M12 8 V12 L15 14"/></svg></span><span class="tx"><b>Past outcomes</b><small>previous decisions, results</small><span class="tg">not logged yet</span></span><i class="ii">i</i></button>
+          <div class="ws"><span class="ring" aria-hidden="true"></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 L21 8 L12 13 L3 8 Z M3 12 L12 17 L21 12 M3 16 L12 21 L21 16"/></svg><b>Planning workspace</b><small>forecasts · outlet readiness · approved rules</small></div>
+          <p class="leg"><i class="s"></i>solid: recorded today<i class="d"></i>dashed: access Chagee would need to confirm · click a source for details</p>
         </div>
-        <p class="c5cap">Only orders by outlet and time are recorded today, as far as we know; the dashed inputs would need access, consent or logging.</p>
+        <p class="c5cap">Four sources feed one workspace; most still need access confirmed.</p>
       </div>
+
       <div class="c5s" data-k="2">
-        <div class="c5h"><span class="c5tag">AI agent</span><h3>Trigger → Predict → Recommend → Human decision.</h3></div>
-        <div class="c5g p1g2">
-          <div class="p1trig"><svg class="p1tc" viewBox="0 0 330 170" aria-label="Predicted wait at the busy outlet against the trigger threshold"></svg>
-            <label class="p1th screenonly">Trigger threshold, illustrative<span data-p1b="th"></span><input type="range" data-p1b="thr"></label>
-            <p class="p1gen"><b>Generative AI</b> turns the structured recommendation into a short explanation. It must not invent readiness times, incentives or reasons: every figure comes from the models and the approved rules.</p></div>
-          <div class="c5cl"><div class="c5cards p1stages"><button class="c5card trig" data-why="The forecast says the busy outlet's wait will pass the threshold soon, so the tool acts before the queue peaks. The threshold is a setting managers choose; the value shown is illustrative." style="--i:0"><svg viewBox="0 0 22 22" aria-hidden="true"><path d="M11 3 L20 19 H2 Z M11 9 V13 M11 16 h.01"/></svg><span class="lb">A predicted wait crosses the threshold</span><span class="tg">Trigger</span></button><button class="c5card ai" data-why="Predictive models estimate how soon each nearby outlet could have an order ready, and the demand it already expects." style="--i:1"><svg viewBox="0 0 22 22" aria-hidden="true"><path d="M3 19 H20 M5 15 L9 10 L13 13 L19 5"/></svg><span class="lb">Readiness and demand at nearby outlets</span><span class="tg">Predict</span></button><button class="c5card ai" data-why="Within rules managers approved: which outlet to suggest, whether to recommend a delivery action, and any incentive, only where it saves enough time." style="--i:2"><svg viewBox="0 0 22 22" aria-hidden="true"><path d="M4 11 H16 M12 6 L17 11 L12 16"/></svg><span class="lb">An outlet, an action, an optional incentive</span><span class="tg">Recommend</span></button><button class="c5card rec" data-why="The customer decides whether to switch, before paying. Delivery-channel actions go to the zone manager to approve or decline." style="--i:3"><svg viewBox="0 0 22 22" aria-hidden="true"><circle cx="11" cy="7" r="3.5"/><path d="M4 20 Q4 13 11 13 Q18 13 18 20"/></svg><span class="lb">Customers choose; the zone manager reviews</span><span class="tg">Human decision</span></button></div><p class="c5why">Click a stage to see what it does.</p></div>
+        <div class="sc sc2">
+          <div class="zcol">
+            <span class="rt pred">Prediction · predictive AI</span>
+            <div class="zc chart"><p class="zh">Predicted wait at <span data-p1b="busy"></span></p>
+              <svg class="p1tc" viewBox="0 0 372 150" aria-label="Predicted wait at the busy outlet rising past the illustrative trigger"></svg>
+              <span class="al"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 16 V11 a6 6 0 0 1 12 0 V16 L20 18 H4 Z M10 21 h4"/></svg>Alert</span>
+              <i class="ii" data-d="pred">i</i></div>
+            <div class="zc rec"><span class="zl">AI proposes</span><b>Offer a nearby outlet with available capacity.</b><i class="ii" data-d="rec">i</i></div>
+          </div>
+          <svg class="zar a1" viewBox="0 0 36 40" aria-hidden="true"><path d="M4 20 H28 M21 12 L30 20 L21 28"/></svg>
+          <div class="zcol">
+            <span class="rt exp">Explanation · generative AI</span>
+            <div class="zc bub"><svg class="spk" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 L13.8 10.2 L21 12 L13.8 13.8 L12 21 L10.2 13.8 L3 12 L10.2 10.2 Z"/></svg>
+              <p>“<span data-p1b="busy"></span> is very busy right now. <span data-p1b="alt"></span>, nearby, has room and can have your drink ready sooner, walk included.”</p>
+              <small>Plain words for the customer; no new figures or reasons.</small><i class="ii" data-d="exp">i</i></div>
+          </div>
+          <svg class="zar a2" viewBox="0 0 36 40" aria-hidden="true"><path d="M4 20 H28 M21 12 L30 20 L21 28"/></svg>
+          <div class="zcol">
+            <span class="rt hum">Human choice</span>
+            <div class="zc who c1"><span class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21 Q4 14 12 14 Q20 14 20 21"/></svg></span>
+              <span class="tx"><b>Customer</b><small>takes the nearby outlet or keeps the original pickup</small><span class="ch"><i class="y">Accept</i><i>Keep original</i></span></span><i class="ii" data-d="cust">i</i></div>
+            <div class="zc who c2"><span class="ic"><svg viewBox="0 0 24 24"><circle cx="10" cy="8" r="3.5"/><path d="M3 20 Q3 13.5 10 13.5 Q13.5 13.5 15 15.5"/><rect x="15" y="12" width="7" height="9" rx="1"/><path d="M17 15 h3 M17 18 h3"/></svg></span>
+              <span class="tx"><b>Zone manager</b><small>reviews a proposed delivery pause or promotion</small><span class="ch"><i class="y">Approve</i><i>Decline</i></span></span><i class="ii" data-d="mgr">i</i></div>
+          </div>
         </div>
-        <p class="c5cap">The forty-minute threshold is the reference example, adjustable here; it is not a validated operating rule.</p>
+        <p class="c5cap">The alert comes before the peak; nothing changes until a person decides.</p>
       </div>
+
       <div class="c5s" data-k="3">
-        <div class="c5h"><span class="c5tag">Actions</span><h3>Act, decide, and feed the outcome back.</h3></div>
-        <div class="c5g p1g3">
-          <div class="p1loop">
-            <div class="p1acts"><div class="p1act" style="--i:0"><b>Pickup recommendation</b>a nearby outlet that can hand over sooner</div><div class="p1act" style="--i:1"><b>Proposed delivery pause</b>for the zone manager to approve or decline</div><div class="p1act" style="--i:2"><b>Alternative-outlet promotion</b>draw delivery demand to the outlet with room</div></div>
-            <svg class="p1lp" viewBox="0 0 70 180" aria-hidden="true"><path class="flow" d="M4 90 H58" stroke="#C8A96A" stroke-width="3" fill="none" stroke-dasharray="6 6"/><path d="M50 82 L60 90 L50 98" stroke="#C8A96A" stroke-width="3" fill="none"/></svg>
-            <div class="p1fb"><div class="p1dec">Decisions<small>switch or keep · approve or decline</small></div><div class="p1dec">Outcomes<small>collection times, queues, contribution</small></div><div class="p1dec d">Back to the data layer<small>for evaluation and periodic model updates</small></div></div>
-          </div>
-          <div class="p1cons">
-            <p class="p1clab"><b>Demand shaping</b>moving demand in time and place with options and incentives</p>
-            <p class="p1clab"><b>Capacity pooling across nearby outlets</b>spare room at one absorbs the peak at another, limited by travel, delivery coverage and customers' willingness to switch</p>
-            <p class="p1clab"><b>Bottleneck management</b>act where the queue is, before it peaks</p>
-            <p class="p1note">Outcomes support evaluation and periodic model updates; more data alone does not guarantee better recommendations. <span class="golink" data-go="p1x">See execution steps</span></p>
-          </div>
+        <div class="sc sc3">
+          <svg class="fbk" viewBox="0 0 1092 300" aria-hidden="true"><path class="fl" pathLength="1" d="M165 236 V254 H1084 V80 H1080"/><path class="fl" pathLength="1" d="M750 236 V254"/><path class="hd" d="M1084 72 L1074 80 L1084 88"/></svg>
+          <div class="o busy"><p class="oh"><span class="ic"><svg viewBox="0 0 24 24"><path d="M3 9 L5 4 H19 L21 9 Z M4 9 V20 H20 V9 M9 20 V14 H15 V20"/></svg></span><b data-p1b="busy"></b><span class="tg">busy</span></p>
+            <div class="q" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+            <p class="nl">New orders</p>
+            <div class="wl"><span>Workload</span><i style="--w0:96%;--w:82%"></i><em>still busy, less so</em></div>
+            <p class="po"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11 V8 a4 4 0 0 1 8 0 V11"/></svg>Placed orders stay here<span class="rc"><i></i><i></i><i></i><i></i></span><i class="ii" data-d="placed">i</i></p></div>
+          <div class="ph"><svg viewBox="0 0 60 96" aria-hidden="true"><rect x="4" y="2" width="52" height="92" rx="9"/><rect class="scr" x="9" y="12" width="42" height="68" rx="3"/><path d="M24 87 h12"/></svg><p>New pickup orders</p></div>
+          <div class="o alt"><p class="oh"><span class="ic"><svg viewBox="0 0 24 24"><path d="M3 9 L5 4 H19 L21 9 Z M4 9 V20 H20 V9 M9 20 V14 H15 V20"/></svg></span><b data-p1b="alt"></b><span class="tg">spare capacity</span></p>
+            <div class="q" aria-hidden="true"><i></i><i></i></div>
+            <p class="nl">Accepted the switch</p>
+            <div class="wl"><span>Workload</span><i style="--w0:30%;--w:52%"></i><em>spare room used</em></div>
+            <p class="po soft">Suggestions stop if it would fill up<i class="ii" data-d="load">i</i></p></div>
+          <span class="tok k" style="left:112px;top:104px;--fx:338px;--fy:-44px;--d:.9s"></span><span class="tok s" style="left:770px;top:104px;--fx:-320px;--fy:-44px;--d:1.25s"></span>
+          <span class="tok k" style="left:148px;top:104px;--fx:302px;--fy:-44px;--d:1.6s"></span><span class="tok s" style="left:806px;top:104px;--fx:-356px;--fy:-44px;--d:1.95s"></span>
+          <span class="tok k" style="left:184px;top:104px;--fx:266px;--fy:-44px;--d:2.3s"></span>
+          <div class="fbx"><div class="mini" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M10 18 h4"/></svg><svg viewBox="0 0 24 24"><path d="M3 9 L5 4 H19 L21 9 Z M4 9 V20 H20 V9 M9 20 V14 H15 V20"/></svg><svg viewBox="0 0 24 24"><circle cx="6" cy="17" r="3"/><circle cx="18" cy="17" r="3"/><path d="M6 17 H13 L16 8 H19 M13 17 L11 11 H7"/></svg><svg viewBox="0 0 24 24"><path d="M4 12 a8 8 0 1 0 2.5 -5.8 M4 4 V8 H8 M12 8 V12 L15 14"/></svg></div><b>Data sources</b></div>
+          <p class="fbl">Evaluate outcomes and update the model.<i class="ii" data-d="fb">i</i></p>
+          <div class="cons"><span>Course concepts</span><button class="con" data-d="shape">Demand shaping<i class="ii">i</i></button><button class="con" data-d="pool">Capacity pooling<i class="ii">i</i></button><button class="con" data-d="bott">Bottleneck management<i class="ii">i</i></button></div>
+          <span class="golink xl" data-go="p1x">See execution steps</span>
         </div>
-        <p class="c5cap">Illustrative design. Actions are suggestions until a customer or a manager decides.</p>
+        <p class="c5cap">A few new orders move to the outlet with room; placed orders stay put.</p>
       </div>
+
+      <div class="pop" role="status" aria-live="polite"><button class="x" aria-label="Close">×</button><b></b><p></p></div>
       <div class="c5nav screenonly"><span class="c5dots"><i></i><i></i><i></i></span><span class="c5n"></span>
         <button class="btn" data-c5="replay" title="Play this step's animation again">↻ Replay</button>
         <button class="btn" data-c5="prev">◀ Previous</button><button class="btn primary" data-c5="next">Next ▶</button></div>
     </div>
-    <div class="p1bprint printonly">
-      <div><h5>The data</h5><ul><li><b>Recorded:</b> orders by outlet and time</li><li><b>Proposed, needs access or consent:</b> customer location; margin per drink; crew and equipment availability; delivery orders and rider waits; previous recommendations, decisions and outcomes</li></ul></div>
-      <div><h5>The proposed AI agent</h5><ul><li><b>Trigger:</b> a predicted wait crosses an adjustable threshold (illustrative: forty minutes)</li><li><b>Predict:</b> readiness and demand at nearby outlets</li><li><b>Recommend:</b> an outlet, action and optional incentive within approved rules</li><li><b>Human decision:</b> customers choose; the zone manager reviews delivery actions</li><li>Generative AI explains; it must not invent figures or reasons</li></ul></div>
-      <div><h5>Actions and feedback</h5><ul><li>Pickup recommendation; proposed delivery pause; alternative-outlet promotion</li><li>Decisions and outcomes return to the data layer for evaluation and periodic model updates</li><li>Demand shaping; capacity pooling across nearby outlets, limited by travel, coverage and willingness to switch; bottleneck management</li></ul></div>
-    </div>
+    <div class="takeaway btake"><span class="lab">TAKEAWAY</span><span>Help customers find convenient options while making better use of nearby capacity.<small>Expected outcomes to test in the pilot, not a promised increase in sales or profit.</small></span></div>
   </div>
   <div class="foot"><span>OPIM639 · Group 3 · proposed design; thresholds and times are illustrative</span><span class="rail"></span><span class="pg"></span></div>
   <aside class="notes">
-    <p>How it works, in three steps; use Next, Previous and Replay, and click any card. One, the data: orders by outlet and time are recorded today; customer location with permission, margin per drink, crew and equipment availability, delivery orders and rider waits, and a log of past recommendations and outcomes would need access, consent or logging. Which of these Chagee can provide is to confirm.</p>
-    <p>Two, the proposed AI agent: trigger, predict, recommend, human decision. A predicted wait crossing a threshold triggers it; the forty minutes is the reference example and adjustable here, not a validated rule. Predictive models estimate readiness and demand at nearby outlets; the tool proposes an outlet, an action and an optional incentive within approved rules; the customer chooses whether to switch, and the zone manager reviews any delivery action. Generative AI only explains the structured recommendation; it must not invent readiness times, incentives or reasons.</p>
-    <p>Three, actions and feedback: a pickup recommendation, a proposed delivery pause or an alternative-outlet promotion, then the decisions and outcomes go back to the data layer. That supports evaluation and periodic model updates; it does not make the tool better automatically. The class ideas: demand shaping, capacity pooling across nearby outlets, limited by travel, delivery coverage and willingness to switch, and bottleneck management. Then try the customer experience. About one minute.</p>
+    <p>How the solution works, in three steps; Next, Previous and Replay drive it, and the small i icons open the detail. Step one, data flows in. Four sources feed one planning workspace: app and sales, meaning orders, customer location and drink margins; outlet operations, meaning open orders, crew and machines; delivery apps, meaning delivery orders and rider waits; and past outcomes, meaning earlier recommendations, decisions and results. Only orders by outlet and time are recorded today, as far as we know; location needs the customer's permission, and the rest needs access or logging that Chagee would have to confirm.</p>
+    <p>Step two, AI recommends and people decide. The busy outlet's predicted wait rises and crosses the trigger; the forty minutes is the reference example, an illustrative setting, not a validated rule. Predictive AI proposes one thing: offer a nearby outlet with available capacity. Generative AI only explains that in plain words; it does not add figures or reasons. Then people decide: the customer accepts or keeps the original pickup, and the zone manager approves or declines any delivery pause or promotion.</p>
+    <p>Step three, demand is better distributed. A few new orders go to the outlet with room, others keep their choice, and orders already placed stay where they were placed. The busy outlet is still busy, just less so. Every decision and outcome goes back to the data, to evaluate it and update the model. The course ideas: demand shaping, capacity pooling, limited by travel, delivery coverage and willingness to switch, and bottleneck management. The takeaway: help customers find convenient options while making better use of nearby capacity. These are outcomes to test in the pilot, not promised sales. Then try the customer experience on the next slide. About one minute.</p>
   </aside>
 </section>
 
