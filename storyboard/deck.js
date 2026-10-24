@@ -2546,55 +2546,59 @@
 
     const pa = document.getElementById("p1a");
     if (pa) {
-      const S = { ch: "pick", pick: null, fill: false, dec: null }, inc = v("switch_incentive"), minSave = v("min_saving_min");
-      const bt = v("busy_travel_min"), br = v("busy_ready_min"), at = v("alt_travel_min");
-      const peakWait = Math.max(...v("predicted_wait"));
+      const S = { pick: null, fill: false, dec: null, ord: false }, inc = v("switch_incentive"), minSave = v("min_saving_min");
+      const bt = v("busy_travel_min"), br = v("busy_ready_min"), at = v("alt_travel_min"), emb = $(pa, "img.emb").src;
       $(pa, '[data-cx="scen"]').textContent = `${B} is swamped and ${AL}, nearby, has room. The outlets are the reference deck's example; every time is illustrative.`;
-      $(pa, '[data-cx="filllab"]').textContent = `${AL} fills up`;
+      $$(pa, '[data-cx="clock"]').forEach(e => (e.textContent = "9:41"));
       const render = () => {
-        $$(pa, ".cxseg .btn").forEach(b => b.classList.toggle("on", b.dataset.v === S.ch));
-        $$(pa, ".cxch").forEach(c => c.classList.toggle("on", c.dataset.ch === S.ch));
-        // pickup: collection is the later of walking there and the drink being ready
+        // pickup: collection is the later of walking there and the drink being ready; a switch is offered only if it saves enough
         const ar = S.fill ? v("alt_ready_when_full_min") : v("alt_ready_min"), bc = Math.max(bt, br), ac = Math.max(at, ar), save = bc - ac, offer = save >= minSave;
-        let body = `<div class="cxsel"><b>Your outlet: ${B}</b>Collect in about <em>${bc} min</em>: walk ${bt} min, ready in about ${br}</div>`;
-        if (S.pick === "switch") body += `<div class="cxok"><b>Order confirmed · simulated</b>Collect at ${AL} in about ${ac} min. Switch perk added to your account.</div>`;
-        else if (S.pick === "keep") body += `<div class="cxok"><b>Order confirmed · simulated</b>Collect at ${B} in about ${bc} min.</div>`;
-        else if (offer) body += `<div class="cxsug"><b>Suggested: ${AL}</b>Collect in about <em>${ac} min</em>: walk ${at} min, ready in about ${ar}. About ${save} min sooner.</div>
-            <div class="cxinc"><b>Optional switch perk</b>${inc}</div><button class="cxbtn go" data-cx="sw">Switch outlet</button><button class="cxbtn keep" data-cx="kp">Keep my outlet</button><span class="cxsim">You choose before you pay.</span>`;
-        else body += `<div class="cxwd"><b>No alternative offered</b>${AL} is busy too: switching would save about ${save} min, below the ${minSave}-minute minimum.</div><button class="cxbtn keep" data-cx="kp">Continue at ${B}</button>`;
-        $(pa, '[data-cx="pphone"]').innerHTML = `<div class="olbar"><b>Pickup</b><span>Chagee app · illustrative</span></div><div class="odscr-b">${body}</div>`;
-        $(pa, '[data-cx="ptext"]').innerHTML = `<h4>${offer || S.pick ? "A faster outlet, offered" : "The suggestion is withdrawn"}</h4>
-          <p class="cxcalc">Collection = the later of the walk and the drink being ready.<br>${B}: later of ${bt} and ${br} = <b>${bc} min</b> · ${AL}: later of ${at} and ${ar} = <b>${ac} min</b><br>Saving: ${bc} − ${ac} = <b>${save} min</b>; offered only if at least ${minSave} min (approved-rule placeholder).</p>
-          <p><b>The customer chooses</b> before paying; the perk is optional and within approved rules. A confirmed order never moves.</p>`;
-        const row = (n, r, ok, note) => `<div class="cxwr${ok ? " ok" : ""}"><span>${n}</span><i><em style="width:${Math.min(100, r / br * 100)}%"></em></i><span>${r} min</span></div>${note ? `<div class="cxsim" style="text-align:left;margin:-2px 0 4px 118px">${note}</div>` : ""}`;
-        $(pa, '[data-cx="pwl"]').innerHTML = row(B, br, false, S.pick === "switch" ? "one fewer order waiting" : S.pick === "keep" ? "your order joins this queue" : "") +
-                                             row(AL, ar, !S.fill, S.pick === "switch" ? "your order added; still within its capacity" : "");
-        // delivery: the zone manager decides first, then the customer screen changes
-        const D = S.dec, btn = (d, l) => `<button class="btn${D === d ? " on" : ""}" data-cx="dec" data-v="${d}">${l}</button>`;
-        $(pa, '[data-cx="mgr"]').innerHTML = `<span class="t">Agent recommendation · zone manager</span><h5>${B}: predicted wait about ${peakWait} min, above the ${THR.value}-minute threshold</h5>
-          <p class="why">Suggest a temporary pause of ${B} on the delivery app, or a promotion at ${AL}, which can have orders ready in about ${v("alt_ready_min")} min.</p>
-          <span class="gen">Explanation written from the structured recommendation; the figures come from the models, not the text generator.</span>
-          <div class="acts">${btn("pause", "Approve temporary pause")}${btn("promo", `Promote ${AL} instead`)}${btn("decline", "Decline")}</div>
-          <span class="st">${D === "pause" ? "Pause approved · simulated" : D === "promo" ? `Promotion at ${AL} approved · simulated` : D === "decline" ? "Declined: no change" : "Awaiting the manager's decision"}</span>`;
-        const store = (n, on, badge, v2) => `<div class="dlvst${on ? "" : " off"}"><span class="lg">C</span><div><b>CHAGEE · ${n}</b><span class="bd ${on ? "on" : "off"}">${badge}</span>${v2 ? `<span class="bd v">${v2}</span>` : ""}</div></div>`;
-        $(pa, '[data-cx="dphone"]').innerHTML = `<div class="dlvbar"><b>Delivery</b><span>Chagee</span></div><div class="odscr-b"><div class="odctx">Results near you</div>
-          ${store(B, D !== "pause", D === "pause" ? "Not taking orders right now" : "Open")}${store(AL, true, "Open", D === "promo" ? "Promotion today" : "")}
-          <span class="cxsim">${D ? "After the manager's decision" : "Before the manager decides"} · illustrative mock-up, not a real app</span></div>`;
-        $(pa, '[data-cx="dtext"]').innerHTML = `<h4>The busy outlet steps back, only if the manager approves</h4>
-          <p>The recommendation reaches the zone manager first; the customer screen changes only after a decision.</p>
-          <p>Orders already placed at ${B} are not moved. Customers may order from ${AL}, elsewhere, or not at all. The platform, not Chagee, controls its own ranking.</p>
-          <p class="cxreq"><b>To confirm:</b> platform integration and permissions to pause an outlet or run an outlet promotion.</p>`;
+        let ph = `<div class="brand"><img src="${emb}" alt="">CHAGEE</div><div class="ctx">Pickup · ${B}</div>`;
+        if (S.pick === "switch") ph += `<div class="hero">Switched</div><div class="pc ok"><span class="chip">Confirmed · simulated</span><b>Collect at ${AL} in about ${ac} min</b>Switch perk added: ${inc.toLowerCase()}.</div><button class="pb alt sm" data-cx="undo">Undo</button>`;
+        else if (S.pick === "keep") ph += `<div class="hero">Your tea</div><div class="pc ok"><span class="chip">Confirmed · simulated</span><b>Collect at ${B} in about ${bc} min</b>You kept your outlet; nothing else changes.</div><button class="pb alt sm" data-cx="undo">Undo</button>`;
+        else if (offer) ph += `<div class="hero">Your tea, sooner</div><div class="pc sug"><span class="chip">Suggested for you</span><b>Collect at ${AL} in about ${ac} min</b>instead of ${bc} min at ${B}.</div>
+          <div class="pc perk"><span class="chip">Switch perk</span><br>${inc}.</div><button class="pb go" data-cx="sw">Switch to ${AL}</button><button class="pb alt" data-cx="kp">Keep ${B}</button>`;
+        else ph += `<div class="hero">Your tea</div><div class="pc no"><span class="chip">No suggestion right now</span><b>Collect at ${B} in about ${bc} min</b>${AL} is busy too, so no switch is offered.</div><button class="pb alt" data-cx="kp">Continue at ${B}</button>`;
+        $(pa, '[data-cx="pphone"]').innerHTML = ph;
+        $(pa, '[data-cx="ptext"]').innerHTML = `<h4>${offer || S.pick ? "A faster outlet, offered" : "No faster outlet, no offer"}</h4>
+          <p>${offer || S.pick ? `${B} is swamped, so the app suggests ${AL} and explains why.` : `${AL} has filled up too, so the suggestion is withdrawn.`}</p>
+          ${offer ? `<div class="big"><b>${save} min sooner</b><span>collect in about ${ac} min instead of ${bc}, walk included</span></div>`
+                  : `<div class="big mute"><b>Saves only ${save} min</b><span>below the ${minSave}-minute minimum, so nothing is offered</span></div>`}
+          <div class="dyn"><i>Dynamic pricing</i>A voucher or a carrier bag nudges and rewards the switch, offered only while ${B} is swamped.</div>
+          <p class="who"><b>Customer chooses</b> before paying.<br><button class="lnk" data-cx="fill">${S.fill ? `${AL} has room again` : `What if ${AL} fills up?`}</button></p>`;
+        // delivery: nothing changes for customers until the zone manager decides
+        const D = S.dec, paused = D === "pause", nudged = D === "pause" || D === "promo";
+        const store = (n, cls, badges) => `<div class="st ${cls}"><img src="${emb}" alt=""><div><b>CHAGEE · ${n}</b>${badges}</div></div>`;
+        let dp = `<div class="dhd">Delivery<span>Chagee</span></div>`;
+        if (S.ord) dp += `<div class="res">Your order</div><div class="pc ok"><span class="chip">Placed · simulated</span><b>CHAGEE · ${AL} is preparing it</b>A rider collects from the outlet with room, not the busy counter.</div><button class="pb alt sm" data-cx="ordx">Back to results</button>`;
+        else dp += `<div class="res">Results near you</div>` +
+          store(B, paused ? "off" : "", paused ? `<span class="bd off">Not taking orders right now</span><br>Very busy · try again later` : `<span class="bd busy">Open · very busy</span><br>Long wait for riders`) +
+          store(AL, nudged ? "hi" : "", `<span class="bd on">Open · taking orders</span>${nudged ? `<span class="bd v">Voucher · discount today</span>` : ""}`);
+        if (nudged && !S.ord) dp += `<button class="pb gr" data-cx="ord">Order from ${AL}</button>`;
+        dp += `<div class="mock">Illustrative mock-up, not the real app.</div>`;
+        $(pa, '[data-cx="dphone"]').innerHTML = dp;
+        const call = { pause: ["Orders flow to " + AL, "no riders stuck at the busy counter"], promo: ["Demand nudged to " + AL, `${B} stays open; the voucher draws orders`],
+                       decline: ["No change", `${B} stays listed as usual`] }[D] || ["Awaiting the zone manager", "nothing changes for customers until a decision"];
+        const btn = (d, l) => `<button class="btn${D === d ? " on" : ""}" data-cx="dec" data-v="${d}">${l}</button>`;
+        $(pa, '[data-cx="dtext"]').innerHTML = `<h4>The busy outlet steps back</h4>
+          <p>The agent recommends pausing ${B} on delivery apps and redirecting demand; the zone manager reviews and approves.</p>
+          <div class="big${D && D !== "decline" ? "" : " mute"}"><b>${call[0]}</b><span>${call[1]}</span></div>
+          <button class="dyn${D === "promo" ? " on" : ""}" data-cx="dec" data-v="promo"><i>Dynamic pricing</i>Instead of closing ${B} on delivery altogether, a voucher at ${AL} can draw demand to the outlet with room.</button>
+          <div class="who"><b>Zone manager approves</b> the pause and redirection.<div class="acts">${btn("pause", "Approve pause")}${btn("promo", "Voucher only")}${btn("decline", "Decline")}</div>
+            <span class="fine">Placed orders stay put; platform permissions to confirm.</span></div>`;
       };
       pa.addEventListener("click", e => {
-        const b = e.target.closest("[data-cx]"); if (!b || b.tagName === "INPUT") return; const a = b.dataset.cx; b.blur?.();
-        if (a === "ch") S.ch = b.dataset.v; else if (a === "sw") S.pick = "switch"; else if (a === "kp") S.pick = "keep";
-        else if (a === "dec") S.dec = b.dataset.v; else if (a === "reset") Object.assign(S, { pick: null, fill: false, dec: null });
-        else if (a === "exec") { $(pa, ".cxpanel").classList.add("exec"); return; } else if (a === "back") { $(pa, ".cxpanel").classList.remove("exec"); return; }
+        const b = e.target.closest("[data-cx]"); if (!b) return; const a = b.dataset.cx; b.blur?.();
+        if (a === "sw") S.pick = "switch"; else if (a === "kp") S.pick = "keep"; else if (a === "undo") S.pick = null;
+        else if (a === "fill") { S.fill = !S.fill; S.pick = null; }
+        else if (a === "dec") { S.dec = S.dec === b.dataset.v ? null : b.dataset.v; S.ord = false; }
+        else if (a === "ord") S.ord = true; else if (a === "ordx") S.ord = false;
+        else if (a === "reset") Object.assign(S, { pick: null, fill: false, dec: null, ord: false });
+        else if (a === "exec") { $(pa, ".cxw").classList.add("exec"); return; } else if (a === "back") { $(pa, ".cxw").classList.remove("exec"); return; }
         else return;
-        $(pa, '[data-cx="fill"]').checked = S.fill; render();
+        render();
       });
-      $(pa, '[data-cx="fill"]').addEventListener("change", e => { S.fill = e.target.checked; S.pick = null; render(); });
-      printers.push(() => { Object.assign(S, { ch: "pick", pick: null, fill: false, dec: "pause" }); $(pa, ".cxpanel").classList.remove("exec"); render(); });
+      printers.push(() => { Object.assign(S, { pick: null, fill: false, dec: "pause", ord: false }); $(pa, ".cxw").classList.remove("exec"); render(); });
       render();
     }
   })();

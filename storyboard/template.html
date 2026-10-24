@@ -1023,7 +1023,7 @@ html,body{margin:0;background:#E7E3DC;color:var(--ink);font-family:var(--sans);-
 @keyframes p1scoot{0%{transform:translateX(60px);opacity:0}25%{transform:translateX(0);opacity:1}100%{opacity:1}}
 @keyframes p1np{0%{transform:translateY(0);opacity:0}15%{opacity:1}70%{transform:translateY(-36px);opacity:1}100%{transform:translateY(-46px);opacity:0}}
 .p1scene.paused *{animation-play-state:paused!important}
-@media (prefers-reduced-motion:reduce){.p1scene *,.p1bi *,.cxpanel *{animation:none!important;transition:none!important}.p1scene .np{opacity:1}}
+@media (prefers-reduced-motion:reduce){.p1scene *,.p1bi *,.cxw *{animation:none!important;transition:none!important}.p1scene .np{opacity:1}}
 .p1tip{position:absolute;left:10px;top:10px;max-width:300px;padding:8px 11px;border-radius:10px;background:#fff;border:1.5px solid var(--red);box-shadow:0 6px 16px rgba(36,64,107,.16);font:13px/1.38 var(--sans);color:var(--ink)} .p1tip:empty{display:none} .p1tip b{display:block;color:var(--red);font-size:11px;letter-spacing:.08em;text-transform:uppercase}
 .p1side{display:flex;flex-direction:column;min-height:0;padding:4px 0 44px}
 .p1lhd{margin:0 0 8px;font:700 11px/1.3 var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--red)} .p1lhd span{font-weight:500;letter-spacing:.02em;text-transform:none;color:var(--taupe)}
@@ -1167,62 +1167,70 @@ html,body{margin:0;background:#E7E3DC;color:var(--ink);font-family:var(--sans);-
   #p1b .c5s{display:none!important} #p1b .c5s[data-k="3"]{display:flex!important;margin-top:0} #p1b .sx,#p1b .pop,#p1b .c5cap,#p1b .ii{display:none!important}
   #p1b .btake{visibility:visible;animation:none!important;margin-top:8px;padding:8px 20px}
 }
-/* 05 */
-.cxpanel{position:relative;margin-top:10px;height:458px;background:var(--cream);border-radius:14px;padding:10px 18px 12px;display:flex;flex-direction:column;gap:8px}
-.cxbar{display:flex;align-items:center;justify-content:space-between;gap:10px}
-.cxseg{display:flex;gap:6px} .cxseg .btn{height:28px} .cxseg .btn.on{background:var(--navy);color:#fff;border-color:var(--navy)}
-.cxexec{height:30px;font-size:13px}
-.cxch{display:none;flex:1;min-height:0;gap:22px;align-items:center} .cxch.on{display:grid}
-.cxch[data-ch="pick"]{grid-template-columns:250px 1fr} .cxch[data-ch="dlv"]{grid-template-columns:300px 250px 1fr}
-.cxph{width:244px;height:392px;justify-self:center}
-.cxph .odscr-b{gap:6px;padding:8px} .cxph .cxsel,.cxph .cxsug,.cxph .cxinc{font-size:11.5px;padding:6px 9px} .cxph .cxbtn{padding:7px 10px}
-.cxsel{border:1.5px solid var(--line);border-radius:10px;padding:7px 10px;font:12px/1.35 var(--sans);color:var(--ink2)} .cxsel b{display:block;font:600 13px var(--sans);color:var(--ink)} .cxsel em{font-style:normal;font-weight:700;color:var(--red)}
-.cxsug{border:1.5px solid #2F6B45;border-radius:10px;padding:7px 10px;background:#F2F8F4;font:12px/1.35 var(--sans);color:var(--ink2)} .cxsug b{display:block;font:600 13px var(--sans);color:#2F6B45} .cxsug em{font-style:normal;font-weight:700;color:#2F6B45}
-.cxinc{border:1px dashed #C8A96A;border-radius:10px;padding:6px 10px;background:#FFF9EC;font:11.5px/1.35 var(--sans);color:var(--ink2)} .cxinc b{display:block;font:700 10px var(--sans);letter-spacing:.08em;text-transform:uppercase;color:#8A6416}
-.cxbtn{all:unset;cursor:pointer;text-align:center;border-radius:999px;padding:8px 10px;font:600 13px var(--sans)} .cxbtn.go{background:var(--red);color:#fff} .cxbtn.keep{border:1.5px solid var(--ink);color:var(--ink)}
-.cxsim{font:11px var(--sans);color:var(--taupe);text-align:center}
-.cxok{border-radius:12px;background:#EEF5F0;border:1px solid #2F6B45;padding:9px 11px;font:12.5px/1.4 var(--sans);color:var(--ink)} .cxok b{display:block;color:#2F6B45}
-.cxwd{border-radius:12px;background:#F6F3ED;border:1px solid var(--line);padding:9px 11px;font:12.5px/1.4 var(--sans);color:var(--ink2)} .cxwd b{display:block;color:var(--ink)}
-.cxside{display:flex;flex-direction:column;gap:10px;align-self:stretch;justify-content:center}
-.cxtxt h4{margin:0 0 4px;font:500 22px/1.15 var(--serif);color:var(--navy)} .cxtxt p{margin:0 0 6px;font:14px/1.42 var(--sans);color:var(--ink2)}
-.cxcalc{padding:8px 11px;border-radius:10px;background:#fff;font:13px/1.45 var(--sans);color:var(--ink2)} .cxcalc b{color:var(--navy)}
-.cxreq{padding:7px 10px;border-radius:9px;border:1px dashed var(--red);background:#FFF8F7;font:12px/1.38 var(--sans);color:var(--ink2)} .cxreq b{color:var(--red)}
-.cxwl .l{display:block;font:600 10.5px var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--taupe);margin-bottom:4px}
-.cxwr{display:grid;grid-template-columns:110px 1fr 40px;gap:8px;align-items:center;font:12.5px var(--sans);color:var(--ink);margin-bottom:4px}
-.cxwr i{display:block;height:12px;border-radius:6px;background:#F1EADB;overflow:hidden} .cxwr i em{display:block;height:100%;background:var(--red);transition:width .5s} .cxwr.ok i em{background:#2F6B45}
-.cxctl{display:flex;align-items:center;gap:12px;font:13px var(--sans);color:var(--ink2)} .cxctl label{display:flex;align-items:center;gap:6px;cursor:pointer}
-.cxmgr{align-self:center;background:#fff;border:9px solid var(--navy);border-radius:14px;box-shadow:0 8px 22px rgba(36,64,107,.18);padding:10px 12px;display:flex;flex-direction:column;gap:7px;font:12.5px/1.4 var(--sans);color:var(--ink2)}
-.cxmgr .t{font:700 10px var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--taupe)} .cxmgr h5{margin:0;font:600 14px/1.3 var(--sans);color:var(--ink)}
-.cxmgr .why{padding:6px 8px;border-radius:8px;background:#FBF7F0} .cxmgr .gen{font-size:11px;color:var(--taupe)}
-.cxmgr .acts{display:flex;flex-direction:column;gap:5px} .cxmgr .acts .btn{height:28px;font-size:12px;justify-content:center} .cxmgr .acts .btn.on{background:var(--navy);color:#fff;border-color:var(--navy)}
-.cxmgr .st{font-weight:600;color:#2F6B45;min-height:18px}
-.dlvbar{background:#1F7A4D;color:#fff;padding:10px 12px 8px} .dlvbar b{display:block;font:700 15px var(--sans)} .dlvbar span{display:block;margin-top:6px;background:#fff;color:var(--ink);border-radius:999px;padding:5px 10px;font:12px var(--sans)}
-.dlvst{display:grid;grid-template-columns:34px 1fr;gap:8px;border:1.5px solid var(--line);border-radius:10px;padding:8px 9px;font:11.5px/1.35 var(--sans);color:var(--ink2)} .dlvst b{display:block;font:600 12.5px var(--sans);color:var(--ink)}
-.dlvst .lg{width:34px;height:34px;border-radius:8px;background:#FBEDEC;display:grid;place-items:center;font:700 13px var(--serif);color:var(--red)}
-.dlvst.off{opacity:.55} .dlvst .bd{display:inline-block;margin-top:3px;padding:2px 8px;border-radius:999px;font:600 10.5px var(--sans)} .dlvst .bd.on{background:#E3F1E8;color:#1F7A4D} .dlvst .bd.off{background:#EEE;color:#777} .dlvst .bd.v{background:#FFF1D6;color:#8A6416;margin-left:4px}
+/* 05: two channels side by side, each a phone and its story; every button in them is live */
+#p1a .cxw{position:relative;margin-top:10px;height:462px;display:grid;grid-template-columns:1fr 1fr;gap:22px}
+#p1a .cxh{position:relative;border-radius:22px;padding:16px 18px 14px;display:grid;grid-template-columns:212px 1fr;grid-template-rows:auto 1fr;column-gap:18px;row-gap:12px}
+#p1a .cxh.pick{background:#F6F1E8} #p1a .cxh.dlv{background:#EEF2EE}
+#p1a .cxpill{grid-column:1 / -1;justify-self:start;font:700 12px/1 var(--sans);letter-spacing:.14em;text-transform:uppercase;color:#fff;padding:8px 14px;border-radius:20px}
+#p1a .pick .cxpill{background:var(--red)} #p1a .dlv .cxpill{background:#3E8A57}
+/* the phone */
+#p1a .cxph2{position:relative;height:378px;box-sizing:border-box;border:9px solid #EDEAE4;border-radius:34px;background:#fff;box-shadow:0 0 0 1.5px #D9D4CA,0 12px 26px rgba(0,0,0,.08);display:flex;flex-direction:column;overflow:hidden}
+#p1a .sbar{display:flex;justify-content:space-between;align-items:center;padding:9px 16px 2px;font:600 11px var(--sans);color:var(--ink)} #p1a .sbar i{font-style:normal;letter-spacing:1px}
+#p1a .notch{position:absolute;left:50%;top:0;width:84px;height:18px;transform:translateX(-50%);background:#EDEAE4;border-radius:0 0 12px 12px}
+#p1a .scr{flex:1;min-height:0;display:flex;flex-direction:column;gap:6px;padding:4px 10px 6px}
+#p1a .tabs{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--line);padding:5px 0 7px;font:9.5px var(--sans);color:var(--taupe);text-align:center}
+#p1a .tabs span{display:flex;flex-direction:column;align-items:center;gap:1px} #p1a .tabs svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linejoin:round}
+#p1a .pick .tabs .on{color:var(--red)} #p1a .dlv .tabs .on{color:#3E8A57}
+#p1a .brand{display:flex;align-items:center;gap:6px;font:700 13px var(--sans);letter-spacing:.32em;color:var(--ink)} #p1a .brand img{width:22px;height:22px}
+#p1a .ctx{font:10px var(--sans);color:var(--taupe);margin-top:1px} #p1a .hero{font:800 14px/1.15 var(--sans);color:var(--ink);text-transform:uppercase}
+#p1a .hero::after{content:"";display:block;width:26px;height:3px;border-radius:2px;background:var(--red);margin-top:4px}
+#p1a .chip{display:inline-block;font:700 8.5px/1 var(--sans);letter-spacing:.12em;text-transform:uppercase;padding:3px 6px;border-radius:6px;margin-bottom:3px}
+#p1a .pc{border-radius:10px;padding:7px 9px;font:10.5px/1.35 var(--sans);color:var(--ink2)} #p1a .pc b{display:block;font:700 11.5px/1.3 var(--sans);color:var(--ink)}
+#p1a .pc.sug{border:1.5px solid #E5CD98} #p1a .pc.sug .chip{background:#FBEDEC;color:var(--red)}
+#p1a .pc.perk{background:#FBF4E4} #p1a .pc.perk .chip{background:#F1DFB6;color:#7A5F22}
+#p1a .pc.ok{background:#EEF5F0;border:1.5px solid #2F6B45} #p1a .pc.ok .chip{background:#2F6B45;color:#fff}
+#p1a .pc.no{background:#F4F1EB;border:1.5px solid var(--line)} #p1a .pc.no .chip{background:#E4DED2;color:var(--ink2)}
+#p1a .pb{all:unset;box-sizing:border-box;cursor:pointer;display:block;width:100%;text-align:center;border-radius:999px;padding:7px 8px;font:700 11.5px var(--sans)}
+#p1a .pb.go{background:#D7322A;color:#fff} #p1a .pb.go:hover{background:#B8322B} #p1a .pb.alt{border:2px solid var(--ink);color:var(--ink)} #p1a .pb.alt:hover{background:#F4F1EB}
+#p1a .pb.gr{background:#3E8A57;color:#fff} #p1a .pb.gr:hover{background:#2F6B45} #p1a .pb.sm{padding:4px 8px;font-size:10.5px}
+#p1a .dhd{margin:0 -10px;padding:5px 10px 8px;background:#3E8A57;color:#fff;font:700 12px var(--sans)} #p1a .dhd span{display:block;margin-top:5px;padding:5px 10px;border-radius:999px;background:#fff;color:var(--ink);font:400 11px var(--sans)}
+#p1a .scr.dl{padding-top:0}
+#p1a .res{font:700 11px var(--sans);color:var(--ink)}
+#p1a .st{display:grid;grid-template-columns:34px 1fr;gap:8px;border:1.5px solid var(--line);border-radius:11px;padding:6px 8px;font:9.5px/1.3 var(--sans);color:var(--taupe);transition:all .3s}
+#p1a .st img{width:34px;height:34px;border-radius:8px;background:#FBEDEC;padding:3px;box-sizing:border-box} #p1a .st b{display:block;font:700 10.5px var(--sans);color:var(--ink)}
+#p1a .st .bd{display:inline-block;margin:2px 3px 1px 0;padding:2px 7px;border-radius:999px;font:600 9px var(--sans)}
+#p1a .bd.on{background:#E3F1E8;color:#2F6B45} #p1a .bd.off{background:#EEE;color:#888} #p1a .bd.busy{background:#FCE9D9;color:#A2541B} #p1a .bd.v{background:#FFF1D6;color:#8A6416}
+#p1a .st.off{background:#FAFAFA} #p1a .st.off img{filter:grayscale(1);opacity:.6} #p1a .st.off b{color:#888}
+#p1a .st.hi{border-color:#3E8A57;box-shadow:0 0 0 3px #DCEBE1}
+#p1a .mock{margin-top:auto;font:9px var(--sans);color:var(--taupe);text-align:center}
+/* the story beside each phone */
+#p1a .side{display:flex;flex-direction:column;gap:9px;min-width:0;padding-top:4px}
+#p1a .side h4{margin:0;font:500 24px/1.12 var(--serif);color:var(--navy)} #p1a .side>p{margin:0;font:13.5px/1.4 var(--sans);color:var(--ink2)}
+#p1a .big{background:#fff;border-radius:12px;border-left:5px solid var(--red);padding:7px 13px;transition:all .3s} #p1a .big b{display:block;font:500 25px/1.1 var(--serif);color:var(--red)} #p1a .big span{font:13px/1.35 var(--sans);color:var(--ink2)}
+#p1a .dlv .big{border-left-color:#3E8A57} #p1a .dlv .big b{color:#3E8A57;font-size:22px} #p1a .big.mute{border-left-color:var(--taupe)} #p1a .big.mute b{color:var(--ink2)}
+#p1a .dyn{all:unset;box-sizing:border-box;display:block;border:1.5px dashed #D9C08C;border-radius:12px;padding:7px 12px;font:13px/1.36 var(--sans);color:var(--ink2)} #p1a .dyn i{display:block;font:700 10.5px var(--sans);font-style:normal;letter-spacing:.14em;text-transform:uppercase;color:#A88539;margin-bottom:2px}
+#p1a button.dyn{cursor:pointer} #p1a button.dyn:hover{border-color:#A88539;background:#FFFBF1} #p1a button.dyn.on{border-style:solid;border-color:#A88539;background:#FFF8E8}
+#p1a .who{margin:auto 0 0;font:13.5px/1.35 var(--sans);color:var(--taupe)} #p1a .who b{color:var(--ink)}
+#p1a .acts{display:flex;gap:5px;margin:5px 0 3px} #p1a .acts .btn{height:26px;font-size:12px;padding:0 9px} #p1a .acts .btn.on{background:#2F6B45;border-color:#2F6B45;color:#fff}
+#p1a .lnk{all:unset;cursor:pointer;font:600 12.5px var(--sans);color:var(--red);border-bottom:1px dotted var(--red)}
+#p1a .fine{font:11.5px/1.35 var(--sans);color:var(--taupe)}
+#p1a .cxmore{display:flex;justify-content:flex-end;align-items:center;gap:16px;margin:8px 0 0} #p1a .cxmore .btn{height:26px;font-size:12px} #p1a .cxmore .golink{font-size:13.5px}
+#p1a .cxw.exec .cxexecp{display:block}
+#p1a .scr>*,#p1a .side>*{animation:c5fade .35s ease-out both}
+@media print{
+  #p1a .cxw{height:auto} #p1a .cxexecp{display:none!important} #p1a .acts,#p1a .lnk{display:none} #p1a .scr>*,#p1a .side>*{animation:none!important}
+}
 .cxexecp{display:none;position:absolute;inset:0;z-index:6;background:#fff;border-radius:14px;padding:12px 18px;box-shadow:0 10px 30px rgba(36,64,107,.2);overflow:auto}
-.cxpanel.exec .cxexecp{display:block} .cxexecp .ptop{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.cxexecp .ptop{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
 .p1xsteps .p1xs{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
 .p1xs>div{border:1px solid var(--line);border-top:4px solid var(--navy);border-radius:12px;padding:9px 11px;background:#fff;font:12.5px/1.42 var(--sans);color:var(--ink2)}
 .p1xs .when{display:block;margin-bottom:3px} .p1xs .n{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--red);color:#fff;font:700 12px var(--sans);margin-bottom:4px}
 .p1xs h5{margin:0 0 4px;font:600 14px/1.25 var(--sans);color:var(--ink)} .p1xs .when{font:600 11px var(--sans);letter-spacing:.06em;text-transform:uppercase;color:#4A6699} .p1xs .who{margin-top:5px;font-size:11.5px;color:var(--taupe)}
 .p1xg{display:flex;gap:10px;margin-top:10px} .p1xg p{flex:1;margin:0;padding:8px 11px;border-radius:10px;background:#EEF5F0;font:12.5px/1.4 var(--sans);color:var(--ink2)} .p1xg b{color:#2F6B45}
 .p1xd{margin:10px 0 0;font:12.5px/1.4 var(--sans);color:var(--ink)}
-.cxlab{display:none}
 @media print{
   .p1row{display:grid!important} .p1row p{display:block!important} .p1row{animation:none!important;background:none!important;box-shadow:none!important;padding:3px 8px 3px 4px} .p1row p{font-size:12px}
   .p1gains{display:block!important;animation:none!important;margin-top:6px} .p1scene .hs{opacity:1!important} .p1scene *{animation:none!important} .p1scene .np0{opacity:1} .p1tip{display:none}
-  .cxpanel{height:auto} .cxexecp{display:none!important} .cxch{display:grid!important;gap:12px} .cxpanel{display:grid;grid-template-columns:1fr 1.25fr;gap:14px}
-  .cxpanel{padding:10px 14px} .cxch{align-items:start;align-content:start}
-  .cxch[data-ch="pick"]{grid-template-columns:180px 1fr;grid-template-areas:"lab lab" "ph side"} .cxch[data-ch="pick"] .cxph{grid-area:ph} .cxch[data-ch="pick"] .cxside{grid-area:side;justify-content:flex-start}
-  .cxch[data-ch="dlv"]{grid-template-columns:180px 1fr;grid-template-areas:"lab lab" "ph mgr" "ph txt"}
-  .cxch[data-ch="dlv"] .cxmgr{grid-area:mgr;border-width:4px;padding:7px 9px;gap:4px;font-size:11px} .cxch[data-ch="dlv"] .cxmgr h5{font-size:12px} .cxch[data-ch="dlv"] .cxmgr .acts,.cxch[data-ch="dlv"] .cxmgr .gen{display:none}
-  .cxch[data-ch="dlv"] .cxph{grid-area:ph} .cxch[data-ch="dlv"] .cxside{grid-area:txt;justify-content:flex-start}
-  .cxlab{display:block;grid-area:lab;font:700 11px var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--red)}
-  .cxph{width:180px;height:345px} .cxph .olbar{padding:6px 10px} .cxph .olbar b{font-size:14px} .cxph .odscr-b{gap:4px;padding:6px}
-  .cxph .cxsel,.cxph .cxsug,.cxph .cxinc,.cxph .cxok{font-size:10px;padding:4px 7px} .cxph .cxsel b,.cxph .cxsug b{font-size:11px} .cxph .cxbtn{padding:4px;font-size:11px} .cxph .cxsim{font-size:9.5px}
-  .cxph .dlvbar{padding:6px 10px} .cxph .dlvst{font-size:10px;padding:5px 7px} .cxph .dlvst b{font-size:11px} .cxtxt h4{font-size:16px} .cxtxt p{font-size:11px;margin-bottom:4px} .cxtxt p:not(.cxcalc):not(.cxreq){display:none} .cxcalc{font-size:11px;padding:6px 8px}
-  .cxwr{grid-template-columns:80px 1fr 36px;font-size:11px} .cxbar,.cxctl{display:none}
 }
 /* ---------------------------------------------------------------- the earlier online slides, now in the appendix (overview, offers, pickup rewards, case) */
 #oo .oo3{flex:1;min-height:0;display:grid;grid-template-columns:1fr 44px 1fr 44px 1fr;align-items:center;gap:6px;margin-top:14px}
@@ -1729,26 +1737,27 @@ aside.notes{display:none}
   <div class="leafart" aria-hidden="true"></div>
   <div class="inner">
     <p class="kicker">05 · Online retailing · the customer experience<span class="stg"><b>Online</b><i>Problem</i><i class="on">Solution</i><i class="on">Decision</i></span><span class="dm"><i>Decision-maker</i>Digital commerce manager, with operations</span></p>
-    <h2 class="head">Customers are offered an outlet with room; managers approve delivery actions</h2>
+    <h2 class="head">Customers get a faster outlet; managers approve delivery actions</h2>
     <p class="bprob keep"><b>Illustrative scenario</b><span data-cx="scen"></span></p>
-    <div class="cxpanel keep">
-      <div class="cxbar"><div class="cxseg screenonly"><button class="btn on" data-cx="ch" data-v="pick">Pickup · Chagee app</button><button class="btn" data-cx="ch" data-v="dlv">Delivery · illustrative third-party app</button></div>
-        <button class="btn primary cxexec screenonly" data-cx="exec">See execution steps →</button></div>
-      <div class="cxch on" data-ch="pick">
-        <div class="cxlab app printonly">Pickup · Chagee app</div>
-        <div class="olph cxph"><div class="olscr" data-cx="pphone"></div></div>
-        <div class="cxside"><div class="cxtxt" data-cx="ptext"></div>
-          <div class="cxwl"><span class="l">Outlet workload · minutes until a new order is ready, illustrative</span><div data-cx="pwl"></div></div>
-          <div class="cxctl screenonly"><label><input type="checkbox" data-cx="fill"> <span data-cx="filllab"></span></label><button class="btn" data-cx="reset">Reset</button></div></div>
+    <div class="cxw keep">
+      <div class="cxh pick">
+        <span class="cxpill">Pickup · Chagee app</span>
+        <div class="cxph2"><div class="sbar"><span data-cx="clock"></span><i>•••</i></div><span class="notch" aria-hidden="true"></span>
+          <div class="scr" data-cx="pphone"></div>
+          <nav class="tabs" aria-hidden="true"><span><svg viewBox="0 0 24 24"><path d="M4 11 L12 4 L20 11 V20 H4 Z"/></svg>Home</span><span class="on"><svg viewBox="0 0 24 24"><path d="M7 8 H17 L15.8 21 H8.2 Z M6 8 H18 M12 8 V4 l3 -1"/></svg>Menu</span><span><svg viewBox="0 0 24 24"><path d="M6 3 H18 V21 H6 Z M9 8 H15 M9 12 H15 M9 16 H13"/></svg>Orders</span><span><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21 Q4 14 12 14 Q20 14 20 21"/></svg>Me</span></nav></div>
+        <div class="side" data-cx="ptext"></div>
       </div>
-      <div class="cxch" data-ch="dlv">
-        <div class="cxlab dlv printonly">Delivery · illustrative third-party app</div>
-        <div class="cxmgr" data-cx="mgr"></div>
-        <div class="olph cxph"><div class="olscr" data-cx="dphone"></div></div>
-        <div class="cxside"><div class="cxtxt" data-cx="dtext"></div></div>
+      <div class="cxh dlv">
+        <span class="cxpill">Delivery · e.g. GrabFood</span>
+        <div class="cxph2"><div class="sbar"><span data-cx="clock"></span><i>•••</i></div><span class="notch" aria-hidden="true"></span>
+          <div class="scr" data-cx="dphone"></div>
+          <nav class="tabs" aria-hidden="true"><span class="on"><svg viewBox="0 0 24 24"><path d="M4 11 L12 4 L20 11 V20 H4 Z"/></svg>Home</span><span><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"/><path d="M16 16 L20 20"/></svg>Search</span><span><svg viewBox="0 0 24 24"><path d="M6 3 H18 V21 H6 Z M9 8 H15 M9 12 H15 M9 16 H13"/></svg>Orders</span><span><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21 Q4 14 12 14 Q20 14 20 21"/></svg>Account</span></nav></div>
+        <div class="side" data-cx="dtext"></div>
       </div>
+      <img class="emb" src="{img:emblem}" alt="" hidden>
       <div class="cxexecp"><div class="ptop"><span class="ptitle">Execution steps · proposed plan, reusing the online roadmap's timing and gates</span><button class="btn" data-cx="back">← Back to the demonstration</button></div><div class="p1xsteps"><!--P1XSTEPS--></div></div>
     </div>
+    <p class="cxmore screenonly"><button class="btn" data-cx="reset">↺ Reset both</button><span class="golink" data-cx="exec">See execution steps</span></p>
   </div>
   <div class="foot"><span>OPIM639 · Group 3 · mock-ups and times are illustrative, not live Chagee or delivery-app data</span><span class="rail"></span><span class="pg"></span></div>
   <aside class="notes">
