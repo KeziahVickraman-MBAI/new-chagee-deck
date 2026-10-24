@@ -2501,7 +2501,7 @@
         pool: ["Capacity pooling", "Nearby outlets act as one pool of capacity, limited by walking time, delivery coverage and how many customers are willing to switch."],
         bott: ["Bottleneck management", "Act where the queue builds, before it peaks: the busy outlet's counter and collection shelf."] };
       const closePop = () => { pop.classList.remove("on"); $$(box, ".src.on,.con.on").forEach(e => e.classList.remove("on")); };
-      const play = () => { box.classList.remove("play"); void box.offsetWidth; box.classList.add("play"); $(box, "svg.flw").setCurrentTime?.(0); };
+      const play = () => { box.classList.remove("play"); void box.offsetWidth; box.classList.add("play"); $(box, "svg.flw").setCurrentTime?.(0); $(box, ".p1tc").classList.remove("now"); };
       const paint = () => {
         box.dataset.st = st; $(box, ".c5n").textContent = `${st} / ${N}`; $(box, '[data-c5="prev"]').disabled = st === 1;
         $$(box, ".sx li").forEach((l, i) => { l.classList.toggle("cur", i === st - 1); l.classList.toggle("done", i < st - 1); });
@@ -2528,13 +2528,19 @@
       // the trigger: the illustrative predicted wait rising past the threshold
       const W = v("predicted_wait"), [h0, m0] = v("now_clock").split(":").map(Number), svg = $(pb, ".p1tc"), th = THR.value;
       const clk = i => { const t = h0 * 60 + m0 + i * 10; return `${String(Math.floor(t / 60)).padStart(2, "0")}:${String(t % 60).padStart(2, "0")}`; };
-      const top = Math.max(70, ...W), x = i => 30 + i * (330 / (W.length - 1)), y = m => 126 - m / top * 112, hit = W.findIndex(w => w >= th);
-      svg.innerHTML = `<line x1="30" x2="360" y1="126" y2="126" stroke="#C9C2B6"/>` +
-        W.map((w, i) => i % 2 ? "" : `<text x="${x(i)}" y="144" font-size="11" fill="#9A9387" text-anchor="middle">${clk(i)}</text>`).join("") +
-        `<path d="${W.map((w, i) => `${i ? "L" : "M"}${x(i)},${y(w * 1.15)}`).join(" ")} ${[...W].reverse().map((w, j) => `L${x(W.length - 1 - j)},${y(w * 0.85)}`).join(" ")} Z" fill="#24406B" opacity=".08"/>` +
-        `<line x1="30" x2="360" y1="${y(th)}" y2="${y(th)}" stroke="#B8322B" stroke-width="1.6" stroke-dasharray="5 4"/><text x="32" y="${y(th) - 6}" font-size="11.5" fill="#B8322B">trigger · ${th} min, illustrative</text>` +
-        `<polyline class="ln" pathLength="1" points="${W.map((w, i) => `${x(i)},${y(w)}`).join(" ")}"/>` +
-        (hit >= 0 ? `<circle class="hit" cx="${x(hit)}" cy="${y(W[hit])}" r="6.5" fill="#B8322B"/>` : "");
+      const inp = $(pb, '[data-p1b="thr"]'); inp.min = THR.range[0]; inp.max = THR.range[1]; inp.step = v("threshold_step"); inp.value = th;
+      const chart = () => {
+        const th = +inp.value, top = Math.max(70, ...W), x = i => 30 + i * (330 / (W.length - 1)), y = m => 126 - m / top * 112, hit = W.findIndex(w => w >= th);
+        svg.innerHTML = `<line x1="30" x2="360" y1="126" y2="126" stroke="#C9C2B6"/>` +
+          W.map((w, i) => i % 2 ? "" : `<text x="${x(i)}" y="144" font-size="11" fill="#9A9387" text-anchor="middle">${clk(i)}</text>`).join("") +
+          `<path d="${W.map((w, i) => `${i ? "L" : "M"}${x(i)},${y(w * 1.15)}`).join(" ")} ${[...W].reverse().map((w, j) => `L${x(W.length - 1 - j)},${y(w * 0.85)}`).join(" ")} Z" fill="#24406B" opacity=".08"/>` +
+          `<line x1="30" x2="360" y1="${y(th)}" y2="${y(th)}" stroke="#B8322B" stroke-width="1.6" stroke-dasharray="5 4"/><text x="32" y="${y(th) - 6}" font-size="11.5" fill="#B8322B">trigger · ${th} min, illustrative</text>` +
+          `<polyline class="ln" pathLength="1" points="${W.map((w, i) => `${x(i)},${y(w)}`).join(" ")}"/>` +
+          (hit >= 0 ? `<circle class="hit" cx="${x(hit)}" cy="${y(W[hit])}" r="6.5" fill="#B8322B"/><text x="${x(hit)}" y="${y(W[hit]) + 20}" font-size="11" font-weight="700" fill="#B8322B" text-anchor="middle">${clk(hit)}</text>`
+                    : `<text x="195" y="70" font-size="12" fill="#B8322B" text-anchor="middle">no alert: the forecast stays below</text>`);
+        $(pb, '[data-p1b="th"]').textContent = `${th} min`; $(pb, ".al").style.visibility = hit >= 0 ? "" : "hidden";
+      };
+      inp.addEventListener("input", () => { svg.classList.add("now"); chart(); }); chart();
       printers.push(() => { st = N; paint(); }); paint();
     }
 

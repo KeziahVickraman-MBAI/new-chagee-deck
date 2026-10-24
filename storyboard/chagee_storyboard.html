@@ -1082,6 +1082,9 @@ html,body{margin:0;background:#E7E3DC;color:var(--ink);font-family:var(--sans);-
 #p1b .al{position:absolute;right:34px;top:6px;display:flex;align-items:center;gap:4px;padding:3px 9px 3px 6px;border-radius:12px;background:var(--red);color:#fff;font:700 12px var(--sans)}
 #p1b .al svg{width:16px;height:16px;fill:none;stroke:#fff;stroke-width:2;stroke-linejoin:round}
 #p1b .zc.chart{border-color:#C9D3E3}
+#p1b .p1tc.now *{animation:none!important}
+#p1b .thr{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:10px;margin-top:2px;font:600 11px var(--sans);letter-spacing:.06em;text-transform:uppercase;color:var(--taupe)} #p1b .thr input{accent-color:var(--red);margin:0} #p1b .thr span{font-size:13px;color:var(--red);letter-spacing:0;text-transform:none;min-width:44px;text-align:right}
+#p1b .sc.sc2{height:332px}
 #p1b .zc.rec{border:2px solid var(--navy);padding:10px 30px 10px 12px} #p1b .zc.rec b{display:block;font:500 20px/1.2 var(--serif);color:var(--navy)}
 #p1b .zl{display:block;font:700 10.5px var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--taupe);margin-bottom:3px}
 #p1b .zar{width:36px;height:40px} #p1b .zar path{fill:none;stroke:#C8A96A;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
@@ -1122,6 +1125,7 @@ html,body{margin:0;background:#E7E3DC;color:var(--ink);font-family:var(--sans);-
 #p1b .fbx .mini{display:grid;grid-template-columns:repeat(4,22px);gap:6px} #p1b .fbx .mini svg{width:22px;height:22px;fill:none;stroke:var(--navy);stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
 #p1b .fbx b{font:600 13px var(--sans);color:var(--navy)}
 #p1b .fbl{position:absolute;left:928px;top:142px;width:150px;margin:0;font:500 17px/1.25 var(--serif);color:#7A5F22}
+#p1b .fbl small{display:block;margin-top:2px;font:italic 15px/1.25 var(--serif);color:#7A5F22}
 #p1b .fbl .ii{display:inline-grid;margin-left:5px;vertical-align:1px}
 #p1b .cons{position:absolute;left:0;top:266px;display:flex;align-items:center;gap:10px}
 #p1b .cons>span{font:700 11px var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--taupe)}
@@ -1656,6 +1660,7 @@ aside.notes{display:none}
             <span class="rt pred">Prediction · predictive AI</span>
             <div class="zc chart"><p class="zh">Predicted wait at <span data-p1b="busy"></span></p>
               <svg class="p1tc" viewBox="0 0 372 150" aria-label="Predicted wait at the busy outlet rising past the illustrative trigger"></svg>
+              <label class="thr screenonly">Trigger, illustrative<input type="range" data-p1b="thr"><span data-p1b="th"></span></label>
               <span class="al"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 16 V11 a6 6 0 0 1 12 0 V16 L20 18 H4 Z M10 21 h4"/></svg>Alert</span>
               <i class="ii" data-d="pred">i</i></div>
             <div class="zc rec"><span class="zl">AI proposes</span><b>Offer a nearby outlet with available capacity.</b><i class="ii" data-d="rec">i</i></div>
@@ -1697,7 +1702,7 @@ aside.notes{display:none}
           <span class="tok k" style="left:148px;top:104px;--fx:302px;--fy:-44px;--d:1.6s"></span><span class="tok s" style="left:806px;top:104px;--fx:-356px;--fy:-44px;--d:1.95s"></span>
           <span class="tok k" style="left:184px;top:104px;--fx:266px;--fy:-44px;--d:2.3s"></span>
           <div class="fbx"><div class="mini" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M10 18 h4"/></svg><svg viewBox="0 0 24 24"><path d="M3 9 L5 4 H19 L21 9 Z M4 9 V20 H20 V9 M9 20 V14 H15 V20"/></svg><svg viewBox="0 0 24 24"><circle cx="6" cy="17" r="3"/><circle cx="18" cy="17" r="3"/><path d="M6 17 H13 L16 8 H19 M13 17 L11 11 H7"/></svg><svg viewBox="0 0 24 24"><path d="M4 12 a8 8 0 1 0 2.5 -5.8 M4 4 V8 H8 M12 8 V12 L15 14"/></svg></div><b>Data sources</b></div>
-          <p class="fbl">Evaluate outcomes and update the model.<i class="ii" data-d="fb">i</i></p>
+          <p class="fbl">Evaluate outcomes and update the model.<small>(continuous learning)</small><i class="ii" data-d="fb">i</i></p>
           <div class="cons"><span>Course concepts</span><button class="con" data-d="shape">Demand shaping<i class="ii">i</i></button><button class="con" data-d="pool">Capacity pooling<i class="ii">i</i></button><button class="con" data-d="bott">Bottleneck management<i class="ii">i</i></button></div>
           <span class="golink xl" data-go="p1x">See execution steps</span>
         </div>
@@ -8176,7 +8181,7 @@ aside.notes{display:none}
         pool: ["Capacity pooling", "Nearby outlets act as one pool of capacity, limited by walking time, delivery coverage and how many customers are willing to switch."],
         bott: ["Bottleneck management", "Act where the queue builds, before it peaks: the busy outlet's counter and collection shelf."] };
       const closePop = () => { pop.classList.remove("on"); $$(box, ".src.on,.con.on").forEach(e => e.classList.remove("on")); };
-      const play = () => { box.classList.remove("play"); void box.offsetWidth; box.classList.add("play"); $(box, "svg.flw").setCurrentTime?.(0); };
+      const play = () => { box.classList.remove("play"); void box.offsetWidth; box.classList.add("play"); $(box, "svg.flw").setCurrentTime?.(0); $(box, ".p1tc").classList.remove("now"); };
       const paint = () => {
         box.dataset.st = st; $(box, ".c5n").textContent = `${st} / ${N}`; $(box, '[data-c5="prev"]').disabled = st === 1;
         $$(box, ".sx li").forEach((l, i) => { l.classList.toggle("cur", i === st - 1); l.classList.toggle("done", i < st - 1); });
@@ -8203,13 +8208,19 @@ aside.notes{display:none}
       // the trigger: the illustrative predicted wait rising past the threshold
       const W = v("predicted_wait"), [h0, m0] = v("now_clock").split(":").map(Number), svg = $(pb, ".p1tc"), th = THR.value;
       const clk = i => { const t = h0 * 60 + m0 + i * 10; return `${String(Math.floor(t / 60)).padStart(2, "0")}:${String(t % 60).padStart(2, "0")}`; };
-      const top = Math.max(70, ...W), x = i => 30 + i * (330 / (W.length - 1)), y = m => 126 - m / top * 112, hit = W.findIndex(w => w >= th);
-      svg.innerHTML = `<line x1="30" x2="360" y1="126" y2="126" stroke="#C9C2B6"/>` +
-        W.map((w, i) => i % 2 ? "" : `<text x="${x(i)}" y="144" font-size="11" fill="#9A9387" text-anchor="middle">${clk(i)}</text>`).join("") +
-        `<path d="${W.map((w, i) => `${i ? "L" : "M"}${x(i)},${y(w * 1.15)}`).join(" ")} ${[...W].reverse().map((w, j) => `L${x(W.length - 1 - j)},${y(w * 0.85)}`).join(" ")} Z" fill="#24406B" opacity=".08"/>` +
-        `<line x1="30" x2="360" y1="${y(th)}" y2="${y(th)}" stroke="#B8322B" stroke-width="1.6" stroke-dasharray="5 4"/><text x="32" y="${y(th) - 6}" font-size="11.5" fill="#B8322B">trigger · ${th} min, illustrative</text>` +
-        `<polyline class="ln" pathLength="1" points="${W.map((w, i) => `${x(i)},${y(w)}`).join(" ")}"/>` +
-        (hit >= 0 ? `<circle class="hit" cx="${x(hit)}" cy="${y(W[hit])}" r="6.5" fill="#B8322B"/>` : "");
+      const inp = $(pb, '[data-p1b="thr"]'); inp.min = THR.range[0]; inp.max = THR.range[1]; inp.step = v("threshold_step"); inp.value = th;
+      const chart = () => {
+        const th = +inp.value, top = Math.max(70, ...W), x = i => 30 + i * (330 / (W.length - 1)), y = m => 126 - m / top * 112, hit = W.findIndex(w => w >= th);
+        svg.innerHTML = `<line x1="30" x2="360" y1="126" y2="126" stroke="#C9C2B6"/>` +
+          W.map((w, i) => i % 2 ? "" : `<text x="${x(i)}" y="144" font-size="11" fill="#9A9387" text-anchor="middle">${clk(i)}</text>`).join("") +
+          `<path d="${W.map((w, i) => `${i ? "L" : "M"}${x(i)},${y(w * 1.15)}`).join(" ")} ${[...W].reverse().map((w, j) => `L${x(W.length - 1 - j)},${y(w * 0.85)}`).join(" ")} Z" fill="#24406B" opacity=".08"/>` +
+          `<line x1="30" x2="360" y1="${y(th)}" y2="${y(th)}" stroke="#B8322B" stroke-width="1.6" stroke-dasharray="5 4"/><text x="32" y="${y(th) - 6}" font-size="11.5" fill="#B8322B">trigger · ${th} min, illustrative</text>` +
+          `<polyline class="ln" pathLength="1" points="${W.map((w, i) => `${x(i)},${y(w)}`).join(" ")}"/>` +
+          (hit >= 0 ? `<circle class="hit" cx="${x(hit)}" cy="${y(W[hit])}" r="6.5" fill="#B8322B"/><text x="${x(hit)}" y="${y(W[hit]) + 20}" font-size="11" font-weight="700" fill="#B8322B" text-anchor="middle">${clk(hit)}</text>`
+                    : `<text x="195" y="70" font-size="12" fill="#B8322B" text-anchor="middle">no alert: the forecast stays below</text>`);
+        $(pb, '[data-p1b="th"]').textContent = `${th} min`; $(pb, ".al").style.visibility = hit >= 0 ? "" : "hidden";
+      };
+      inp.addEventListener("input", () => { svg.classList.add("now"); chart(); }); chart();
       printers.push(() => { st = N; paint(); }); paint();
     }
 
