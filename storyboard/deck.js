@@ -2445,6 +2445,43 @@
   /* ---------------------------------------------------------------- 11 further application: an existing outlet temporarily
      unavailable, on the slide 10 demand model run in reverse (sitepick.unavailable): a panel on the decision slide, and the
      same view as an appendix page for print. An illustrative scenario, never a closure recommendation. */
+  /* ---------------------------------------------------------------- 09 the expansion manager's decision, as charts: bar widths
+     and the five-year profit range from the same results the table (#e2t) prints (DATA.site, DATA.pnl); the labels in the
+     bars are the template's. The slide's stepper shows the three steps; CSS grows each step's marks in. */
+  (function decisionCharts() {
+    const sl = document.getElementById("e2"), svg = sl && $(sl, ".e2rng"); if (!svg) return;
+    const top = DATA.site.top, bt = DATA.site.besideTop, PN = DATA.pnl, GEO = window.STORY.GEO;
+    const w = (k, x) => ($(sl, `[data-k="${k}"]`).style.width = pct(x, 2));
+    w("wo", bt.fromUnmet / bt.cups); w("wi", top.fromUnmet / top.cups);
+    const mx = Math.max(bt.cups, top.cups) / 0.8;                      // the larger store fills 80% of the row; "sold" follows
+    w("wo-net", bt.netNew / mx); w("wo-mv", bt.cannibal / mx); w("wi-net", top.netNew / mx); w("wi-mv", top.cannibal / mx);
+    // the range chart: one row per site, low to high volume as a bar, base volume as a dot, the opening investment dashed
+    const rows = [["wo", `Beside ${GEO.numbers[bt.j]} · ${GEO.names[bt.j]}`, "#DDD6CA", "#8F8676"], ["wi", `Cluster near ${top.hub}`, "#C9D3E6", COL.navy]].map(([k, name, rg, dot]) =>
+      ({ name, rg, dot, lo: PN[k].low.total.opProfit, base: PN[k].base.total.opProfit, hi: PN[k].high.total.opProfit, inv: PN[k].base.invest }));
+    const all = rows.flatMap(r => [r.lo, r.hi, r.inv]), H = 5e5;
+    const d0 = Math.floor((Math.min(0, ...all) - 1e5) / H) * H, d1 = Math.ceil((Math.max(...all) + 1e5) / H) * H;   // half a million either side, with room
+    const L = 8, R = 512, X = v => L + (v - d0) / (d1 - d0) * (R - L), AX = 246;
+    const m = v => `${v < 0 ? "−" : ""}${(Math.abs(v) / 1e6).toFixed(Math.abs(v) < 1e5 ? 2 : 1)}`;
+    const tk = t => t === 0 ? "S$0" : `${t < 0 ? "−" : ""}S$${Math.abs(t / 1e6)}m`, cw = s => s.length * 6.3;
+    let s = `<rect x="${L}" y="6" width="${X(0) - L}" height="${AX - 6}" fill="#FBEFEE"/>`;
+    for (let t = Math.ceil(d0 / 1e6) * 1e6; t <= d1; t += 1e6)
+      s += `<line x1="${X(t)}" y1="6" x2="${X(t)}" y2="${AX}" stroke="#EEEAE2" stroke-width="1"/>` + T(X(t), AX + 16, tk(t), `font-size="11.5" fill="${COL.taupe}" text-anchor="middle"`);
+    s += `<line x1="${X(0)}" y1="6" x2="${X(0)}" y2="${AX}" stroke="${COL.ink}" stroke-width="2"/>` +
+         T(X(0) - 6, 20, "LOSES MONEY", `font-size="9.5" font-weight="700" letter-spacing="1.2" fill="${COL.red}" text-anchor="end"`) +
+         T(X(0) + 6, 20, "MAKES MONEY", `font-size="9.5" font-weight="700" letter-spacing="1.2" fill="#2F6B45"`);
+    rows.forEach((r, i) => {
+      const y = 84 + i * 100, xl = X(r.lo), xh = X(r.hi), lo = `low ${m(r.lo)}`, hi = `high ${m(r.hi)}`;
+      const clash = xl + cw(lo) + 8 > xh - cw(hi);                      // a short bar: the high label drops a line
+      s += T(L + 10, y - 34, r.name, `font-size="13.5" font-weight="500" fill="${COL.ink}" stroke="#fff" stroke-width="4" paint-order="stroke"`) +
+           `<rect class="rg" x="${xl}" y="${y - 7}" width="${xh - xl}" height="14" rx="7" fill="${r.rg}"/>` +
+           `<line class="iv" x1="${X(r.inv)}" y1="${y - 17}" x2="${X(r.inv)}" y2="${y + 17}" stroke="${COL.ink2}" stroke-width="2" stroke-dasharray="4 3"/>` +
+           `<circle class="bd" cx="${X(r.base)}" cy="${y}" r="8" fill="${r.dot}" stroke="#fff" stroke-width="2.5"/>` +
+           `<g class="vl">` + T(X(r.base), y - 15, `base ${m(r.base)}`, `font-size="12" font-weight="600" fill="${COL.ink}" text-anchor="middle"`) +
+           T(xl, y + 25, lo, `font-size="11.5" fill="${COL.ink2}"`) + T(xh, y + (clash ? 40 : 25), hi, `font-size="11.5" fill="${COL.ink2}" text-anchor="end"`) + `</g>`;
+    });
+    svg.innerHTML = s;
+  })();
+
   (function existingOutlets() {
     const Site = window.ChageeSite, GEO = window.STORY.GEO; if (!Site?.unavailable) return;
     const M = Site.model(Sim, RAW, GEO), oname = j => `${GEO.numbers[j]} · ${GEO.names[j]}`;
@@ -2502,14 +2539,18 @@
       draw();
       return { reset: () => { S.j = J0; S.on = false; draw(); } };
     }
-    const sl = document.getElementById("e2"), ov = sl && $(sl, ".exo");
+    // one live overlay (on slide 09); a What about existing outlets? button on any slide (09, and the table in the appendix)
+    // moves it into that slide and opens it, so Back to the decision returns to the slide it was opened from
+    const ov = $(document, "#e2 .exo"), hosts = slides.filter(s => $(s, "[data-exo=open]"));
     if (ov) {
       const V = mount(ov, true);
-      const close = () => ov.classList.remove("open");
-      sl.addEventListener("click", e => { const b = e.target.closest("[data-exo=open],[data-exo=close]"); if (!b) return; b.blur();
-        if (b.dataset.exo === "open") { V.reset(); ov.classList.add("open"); } else close(); });
+      const close = () => ov.classList.remove("open"), mo = new MutationObserver(close);
+      hosts.forEach(sl => {
+        sl.addEventListener("click", e => { const b = e.target.closest("[data-exo=open],[data-exo=close]"); if (!b) return; b.blur();
+          if (b.dataset.exo === "open") { $(sl, ".inner").appendChild(ov); V.reset(); ov.classList.add("open"); } else close(); });
+        mo.observe(sl, { attributes: true, attributeFilter: ["class"] });
+      });
       addEventListener("keydown", e => { if (e.key === "Escape") close(); });
-      new MutationObserver(close).observe(sl, { attributes: true, attributeFilter: ["class"] });
       printers.push(close);
     }
     const ap = document.getElementById("xo"); if (ap) mount($(ap, ".exo"), false);

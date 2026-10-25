@@ -250,6 +250,13 @@ def values(d: dict) -> dict:
         raise SystemExit("build: slide 10b says the cluster site serves more customers without access than the site beside an outlet; rewrite it")
     if not st["top"]["netNew"] > nd["netNew"]:
         raise SystemExit("build: slide 05 band says the app-search site adds more than a store beside an outlet; rewrite it")
+    # slide 09, the visual decision: its headline and takeaway are worded from these, so the build holds them to the words
+    v["s.bt_name"] = GEO_["names"][nd["j"]]
+    v["r.nd_moved_cups"], v["r.net_ratio"], v["r.top_new_share"] = nd["cannibal"], st["top"]["netNew"] / nd["netNew"], st["top"]["netNew"] / st["top"]["cups"]
+    if not v["r.net_ratio"] > 3:
+        raise SystemExit("build: slide 09's headline says the cluster site brings in over three times the new cups; rewrite it")
+    if not 0.6 <= v["r.nd_moved"] < 2 / 3:
+        raise SystemExit("build: slide 09 says almost two of every three cups at the baseline site are moved from our outlets; rewrite it")
     L_ = d["splits"][day]; hand, ch = L_["all_hand"], L_[L_["_cheapest"]]
     if not (hand["meets"] and L_["_cheapest"] != "all_hand" and ch["cost"]["total"] < hand["cost"]["total"]):
         raise SystemExit("build: slide 07 band assumes a machine split is cheaper than all by hand on an event day; rewrite it")
