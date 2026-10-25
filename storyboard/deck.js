@@ -226,7 +226,8 @@
   // unnumbered slide in the main run (Q&A) takes the number after the last numbered slide before it
   const noOf = el => { const m = el && $(el, ".kicker")?.textContent.match(/^\s*(\d\d)\b/); return m ? m[1] : null; };
   const slideNo = id => { const el = document.getElementById(id); if (!el) return null; const n = noOf(el); if (n) return n;
-    for (let i = slides.indexOf(el) - 1; i >= 0; i--) { const p = noOf(slides[i]); if (p) return String(+p + 1).padStart(2, "0"); } return null; };
+    let k = 1;   // an unnumbered agenda slide before it (the execution plan) takes a number too
+    for (let i = slides.indexOf(el) - 1; i >= 0; i--) { const p = noOf(slides[i]); if (p) return String(+p + k).padStart(2, "0"); if ($(document, `.agenda li[data-go="${slides[i].id}"]`)) k++; } return null; };
   $$(document, ".agenda li[data-go]").forEach(li => { const no = $(li, ".no"); if (!no || no.textContent.trim()) return;
     const a = slideNo(li.dataset.go), b = li.dataset.to && slideNo(li.dataset.to); no.textContent = a ? (b && b !== a ? `${a}–${b}` : a) : "+"; });
   addEventListener("resize", fit);
