@@ -20,9 +20,9 @@ html,body{margin:0;background:#E7E3DC;color:var(--ink);font-family:var(--sans);-
 .slide.active{display:block}
 .slide.content>.inner{position:absolute;inset:0;padding:40px 72px 54px;display:flex;flex-direction:column}
 .leafart{position:absolute;right:-6px;top:-8px;width:300px;height:300px;pointer-events:none;background:url({img:leaves_right}) no-repeat right top/contain}
-.kicker{font:500 12px/1 var(--sans);letter-spacing:.2em;text-transform:uppercase;color:var(--red);margin:0 0 10px}
-.head{margin:0;max-width:960px;font:500 37px/1.1 var(--serif);color:var(--ink);letter-spacing:-.005em}
-.slide.content .kicker{line-height:22px}   /* one 22px label line on every slide, as a decision-maker badge makes it: the title always starts at the same height */
+.kicker{font:600 12px/1.2 var(--sans);letter-spacing:.16em;text-transform:uppercase;color:#4A6699;margin:0 0 10px}
+.head{margin:0;max-width:1060px;font:500 42px/1.08 var(--serif);color:var(--navy);letter-spacing:-.01em}
+.slide.content .kicker{line-height:1.2;height:14.4px;display:flex;align-items:center;white-space:nowrap}   /* one label line on every slide, a badge in it included, so the title always starts at the same height */
 .sub{margin:8px 0 0;max-width:900px;font:italic 400 16.5px/1.4 var(--sans);color:var(--taupe)}
 .body{flex:1;min-height:0;margin-top:18px;display:grid;grid-template-columns:1fr 318px;gap:26px}
 .body.wide{grid-template-columns:1fr}
@@ -1780,6 +1780,9 @@ body.print #e2 *{transition:none!important}
 #p1p .pq-badge{height:21px;padding:0 11px;border-radius:999px;background:var(--red);color:#fff;font:700 10px/21px var(--sans);letter-spacing:.14em;text-transform:uppercase;-webkit-print-color-adjust:exact;print-color-adjust:exact}
 #p1p .pq-st{font:500 23px/1.2 var(--serif);color:var(--navy)}
 #p1p .pq-scene{position:absolute;left:18px;top:73px;width:340px;height:300px;overflow:visible}
+#p1p .pq-walker{transform-box:fill-box;transform-origin:50% 100%;animation:pqleave 7s ease-in-out infinite}   /* the customer who gives up keeps leaving, as in the earlier scene */
+@keyframes pqleave{0%,35%{transform:translateX(0);opacity:1}42%{transform:translateX(3px) rotate(3deg)}85%{opacity:1}100%{transform:translateX(40px);opacity:0}}
+body.print #p1p .pq-walker{animation:none} @media print{#p1p .pq-walker{animation:none!important}} @media (prefers-reduced-motion:reduce){#p1p .pq-walker{animation:none}}
 #p1p .pq-costs{position:absolute;left:362px;right:29px;top:78px}
 #p1p .pq-costs .pq-hd{margin:0 0 4px;font:700 10px/14px var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--red)}
 #p1p .pq-costs ol{list-style:none;margin:0;padding:0}
@@ -2439,10 +2442,10 @@ aside.notes{display:none}
 </section>
 
 <!-- ======================================================= 01 INTRODUCTION: CHAGEE SINGAPORE AND OUR SCOPE -->
-<section class="slide content" id="intro" data-chapter="Introduction" data-title="Chagee Singapore and our scope">
+<section class="slide content" id="intro" data-no="01" data-chapter="Introduction" data-title="Chagee Singapore and our scope">
   <div class="leafart" aria-hidden="true"></div>
   <div class="inner">
-    <p class="kicker">01 · Introduction</p>
+    <p class="kicker">Introduction</p>
     <h2 class="head">Today, we're presenting Chagee</h2>
     <p class="sub lede">A tea brand most of you know: order in the app, collect at the counter, or have it delivered to your location.</p>
     <div class="pair keep">
@@ -2486,10 +2489,10 @@ aside.notes{display:none}
 </section>
 
 <!-- ======================================================= 02 EXECUTIVE SUMMARY AND BUSINESS PLAN -->
-<section class="slide content" id="es" data-chapter="Summary" data-title="Executive summary">
+<section class="slide content" id="es" data-no="02" data-chapter="Summary" data-title="Executive summary">
   <div class="leafart" aria-hidden="true"></div>
   <div class="inner">
-    <p class="kicker">02 · Executive summary and business plan</p>
+    <p class="kicker">Executive summary and business plan</p>
     <h2 class="head">Our business plan to solve Chagee's problem statements</h2>
     <div class="es-case keep">
       <div class="es-av"><svg viewBox="0 0 80 80" aria-label="Illustrated persona">
@@ -2530,14 +2533,14 @@ aside.notes{display:none}
 </section>
 
 <!-- ======================================================= 03 ONLINE RETAILING · PROPOSAL 1: THE BUSINESS PROBLEM -->
-<section class="slide content" id="p1p" data-chapter="Online" data-reveal="all" data-title="When an outlet is swamped">
+<section class="slide content" id="p1p" data-no="03" data-chapter="Online" data-reveal="all" data-title="When an outlet is swamped">
   <div class="leafart" aria-hidden="true"></div>
   <div class="inner">
     <p class="kicker">Our business recommendations</p>
     <h2 class="head">Proposal 1: AI-enabled demand management</h2>
     <div class="pq-panel">
       <p class="pq-ch"><span class="pq-badge">Key Challenge 1</span><span class="pq-st">Demand management: crowded outlets lose sales, with impacted customer experience</span></p>
-      <svg class="pq-scene" viewBox="0 0 340 300" aria-label="A crowded Chagee outlet at peak: a queue behind a rope, a customer walking away, a delivery rider waiting"><g transform="translate(14 19) scale(.815) translate(-24 -22)"><g><rect x="24" y="22" width="352" height="216" rx="14" fill="#F1E5D2"/><rect x="24" y="22" width="352" height="54" rx="14" fill="#FFFBF5"/><rect x="24" y="60" width="352" height="16" fill="#FFFBF5"/><text x="160" y="58" text-anchor="middle" font-family="Georgia, serif" font-size="24" font-weight="700" letter-spacing="7" fill="#3B2F2A">CHAGEE</text><circle cx="318" cy="49" r="20" fill="#fff"/><image href="{img:emblem}" x="300" y="31" width="36" height="36"/><path d="M44 238 V128 a34 34 0 0 1 68 0 V238 Z" fill="#E6D3B6"/><path d="M52 238 V130 a26 26 0 0 1 52 0 V238 Z" fill="#F6ECDD"/><path d="M158 238 V128 a34 34 0 0 1 68 0 V238 Z" fill="#E6D3B6"/><path d="M166 238 V130 a26 26 0 0 1 52 0 V238 Z" fill="#F6ECDD"/><path d="M272 238 V128 a34 34 0 0 1 68 0 V238 Z" fill="#E6D3B6"/><path d="M280 238 V130 a26 26 0 0 1 52 0 V238 Z" fill="#F6ECDD"/><rect x="42" y="178" width="316" height="11" rx="3" fill="#2E3A55"/><g fill="#8FA3C7"><rect x="77" y="180.5" width="42" height="6" rx="1"/><rect x="177" y="180.5" width="44" height="6" rx="1"/><rect x="297" y="180.5" width="42" height="6" rx="1"/></g><rect x="38" y="204" width="324" height="34" rx="6" fill="#9C7A5B"/><rect x="38" y="204" width="324" height="7" rx="3" fill="#B8957A"/><g fill="#fff" opacity=".9"><rect x="96" y="195" width="9" height="11" rx="2"/><rect x="214" y="195" width="9" height="11" rx="2"/><rect x="130" y="195" width="9" height="11" rx="2"/></g></g></g><path d="M-9 205 H324" stroke="#DCD3C3" stroke-width="1.2"/><rect x="34" y="222" width="4" height="45" rx="2" fill="#3B2F2A"/><ellipse cx="36" cy="268" rx="7" ry="2.5" fill="#3B2F2A"/><rect x="109" y="222" width="4" height="45" rx="2" fill="#3B2F2A"/><ellipse cx="111" cy="268" rx="7" ry="2.5" fill="#3B2F2A"/><rect x="192" y="222" width="4" height="45" rx="2" fill="#3B2F2A"/><ellipse cx="194" cy="268" rx="7" ry="2.5" fill="#3B2F2A"/><rect x="269" y="222" width="4" height="45" rx="2" fill="#3B2F2A"/><ellipse cx="271" cy="268" rx="7" ry="2.5" fill="#3B2F2A"/><path d="M36 224 Q73.5 236 111 224 Q152.5 236 194 224 Q232.5 236 271 224" stroke="#B8322B" stroke-width="2.6" fill="none"/><g transform="translate(49 225)"><path d="M-11 34 C-11 18 -7 12 0 12 C7 12 11 18 11 34 Z" fill="#3D5C8F"/><circle cy="2" r="9" fill="#F1D3B8"/><path d="M-9 0 C-9 -9 9 -9 9 0 C6 -4 -6 -4 -9 0 Z" fill="#3B2F2A"/><path d="M-4 7 Q0 4 4 7" stroke="#7A4B3A" stroke-width="1.3" fill="none" stroke-linecap="round"/><circle cx="-3.5" cy="2" r="1.1" fill="#3B2F2A"/><circle cx="3.5" cy="2" r="1.1" fill="#3B2F2A"/></g><g transform="translate(76 225)"><path d="M-11 34 C-11 18 -7 12 0 12 C7 12 11 18 11 34 Z" fill="#D99A93"/><circle cy="2" r="9" fill="#F1D3B8"/><path d="M-9 0 C-9 -9 9 -9 9 0 C6 -4 -6 -4 -9 0 Z" fill="#3B2F2A"/><path d="M-4 7 Q0 4 4 7" stroke="#7A4B3A" stroke-width="1.3" fill="none" stroke-linecap="round"/><circle cx="-3.5" cy="2" r="1.1" fill="#3B2F2A"/><circle cx="3.5" cy="2" r="1.1" fill="#3B2F2A"/></g><g transform="translate(101 225)"><path d="M-11 34 C-11 18 -7 12 0 12 C7 12 11 18 11 34 Z" fill="#8FB49A"/><circle cy="2" r="9" fill="#F1D3B8"/><path d="M-9 0 C-9 -9 9 -9 9 0 C6 -4 -6 -4 -9 0 Z" fill="#3B2F2A"/><path d="M-4 7 Q0 4 4 7" stroke="#7A4B3A" stroke-width="1.3" fill="none" stroke-linecap="round"/><circle cx="-3.5" cy="2" r="1.1" fill="#3B2F2A"/><circle cx="3.5" cy="2" r="1.1" fill="#3B2F2A"/></g><g transform="translate(129 225)"><path d="M-11 34 C-11 18 -7 12 0 12 C7 12 11 18 11 34 Z" fill="#E3C29B"/><circle cy="2" r="9" fill="#F1D3B8"/><path d="M-9 0 C-9 -9 9 -9 9 0 C6 -4 -6 -4 -9 0 Z" fill="#3B2F2A"/><path d="M-4 7 Q0 4 4 7" stroke="#7A4B3A" stroke-width="1.3" fill="none" stroke-linecap="round"/><circle cx="-3.5" cy="2" r="1.1" fill="#3B2F2A"/><circle cx="3.5" cy="2" r="1.1" fill="#3B2F2A"/></g><g transform="translate(154 225)"><path d="M-11 34 C-11 18 -7 12 0 12 C7 12 11 18 11 34 Z" fill="#24406B"/><circle cy="2" r="9" fill="#F1D3B8"/><path d="M-9 0 C-9 -9 9 -9 9 0 C6 -4 -6 -4 -9 0 Z" fill="#3B2F2A"/><path d="M-4 7 Q0 4 4 7" stroke="#7A4B3A" stroke-width="1.3" fill="none" stroke-linecap="round"/><circle cx="-3.5" cy="2" r="1.1" fill="#3B2F2A"/><circle cx="3.5" cy="2" r="1.1" fill="#3B2F2A"/></g><g transform="translate(179 225)"><path d="M-11 34 C-11 18 -7 12 0 12 C7 12 11 18 11 34 Z" fill="#C9706A"/><circle cy="2" r="9" fill="#F1D3B8"/><path d="M-9 0 C-9 -9 9 -9 9 0 C6 -4 -6 -4 -9 0 Z" fill="#3B2F2A"/><path d="M-4 7 Q0 4 4 7" stroke="#7A4B3A" stroke-width="1.3" fill="none" stroke-linecap="round"/><circle cx="-3.5" cy="2" r="1.1" fill="#3B2F2A"/><circle cx="3.5" cy="2" r="1.1" fill="#3B2F2A"/></g><g transform="translate(207 225)"><path d="M-11 34 C-11 18 -7 12 0 12 C7 12 11 18 11 34 Z" fill="#6F86AE"/><circle cy="2" r="9" fill="#F1D3B8"/><path d="M-9 0 C-9 -9 9 -9 9 0 C6 -4 -6 -4 -9 0 Z" fill="#3B2F2A"/><path d="M-4 7 Q0 4 4 7" stroke="#7A4B3A" stroke-width="1.3" fill="none" stroke-linecap="round"/><circle cx="-3.5" cy="2" r="1.1" fill="#3B2F2A"/><circle cx="3.5" cy="2" r="1.1" fill="#3B2F2A"/></g><g transform="translate(233 225)"><path d="M-11 34 C-11 18 -7 12 0 12 C7 12 11 18 11 34 Z" fill="#B8322B"/><circle cy="2" r="9" fill="#F1D3B8"/><path d="M-9 0 C-9 -9 9 -9 9 0 C6 -4 -6 -4 -9 0 Z" fill="#3B2F2A"/><path d="M-4 7 Q0 4 4 7" stroke="#7A4B3A" stroke-width="1.3" fill="none" stroke-linecap="round"/><circle cx="-3.5" cy="2" r="1.1" fill="#3B2F2A"/><circle cx="3.5" cy="2" r="1.1" fill="#3B2F2A"/></g><g transform="translate(89 211)"><rect x="-10" y="-6" width="20" height="11" rx="5.5" fill="#fff" stroke="#D9D0C0"/><g fill="#6E6A63"><circle cx="-4.5" cy="-.5" r="1.1"/><circle cx="0" cy="-.5" r="1.1"/><circle cx="4.5" cy="-.5" r="1.1"/></g></g><g transform="translate(194 211)"><rect x="-10" y="-6" width="20" height="11" rx="5.5" fill="#fff" stroke="#D9D0C0"/><g fill="#6E6A63"><circle cx="-4.5" cy="-.5" r="1.1"/><circle cx="0" cy="-.5" r="1.1"/><circle cx="4.5" cy="-.5" r="1.1"/></g></g><text x="129" y="216" font-size="10" font-weight="700" fill="#B8322B" text-anchor="middle" letter-spacing="-1">)))</text><text x="234" y="216" font-size="10" font-weight="700" fill="#B8322B" text-anchor="middle" letter-spacing="-1">)))</text><g transform="translate(294 235)"><path d="M-11 34 C-11 18 -7 12 0 12 C7 12 11 18 11 34 Z" fill="#9A9387"/><circle cy="2" r="9" fill="#F1D3B8"/><path d="M-9 0 C-9 -9 9 -9 9 0 C6 -4 -6 -4 -9 0 Z" fill="#3B2F2A"/><path d="M-4 7 Q0 4 4 7" stroke="#7A4B3A" stroke-width="1.3" fill="none" stroke-linecap="round"/><circle cx="-3.5" cy="2" r="1.1" fill="#3B2F2A"/><circle cx="3.5" cy="2" r="1.1" fill="#3B2F2A"/></g><path d="M279 277 H315 M309 272 L315 277 L309 282" stroke="#8A847A" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/><g transform="translate(4 252)"><rect x="2" y="2" width="15" height="13" rx="2" fill="#2F6B45"/><path d="M3 8.5 H16" stroke="#7FA88B" stroke-width="1.2"/><path d="M9 29 H30 L36 14 M30 29 L27 18 H4" stroke="#2F6B45" stroke-width="3" fill="none" stroke-linejoin="round"/><path d="M33 12 H40" stroke="#2F6B45" stroke-width="3" stroke-linecap="round"/><circle cx="9" cy="29" r="6" fill="#fff" stroke="#2F6B45" stroke-width="3"/><circle cx="38" cy="29" r="6" fill="#fff" stroke="#2F6B45" stroke-width="3"/></g></svg>
+      <svg class="pq-scene" viewBox="0 0 340 300" aria-label="A crowded Chagee outlet at peak: a queue behind a rope, a customer walking away, a delivery rider waiting"><g transform="translate(14 19) scale(.815) translate(-24 -22)"><g><rect x="24" y="22" width="352" height="216" rx="14" fill="#F1E5D2"/><rect x="24" y="22" width="352" height="54" rx="14" fill="#FFFBF5"/><rect x="24" y="60" width="352" height="16" fill="#FFFBF5"/><text x="160" y="58" text-anchor="middle" font-family="Georgia, serif" font-size="24" font-weight="700" letter-spacing="7" fill="#3B2F2A">CHAGEE</text><circle cx="318" cy="49" r="20" fill="#fff"/><image href="{img:emblem}" x="300" y="31" width="36" height="36"/><path d="M44 238 V128 a34 34 0 0 1 68 0 V238 Z" fill="#E6D3B6"/><path d="M52 238 V130 a26 26 0 0 1 52 0 V238 Z" fill="#F6ECDD"/><path d="M158 238 V128 a34 34 0 0 1 68 0 V238 Z" fill="#E6D3B6"/><path d="M166 238 V130 a26 26 0 0 1 52 0 V238 Z" fill="#F6ECDD"/><path d="M272 238 V128 a34 34 0 0 1 68 0 V238 Z" fill="#E6D3B6"/><path d="M280 238 V130 a26 26 0 0 1 52 0 V238 Z" fill="#F6ECDD"/><rect x="42" y="178" width="316" height="11" rx="3" fill="#2E3A55"/><g fill="#8FA3C7"><rect x="77" y="180.5" width="42" height="6" rx="1"/><rect x="177" y="180.5" width="44" height="6" rx="1"/><rect x="297" y="180.5" width="42" height="6" rx="1"/></g><rect x="38" y="204" width="324" height="34" rx="6" fill="#9C7A5B"/><rect x="38" y="204" width="324" height="7" rx="3" fill="#B8957A"/><g fill="#fff" opacity=".9"><rect x="96" y="195" width="9" height="11" rx="2"/><rect x="214" y="195" width="9" height="11" rx="2"/><rect x="130" y="195" width="9" height="11" rx="2"/></g></g></g><path d="M-9 205 H324" stroke="#DCD3C3" stroke-width="1.2"/><rect x="34" y="222" width="4" height="45" rx="2" fill="#3B2F2A"/><ellipse cx="36" cy="268" rx="7" ry="2.5" fill="#3B2F2A"/><rect x="109" y="222" width="4" height="45" rx="2" fill="#3B2F2A"/><ellipse cx="111" cy="268" rx="7" ry="2.5" fill="#3B2F2A"/><rect x="192" y="222" width="4" height="45" rx="2" fill="#3B2F2A"/><ellipse cx="194" cy="268" rx="7" ry="2.5" fill="#3B2F2A"/><rect x="269" y="222" width="4" height="45" rx="2" fill="#3B2F2A"/><ellipse cx="271" cy="268" rx="7" ry="2.5" fill="#3B2F2A"/><path d="M36 224 Q73.5 236 111 224 Q152.5 236 194 224 Q232.5 236 271 224" stroke="#B8322B" stroke-width="2.6" fill="none"/><g transform="translate(49 225)"><path d="M-11 34 C-11 18 -7 12 0 12 C7 12 11 18 11 34 Z" fill="#3D5C8F"/><circle cy="2" r="9" fill="#F1D3B8"/><path d="M-9 0 C-9 -9 9 -9 9 0 C6 -4 -6 -4 -9 0 Z" fill="#3B2F2A"/><path d="M-4 7 Q0 4 4 7" stroke="#7A4B3A" stroke-width="1.3" fill="none" stroke-linecap="round"/><circle cx="-3.5" cy="2" r="1.1" fill="#3B2F2A"/><circle cx="3.5" cy="2" r="1.1" fill="#3B2F2A"/></g><g transform="translate(76 225)"><path d="M-11 34 C-11 18 -7 12 0 12 C7 12 11 18 11 34 Z" fill="#D99A93"/><circle cy="2" r="9" fill="#F1D3B8"/><path d="M-9 0 C-9 -9 9 -9 9 0 C6 -4 -6 -4 -9 0 Z" fill="#3B2F2A"/><path d="M-4 7 Q0 4 4 7" stroke="#7A4B3A" stroke-width="1.3" fill="none" stroke-linecap="round"/><circle cx="-3.5" cy="2" r="1.1" fill="#3B2F2A"/><circle cx="3.5" cy="2" r="1.1" fill="#3B2F2A"/></g><g transform="translate(101 225)"><path d="M-11 34 C-11 18 -7 12 0 12 C7 12 11 18 11 34 Z" fill="#8FB49A"/><circle cy="2" r="9" fill="#F1D3B8"/><path d="M-9 0 C-9 -9 9 -9 9 0 C6 -4 -6 -4 -9 0 Z" fill="#3B2F2A"/><path d="M-4 7 Q0 4 4 7" stroke="#7A4B3A" stroke-width="1.3" fill="none" stroke-linecap="round"/><circle cx="-3.5" cy="2" r="1.1" fill="#3B2F2A"/><circle cx="3.5" cy="2" r="1.1" fill="#3B2F2A"/></g><g transform="translate(129 225)"><path d="M-11 34 C-11 18 -7 12 0 12 C7 12 11 18 11 34 Z" fill="#E3C29B"/><circle cy="2" r="9" fill="#F1D3B8"/><path d="M-9 0 C-9 -9 9 -9 9 0 C6 -4 -6 -4 -9 0 Z" fill="#3B2F2A"/><path d="M-4 7 Q0 4 4 7" stroke="#7A4B3A" stroke-width="1.3" fill="none" stroke-linecap="round"/><circle cx="-3.5" cy="2" r="1.1" fill="#3B2F2A"/><circle cx="3.5" cy="2" r="1.1" fill="#3B2F2A"/></g><g transform="translate(154 225)"><path d="M-11 34 C-11 18 -7 12 0 12 C7 12 11 18 11 34 Z" fill="#24406B"/><circle cy="2" r="9" fill="#F1D3B8"/><path d="M-9 0 C-9 -9 9 -9 9 0 C6 -4 -6 -4 -9 0 Z" fill="#3B2F2A"/><path d="M-4 7 Q0 4 4 7" stroke="#7A4B3A" stroke-width="1.3" fill="none" stroke-linecap="round"/><circle cx="-3.5" cy="2" r="1.1" fill="#3B2F2A"/><circle cx="3.5" cy="2" r="1.1" fill="#3B2F2A"/></g><g transform="translate(179 225)"><path d="M-11 34 C-11 18 -7 12 0 12 C7 12 11 18 11 34 Z" fill="#C9706A"/><circle cy="2" r="9" fill="#F1D3B8"/><path d="M-9 0 C-9 -9 9 -9 9 0 C6 -4 -6 -4 -9 0 Z" fill="#3B2F2A"/><path d="M-4 7 Q0 4 4 7" stroke="#7A4B3A" stroke-width="1.3" fill="none" stroke-linecap="round"/><circle cx="-3.5" cy="2" r="1.1" fill="#3B2F2A"/><circle cx="3.5" cy="2" r="1.1" fill="#3B2F2A"/></g><g transform="translate(207 225)"><path d="M-11 34 C-11 18 -7 12 0 12 C7 12 11 18 11 34 Z" fill="#6F86AE"/><circle cy="2" r="9" fill="#F1D3B8"/><path d="M-9 0 C-9 -9 9 -9 9 0 C6 -4 -6 -4 -9 0 Z" fill="#3B2F2A"/><path d="M-4 7 Q0 4 4 7" stroke="#7A4B3A" stroke-width="1.3" fill="none" stroke-linecap="round"/><circle cx="-3.5" cy="2" r="1.1" fill="#3B2F2A"/><circle cx="3.5" cy="2" r="1.1" fill="#3B2F2A"/></g><g transform="translate(233 225)"><path d="M-11 34 C-11 18 -7 12 0 12 C7 12 11 18 11 34 Z" fill="#B8322B"/><circle cy="2" r="9" fill="#F1D3B8"/><path d="M-9 0 C-9 -9 9 -9 9 0 C6 -4 -6 -4 -9 0 Z" fill="#3B2F2A"/><path d="M-4 7 Q0 4 4 7" stroke="#7A4B3A" stroke-width="1.3" fill="none" stroke-linecap="round"/><circle cx="-3.5" cy="2" r="1.1" fill="#3B2F2A"/><circle cx="3.5" cy="2" r="1.1" fill="#3B2F2A"/></g><g transform="translate(89 211)"><rect x="-10" y="-6" width="20" height="11" rx="5.5" fill="#fff" stroke="#D9D0C0"/><g fill="#6E6A63"><circle cx="-4.5" cy="-.5" r="1.1"/><circle cx="0" cy="-.5" r="1.1"/><circle cx="4.5" cy="-.5" r="1.1"/></g></g><g transform="translate(194 211)"><rect x="-10" y="-6" width="20" height="11" rx="5.5" fill="#fff" stroke="#D9D0C0"/><g fill="#6E6A63"><circle cx="-4.5" cy="-.5" r="1.1"/><circle cx="0" cy="-.5" r="1.1"/><circle cx="4.5" cy="-.5" r="1.1"/></g></g><text x="129" y="216" font-size="10" font-weight="700" fill="#B8322B" text-anchor="middle" letter-spacing="-1">)))</text><text x="234" y="216" font-size="10" font-weight="700" fill="#B8322B" text-anchor="middle" letter-spacing="-1">)))</text><g transform="translate(294 235)"><g class="pq-walker"><path d="M-11 34 C-11 18 -7 12 0 12 C7 12 11 18 11 34 Z" fill="#9A9387"/><circle cy="2" r="9" fill="#F1D3B8"/><path d="M-9 0 C-9 -9 9 -9 9 0 C6 -4 -6 -4 -9 0 Z" fill="#3B2F2A"/><path d="M-4 7 Q0 4 4 7" stroke="#7A4B3A" stroke-width="1.3" fill="none" stroke-linecap="round"/><circle cx="-3.5" cy="2" r="1.1" fill="#3B2F2A"/><circle cx="3.5" cy="2" r="1.1" fill="#3B2F2A"/></g></g><path d="M279 277 H315 M309 272 L315 277 L309 282" stroke="#8A847A" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/><g transform="translate(4 252)"><rect x="2" y="2" width="15" height="13" rx="2" fill="#2F6B45"/><path d="M3 8.5 H16" stroke="#7FA88B" stroke-width="1.2"/><path d="M9 29 H30 L36 14 M30 29 L27 18 H4" stroke="#2F6B45" stroke-width="3" fill="none" stroke-linejoin="round"/><path d="M33 12 H40" stroke="#2F6B45" stroke-width="3" stroke-linecap="round"/><circle cx="9" cy="29" r="6" fill="#fff" stroke="#2F6B45" stroke-width="3"/><circle cx="38" cy="29" r="6" fill="#fff" stroke="#2F6B45" stroke-width="3"/></g></svg>
       <div class="pq-costs"><p class="pq-hd">What it costs Chagee today</p><ol><li><span class="pq-ic"><svg viewBox="0 0 22 22"><circle cx="9" cy="4.5" r="2"/><path d="M9 7 L8 13 L5 19 M8 13 L12 16 L13 20 M8.5 9 L12 11 M14 10 H20 M17 7 L20 10 L17 13"/></svg><i></i></span><div><h5>Drop-offs</h5><p>Customers see the wait and leave without ordering.</p></div></li><li><span class="pq-ic"><svg viewBox="0 0 22 22"><circle cx="5" cy="7" r="2.2"/><circle cx="11" cy="6" r="2.2"/><circle cx="17" cy="7" r="2.2"/><path d="M1.5 17 Q5 11 8.5 17 M7.5 16 Q11 10 14.5 16 M13.5 17 Q17 11 20.5 17"/></svg><i></i></span><div><h5>Crowding</h5><p>Those who stay crowd the outlet, so it sells less and delivery orders slow down.</p></div></li><li><span class="pq-ic"><svg viewBox="0 0 22 22"><circle cx="11" cy="12" r="8"/><path d="M11 7 V12 L14.5 14 M8.5 2 H13.5"/></svg><i></i></span><div><h5>Long waits</h5><p>Customers wait longer than they expected; the experience suffers.</p></div></li><li><span class="pq-ic"><svg viewBox="0 0 22 22"><circle cx="5" cy="16" r="3"/><circle cx="17" cy="16" r="3"/><path d="M5 16 H12 L15 9 H18 M12 16 L10 10 H6 M14 5 H18"/></svg><i></i></span><div><h5>Delivery orders arrive blind</h5><p>Delivery customers cannot see the in-store queue, so orders keep coming and riders wait at the counter.</p></div></li><li class="hot"><span class="pq-ic"><svg viewBox="0 0 22 22"><path d="M3 9 H19 L17.5 4 H4.5 Z M4 9 V19 H18 V9 M9 19 V14 H13 V19"/></svg><i></i></span><div><h5>Spoils the in-store image</h5><p>Chagee's elegant stores are part of the brand. A crowd of frustrated customers at the door undoes the classy experience the brick-and-mortar model is built on.</p></div></li></ol></div>
     </div>
     <div class="pq-gains"><p class="pq-ghd">With AI, this can change</p><div class="pq-g3"><div><i>✓</i><span><b>Higher sales</b>Demand spread across nearby outlets instead of lost.</span></div><div><i>✓</i><span><b>A better brand image</b>Faster turnaround, well managed, a smart system.</span></div><div><i>✓</i><span><b>Calmer counters</b>Delivery riders do not wait long or crowd the counter.</span></div></div></div>
@@ -2551,12 +2554,12 @@ aside.notes{display:none}
 </section>
 
 <!-- ======================================================= 04 ONLINE RETAILING · PROPOSAL 1: HOW IT WORKS (overview; its illustrative explanation, #p1b, follows as an auxiliary view) -->
-<section class="slide content" id="p1h" data-chapter="Online" data-title="Proposal 1: how it works">
+<section class="slide content" id="p1h" data-no="04" data-chapter="Online" data-title="Proposal 1: how it works">
   <div class="leafart" aria-hidden="true"></div>
   <p class="edge edm"><i>Decision-maker</i><b>Digital commerce manager, with operations</b></p>
   <p class="edge ecl"><i>Course link</i><b>Topics 3 &amp; 9 · Demand prediction and omnichannel fulfilment</b></p>
   <div class="inner">
-    <p class="kicker hk">04 · Online retailing · how it works</p>
+    <p class="kicker hk">Online retailing · how it works</p>
     <button class="btn auxb screenonly keep" data-go="p1b" title="The same solution, animated step by step (optional)">See illustrative explanation →</button>
     <h2 class="head">From Chagee's data to demand spread across outlets</h2>
     <p class="hsub keep">An AI agent uses predictive AI to recommend, generative AI explains, and people make the final call.</p>
@@ -2706,12 +2709,12 @@ aside.notes{display:none}
 </section>
 
 <!-- ======================================================= 05 ONLINE RETAILING · PROPOSAL 1: THE CUSTOMER EXPERIENCE -->
-<section class="slide content" id="p1a" data-chapter="Online" data-reveal="all" data-title="The customer experience">
+<section class="slide content" id="p1a" data-no="05" data-chapter="Online" data-reveal="all" data-title="The customer experience">
   <div class="leafart" aria-hidden="true"></div>
   <p class="edge edm"><i>Decision-maker</i><b>Digital commerce manager, with operations</b></p>
   <p class="edge ecl"><i>Course link</i><b>Topics 3 &amp; 9 · Demand prediction and omnichannel fulfilment</b></p>
   <div class="inner">
-    <p class="kicker">05 · Online retailing · the customer experience</p>
+    <p class="kicker">Online retailing · the customer experience</p>
     <h2 class="head">Customers get a faster outlet; managers approve delivery actions</h2>
     <p class="bprob keep"><b>Illustrative scenario</b><span data-cx="scen"></span></p>
     <div class="cxw keep" style="--emb:url({img:emblem})">
@@ -2743,12 +2746,12 @@ aside.notes{display:none}
 </section>
 
 <!-- ======================================================= 06 IN-STORE MANAGEMENT · PROPOSAL 2: AI-ENABLED IN-STORE PLANNING -->
-<section class="slide content" id="p2p" data-chapter="Serve" data-title="AI-enabled in-store planning: the challenge">
+<section class="slide content" id="p2p" data-no="06" data-chapter="Serve" data-title="AI-enabled in-store planning: the challenge">
   <div class="leafart" aria-hidden="true"></div>
   <p class="edge edm"><i>Decision-maker</i><b>Zone manager / outlet GM</b></p>
   <p class="edge ecl"><i>Course link</i><b>Topics 3 &amp; 4 · Demand forecasting and resource allocation</b></p>
   <div class="inner">
-    <p class="kicker">06 · In-store management</p>
+    <p class="kicker">Our business recommendations</p>
     <h2 class="head">Proposal 2: AI-enabled in-store planning to achieve high-performing outlets</h2>
     <div class="p2-panel keep">
       <div class="pb-title"><span class="pb-chip">Key Challenge 2</span><h3>In-store management: matching staff, machines and stock to daily demand</h3></div>
@@ -2786,12 +2789,12 @@ aside.notes{display:none}
 </section>
 
 <!-- ======================================================= 07 IN-STORE MANAGEMENT · PROPOSAL 2: HOW IT WORKS (the managers' dashboard) -->
-<section class="slide content" id="p2b" data-chapter="Serve" data-title="How AI-assisted staffing works" data-reveal="all">
+<section class="slide content" id="p2b" data-no="07" data-chapter="Serve" data-title="How AI-assisted staffing works" data-reveal="all">
   <div class="leafart" aria-hidden="true"></div>
   <p class="edge edm"><i>Decision-maker</i><b>Zone manager / outlet GM</b></p>
   <p class="edge ecl"><i>Course link</i><b>Topics 3 &amp; 4 · Demand forecasting and resource allocation</b></p>
   <div class="inner">
-    <p class="kicker">07 · In-store management · how it works</p>
+    <p class="kicker">In-store management · how it works</p>
     <h2 class="head">Managers can use insights to plan and manage stores better</h2>
     <div class="db-flow">
       <span class="db-fl-lab">How it works</span>
@@ -2909,13 +2912,13 @@ aside.notes{display:none}
 </section>
 
 <!-- ======================================================= 08 EXPAND: THE CANDIDATE-SITE MAP -->
-<section class="slide content ovslide" id="c5" data-chapter="Expand" data-title="Predict demand for a new store">
+<section class="slide content ovslide" id="c5" data-no="08" data-chapter="Expand" data-title="Predict demand for a new store">
   <div class="leafart" aria-hidden="true"></div>
   <p class="edge edm"><i>Decision-maker</i><b>Expansion manager</b></p>
   <p class="edge ecl"><i>Course link</i><b>Topic 3 · Analytics and AI: data-driven demand prediction</b></p>
   <div class="inner">
-    <p class="kicker">08 · Expand · where to open next</p>
-    <h2 class="head">Proposal 3: Open where an outlet adds customers, not where it moves them</h2>
+    <p class="kicker">Our business recommendations</p>
+    <h2 class="head">Proposal 3: AI-enabled new-store site selection</h2>
     <p class="bprob keep"><b>Business problem</b><span>Chagee needs to identify locations with sufficient additional demand and attractive economics: a new outlet may look successful while mostly moving sales from nearby stores.
       <span class="ev obs">Context</span> Chagee aims to expand rapidly in Singapore; the number of stores is confidential (Chagee source, anonymous). <span class="ev sim">Simulated</span> searches below.</span></p>
     <div class="c5intro keep" data-st="1" aria-label="Overview in three steps before the forecaster">
@@ -3050,12 +3053,12 @@ aside.notes{display:none}
 <!-- ======================================================= 09 EXPAND: THE EXPANSION MANAGER'S DECISION
      Two charts in three steps (customer access; new vs moved cups; five-year profit range and payback), drawn by deck.js
      from DATA.site and DATA.pnl; the table version is in the appendix (#e2t). -->
-<section class="slide content" id="e2" data-chapter="Expand" data-reveal="all" data-title="The expansion manager's decision">
+<section class="slide content" id="e2" data-no="09" data-chapter="Expand" data-reveal="all" data-title="The expansion manager's decision">
   <div class="leafart" aria-hidden="true"></div>
   <p class="edge edm"><i>Decision-maker</i><b>Expansion manager</b></p>
   <p class="edge ecl"><i>Course link</i><b>Topic 3 · Analytics and AI: data-driven demand prediction</b></p>
   <div class="inner stepper" data-steps="3">
-    <p class="kicker">09 · Expand · the expansion manager's decision</p>
+    <p class="kicker">Expand · the expansion manager's decision</p>
     <h2 class="head">{{s.top_hub}} brings in over three times the new cups. Investigate it first, then check the downside</h2>
     <div class="revctl screenonly" style="top:8px"><span class="lab">Step through</span><span class="ctl"></span></div>
     <div class="e2v">
@@ -4068,7 +4071,7 @@ aside.notes{display:none}
 <section class="slide content" id="rc" data-chapter="Appendix" data-title="Our recommendation">
   <div class="leafart" aria-hidden="true"></div>
   <div class="inner">
-    <p class="kicker">10 · Execution plan</p>
+    <p class="kicker">Execution plan</p>
     <h2 class="head">Three managers, three pilots, each judged on its own evidence</h2>
     <p class="sub">A connected story, not one combined model: no simulated benefit is carried between parts or added up.</p>
     <div class="rec3">
