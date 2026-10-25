@@ -2067,6 +2067,66 @@ body.print #p1p :is(.pq-walker,.pq-in){animation:none} @media print{#p1p :is(.pq
 #p3x .gate b{display:block;font:600 14.5px/1.35 var(--sans)}
 #e2 .e2exec{flex:none;align-self:flex-end;margin:auto 0 0;padding:7px 14px;border-radius:999px;background:var(--navy);color:#fff;border:0;font:600 12.5px/1 var(--sans)}   /* as Proposal 2's Execution steps */
 :is(#p1b,#p1a) .golink.exchip{padding:7px 14px;border-radius:999px;background:var(--navy);color:#fff;border:0;font:600 12.5px/1 var(--sans)}   /* Proposal 1's Execution steps, as Proposals 2 and 3 */
+/* ---------------------------------------------------------------- slide 11: financial impact (#fi)
+   Taken from the reference deck (chagee-deck.vercel.app #13): the rules that style that slide, each scoped to it by an
+   :is(#fi,#fi *) on its subject; the footer rail keeps this deck's shared position and red current chapter. */
+#fi{--shadow:0 1px 2px rgba(0,0,0,.04),0 14px 34px -14px rgba(36,64,107,.22); --wash:#FAF8F3}
+.slide.content .lede:is(#fi,#fi *){margin:10px 0 0;font:400 19px/1.35 var(--sans);color:var(--ink2)}
+.slide.content .sub.lede:is(#fi,#fi *){font-style:normal}
+.fi-go:is(#fi,#fi *){align-self:flex-end;margin:4px 0 0;padding:6px 14px;border-radius:999px;background:#2F6B45;color:#fff;border:0;font:600 12px/1 var(--sans)}
+.fi-nf:is(#fi,#fi *){margin-top:8px;padding:7px 20px;border-radius:14px;background:#FAF8F3;display:flex;align-items:center;gap:10px;font:12.5px var(--sans);color:var(--ink2)}
+.fi-nf b:is(#fi,#fi *){font:700 10.5px var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--navy);margin-right:6px}
+.fi-nf span:is(#fi,#fi *){padding:3px 11px;border-radius:999px;background:#fff;border:1px solid #EEE7DA}
+.fi-nf em:is(#fi,#fi *){margin-left:auto;font-style:italic;color:var(--taupe)}
+.fi-body:is(#fi,#fi *){flex:1;min-height:0;margin-top:10px;display:grid;grid-template-columns:1fr 430px;gap:18px}
+.fi-chart:is(#fi,#fi *){padding:14px 20px 10px;border-radius:18px;background:#fff;border:1px solid #EEE7DA;box-shadow:var(--shadow);display:flex;flex-direction:column;min-height:0}
+.fi-top:is(#fi,#fi *){display:flex;flex-direction:column;gap:6px}
+.fi-t:is(#fi,#fi *){font:500 19px var(--serif);color:var(--ink)}
+.fi-key:is(#fi,#fi *){display:flex;flex-wrap:wrap;gap:4px 14px;font:11.5px var(--sans);color:var(--ink2)}
+.fi-key span:is(#fi,#fi *){display:inline-flex;align-items:center;gap:6px}
+.fi-key i:is(#fi,#fi *){display:inline-block;width:11px;height:11px;border-radius:3px}
+.fi-key i.ln:is(#fi,#fi *){width:18px;height:0;border-radius:0;border-top:2.2px solid #262626}
+.fich:is(#fi,#fi *){flex:1;min-height:0;width:100%;margin-top:4px}
+.fiax:is(#fi,#fi *){font:10.5px var(--sans);fill:#9A9387}
+.fiph:is(#fi,#fi *){font:700 10.5px var(--sans);letter-spacing:.1em;text-transform:uppercase}
+.fiyr:is(#fi,#fi *){font:700 12px var(--sans);fill:var(--ink2);letter-spacing:.04em}
+.fiv:is(#fi,#fi *){font:700 11.5px var(--sans)}
+.fiv.g:is(#fi,#fi *){fill:#2F6B45}
+.firl:is(#fi,#fi *){font:700 10.5px var(--sans);fill:var(--taupe)}
+.firl.g:is(#fi,#fi *){fill:#2F6B45}
+.firl.c:is(#fi,#fi *){fill:#7D766A}
+.firl.b:is(#fi,#fi *){fill:var(--ink)}
+.fiv.c:is(#fi,#fi *){fill:#7D766A}
+.fic:is(#fi,#fi *){font:700 12px var(--sans);fill:#262626}
+.fic.n:is(#fi,#fi *){fill:var(--red)}
+.fi-side:is(#fi,#fi *){display:flex;flex-direction:column;gap:8px;min-height:0}
+.fi-c:is(#fi,#fi *){flex:1;padding:7px 18px;border-radius:16px;background:#fff;border:1px solid #EEE7DA;display:flex;flex-direction:column;justify-content:center;gap:4px}
+.fi-c.res:is(#fi,#fi *){background:#F4F8F5;border-color:#DCEBE1}
+.fi-k:is(#fi,#fi *){margin:0;font:700 10.5px/1.2 var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--navy)}
+.fi-c.cost .fi-k:is(#fi,#fi *){color:#7D766A}
+.fi-c.res .fi-k:is(#fi,#fi *){color:#2F6B45}
+.fi-big:is(#fi,#fi *){margin:0;font:500 24px/1.1 var(--serif);color:var(--ink)}
+.fi-big small:is(#fi,#fi *){font:12px var(--sans);color:var(--taupe)}
+.fi-big.g:is(#fi,#fi *){color:#2F6B45}
+.fi-big.c:is(#fi,#fi *){color:#7D766A}
+.fi-c.res .fi-big:is(#fi,#fi *){font-size:27px;color:#2F6B45}
+.fi-p:is(#fi,#fi *){margin:0;font:12px/1.35 var(--sans);color:var(--ink2)}
+.fi-rows:is(#fi,#fi *){display:flex;flex-direction:column;gap:1px;margin-top:2px}
+.fi-rows div:is(#fi,#fi *){display:grid;grid-template-columns:26px 1fr auto;align-items:baseline;gap:6px;font:12.5px var(--sans);color:var(--ink2)}
+.fi-rows b:is(#fi,#fi *){font:700 10.5px var(--sans);letter-spacing:.08em}
+.fi-rows em:is(#fi,#fi *){font:700 12.5px var(--sans);font-style:normal;color:var(--ink)}
+.fi-rows .p1 b:is(#fi,#fi *){color:var(--red)}
+.fi-rows .p2 b:is(#fi,#fi *){color:var(--navy)}
+.fi-rows .p3 b:is(#fi,#fi *){color:#2F6B45}
+.fi-two:is(#fi,#fi *){display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.fi-two>div:is(#fi,#fi *){display:flex;flex-direction:column;gap:3px}
+.fi-chips:is(#fi,#fi *){display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+.fi-chips span:is(#fi,#fi *){padding:4px 11px;border-radius:999px;background:#fff;font:12px var(--sans);color:var(--ink2)}
+.fi-chips b:is(#fi,#fi *){color:#2F6B45}
+.slide.content:is(#fi,#fi *){background:linear-gradient(180deg,var(--wash) 0,#fff 120px)}
+.slide.content .kicker:is(#fi,#fi *){font:600 12px/1.2 var(--sans);letter-spacing:.16em;color:#4A6699;margin:0 0 10px}
+.slide.content .head:is(#fi,#fi *){font:500 42px/1.08 var(--serif);color:var(--navy);letter-spacing:-.01em;max-width:1000px}
+.slide.content .sub:is(#fi,#fi *){font-size:16px;color:#7A756C}
 /* ---------------------------------------------------------------- slide 10: the six-month execution plan (#ep)
    Taken from the reference deck (chagee-deck.vercel.app #12, its #rc; re-taken October 2026 for the three-month build phase): the rules that style that slide, each scoped to it by an
    :is(#ep,#ep *) on its subject. This exact match keeps the reference's navy kicker and title. */
@@ -2432,7 +2492,7 @@ aside.notes{display:none}
       <li data-go="es"><span class="no"></span><span class="nm">Executive Summary and Business Plan<span class="why">Two key challenges and one strategic decision</span></span></li>
       <li data-go="p1p" data-to="e2"><span class="no"></span><span class="nm">Our Business Recommendations<span class="why">Smart pickup routing · AI enabled in-store planning · Expand access</span></span></li>
       <li data-go="ep"><span class="no"></span><span class="nm">Execution Plan<span class="why">Three pilots and when to proceed</span></span></li>
-      <li data-go="c9"><span class="no">+</span><span class="nm">Business Impact<span class="why">What the plan is worth, in our model</span></span></li>
+      <li data-go="fi"><span class="no"></span><span class="nm">Business Impact<span class="why">What the plan is worth, in our model</span></span></li>
       <li data-go="qa"><span class="no"></span><span class="nm">Q &amp; A</span></li>
       <li data-go="ax"><span class="no">+</span><span class="nm">Appendix<span class="why">Supporting evidence, derivations and sources</span></span></li>
     </ol>
@@ -3145,6 +3205,60 @@ aside.notes{display:none}
     <p>Proposal two, AI-enabled in-store planning, is designed and built from now to December. From January, the findings from the proposal one pilot feed in and sharpen the forecasts; we then test them in one zone in April and May and launch in June.</p>
     <p>Proposal three, the site selection model, is also designed and built from now to December, on outlet and site history. In January and February, what the proposal one pilot learns about demand refines it, and in March it picks the next two sites, which takes little time once the model is built. April and May are the administration before a store can open, leases, permits and fit-out, and the two new stores launch in June.</p>
     <p>The work is run by a small joint team: our project manager and AI engineer, with Chagee's supply chain manager from APAC HQ, a zone manager and a store manager. Underneath, one model keeps learning from every week of data. By the end of June, Chagee has one integrated platform, with all three proposals launched across Singapore, improving demand management, decision making and site selection, and two new stores opened in strong locations chosen to maximise profit. The twelve-month view is in the appendix. About fifty seconds.</p>
+  </aside>
+</section>
+
+<!-- ======================================================= 11 FINANCIAL IMPACT
+     Copied from the reference deck (chagee-deck.vercel.app #13, its #fi): static, the whole slide at once. Every figure comes from
+     the team's five-year model (assumptions.json financial_model) through {{fi.*}}; the chart is the reference's SVG
+     (storyboard/fi_chart.svg), whose labels the build checks against the model. Full financial model → the appendix page #acr. -->
+<section class="slide content" id="fi" data-chapter="Impact" data-title="Financial impact" data-reveal="all">
+  <div class="leafart" aria-hidden="true"></div>
+  <div class="inner">
+    <p class="kicker">Financial impact · Singapore · five years</p>
+    <h2 class="head">We forecast our business plan to add {{fi.net5}} net profit over five years and break even in {{fi.be}}</h2>
+    <p class="sub lede">Team set up in 2026, pilots in early 2027, expands outlet coverage from 2H-2027 onwards; then the model keeps improving.</p>
+    <div class="fi-body">
+      <div class="fi-chart">
+        <div class="fi-top"><span class="fi-t">Financial gain and cost each year</span>
+          <span class="fi-key"><span><i style="background:#2F6B45"></i>Gross profit on extra sales</span><span><i style="background:#9CC8AA"></i>Cost savings</span><span><i style="background:#D6CDBE"></i>Cost</span><span><i class="ln"></i>Cumulative net</span></span></div>
+        <!--FICHART-->
+      </div>
+      <div class="fi-side">
+        <div class="fi-c rev">
+          <p class="fi-k">Revenue impact</p>
+          <p class="fi-big">+{{fi.rev5}} <small>extra revenue over five years</small></p>
+          <p class="fi-p">About {{fi.cups}} more cups a year by {{fi.last}}</p>
+          <div class="fi-rows">
+            <div class="p1"><b>P1</b><span>Fewer walk-aways at peak</span><em>{{fi.p1}}</em></div>
+            <div class="p2"><b>P2</b><span>Staff and machines ready for the peak</span><em>{{fi.p2}}</em></div>
+            <div class="p3"><b>P3</b><span>Better-placed new stores</span><em>{{fi.p3}}</em></div>
+          </div>
+        </div>
+        <div class="fi-c cost">
+          <p class="fi-k">Cost impact</p>
+          <div class="fi-two">
+            <div><p class="fi-big g">{{fi.saved}} <small>saved</small></p><p class="fi-p">Less idle staff time, fresh-stock waste and machines</p></div>
+            <div><p class="fi-big c">{{fi.inv}} <small>invested</small></p><p class="fi-p">{{fi.oneoff}} one-off, then {{fi.run}} a year</p></div>
+          </div>
+        </div>
+        <div class="fi-c res">
+          <p class="fi-k">Financial result</p>
+          <p class="fi-big">{{fi.net5}} <small>net over five years</small></p>
+          <div class="fi-chips"><span>Breakeven <b>{{fi.be}}</b></span><span><b>{{fi.full}}</b> a year at full scale</span></div>
+          <span class="golink fi-go" data-go="acr" tabindex="0" role="link">Full financial model</span>
+        </div>
+      </div>
+    </div>
+    <div class="fi-nf"><b>Beyond the numbers</b><span>Brand value</span><span>A better customer experience</span><span>Calmer, better-looking stores</span><em>Harder to measure, just as important</em></div>
+  </div>
+  <div class="foot"><span>OPIM639 · Group 3</span><span class="rail"></span><span class="pg"></span></div>
+  <aside class="notes">
+    <p>What the three proposals are worth together, over five years, on top of today's business. All figures are our illustrative assumptions, not Chagee data.</p>
+    <p>Read the chart from left to right. In 2026 we only set up the project team, about {{fi.setup}}. In 2027 we build the platform and pilot in the first half, so cost peaks at about {{fi.peakcost}}; from the second half every outlet is covered. From 2028 the shared model keeps learning, so the green bars grow while running costs stay at about {{fi.run}} a year. The black line is the cumulative result: it bottoms out at {{fi.low}} and turns positive in 2028.</p>
+    <p>Revenue: more demand captured and served. Proposal one recovers customers who would have walked away at peak, proposal two has staff and machines ready for the busy days, and proposal three places new stores where they sell more. Together about {{fi.cups}} more cups a year by {{fi.last}}, {{fi.rev5}} of revenue over five years, counted in the benefit at gross margin.</p>
+    <p>Cost: proposal two saves {{fi.saved}} in idle staff hours, wasted fresh stock and machines, against {{fi.inv}} of investment.</p>
+    <p>Result: {{fi.net5}} net over five years, breaking even in {{fi.be}}, and about {{fi.full}} a year once everything runs at full scale. The full model and its assumptions are in the appendix and the Excel workbook. About one minute.</p>
   </aside>
 </section>
 

@@ -3959,6 +3959,20 @@
       "source": "T-team-five-year-model",
       "rationale": "The model's key assumptions panel, exactly as shown, including its subtitle claim that some inputs are based on Chagee's real online data (not verified in this deck)."
     },
+    "cups_added_last_year": {
+      "value": 305000,
+      "unit": "more cups a year by the last year of the model, all three proposals",
+      "range": null,
+      "source": "T-team-five-year-model",
+      "rationale": "As on the reference deck's financial impact slide (chagee-deck.vercel.app #13), from the team's model; the table's rounded thousands sum to about the same."
+    },
+    "revenue_by_proposal_m": {
+      "value": [2.1, 1.1, 1.8],
+      "unit": "S$ million of extra revenue over five years: P1, P2, P3",
+      "range": null,
+      "source": "T-team-five-year-model",
+      "rationale": "As on the reference deck's financial impact slide (chagee-deck.vercel.app #13). The build checks they sum to the table's additional revenue."
+    },
     "assumptions_sub": {
       "value": "Some based on Chagee's real online data; the rest are illustrative assumptions",
       "unit": "text",

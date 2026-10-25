@@ -602,6 +602,30 @@ def values(d: dict) -> dict:
     hrs, cost = P2F["overtime_hours_per_month"]["value"], P2F["recurring_cost_per_month"]["value"]
     v["p2f.hours"], v["p2f.wage"], v["p2f.cost"] = hrs, wage, cost
     v["p2f.saving"], v["p2f.net"], v["p2f.be_hours"] = round(hrs * wage), round(hrs * wage) - cost, math.ceil(cost / wage - 1e-9)
+    # slide 11: financial impact (reference deck #13), every figure from the team's five-year model (financial_model)
+    FMr = RAW["financial_model"]; FMg = {r[1]: r[2] for r in FMr["rows"]["value"] if len(r) > 2}
+    FMt = {r[1]: r[3] for r in FMr["rows"]["value"] if len(r) > 3}
+    fm_m = lambda k: f"S${k / 1e3:.1f}m"
+    fm_s = lambda k: ("−" if k < 0 else "+") + (f"S${abs(k):.0f}k" if abs(k) < 100 else fm_m(abs(k)))
+    yrs, net, cum = FMr["years"]["value"], FMg["Net financial impact"], FMg["Cumulative net impact"]
+    rp = FMr["revenue_by_proposal_m"]["value"]
+    if abs(sum(rp) * 1e3 - FMt["Additional revenue"]) > 60:
+        raise SystemExit("build: the financial impact slide's revenue by proposal no longer sums to the model's additional revenue")
+    be = next(i for i in range(len(cum)) if cum[i] >= 0)
+    if be == 0 or -cum[be - 1] / net[be] > 0.25:
+        raise SystemExit("build: the financial impact slide says break-even comes early in a year; check financial_model")
+    one_off = sum(FMt[k] for k in ("Project team", "Platform build", "Data pipelines and cloud set-up", "Security and PDPA review"))
+    v.update({"fi.net5": fm_m(FMt["Net financial impact"]), "fi.rev5": fm_m(FMt["Additional revenue"]), "fi.cups": f"{FMr['cups_added_last_year']['value']:,}",
+              "fi.p1": f"S${rp[0]:.1f}m", "fi.p2": f"S${rp[1]:.1f}m", "fi.p3": f"S${rp[2]:.1f}m",
+              "fi.saved": fm_m(FMt["Operating cost savings"]), "fi.inv": fm_m(FMt["Total cost"]), "fi.oneoff": fm_m(one_off), "fi.run": fm_m(FMg["Total cost"][-1]),
+              "fi.be": f"early {yrs[be]}", "fi.full": fm_m(net[-1]), "fi.setup": fm_s(FMg["Total cost"][0])[1:], "fi.peakcost": fm_m(max(FMg["Total cost"])),
+              "fi.low": "−" + fm_m(-min(cum)), "fi.last": str(yrs[-1])})
+    # the chart is the reference's SVG (storyboard/fi_chart.svg): its labels must be the model's
+    svg = (HERE / "fi_chart.svg").read_text(encoding="utf-8")
+    want = ["–" if (g := FMg["Total benefit"][i]) is None else fm_s(g) for i in range(len(yrs))] + [fm_s(-c) for c in FMg["Total cost"]] + [fm_s(c) for c in cum]
+    got = re.findall(r'class="fiv g"[^>]*>([^<]*)<', svg) + re.findall(r'class="fiv c"[^>]*>([^<]*)<', svg) + re.findall(r'class="fic(?: n)?"[^>]*>([^<]*)<', svg)
+    if want != got:
+        raise SystemExit(f"build: the financial impact chart's labels differ from financial_model: {got} vs {want}")
     for kind, key in (("mach", "machines"), ("stock", "stock")):
         for o, (now, rec) in PDB[key].items():
             v[f"p2.{kind}_{o}_now"], v[f"p2.{kind}_{o}_rec"] = now, rec
@@ -1050,7 +1074,7 @@ def fill(text: str, vals: dict) -> str:
     return re.sub(r"\{\{([a-zA-Z_][\w.]*)(?:\|(\w+))?\}\}", rep, text)
 
 
-ALLOWED = re.compile(r"\bP[1-3]\b|(?i:\bslides?\s+\d\db?(?:\s*(?:,|and|to|–)\s*\d\db?)*)|\bM[1-3]\b|Item 3\.D|\bslides? 3\d\b|\b8[A-D]\b|\b(?:19|20)\d\d\b|OPIM\s?639|Topics? \d(?:\s*&(?:amp;)?\s*\d)*|\bT\d\b|\b0[1-9]b?\b|\b10b\b|\b1\d(?= ·)|\bslides? 1\d\b|Week \d|\b1 (?=company|counter)|Group \d|Form 20-F|[Pp]roposals? \d(?:(?:,| and) \d)*|Key Challenge \d|\bW\d–\d\b|Gate \d")
+ALLOWED = re.compile(r"\bP[1-3]\b|\b[12]H-20\d\d\b|(?i:\bslides?\s+\d\db?(?:\s*(?:,|and|to|–)\s*\d\db?)*)|\bM[1-3]\b|Item 3\.D|\bslides? 3\d\b|\b8[A-D]\b|\b(?:19|20)\d\d\b|OPIM\s?639|Topics? \d(?:\s*&(?:amp;)?\s*\d)*|\bT\d\b|\b0[1-9]b?\b|\b10b\b|\b1\d(?= ·)|\bslides? 1\d\b|Week \d|\b1 (?=company|counter)|Group \d|Form 20-F|[Pp]roposals? \d(?:(?:,| and) \d)*|Key Challenge \d|\bW\d–\d\b|Gate \d")
 
 
 def digit_check(tpl: str) -> None:
@@ -1122,6 +1146,7 @@ def build() -> Path:
     html = html.replace("<!--ONLAPPX1-->", oa[0]).replace("<!--ONLAPPX2-->", oa[1])
     html = html.replace("<!--MBAPPX1-->", mx[0]).replace("<!--MBAPPX2-->", mx[1]).replace("<!--MBAPPX3-->", mx[2])
     html = html.replace("<!--FINMODEL-->", fin_model_page())
+    html = html.replace("<!--FICHART-->", (HERE / "fi_chart.svg").read_text(encoding="utf-8").strip())
     html = html.replace("<!--APPENDIX-->", appendix()).replace("<!--NMAPPENDIX-->", nm_appendix()).replace("<!--TIERS-->", tiers_table())
     js = "\n".join((ROOT / "sim" / f).read_text(encoding="utf-8") for f in ("sim.js", "store.js", "counter.js", "sitepick.js", "ladder.js", "benefit.js", "siteext.js", "sitemodel.js", "newmarket.js", "pnl.js", "members.js", "squadcast.js", "crewtool.js", "toppings.js"))
     js += "\n" + (HERE / "deck.js").read_text(encoding="utf-8")
