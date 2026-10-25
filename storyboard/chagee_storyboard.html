@@ -3446,48 +3446,6 @@ aside.notes{display:none}
   <aside class="notes"><p>Soft copy and print companion of slide 08's P&amp;L view, at the default inputs and the suggested site. The on-screen view updates with the selected site and the assumption sliders; this page shows the defaults.</p></aside>
 </section>
 
-<!-- ======================================================= APPENDIX: FOUR SCORES (Jin's framework) -->
-<section class="slide content" id="x1" data-chapter="Appendix" data-title="Four scores for every location">
-  <div class="leafart" aria-hidden="true"></div>
-  <div class="inner stepper" data-steps="5">
-    <p class="kicker">Appendix · Four scores for every location · corporate expansion planning<span class="ext">Extension: where this scales next. Not included in the S$ benefit.</span></p>
-    <h2 class="head">Four scores for every location</h2>
-    <p class="sub">Corporate drops a pin; the model rates it on four things (illustrative). Decision owner here: the expansion manager.</p>
-    <div class="body" style="grid-template-columns:500px 1fr;gap:20px;margin-top:12px">
-      <div class="panel xmap" data-kind="xmap">
-        <div class="ptop"><span class="ptitle">Schematic map · hypothetical pins</span><span class="seg xpins screenonly"></span></div>
-        <div class="visual" style="margin-top:4px"><svg class="xsvg" viewBox="0 0 470 250" preserveAspectRatio="xMidYMid meet" aria-label="Schematic map: a candidate pin, its ring, the neighbour outlet that loses most, and an MRT line"></svg></div>
-        <ol class="caps" style="min-height:40px">
-          <li data-s="1"><span class="n">1</span><span>Corporate drops a pin: a hypothetical candidate site. Pick another pin above to compare.</span></li>
-          <li data-s="2"><span class="n">2</span><span>The model tags the pin's attributes: people within 1 km, transit, footfall, delivery orders, competitors, Chagee outlets within 2 km.</span></li>
-          <li data-s="3"><span class="n">3</span><span>Three scores from those attributes. Here they are set by hand: drag a bar to test another value.</span></li>
-          <li data-s="4"><span class="n">4</span><span>The slide 08 engine computes what existing outlets would lose: the cannibalisation factor.</span></li>
-          <li data-s="5"><span class="n">5</span><span>The site score weighs the three scores; cannibalisation stays out of it and is deducted in the profit (next slide).</span></li>
-        </ol>
-        <div class="lg"><span><i style="background:var(--navy)"></i>Existing outlet</span><span><i style="background:var(--red)"></i>Candidate site</span><span><i style="background:#E6DCC8;border-radius:2px"></i>Housing estate</span><span><i style="background:#7E9B82;height:4px;border-radius:1px;vertical-align:2px"></i>MRT line</span></div>
-      </div>
-      <div class="xs">
-        <div class="row" data-s="3" data-sc="demand"><div><h4>Demand score<span class="src">hand-set</span></h4><p>Residents, workers and transit riders within reach, plus footfall.</p></div><div class="bar"><i style="width:84%"></i><input class="screenonly" type="range" min="0" max="100" step="1" value="84" aria-label="Demand score"></div><div class="val">84</div></div>
-        <div class="row" data-s="3" data-sc="delivery"><div><h4>Delivery demand score<span class="src">hand-set</span></h4><p>Orders from the area on third-party delivery apps.</p>
-          <p class="nt">All Chagee delivery goes through third-party apps (anonymous Chagee source, to confirm), so we use area demand, not "served from a farther outlet". Whether the platforms share this data is to confirm.</p></div><div class="bar"><i style="width:78%"></i><input class="screenonly" type="range" min="0" max="100" step="1" value="78" aria-label="Delivery demand score"></div><div class="val">78</div></div>
-        <div class="row" data-s="3" data-sc="competition"><div><h4>Competition score<span class="src">hand-set</span></h4><p>Bubble-tea and cafe outlets within 500 m; dense competition lowers the score, a few prove demand.</p></div><div class="bar"><i style="width:61%"></i><input class="screenonly" type="range" min="0" max="100" step="1" value="61" aria-label="Competition score"></div><div class="val">61</div></div>
-        <div class="row neg" data-s="4" data-sc="cannibal"><div><h4>Cannibalisation factor<span class="src">computed · slide 08 engine</span></h4><p class="cw">The share of the site's cups that existing Chagee outlets would lose, deducted so the result is net to Chagee.</p></div><div class="bar"><i style="width:13%"></i></div><div class="val">−13</div></div>
-        <div class="row tot" data-s="5"><div><h4>Site score<span class="src">weighted</span><span class="src sv"></span></h4><p>Demand 50%, delivery 20%, competition 30% (hand-set weights).</p></div><div class="bar"><i style="width:76%"></i></div><div class="val">76</div></div>
-      </div>
-    </div>
-    <div class="revctl screenonly" style="top:8px"><span class="lab">Step through</span><span class="ctl"></span></div>
-    <div class="xstrip" data-s="2"><span class="lab">Attributes the model tags to each pin</span><span>residents and workers within 1 km · MRT and bus tap-ins · footfall · delivery orders from the area · competing outlets within 500 m · Chagee outlets within 2 km · rent per sq ft · staff needed at peak</span></div>
-    <p class="xai" data-s="5"><b>What is AI here</b><span>Scoring a pin from its attributes would be a supervised model trained on outlets' results: a production idea. Here the three scores are set by hand, and the cannibalisation factor is computed by the slide 08 engine on synthetic data. The next slide runs the supervised model.</span></p>
-    <p class="xill">Illustrative. Synthetic data, not Chagee data. Chagee's opening history is internal and we do not have it.</p>
-  </div>
-  <div class="foot"><span>OPIM 639 · Group 3 · Course Link: Topic 3 · Analytics and AI: data-driven demand prediction</span><span class="rail"></span><span class="pg"></span></div>
-  <aside class="notes">
-    <p>An extension: where this scales next, and not part of the benefit figure. The decision owner here is the expansion manager. This builds on Jin's site-selection framework.</p>
-    <p>Step through it. Corporate drops a pin; the model tags its attributes; three scores follow. Demand, delivery demand and competition are set by hand here, and you can drag a bar to test another value: in production, a supervised model would score them. We call the second one delivery demand, not delivery relief, because all Chagee delivery runs through third-party apps, according to an anonymous Chagee source; whether the platforms share this data is to confirm.</p>
-    <p>The cannibalisation factor is computed by the same engine as slide 08: about 13% of site A's cups would move from existing outlets. Switch to the pin with an outlet inside the ring, or the one beside an outlet, and watch it jump. All synthetic. About thirty-five seconds.</p>
-  </aside>
-</section>
-
 <!-- ======================================================= APPENDIX: THE EXPANSION MANAGER'S DECISION AS A TABLE
      The earlier main slide 09, kept as it was; its What about existing outlets? opens the same overlay as slide 09. -->
 <section class="slide content" id="e2t" data-chapter="Appendix" data-title="The expansion manager's decision as a table">
@@ -3649,6 +3607,48 @@ aside.notes{display:none}
   </div>
   <div class="foot"><span>OPIM 639 · Group 3</span><span class="rail"></span><span class="pg"></span></div>
   <aside class="notes"><p>Soft copy only.</p></aside>
+</section>
+
+<!-- ======================================================= APPENDIX: FOUR SCORES (Jin's framework) -->
+<section class="slide content" id="x1" data-chapter="Appendix" data-title="Four scores for every location">
+  <div class="leafart" aria-hidden="true"></div>
+  <div class="inner stepper" data-steps="5">
+    <p class="kicker">Appendix · Four scores for every location · corporate expansion planning<span class="ext">Extension: where this scales next. Not included in the S$ benefit.</span></p>
+    <h2 class="head">Four scores for every location</h2>
+    <p class="sub">Corporate drops a pin; the model rates it on four things (illustrative). Decision owner here: the expansion manager.</p>
+    <div class="body" style="grid-template-columns:500px 1fr;gap:20px;margin-top:12px">
+      <div class="panel xmap" data-kind="xmap">
+        <div class="ptop"><span class="ptitle">Schematic map · hypothetical pins</span><span class="seg xpins screenonly"></span></div>
+        <div class="visual" style="margin-top:4px"><svg class="xsvg" viewBox="0 0 470 250" preserveAspectRatio="xMidYMid meet" aria-label="Schematic map: a candidate pin, its ring, the neighbour outlet that loses most, and an MRT line"></svg></div>
+        <ol class="caps" style="min-height:40px">
+          <li data-s="1"><span class="n">1</span><span>Corporate drops a pin: a hypothetical candidate site. Pick another pin above to compare.</span></li>
+          <li data-s="2"><span class="n">2</span><span>The model tags the pin's attributes: people within 1 km, transit, footfall, delivery orders, competitors, Chagee outlets within 2 km.</span></li>
+          <li data-s="3"><span class="n">3</span><span>Three scores from those attributes. Here they are set by hand: drag a bar to test another value.</span></li>
+          <li data-s="4"><span class="n">4</span><span>The slide 08 engine computes what existing outlets would lose: the cannibalisation factor.</span></li>
+          <li data-s="5"><span class="n">5</span><span>The site score weighs the three scores; cannibalisation stays out of it and is deducted in the profit (next slide).</span></li>
+        </ol>
+        <div class="lg"><span><i style="background:var(--navy)"></i>Existing outlet</span><span><i style="background:var(--red)"></i>Candidate site</span><span><i style="background:#E6DCC8;border-radius:2px"></i>Housing estate</span><span><i style="background:#7E9B82;height:4px;border-radius:1px;vertical-align:2px"></i>MRT line</span></div>
+      </div>
+      <div class="xs">
+        <div class="row" data-s="3" data-sc="demand"><div><h4>Demand score<span class="src">hand-set</span></h4><p>Residents, workers and transit riders within reach, plus footfall.</p></div><div class="bar"><i style="width:84%"></i><input class="screenonly" type="range" min="0" max="100" step="1" value="84" aria-label="Demand score"></div><div class="val">84</div></div>
+        <div class="row" data-s="3" data-sc="delivery"><div><h4>Delivery demand score<span class="src">hand-set</span></h4><p>Orders from the area on third-party delivery apps.</p>
+          <p class="nt">All Chagee delivery goes through third-party apps (anonymous Chagee source, to confirm), so we use area demand, not "served from a farther outlet". Whether the platforms share this data is to confirm.</p></div><div class="bar"><i style="width:78%"></i><input class="screenonly" type="range" min="0" max="100" step="1" value="78" aria-label="Delivery demand score"></div><div class="val">78</div></div>
+        <div class="row" data-s="3" data-sc="competition"><div><h4>Competition score<span class="src">hand-set</span></h4><p>Bubble-tea and cafe outlets within 500 m; dense competition lowers the score, a few prove demand.</p></div><div class="bar"><i style="width:61%"></i><input class="screenonly" type="range" min="0" max="100" step="1" value="61" aria-label="Competition score"></div><div class="val">61</div></div>
+        <div class="row neg" data-s="4" data-sc="cannibal"><div><h4>Cannibalisation factor<span class="src">computed · slide 08 engine</span></h4><p class="cw">The share of the site's cups that existing Chagee outlets would lose, deducted so the result is net to Chagee.</p></div><div class="bar"><i style="width:13%"></i></div><div class="val">−13</div></div>
+        <div class="row tot" data-s="5"><div><h4>Site score<span class="src">weighted</span><span class="src sv"></span></h4><p>Demand 50%, delivery 20%, competition 30% (hand-set weights).</p></div><div class="bar"><i style="width:76%"></i></div><div class="val">76</div></div>
+      </div>
+    </div>
+    <div class="revctl screenonly" style="top:8px"><span class="lab">Step through</span><span class="ctl"></span></div>
+    <div class="xstrip" data-s="2"><span class="lab">Attributes the model tags to each pin</span><span>residents and workers within 1 km · MRT and bus tap-ins · footfall · delivery orders from the area · competing outlets within 500 m · Chagee outlets within 2 km · rent per sq ft · staff needed at peak</span></div>
+    <p class="xai" data-s="5"><b>What is AI here</b><span>Scoring a pin from its attributes would be a supervised model trained on outlets' results: a production idea. Here the three scores are set by hand, and the cannibalisation factor is computed by the slide 08 engine on synthetic data. The next slide runs the supervised model.</span></p>
+    <p class="xill">Illustrative. Synthetic data, not Chagee data. Chagee's opening history is internal and we do not have it.</p>
+  </div>
+  <div class="foot"><span>OPIM 639 · Group 3 · Course Link: Topic 3 · Analytics and AI: data-driven demand prediction</span><span class="rail"></span><span class="pg"></span></div>
+  <aside class="notes">
+    <p>An extension: where this scales next, and not part of the benefit figure. The decision owner here is the expansion manager. This builds on Jin's site-selection framework.</p>
+    <p>Step through it. Corporate drops a pin; the model tags its attributes; three scores follow. Demand, delivery demand and competition are set by hand here, and you can drag a bar to test another value: in production, a supervised model would score them. We call the second one delivery demand, not delivery relief, because all Chagee delivery runs through third-party apps, according to an anonymous Chagee source; whether the platforms share this data is to confirm.</p>
+    <p>The cannibalisation factor is computed by the same engine as slide 08: about 13% of site A's cups would move from existing outlets. Switch to the pin with an outlet inside the ring, or the one beside an outlet, and watch it jump. All synthetic. About thirty-five seconds.</p>
+  </aside>
 </section>
 
 <!-- ======================================================= CONSIDERED BUT NOT FOR PRESENTATION (divider) -->
