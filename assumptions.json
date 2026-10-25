@@ -18,6 +18,7 @@
     }
   },
   "_sources": {
+    "T-team-five-year-model": "The team's five-year financial model (screenshot supplied by the user, 26 Oct 2026), shown exactly on the appendix page 'The five-year model behind the financial impact'. Its inputs are the team's; its claim that some are based on Chagee's real online data is not verified in this deck.",
     "T-online-brief": "Team brief 'CHAGEE Singapore: AI-Enabled Online Retailing Business Plan' (Revan, Oct 2026; local copy 'CHAGEE online retailing (Revan).docx.pdf'). Its figures are reconciled in the appendix, not copied; its '1,500 cups a day' (Q2 2025 call) could not be verified and is not used.",
     "L-sg-locator-oct26": "CHAGEE Singapore store locator, https://www.chagee.com.sg/en/stores, checked 24 Oct 2026: 46 outlets listed (a 'Nearby stores' list, possibly incomplete).",
     "L-chagee-help-delivery": "CHAGEE Singapore Help Centre, 'Why is there no delivery option in the CHAGEE App?' (updated 20 Oct 2026): 'CHAGEE App delivery is available to all users'; outside the coverage zone, order through delivery partners such as Grab.",
@@ -3615,107 +3616,355 @@
       "rationale": "As on the reference slide; equals demand_mgmt.alt_ready_min."
     }
   },
-  "consolidated": {
+  "financial_model": {
     "_note": {
-      "value": "Appendix: consolidated revenue and costs for the next five years (2027 to 2031), all three proposals",
+      "value": "Appendix: the five-year model behind the financial impact (slide id acr)",
       "unit": "text",
       "range": null,
-      "source": "assumption",
-      "rationale": "Built at the user's request (26 Oct 2026) as a course-style revenue and cost table. Reuses the deck's own inputs wherever one exists (price, margin, cups, wage, Proposal 2's zone case, the new-store P&L, the approved day rate, integration and platform costs) and adds only the placeholders below. Every figure is illustrative, not Chagee data. The three proposals touch different customers: Proposal 1 only peak orders at busy CBD and mall outlets, Proposal 2 only labour and waste in existing outlets, Proposal 3 only two new heartland stores, after the sales they move from nearby outlets; so no order is counted twice."
+      "source": "T-team-five-year-model",
+      "rationale": "The team's five-year financial model, copied exactly from the screenshot the user supplied on 26 Oct 2026 (S$ thousands unless stated, 2026 to 2030). Replaces the earlier consolidated table. Not derived from this deck's other inputs: its baseline (240,000 cups a year, 54% margin, 3% growth) differs from store.cups_per_store_per_year and storyboard.gross_margin_per_cup. The build checks that the rows add up to the totals shown."
     },
-    "start_year": {
-      "value": 2027,
-      "unit": "first calendar year",
-      "range": null,
-      "source": "assumption",
-      "rationale": "The execution plan starts in January 2027 (slide 10)."
-    },
-    "p1_outlet_months": {
+    "years": {
       "value": [
-        176,
-        240,
-        240,
-        240,
-        240
+        2026,
+        2027,
+        2028,
+        2029,
+        2030
       ],
-      "unit": "outlet-months live with smart pickup routing, per year",
+      "unit": "calendar years",
       "range": null,
-      "source": "assumption, illustrative, to validate with Chagee",
-      "rationale": "Follows slide 10's timeline: one zone of 4 outlets in Jan-Feb (the City Hall-Marina zone, 8), three zones (12 outlets) in Mar-Jun (48), then all p1_busy_outlets from July (120): 176 in 2027; 20 x 12 = 240 a year after."
+      "source": "T-team-five-year-model",
+      "rationale": "As shown."
     },
-    "p1_busy_outlets": {
-      "value": 20,
-      "unit": "outlets where peak queues form",
-      "range": [
-        10,
-        30
-      ],
-      "source": "assumption, illustrative, to validate with Chagee",
-      "rationale": "Our placeholder: about half of the 44 outlets, the CBD, mall and MRT-linked ones where the problem slide's peak crowding occurs. Chagee's own wait and walk-away data would set it."
-    },
-    "p1_switch_share_of_peak": {
-      "value": 0.05,
-      "unit": "share of peak-hour orders that accept a switch and get the perk",
-      "range": [
-        0.02,
-        0.1
-      ],
-      "source": "assumption, illustrative, to validate with Chagee",
-      "rationale": "Our placeholder: 1 in 20 peak orders. Retained orders (online_case.peak_retained_share, the team brief's 3%) are the subset that would otherwise have walked away; every switch costs the perk (online_case.pickup_reward, S$0.50)."
-    },
-    "p2_outlets_per_zone": {
-      "value": 4,
-      "unit": "outlets in a planning zone",
-      "range": null,
-      "source": "assumption",
-      "rationale": "As slide 10's pilot zone: Raffles Place, Suntec City, City Hall and Clarke Quay. 44 outlets make 11 zones."
-    },
-    "p2_zone_months": {
+    "rows": {
       "value": [
-        79,
-        132,
-        132,
-        132,
-        132
+        [
+          "sec",
+          "Revenue impact"
+        ],
+        [
+          "row",
+          "Proposal 1 · cups recovered from walk-aways (thousands)",
+          [
+            null,
+            42,
+            91,
+            107,
+            118
+          ],
+          357
+        ],
+        [
+          "row",
+          "Proposal 2 · extra cups served at the peak (thousands)",
+          [
+            null,
+            20,
+            50,
+            59,
+            66
+          ],
+          195
+        ],
+        [
+          "row",
+          "Proposal 3 · extra cups at better-chosen sites (thousands)",
+          [
+            null,
+            25,
+            64,
+            92,
+            122
+          ],
+          302
+        ],
+        [
+          "tot",
+          "Additional revenue",
+          [
+            null,
+            513,
+            1207,
+            1519,
+            1799
+          ],
+          5038
+        ],
+        [
+          "row",
+          "Less ingredients and packaging",
+          [
+            null,
+            -236,
+            -555,
+            -699,
+            -828
+          ],
+          -2317
+        ],
+        [
+          "tot",
+          "Gross profit from additional sales",
+          [
+            null,
+            277,
+            652,
+            820,
+            972
+          ],
+          2720
+        ],
+        [
+          "sec",
+          "Cost impact · leaner operations (Proposal 2)"
+        ],
+        [
+          "row",
+          "Staff overhead saved",
+          [
+            null,
+            130,
+            328,
+            386,
+            427
+          ],
+          1272
+        ],
+        [
+          "row",
+          "Fresh stock waste avoided",
+          [
+            null,
+            141,
+            356,
+            419,
+            464
+          ],
+          1380
+        ],
+        [
+          "row",
+          "Tea machines avoided",
+          [
+            null,
+            37,
+            91,
+            103,
+            111
+          ],
+          342
+        ],
+        [
+          "tot",
+          "Operating cost savings",
+          [
+            null,
+            307,
+            775,
+            908,
+            1002
+          ],
+          2993
+        ],
+        [
+          "tot",
+          "Total benefit",
+          [
+            null,
+            584,
+            1427,
+            1729,
+            1974
+          ],
+          5714
+        ],
+        [
+          "sec",
+          "Additional cost from initiatives"
+        ],
+        [
+          "row",
+          "Project team",
+          [
+            78,
+            312,
+            null,
+            null,
+            null
+          ],
+          390
+        ],
+        [
+          "row",
+          "Platform build",
+          [
+            null,
+            100,
+            null,
+            null,
+            null
+          ],
+          100
+        ],
+        [
+          "row",
+          "Data pipelines and cloud set-up",
+          [
+            null,
+            60,
+            null,
+            null,
+            null
+          ],
+          60
+        ],
+        [
+          "row",
+          "Security and PDPA review",
+          [
+            null,
+            20,
+            null,
+            null,
+            null
+          ],
+          20
+        ],
+        [
+          "row",
+          "Run team",
+          [
+            null,
+            null,
+            240,
+            240,
+            240
+          ],
+          720
+        ],
+        [
+          "row",
+          "Software maintenance",
+          [
+            null,
+            null,
+            20,
+            20,
+            20
+          ],
+          60
+        ],
+        [
+          "row",
+          "Cloud, licences and AI services",
+          [
+            null,
+            52,
+            70,
+            70,
+            70
+          ],
+          262
+        ],
+        [
+          "row",
+          "Switch perks (Proposal 1)",
+          [
+            null,
+            23,
+            50,
+            59,
+            66
+          ],
+          198
+        ],
+        [
+          "tot",
+          "Total cost",
+          [
+            78,
+            568,
+            380,
+            389,
+            396
+          ],
+          1811
+        ],
+        [
+          "net",
+          "Net financial impact",
+          [
+            -78,
+            16,
+            1047,
+            1340,
+            1578
+          ],
+          3903
+        ],
+        [
+          "cum",
+          "Cumulative net impact",
+          [
+            -78,
+            -62,
+            985,
+            2324,
+            3903
+          ],
+          null
+        ]
       ],
-      "unit": "zone-months live with in-store planning, per year",
+      "unit": "S$ thousands unless stated; [kind, label, values by year (null = none), total]",
       "range": null,
-      "source": "assumption",
-      "rationale": "Follows slide 10: one test zone in Apr-May (2), all 11 zones from the June launch (7 x 11 = 77): 79 in 2027; 11 x 12 = 132 a year after. Each zone-month uses Proposal 2's financial case (p2_finance: 60 overtime hours avoided at the deck's wage, S$300 recurring cost)."
+      "source": "T-team-five-year-model",
+      "rationale": "Exactly as in the team's model."
     },
-    "p2_waste_share": {
-      "value": 0.005,
-      "unit": "share of an outlet's ingredient spend no longer written off",
-      "range": [
-        0.0,
-        0.01
-      ],
-      "source": "assumption, illustrative, to validate with Chagee",
-      "rationale": "Our placeholder: half a percent of ingredient spend (price x (1 - margin) x cups). Counts only lower write-offs, as the Proposal 2 financial case asks finance to verify."
-    },
-    "p3_stores": {
+    "assumptions": {
       "value": [
-        "base",
-        "base"
+        [
+          "Baseline",
+          "",
+          "44 outlets × 240,000 cups a year at S$5.90, growing 3% a year, plus the new outlets: the base the percentages below apply to. Gross margin 54%; wages rise 3% a year"
+        ],
+        [
+          "Roll-out",
+          "",
+          "Pilots in the first half of 2027; every outlet from the second half. The model reaches its full effect by 2030"
+        ],
+        [
+          "Proposal 1",
+          "p1",
+          "3% of cups lost at peak, 30% of them recovered; 2% of orders redirected, 50% of them with a S$0.50 perk"
+        ],
+        [
+          "Proposal 2",
+          "p2",
+          "10 idle staff hours a week saved per outlet; fresh-stock waste of 3% of sales cut by 20%; 0.5% more cups at the peak"
+        ],
+        [
+          "Proposal 3",
+          "p3",
+          "Two new outlets in 2027, then one a year, each selling 10% more than a conventional site pick"
+        ],
+        [
+          "Costs",
+          "",
+          "Platform build S$100k, data set-up S$60k and security review S$20k in 2027; then a run team S$240k, cloud S$70k and maintenance at 20% of the build a year. Chagee's managers and store teams are existing staff: no extra cost"
+        ]
       ],
-      "unit": "volume scenario of each of the two new stores, from the new-store P&L (pnl)",
+      "unit": "[label, colour class, text]",
       "range": null,
-      "source": "assumption",
-      "rationale": "Slide 10 plans two new stores in strong locations; both use the deck's recommended cluster site at base volume as a stand-in, opening mid-2027 (business_case.opening_year_share, so 2027 counts half a year). Revenue is net of sales moved from nearby outlets; operating profit is before the AI cost, which sits in the shared rows. Set-up is site_ext.setup_cost each. The page shows the second store at low volume as a downside."
+      "source": "T-team-five-year-model",
+      "rationale": "The model's key assumptions panel, exactly as shown, including its subtitle claim that some inputs are based on Chagee's real online data (not verified in this deck)."
     },
-    "build_people": {
-      "value": 2,
-      "unit": "people in the build team, January to June 2027",
+    "assumptions_sub": {
+      "value": "Some based on Chagee's real online data; the rest are illustrative assumptions",
+      "unit": "text",
       "range": null,
-      "source": "assumption",
-      "rationale": "Slide 10's project team from our side: a project manager and an AI engineer, at business_case.specialist_day_rate. Chagee's supply-chain, zone and store managers are existing staff and are not costed."
-    },
-    "run_from_month": {
-      "value": 7,
-      "unit": "month of 2027 the run team, cloud and licences start",
-      "range": null,
-      "source": "assumption",
-      "rationale": "After the six-month build on slide 10. Run team = business_case.maintenance_people at the same day rate; cloud and licences = business_case.platform_per_store_month for all 44 outlets."
+      "source": "T-team-five-year-model",
+      "rationale": "As shown. UNVERIFIED: this deck holds no Chagee online data; flagged to the user."
     }
   }
 }

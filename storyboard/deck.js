@@ -219,8 +219,17 @@
     else if (e.key === "p" || e.key === "P") doPrint();
     else if (e.key === "g" || e.key === "G") { e.preventDefault(); $(document, "#goto").focus(); }
   });
-  let idle; const wake = () => { document.body.classList.remove("idle"); clearTimeout(idle); idle = setTimeout(() => document.body.classList.add("idle"), 2500); };
-  addEventListener("mousemove", wake); addEventListener("keydown", wake); wake();
+  // the toolbar shows only while the pointer is near the bottom edge (or a toolbar control has focus, e.g. the go-to box);
+  // clicks, key presses and Next elsewhere leave it hidden
+  const tb = $(document, "#toolbar"), typing = () => tb.contains(document.activeElement) && document.activeElement.matches("input, select, textarea"); let idle;
+  const hideSoon = () => { if (idle || document.body.classList.contains("idle") || typing()) return;
+    idle = setTimeout(() => { idle = null; if (!typing()) document.body.classList.add("idle"); }, 800); };
+  const showBar = () => { clearTimeout(idle); idle = null; document.body.classList.remove("idle"); };
+  const nearBottom = e => e.clientY > innerHeight - 90 || tb.contains(e.target);
+  addEventListener("pointermove", e => (nearBottom(e) ? showBar() : hideSoon()));
+  addEventListener("pointerdown", e => { if (e.pointerType !== "mouse" && nearBottom(e)) showBar(); });
+  tb.addEventListener("focusin", () => typing() && showBar()); tb.addEventListener("focusout", () => setTimeout(hideSoon));
+  document.body.classList.add("idle");
   $$(document, ".agenda li[data-go]").forEach(li => (li.onclick = () => show(slides.indexOf(document.getElementById(li.dataset.go)))));
   // agenda numbers follow the deck: the number (data-no) of the line's first slide (data-go) to its last (data-to); an
   // unnumbered slide in the main run (Q&A) takes the number after the last numbered slide before it
