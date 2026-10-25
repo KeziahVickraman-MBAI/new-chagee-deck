@@ -290,8 +290,8 @@
   $$(document, ".rt-phone").forEach(ph => {
     const hd = $(ph, ".hd h3"), bd = $(ph, ".bd"), hd0 = hd.textContent, bd0 = bd.innerHTML, { near, far } = ph.dataset;
     const set = a => {
-      if (a === "sw") { hd.textContent = "Switched"; bd.innerHTML = `<div class="crd sug"><small class="tag">Confirmed · simulated</small><h5 style="margin-top:3px">Collect at Raffles City in about ${far} min</h5><p>Complimentary carrier bag added, if you need one.</p></div><button class="cta ghost" data-rr="undo">Undo</button>`; }
-      else if (a === "kp") { hd.textContent = "Your tea"; bd.innerHTML = `<div class="crd sug"><small class="tag">Confirmed · simulated</small><h5 style="margin-top:3px">Collect at Suntec City in about ${near} min</h5><p>You kept your outlet; nothing else changes.</p></div><button class="cta ghost" data-rr="undo">Undo</button>`; }
+      if (a === "sw") { hd.textContent = "Switched"; bd.innerHTML = `<div class="crd sug conf"><small class="tag conf">Confirmed · simulated</small><h5 style="margin-top:3px">Collect at Raffles City in about ${far} min</h5><p>Complimentary carrier bag added, if you need one.</p></div><button class="cta ghost" data-rr="undo">Undo</button>`; }
+      else if (a === "kp") { hd.textContent = "Your tea"; bd.innerHTML = `<div class="crd sug conf"><small class="tag conf">Confirmed · simulated</small><h5 style="margin-top:3px">Collect at Suntec City in about ${near} min</h5><p>You kept your outlet; nothing else changes.</p></div><button class="cta ghost" data-rr="undo">Undo</button>`; }
       else { hd.textContent = hd0; bd.innerHTML = bd0; } };
     ph.addEventListener("click", e => { const b = e.target.closest("[data-rr]"); if (b) { b.blur(); set(b.dataset.rr); } });
     printers.push(() => set("undo"));
