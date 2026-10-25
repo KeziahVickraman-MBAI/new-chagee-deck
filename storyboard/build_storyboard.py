@@ -573,6 +573,14 @@ def values(d: dict) -> dict:
     if not abs(TPd["cai"]["brigade"]["median"] - B_["median"]) < 10:
         raise SystemExit("build: slide 08's notes say training Cai changes little at the default; rewrite them")
     v["tp.cai_b_med"] = TPd["cai"]["brigade"]["median"]
+    # slides 06 and 07, AI-enabled in-store planning (sim/planning.js via precompute.js); the deck computes the same live
+    PLd, PDR = d["planning"], RAW["planning_demo"]
+    mv, sh, ch = PLd["moves"], PLd["short"], next(m for m in PLd["machines"] if m["outlet"] == "ch")
+    if not (len(mv) == 1 and mv[0]["from"] == "rp" and mv[0]["to"] == "ch" and len(sh) == 1 and sh[0]["outlet"] == "sc" and ch["over"]):
+        raise SystemExit("build: slide 07's notes say Raffles Place lends one crew member to City Hall, Suntec City is short one day, and City Hall's peak wants more machines than installed; rewrite them")
+    v["pd.band"], v["pd.moved"], v["pd.move_days"], v["pd.move_min"] = PDR["forecast_band"]["value"], 1, mv[0]["dayRange"], mv[0]["minutes"]
+    v["pd.short"], v["pd.short_day"], v["pd.ch_machines"] = sh[0]["missing"], sh[0]["dayRange"], ch["installed"]
+    v["pd.no"] = 2                                                          # slide 06: key challenge two of the executive summary
     sc_ = TPd["scene"]
     if not (sc_["shown"] > sc_["median"] and RAW["toppings"]["scene"]["value"]["plain_minutes"] < RAW["toppings"]["scene"]["value"]["build_minute"]):
         raise SystemExit("build: slide 06's notes say its run shows a longer-than-median shelf at Ben; check toppings.scene")
@@ -1089,7 +1097,7 @@ def build() -> Path:
     html = html.replace("<!--ONLAPPX1-->", oa[0]).replace("<!--ONLAPPX2-->", oa[1])
     html = html.replace("<!--MBAPPX1-->", mx[0]).replace("<!--MBAPPX2-->", mx[1]).replace("<!--MBAPPX3-->", mx[2])
     html = html.replace("<!--APPENDIX-->", appendix()).replace("<!--NMAPPENDIX-->", nm_appendix()).replace("<!--TIERS-->", tiers_table())
-    js = "\n".join((ROOT / "sim" / f).read_text(encoding="utf-8") for f in ("sim.js", "store.js", "counter.js", "sitepick.js", "ladder.js", "benefit.js", "siteext.js", "sitemodel.js", "newmarket.js", "pnl.js", "members.js", "squadcast.js", "crewtool.js", "toppings.js"))
+    js = "\n".join((ROOT / "sim" / f).read_text(encoding="utf-8") for f in ("sim.js", "store.js", "counter.js", "sitepick.js", "ladder.js", "benefit.js", "siteext.js", "sitemodel.js", "newmarket.js", "pnl.js", "members.js", "squadcast.js", "crewtool.js", "toppings.js", "planning.js"))
     js += "\n" + (HERE / "deck.js").read_text(encoding="utf-8")
     payload = {"RAW": RAW, "DATA": d, "GEO": json.loads((ROOT / "sim" / "sg_geo.json").read_text(encoding="utf-8")),
                "MAP": imgs["sg_map_crop"],
