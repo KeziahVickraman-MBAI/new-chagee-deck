@@ -1269,6 +1269,7 @@ body.print #e2 *{transition:none!important}
 .exo.static [data-exo=close]{display:none} .exoun{font:italic 600 13px var(--sans);color:var(--red)} .exoback{font-size:13px}
 @media print{ .exo:not(.static){display:none!important} .exo.static *{animation:none!important} }
 /* proposal 1 · how it works: a one-page summary after slide 05 */
+.auxb{position:absolute;right:72px;top:84px;z-index:3;height:28px;font-size:12.5px} .auxb.back{color:var(--ink);border-color:var(--ink)}
 #p1h .hsub{margin:2px 0 0;font:16px/1.4 var(--sans);color:var(--ink2)}
 #p1h .h3c{display:grid;grid-template-columns:1fr 1.12fr 1fr;gap:24px;margin-top:20px}
 #p1h .hc{display:flex;flex-direction:column;gap:11px}
@@ -2262,11 +2263,57 @@ aside.notes{display:none}
   </aside>
 </section>
 
-<!-- ======================================================= 04 ONLINE RETAILING · PROPOSAL 1: HOW THE SOLUTION WORKS -->
-<section class="slide content" id="p1b" data-chapter="Online" data-reveal="all" data-title="How the solution works">
+<!-- ======================================================= 04 ONLINE RETAILING · PROPOSAL 1: HOW IT WORKS (overview; its illustrative explanation, #p1b, follows as an auxiliary view) -->
+<section class="slide content" id="p1h" data-chapter="Online" data-reveal="all" data-title="Proposal 1: how it works">
   <div class="leafart" aria-hidden="true"></div>
   <div class="inner">
-    <p class="kicker">04 · Online retailing · how the solution works<span class="stg"><b>Online</b><i>Problem</i><i class="on">Solution</i><i>Decision</i></span><span class="dm"><i>Decision-maker</i>Digital commerce manager, with operations</span></p>
+    <p class="kicker hk">04 · Online retailing · how it works<span class="stg"><b>Online</b><i>Problem</i><i class="on">Solution</i><i>Decision</i></span><span class="dm"><i>Decision-maker</i>Digital commerce manager, with operations</span></p>
+    <button class="btn auxb screenonly" data-go="p1b" title="The same solution, animated step by step (optional)">See illustrative explanation →</button>
+    <h2 class="head">From Chagee's data to demand spread across outlets</h2>
+    <p class="hsub">An AI agent uses predictive AI to recommend, generative AI explains, and people make the final call.</p>
+    <div class="h3c">
+      <div class="hc">
+        <div class="hh"><span class="num">1</span><div><h3>The data</h3><small>What Chagee collects, or could collect</small></div></div>
+        <div class="hd"><span class="hi"><svg viewBox="0 0 24 24"><rect x="7" y="3" width="10" height="18" rx="2"/><path d="M11 18 h2"/></svg></span><div><b>Chagee app &amp; sales</b>Orders by outlet and time · Customer location · Margin per drink</div></div>
+        <div class="hd"><span class="hi"><svg viewBox="0 0 24 24"><path d="M3 9 L5 4 H19 L21 9 Z M4 9 V20 H20 V9 M9 20 V14 H15 V20"/></svg></span><div><b>Outlet operations</b>Live queue of open orders · Crew on shift · # of machines</div></div>
+        <div class="hd"><span class="hi"><svg viewBox="0 0 24 24"><circle cx="6" cy="17" r="3"/><circle cx="18" cy="17" r="3"/><path d="M6 17 H13 L16 8 H19 M13 17 L11 11 H7"/></svg></span><div><b>Delivery apps</b>Delivery orders · Rider waits</div></div>
+        <div class="hd g"><span class="hi"><svg viewBox="0 0 24 24"><path d="M4 12 a8 8 0 1 0 2.5 -5.8 M4 4 V8 H8 M12 8 V12 L15 14"/></svg></span><div><b>Historical events</b>Decisions made · Profitability outcomes</div></div>
+      </div>
+      <div class="hc">
+        <div class="hh"><span class="num">2</span><div><h3>Proposed AI agent</h3><small>Trigger, recommend, decide, with guardrails</small></div></div>
+        <div class="ha t"><span class="hp">Trigger</span><div><b>Wait runs long</b>A store's wait is, or is about to go, above {{dm.wait_threshold}} min.</div></div>
+        <div class="ha a"><span class="hp">AI agent</span><div><b>Recommend outlet, action, incentive</b>Predictive AI on live store data and patterns learnt from past decisions, within approved rules.</div></div>
+        <div class="ha p"><span class="hp">People decide</span><div><b>Customers and managers choose</b>Generative AI explains each recommendation; they accept or decline.</div></div>
+      </div>
+      <div class="hc">
+        <div class="hh"><span class="num">3</span><div><h3>What it does</h3><small>Example of actions at peak, and it keeps learning</small></div></div>
+        <div class="hw"><b>Offers a faster outlet</b>Routes pickups to the outlet that can hand over sooner.</div>
+        <div class="hw"><b>Recommends a delivery pause</b>Recommends pausing third-party delivery orders and redirecting demand; the zone manager reviews and approves.</div>
+        <div class="hl"><span>Continuous learning</span><b>Gets smarter over time</b>Every new decision and its outcome feed back in, so future decisions keep improving.</div>
+      </div>
+    </div>
+    <div class="hband">
+      <div class="hideas"><span class="hk2">The operations ideas behind it</span>
+        <dl><dt>Demand shaping</dt><dd>moving demand strategically</dd><dt>Capacity pooling</dt><dd>with nearby outlets</dd><dt>Reducing bottlenecks</dt><dd>dynamically</dd></dl></div>
+      <div class="hben"><span class="hk2">Key benefits</span>
+        <p><i>✓</i><span><b>Balances the zone</b>, thereby increasing sales</span></p>
+        <p><i>✓</i><span><b>Learns from past decisions and live data from stores</b> to raise profit while enhancing customer experience</span></p></div>
+    </div>
+  </div>
+  <div class="foot"><span>OPIM639 · Group 3 · proposed design; thresholds are illustrative</span><span class="rail"></span><span class="pg"></span></div>
+  <aside class="notes">
+    <p>Section 04, a one-page summary of Proposal 1. For an animated walk-through, press See illustrative explanation at the top right; Back to proposal returns here, and Next carries on to 05. The data: Chagee's app and sales, outlet operations, delivery apps and historical events, meaning decisions made and their profitability outcomes. The proposed AI agent: a trigger when a store's wait is, or is about to go, above {{dm.wait_threshold}} minutes, an illustrative setting; predictive AI recommends an outlet, an action and an incentive within approved rules; generative AI explains it, and customers and managers accept or decline.</p>
+    <p>What it does at the peak: offers a faster outlet for pickups, and recommends a delivery pause that the zone manager reviews and approves. Every decision and its outcome feed back in, so the model keeps learning. The operations ideas: demand shaping, capacity pooling with nearby outlets, and reducing bottlenecks dynamically. The benefits we expect, to be tested in the pilot: a better-balanced zone and more sales, and higher profit with a better customer experience. About thirty seconds.</p>
+  </aside>
+</section>
+
+<!-- ======================================================= ONLINE RETAILING · PROPOSAL 1: ILLUSTRATIVE EXPLANATION (auxiliary view of 04, #p1h: off the
+     Next path; opened from 04's button, and Back to proposal, Next past its end or Previous before its start return to 04) -->
+<section class="slide content" id="p1b" data-chapter="Online" data-reveal="all" data-aux="p1h" data-title="How the solution works: illustrative explanation">
+  <div class="leafart" aria-hidden="true"></div>
+  <div class="inner">
+    <p class="kicker">Online retailing · illustrative explanation<span class="stg"><b>Online</b><i>Problem</i><i class="on">Solution</i><i>Decision</i></span><span class="dm"><i>Decision-maker</i>Digital commerce manager, with operations</span></p>
+    <button class="btn auxb back screenonly" data-go="p1h">← Back to proposal</button>
     <h2 class="head">From Chagee's data to better-balanced demand</h2>
     <p class="bprob keep"><b>The solution</b><span>Predictive AI recommends, generative AI explains, and people decide.</span></p>
     <div class="bsum printonly">
@@ -2364,49 +2411,6 @@ aside.notes{display:none}
     <p>How the solution works, in three steps; Next, Previous and Replay drive it, and the small i icons open the detail. Step one, data flows in. Four sources feed one planning workspace: app and sales, meaning orders, customer location and drink margins; outlet operations, meaning open orders, crew and machines; delivery apps, meaning delivery orders and rider waits; and past outcomes, meaning earlier recommendations, decisions and results. Only orders by outlet and time are recorded today, as far as we know; location needs the customer's permission, and the rest needs access or logging that Chagee would have to confirm.</p>
     <p>Step two, AI recommends and people decide. The busy outlet's predicted wait rises and crosses the trigger; the forty minutes is the reference example, an illustrative setting, not a validated rule. Predictive AI proposes one thing: offer a nearby outlet with available capacity. Generative AI only explains that in plain words; it does not add figures or reasons. Then people decide: the customer accepts or keeps the original pickup, and the zone manager approves or declines any delivery pause or promotion.</p>
     <p>Step three, demand is better distributed. A few new orders go to the outlet with room, others keep their choice, and orders already placed stay where they were placed. The busy outlet is still busy, just less so. Every decision and outcome goes back to the data, to evaluate it and update the model. The course ideas: demand shaping, capacity pooling, limited by travel, delivery coverage and willingness to switch, and bottleneck management. The takeaway: help customers find convenient options while making better use of nearby capacity. These are outcomes to test in the pilot, not promised sales. Then try the customer experience on the next slide. About one minute.</p>
-  </aside>
-</section>
-
-<!-- ======================================================= PROPOSAL 1 · HOW IT WORKS (summary) -->
-<section class="slide content" id="p1h" data-chapter="Online" data-reveal="all" data-title="Proposal 1: how it works">
-  <div class="leafart" aria-hidden="true"></div>
-  <div class="inner">
-    <p class="kicker hk">Proposal 1 · How it works</p>
-    <h2 class="head">From Chagee's data to demand spread across outlets</h2>
-    <p class="hsub">An AI agent uses predictive AI to recommend, generative AI explains, and people make the final call.</p>
-    <div class="h3c">
-      <div class="hc">
-        <div class="hh"><span class="num">1</span><div><h3>The data</h3><small>What Chagee collects, or could collect</small></div></div>
-        <div class="hd"><span class="hi"><svg viewBox="0 0 24 24"><rect x="7" y="3" width="10" height="18" rx="2"/><path d="M11 18 h2"/></svg></span><div><b>Chagee app &amp; sales</b>Orders by outlet and time · Customer location · Margin per drink</div></div>
-        <div class="hd"><span class="hi"><svg viewBox="0 0 24 24"><path d="M3 9 L5 4 H19 L21 9 Z M4 9 V20 H20 V9 M9 20 V14 H15 V20"/></svg></span><div><b>Outlet operations</b>Live queue of open orders · Crew on shift · # of machines</div></div>
-        <div class="hd"><span class="hi"><svg viewBox="0 0 24 24"><circle cx="6" cy="17" r="3"/><circle cx="18" cy="17" r="3"/><path d="M6 17 H13 L16 8 H19 M13 17 L11 11 H7"/></svg></span><div><b>Delivery apps</b>Delivery orders · Rider waits</div></div>
-        <div class="hd g"><span class="hi"><svg viewBox="0 0 24 24"><path d="M4 12 a8 8 0 1 0 2.5 -5.8 M4 4 V8 H8 M12 8 V12 L15 14"/></svg></span><div><b>Historical events</b>Decisions made · Profitability outcomes</div></div>
-      </div>
-      <div class="hc">
-        <div class="hh"><span class="num">2</span><div><h3>Proposed AI agent</h3><small>Trigger, recommend, decide, with guardrails</small></div></div>
-        <div class="ha t"><span class="hp">Trigger</span><div><b>Wait runs long</b>A store's wait is, or is about to go, above {{dm.wait_threshold}} min.</div></div>
-        <div class="ha a"><span class="hp">AI agent</span><div><b>Recommend outlet, action, incentive</b>Predictive AI on live store data and patterns learnt from past decisions, within approved rules.</div></div>
-        <div class="ha p"><span class="hp">People decide</span><div><b>Customers and managers choose</b>Generative AI explains each recommendation; they accept or decline.</div></div>
-      </div>
-      <div class="hc">
-        <div class="hh"><span class="num">3</span><div><h3>What it does</h3><small>Example of actions at peak, and it keeps learning</small></div></div>
-        <div class="hw"><b>Offers a faster outlet</b>Routes pickups to the outlet that can hand over sooner.</div>
-        <div class="hw"><b>Recommends a delivery pause</b>Recommends pausing third-party delivery orders and redirecting demand; the zone manager reviews and approves.</div>
-        <div class="hl"><span>Continuous learning</span><b>Gets smarter over time</b>Every new decision and its outcome feed back in, so future decisions keep improving.</div>
-      </div>
-    </div>
-    <div class="hband">
-      <div class="hideas"><span class="hk2">The operations ideas behind it</span>
-        <dl><dt>Demand shaping</dt><dd>moving demand strategically</dd><dt>Capacity pooling</dt><dd>with nearby outlets</dd><dt>Reducing bottlenecks</dt><dd>dynamically</dd></dl></div>
-      <div class="hben"><span class="hk2">Key benefits</span>
-        <p><i>✓</i><span><b>Balances the zone</b>, thereby increasing sales</span></p>
-        <p><i>✓</i><span><b>Learns from past decisions and live data from stores</b> to raise profit while enhancing customer experience</span></p></div>
-    </div>
-  </div>
-  <div class="foot"><span>OPIM639 · Group 3 · proposed design; thresholds are illustrative</span><span class="rail"></span><span class="pg"></span></div>
-  <aside class="notes">
-    <p>A one-page summary of Proposal 1. The data: Chagee's app and sales, outlet operations, delivery apps and historical events, meaning decisions made and their profitability outcomes. The proposed AI agent: a trigger when a store's wait is, or is about to go, above {{dm.wait_threshold}} minutes, an illustrative setting; predictive AI recommends an outlet, an action and an incentive within approved rules; generative AI explains it, and customers and managers accept or decline.</p>
-    <p>What it does at the peak: offers a faster outlet for pickups, and recommends a delivery pause that the zone manager reviews and approves. Every decision and its outcome feed back in, so the model keeps learning. The operations ideas: demand shaping, capacity pooling with nearby outlets, and reducing bottlenecks dynamically. The benefits we expect, to be tested in the pilot: a better-balanced zone and more sales, and higher profit with a better customer experience. About thirty seconds.</p>
   </aside>
 </section>
 

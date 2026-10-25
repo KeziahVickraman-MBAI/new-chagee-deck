@@ -33,7 +33,7 @@
 
   /* ---------------------------------------------------------------- slides, scaling, rail */
   const deck = $(document, "#deck"), slides = $$(document, ".slide");
-  let cur = 0;
+  let cur = 0, jump = false;                                       // jump: an explicit link or slide number, which may open an auxiliary view
   const content = slides.filter(s => s.classList.contains("content") && s.dataset.chapter !== "Appendix");
   const chapters = [...new Set(content.map(s => s.dataset.chapter))];
   slides.forEach((s, i) => {
@@ -52,6 +52,14 @@
     deck.style.transform = `translate(${-640 * s}px,${-360 * s}px) scale(${s})`;
   }
   function show(i, fromEnd = false) {
+    // an auxiliary view (data-aux="its home slide", e.g. the illustrative explanation behind 04) is off the Next/Previous path:
+    // stepping passes over it, and stepping out of it, either way, returns to its home slide complete
+    if (!jump && Math.abs(i - cur) === 1) {
+      const from = slides[cur], to = slides[i];
+      if (from?.dataset.aux) { i = slides.indexOf(document.getElementById(from.dataset.aux)); fromEnd = true; }
+      else if (to?.dataset.aux) i += i > cur ? 1 : -1;
+    }
+    jump = false;
     cur = Math.max(0, Math.min(slides.length - 1, i));
     slides.forEach((s, k) => s.classList.toggle("active", k === cur));
     buildTo(slides[cur], fromEnd || revealAll || editingNow() ? Infinity : -1);
@@ -148,7 +156,7 @@
     gt.addEventListener("keydown", e => {
       e.stopPropagation();
       if (e.key === "Enter") { const n = parseInt(gt.value, 10);
-        if (n >= 1 && n <= slides.length) { show(n - 1); gt.blur(); } else { gt.classList.add("bad"); gt.select(); } }
+        if (n >= 1 && n <= slides.length) { jump = true; show(n - 1); gt.blur(); } else { gt.classList.add("bad"); gt.select(); } }
       else if (e.key === "Escape") { reset(); gt.blur(); }
     });
     gt.addEventListener("blur", reset);
@@ -3202,7 +3210,7 @@
     printers.push(closeAll);
   })();
   // appendix contents and in-slide links: each jumps to its page
-  $$(document, ".apxix li[data-go], .golink[data-go]").forEach(li => (li.onclick = () => show(slides.indexOf(document.getElementById(li.dataset.go)))));
+  $$(document, ".apxix li[data-go], .golink[data-go], .auxb[data-go]").forEach(li => (li.onclick = () => { jump = true; li.blur(); show(slides.indexOf(document.getElementById(li.dataset.go))); }));
 
   /* ---------------------------------------------------------------- print */
   function preparePrint() {
