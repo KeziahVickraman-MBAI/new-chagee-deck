@@ -615,16 +615,12 @@ def values(d: dict) -> dict:
 
 
 # ---------------------------------------------------------------------------- appendix
-USED = [  # (section, key, label) shown in the appendix: every input the storyboard slides rely on
+USED = [  # (section, key, label) shown in the appendix: every input the main slides and the appendix rely on (not "Considered" or the extension)
     ("store", "cups_per_store_per_year", "Cups per outlet per year"),
     ("store", "hourly_demand_share", "Share of the day's cups in each open hour"),
-    ("surge", "surge_multiplier", "Busy and event day multipliers"),
-    ("surge", "surge_hours", "Busiest hours the multiplier lands on"),
     ("stations", "human_seconds_per_cup", "Seconds per cup by hand, per station"),
     ("stations", "machine_seconds_per_cup", "Seconds per cup by robot, per station"),
     ("stations", "mixed_machine_stations", "Stations the robots do today"),
-    ("people", "worker_speed_spread", "Spread of worker speeds"),
-    ("people", "human_speed_variation_cv", "Minute-to-minute variation in pace"),
     ("people", "new_staff_share", "Share of new staff"),
     ("people", "new_staff_relative_speed", "New staff speed"),
     ("people", "coordination_loss_mixed", "Coordination loss, people around robots"),
@@ -632,8 +628,6 @@ USED = [  # (section, key, label) shown in the appendix: every input the storybo
     ("costs", "capacity_safety_margin", "Roster safety margin over the forecast"),
     ("costs", "labour_cost_per_hour", "Labour cost per hour worked (SGD)"),
     ("costs", "machine_cost_per_unit_per_month", "Robot cost per station unit per month (SGD)"),
-    ("people", "all_machine_attendant_per_open_hour", "Attendant hours, all-robot counter"),
-    ("storyboard", "walkaway_target", "Walk-away limit for the GM's split table"),
     ("sitepick", "events", "Synthetic app-intent dots (slide 12)"),
     ("sitepick", "walk_km", "Walking distance to collect"),
     ("sitepick", "decay_share", "Distance decay, share of the walking distance"),
@@ -641,12 +635,8 @@ USED = [  # (section, key, label) shown in the appendix: every input the storybo
     ("sitepick", "dbscan_eps_km", "DBSCAN cluster radius"),
     ("sitepick", "dbscan_min_points", "DBSCAN minimum searches"),
     ("sitepick", "km_per_px", "Map scale"),
-    ("service", "target_wait_minutes", "Wait at which a customer walks away"),
     ("storyboard", "price_per_cup", "Price per cup, in store (pin to profit, the benefit slide)"),
     ("storyboard", "gross_margin_per_cup", "Margin per cup, share of price (pin to profit, the benefit slide)"),
-    ("storyboard", "busy_days_per_year", "Busy days a year (the benefit slide, illustrative)"),
-    ("storyboard", "event_days_per_year", "Event days a year (the benefit slide, illustrative)"),
-    ("illustration", "walk_back_speed", "Walking-back speed (Week 5 units)"),
     ("site_ext", "scores", "Site scores, hand-set (four scores, pin to profit, illustrative)"),
     ("site_ext", "score_weights", "Site score weights (pin to profit, illustrative)"),
     ("site_ext", "rent_per_month", "Rent per outlet per month (pin to profit, assumption, not Chagee data)"),
@@ -670,14 +660,11 @@ def short(v) -> str:
 def appendix() -> str:
     esc = lambda s: str(s).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
     out = ["<h5>Facts quoted</h5>"]
-    for k, label in (("sg_outlets", "Outlets in Singapore"), ("revenue_share_franchise_fy2025", "Global context, group-wide, not Singapore: franchise share of FY2025 net revenue"),
-                     ("revenue_share_company_owned_fy2025", "Global context, group-wide, not Singapore: company-owned share of FY2025 net revenue"),
-                     ("registered_members_jun2026", "Registered members, group-wide, end of June 2026"),
-                     ("repeat_member_order_share", "Orders from members with two or more purchases, group-wide (more than)")):
+    for k, label in (("sg_outlets", "Outlets in Singapore"), ("revenue_share_franchise_fy2025", "Global context, group-wide, not Singapore: franchise share of FY2025 net revenue")):
         f = RAW["facts"][k]
         out.append(f"<p><b>{label}: {short(f['value'])}</b>. {esc(f['rationale'])} <i>[{esc(f['source'])}]</i></p>")
     out.append("<h5>Sources</h5>")
-    for k in ("L-sg-directory", "I-sg-owned", "L-koalagains", "L-yfchuhai", "L-sec20f", "L-unsw", "I-chagee-contact", "I-sg-groundfloor", "I-team-app-first", "L-ester1996", "P-honeycombers", "P-eatbook", "I-team-expansion", "I-team-site-framework", "L-chagee-q2-2026-call", "L-chagee-q1-2025", "P-appstore", "P-vulcanpost-comeback", "L-sec20f-data", "L-sec20f-member", "C-topic8", "I-chagee-contact-tiers", "C-topic1", "C-topic2"):
+    for k in ("L-sg-directory", "I-sg-owned", "L-koalagains", "L-yfchuhai", "L-sec20f", "I-chagee-contact", "L-ester1996", "P-honeycombers", "P-eatbook", "I-team-expansion", "I-team-site-framework", "P-appstore", "P-vulcanpost-comeback", "L-sec20f-data"):
         out.append(f"<p><b>{k}</b> {esc(RAW['_sources'][k])}</p>")
     out.append("<h5>Assumptions (assumptions.json, illustrative)</h5>")
     for sec, key, label in USED:
@@ -686,14 +673,13 @@ def appendix() -> str:
         out.append(f"<p><b>{esc(label)}</b>: {esc(short(o['value']))} {esc(unit)}</p>")
     out.append("<h5>Claims we did not make</h5>")
     out.append("<p>No Chagee sales, staffing or wait-time data is used; the forecast is not a trained model. "
-               "We do not claim the bucket brigade always beats fixed stations: with spare staff, a well-assigned "
-               "fixed line is as good or slightly faster. Machine breakdowns, breaks and order mix are not modelled.</p>")
+               "Machine breakdowns, breaks and order mix are not modelled.</p>")
     out.append("<p><b>Singapore ownership:</b> Chagee Singapore operates a company-owned model, not a franchise model, as confirmed by the "
                "project owner (I-sg-owned). That outlets run under one company and one data system is from an anonymous Chagee source "
                "(I-chagee-contact). Group-wide franchise revenue shares are global context only and are not applied to Singapore.</p>")
     out.append("<p>We make no claim about: <b>delivery profit by channel</b>; "
                "<b>Chagee's own equipment cost</b> (not public); <b>gross margin per cup</b> (our assumption); "
-               "<b>Chagee's current rostering</b> beyond what an anonymous Chagee source told us (people are deployed on local expertise by the GM and outlet teams; the benefit slide's baseline is ours).</p>")
+               "<b>Chagee's current rostering</b> beyond what an anonymous Chagee source told us (people are deployed on local expertise by the GM and outlet teams).</p>")
     return "\n".join(out)
 
 
