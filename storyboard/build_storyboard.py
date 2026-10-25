@@ -785,8 +785,8 @@ def tp_page(d: dict) -> str:
     return (f"<div class='p1xs'>{cells}</div>"
             "<p class='p2xnote'><b>Decision-maker:</b> the operations manager or outlet GM decides after each step whether to continue. Dedicated staff and topping-dispensing equipment are follow-up alternatives; a robotic arm stays an investigation needing evidence on topping compatibility, cleaning, space, safety, throughput and cost "
             "(<span class='golink' data-go='c7'>equipment, appendix</span>). No labour saving, sales or profit is estimated.</p>"
-            "<h5>Slide 08's comparison: every setting (assumptions.json toppings; illustrative, to validate with Chagee)</h5><table class='res mbt'>" + "".join(f"<tr><td>{a}</td><td>{b}</td></tr>" for a, b in rows) + "</table>"
-            "<p>The AI forecast of topping demand is proposed, not built: on slide 08 the share is set by hand. The alternative, flexible assistance with a manager's tablet, is kept on its own pages: "
+            "<h5>The toppings comparison: every setting (assumptions.json toppings; illustrative, to validate with Chagee)</h5><table class='res mbt'>" + "".join(f"<tr><td>{a}</td><td>{b}</td></tr>" for a, b in rows) + "</table>"
+            "<p>The AI forecast of topping demand is proposed, not built: on the comparison page the share is set by hand. The alternative, flexible assistance with a manager's tablet, is kept on its own pages: "
             "<span class='golink' data-go='s2b'>how the tablet works</span>. <span class='golink' data-go='s2c'>Back to the comparison</span></p>")
 
 
