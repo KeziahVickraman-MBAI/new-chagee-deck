@@ -22,6 +22,7 @@ from __future__ import annotations
 import base64
 import io
 import json, shutil
+import math
 import re
 import subprocess
 import sys
@@ -596,6 +597,11 @@ def values(d: dict) -> dict:
     if [sign(PDB["machines"][o]) for o in ("rp", "sc", "ch")] != [-1, 0, 1] or [sign(PDB["stock"][o]) for o in ("rp", "sc", "ch")] != [-1, 1, 1]:
         raise SystemExit("build: slide 07's dashboard arrows no longer match planning_dashboard's machines or stock; update the markup")
     v["p2.crew"], v["p2.hour"] = PDB["crew_moved"], PDB["refresh_hour"]
+    # appendix, Proposal 2 financial case: avoided overtime at the model's wage, less the recurring cost; hours that cover that cost
+    P2F, wage = RAW["p2_finance"], RAW["costs"]["labour_cost_per_hour"]["value"]
+    hrs, cost = P2F["overtime_hours_per_month"]["value"], P2F["recurring_cost_per_month"]["value"]
+    v["p2f.hours"], v["p2f.wage"], v["p2f.cost"] = hrs, wage, cost
+    v["p2f.saving"], v["p2f.net"], v["p2f.be_hours"] = round(hrs * wage), round(hrs * wage) - cost, math.ceil(cost / wage - 1e-9)
     for kind, key in (("mach", "machines"), ("stock", "stock")):
         for o, (now, rec) in PDB[key].items():
             v[f"p2.{kind}_{o}_now"], v[f"p2.{kind}_{o}_rec"] = now, rec

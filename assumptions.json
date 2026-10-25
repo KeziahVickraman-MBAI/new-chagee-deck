@@ -3294,6 +3294,29 @@
       "rationale": "Illustrative, as shown on the reference deck's slide 9 (chagee-deck.vercel.app); not Chagee data. Outlet names are real places used as labels."
     }
   },
+  "p2_finance": {
+    "_note": {
+      "value": "Appendix: Proposal 2 financial case. One pilot zone's illustrative month; the wage is costs.labour_cost_per_hour",
+      "unit": "text",
+      "range": null,
+      "source": "assumption",
+      "rationale": "The build derives the saving, the net and the break-even hours from these two and the wage."
+    },
+    "overtime_hours_per_month": {
+      "value": 60,
+      "unit": "overtime hours avoided per month across the pilot zone",
+      "range": null,
+      "source": "assumption",
+      "rationale": "Illustrative, as on the reference deck's Proposal 2 financial case (chagee-deck.vercel.app, slide 19); not Chagee data."
+    },
+    "recurring_cost_per_month": {
+      "value": 300,
+      "unit": "S$ per month, recurring system and support cost",
+      "range": null,
+      "source": "assumption",
+      "rationale": "Illustrative, as on the reference deck's Proposal 2 financial case (chagee-deck.vercel.app, slide 19); not Chagee data."
+    }
+  },
   "toppings": {
     "_note": {
       "value": "Slides 06 to 08: Proposal 2, can the same crew absorb toppings? Fixed responsibilities against a bucket brigade",

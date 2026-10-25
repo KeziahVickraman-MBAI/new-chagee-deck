@@ -1761,8 +1761,8 @@ body.print #e2 *{transition:none!important}
 .ag-learn ol b:is(#p1x,#p1x *){color: var(--ink);}
 .gate:is(#p1x,#p1x *){margin: 10px 0px 0px; padding: 7px 14px; border-radius: 12px; background: rgb(255, 255, 255); border-left: 4px solid var(--navy); font: 13.5px/1.4 var(--sans); color: var(--navy);}
 .gate .lab:is(#p1x,#p1x *){display: block; margin-bottom: 2px; font: 700 10px/1.3 var(--sans); letter-spacing: 0.14em; text-transform: uppercase; color: rgb(74, 102, 153);}
-.slide.content .kicker:is(#p1x,#p1x *,#p1r,#p1r *){font: 600 12px/1.2 var(--sans); letter-spacing: 0.16em; color: rgb(74, 102, 153); margin: 0px 0px 10px;}
-.slide.content .head:is(#p1x,#p1x *,#p1r,#p1r *){font: 500 42px/1.08 var(--serif); color: var(--navy); letter-spacing: -0.01em; max-width: 1000px;}
+.slide.content .kicker:is(#p1x,#p1x *,#p1r,#p1r *){font: 600 12px/1.2 var(--sans); letter-spacing: 0.16em; color: var(--red); margin: 0px 0px 10px;}
+.slide.content .head:is(#p1x,#p1x *,#p1r,#p1r *){font: 500 42px/1.08 var(--serif); color: var(--ink); letter-spacing: -0.01em; max-width: 1000px;}
 .slide.content .sub:is(#p1x,#p1x *,#p1r,#p1r *){font-size: 16px; color: rgb(122, 117, 108);}
 @keyframes rtgrow { 
   0% { width: 0px; }
@@ -1774,11 +1774,9 @@ body.print #e2 *{transition:none!important}
    Taken from the reference deck (chagee-deck.vercel.app, slides 8 and 9 and its Proposal 2 pilot page): the rules that style
    those slides, each scoped to them by an :is(#id,#id *) on its subject so nothing reaches the rest of this deck. #p2pilot is
    the reference's #p2x (this deck's #p2x is the toppings execution steps). The reference's theme variables are set here too. */
-:is(#p2p,#p2b,#p2pilot){--shadow:0 1px 2px rgba(0,0,0,.04),0 14px 34px -14px rgba(36,64,107,.22); --wash:#FAF8F3}
+:is(#p2p,#p2b,#p2pilot,#p2f){--shadow:0 1px 2px rgba(0,0,0,.04),0 14px 34px -14px rgba(36,64,107,.22); --wash:#FAF8F3}
 #p2b{--emb:url({img:emblem})}
 .num:is(#p2b,#p2b *){flex:none;display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;background:var(--red);color:#fff;font:600 11px/1 var(--sans);margin-top:1px}
-.slide.content .lede:is(#p2pilot,#p2pilot *){margin:10px 0 0;font:400 19px/1.35 var(--sans);color:var(--ink2)}
-.slide.content .sub.lede:is(#p2pilot,#p2pilot *){font-style:normal}
 #p2p .p2-panel:is(#p2p,#p2p *){flex:1;min-height:0;display:flex;flex-direction:column;margin:16px 0 0;border-radius:22px;background:#FBF7F0}
 #p2p .pb-title:is(#p2p,#p2p *){display:flex;align-items:center;gap:14px;padding:16px 28px 0}
 #p2p .pb-title h3:is(#p2p,#p2p *){margin:0;font:500 21px/1.2 var(--serif);color:var(--navy)}
@@ -1995,18 +1993,6 @@ body.print #e2 *{transition:none!important}
 #p2b .db-loop li b:is(#p2b,#p2b *){font:500 16px/1.2 var(--serif);color:var(--navy)}
 .db-lkp:is(#p2b,#p2b *){margin:3px 0 0 !important;font:italic 13px/1.4 var(--sans) !important;color:#2F6B45 !important}
 .db-hero .golink:is(#p2b,#p2b *){margin:auto 0 0;align-self:flex-start}
-.p2x-grid:is(#p2pilot,#p2pilot *){flex:1;min-height:0;display:grid;grid-template-columns:1.1fr 1fr;gap:26px;margin-top:22px;align-items:start}
-.p2x-tl:is(#p2pilot,#p2pilot *),.p2x-diag:is(#p2pilot,#p2pilot *){border-radius:18px;background:#FBF7F0;padding:20px 26px 22px}
-.p2x-diag:is(#p2pilot,#p2pilot *){background:#F4F6FA}
-.p2x-tl ol:is(#p2pilot,#p2pilot *){list-style:none;margin:6px 0 0;padding:0;display:flex;flex-direction:column;gap:14px}
-.p2x-tl li:is(#p2pilot,#p2pilot *){display:grid;grid-template-columns:64px 1fr;gap:12px;align-items:start}
-.p2x-tl .wk:is(#p2pilot,#p2pilot *){padding:3px 0;border-radius:999px;background:var(--navy);color:#fff;text-align:center;font:700 12px/1.4 var(--sans)}
-.p2x-tl b:is(#p2pilot,#p2pilot *),.dg b:is(#p2pilot,#p2pilot *){display:block;font:500 19px/1.2 var(--serif);color:var(--navy)}
-.p2x-tl li span:is(#p2pilot,#p2pilot *),.dg span:is(#p2pilot,#p2pilot *){font:14px/1.45 var(--sans);color:var(--ink2)}
-.p2x-own:is(#p2pilot,#p2pilot *){margin:16px 0 0;font:13px/1.4 var(--sans);color:var(--ink2)}
-.p2x-own b:is(#p2pilot,#p2pilot *){display:inline;margin-right:8px;font:700 10.5px/1 var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--red)}
-.p2x-diag h4:is(#p2pilot,#p2pilot *){margin:0 0 12px;font:500 22px/1.2 var(--serif);color:var(--ink)}
-.dg:is(#p2pilot,#p2pilot *){padding:10px 0;border-top:1px solid #DFE5EE}
 .pb-with:is(#p2p,#p2p *){padding:13px 26px 15px;border-radius:18px;background:#F4F8F5}
 .pb-whd:is(#p2p,#p2p *){display:flex;align-items:baseline;gap:14px;margin-bottom:8px}
 .pb-whd span:is(#p2p,#p2p *){font:500 23px/1 var(--serif);color:#2F6B45}
@@ -2015,7 +2001,7 @@ body.print #e2 *{transition:none!important}
 .pb-gains i:is(#p2p,#p2p *){grid-row:span 2;display:grid;place-items:center;width:24px;height:24px;border-radius:50%;background:#2F6B45;color:#fff;font:700 13px/1 var(--sans);font-style:normal}
 .pb-gains b:is(#p2p,#p2p *){font:700 15.5px/1.3 var(--sans);color:var(--ink)}
 .pb-gains span:is(#p2p,#p2p *){font:14px/1.45 var(--sans);color:var(--ink2)}
-.hw-ohd:is(#p2b,#p2b *,#p2pilot,#p2pilot *){margin:0 0 8px;font:700 13px/1.2 var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--red)}
+.hw-ohd:is(#p2b,#p2b *){margin:0 0 8px;font:700 13px/1.2 var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--red)}
 .hw-link:is(#p2b,#p2b *){flex:none;padding:7px 14px;border-radius:999px;background:var(--navy);color:#fff !important;border:0 !important;font:600 12.5px/1 var(--sans)}
 #p2b .db-win:is(#p2b,#p2b *){border:1px solid #EFE6D8;background:#FCF8F2}
 #p2b .db-bar:is(#p2b,#p2b *){background:linear-gradient(90deg,#F8E1DD,#FBEDEA);border-bottom:1px solid #F1D3CD}
@@ -2023,11 +2009,42 @@ body.print #e2 *{transition:none!important}
 #p2b .db-bar:is(#p2b,#p2b *)::before{content:"";width:20px;height:20px;flex:none;background:var(--emb) no-repeat center/contain}
 #p2b .db-name:is(#p2b,#p2b *){color:#9E2A24;font-weight:700}
 #p2b .db-card:is(#p2b,#p2b *){background:#fff;border-radius:14px;box-shadow:0 3px 12px -8px rgba(36,64,107,.3)}
-.slide.content:is(#p2p,#p2p *,#p2b,#p2b *,#p2pilot,#p2pilot *){background:linear-gradient(180deg,var(--wash) 0,#fff 120px)}
-.slide.content .sub:is(#p2pilot,#p2pilot *){font-size:16px;color:#7A756C}
-.slide.content .rail span.cur:is(#p2p,#p2p *,#p2b,#p2b *,#p2pilot,#p2pilot *){color:var(--navy);font-weight:700}
-.slide.content .foot .rail:is(#p2p,#p2p *,#p2b,#p2b *,#p2pilot,#p2pilot *){margin-left:auto;margin-right:14px;padding-right:14px;border-right:1px solid #CFC8BB}
+.slide.content:is(#p2p,#p2p *,#p2b,#p2b *){background:linear-gradient(180deg,var(--wash) 0,#fff 120px)}
+.slide.content .rail span.cur:is(#p2p,#p2p *,#p2b,#p2b *){color:var(--navy);font-weight:700}
+.slide.content .foot .rail:is(#p2p,#p2p *,#p2b,#p2b *){margin-left:auto;margin-right:14px;padding-right:14px;border-right:1px solid #CFC8BB}
 @keyframes dbspin{to{transform:rotate(360deg)}}
+/* the appendix pilot and financial case (#p2pilot, #p2f) as on the reference deck (its #p2x and #p2f, slides 18 and 19): its
+   rules for them, scoped the same way, including its own header styling, which these two keep in place of the shared one */
+.kicker:is(#p2pilot,#p2pilot *,#p2f,#p2f *){font:500 12px/1 var(--sans);letter-spacing:.2em;text-transform:uppercase;color:var(--red);margin:0 0 10px}
+.slide.content .lede:is(#p2pilot,#p2pilot *,#p2f,#p2f *){margin:10px 0 0;font:400 19px/1.35 var(--sans);color:var(--ink2)}
+.slide.content .sub.lede:is(#p2pilot,#p2pilot *,#p2f,#p2f *){font-style:normal}
+.p2x-grid:is(#p2pilot,#p2pilot *,#p2f,#p2f *){flex:1;min-height:0;display:grid;grid-template-columns:1.1fr 1fr;gap:26px;margin-top:22px;align-items:start}
+.p2x-tl:is(#p2pilot,#p2pilot *),.p2x-diag:is(#p2pilot,#p2pilot *,#p2f,#p2f *),.p2f-case:is(#p2f,#p2f *){border-radius:18px;background:#FBF7F0;padding:20px 26px 22px}
+.p2x-diag:is(#p2pilot,#p2pilot *,#p2f,#p2f *){background:#F4F6FA}
+.p2x-tl ol:is(#p2pilot,#p2pilot *){list-style:none;margin:6px 0 0;padding:0;display:flex;flex-direction:column;gap:14px}
+.p2x-tl li:is(#p2pilot,#p2pilot *){display:grid;grid-template-columns:64px 1fr;gap:12px;align-items:start}
+.p2x-tl .wk:is(#p2pilot,#p2pilot *){padding:3px 0;border-radius:999px;background:var(--navy);color:#fff;text-align:center;font:700 12px/1.4 var(--sans)}
+.p2x-tl b:is(#p2pilot,#p2pilot *),.dg b:is(#p2pilot,#p2pilot *,#p2f,#p2f *){display:block;font:500 19px/1.2 var(--serif);color:var(--navy)}
+.p2x-tl li span:is(#p2pilot,#p2pilot *),.dg span:is(#p2pilot,#p2pilot *,#p2f,#p2f *){font:14px/1.45 var(--sans);color:var(--ink2)}
+.p2x-own:is(#p2pilot,#p2pilot *){margin:16px 0 0;font:13px/1.4 var(--sans);color:var(--ink2)}
+.p2x-own b:is(#p2pilot,#p2pilot *){display:inline;margin-right:8px;font:700 10.5px/1 var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--red)}
+.p2x-diag h4:is(#p2pilot,#p2pilot *){margin:0 0 12px;font:500 22px/1.2 var(--serif);color:var(--ink)}
+.dg:is(#p2pilot,#p2pilot *,#p2f,#p2f *){padding:10px 0;border-top:1px solid #DFE5EE}
+.p2f-t:is(#p2f,#p2f *){width:100%;border-collapse:collapse;margin-top:6px;font:14.5px/1.4 var(--sans)}
+.p2f-t th:is(#p2f,#p2f *){text-align:left;padding:8px 12px;background:var(--navy);color:#fff;font-weight:600}
+.p2f-t th:last-child:is(#p2f,#p2f *),.p2f-t td:last-child:is(#p2f,#p2f *){text-align:right;width:110px}
+.p2f-t td:is(#p2f,#p2f *){padding:9px 12px;border-bottom:1px solid #EADFCD;color:var(--ink2)}
+.p2f-t tr.tot td:is(#p2f,#p2f *){font-weight:700;color:var(--navy);background:#fff}
+.p2f-be:is(#p2f,#p2f *){margin-top:16px;display:flex;flex-direction:column;gap:3px}
+.p2f-be b:is(#p2f,#p2f *){font:500 26px/1.1 var(--serif);color:var(--red)}
+.p2f-be span:is(#p2f,#p2f *){font:14px/1.45 var(--sans);color:var(--ink2)}
+.hw-ohd:is(#p2pilot,#p2pilot *,#p2f,#p2f *){margin:0 0 8px;font:700 13px/1.2 var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--red)}
+.slide.content:is(#p2pilot,#p2pilot *,#p2f,#p2f *){background:linear-gradient(180deg,var(--wash) 0,#fff 120px)}
+.slide.content .kicker:is(#p2pilot,#p2pilot *,#p2f,#p2f *){font:600 12px/1.2 var(--sans);letter-spacing:.16em;color:#4A6699;margin:0 0 10px}
+.slide.content .head:is(#p2pilot,#p2pilot *,#p2f,#p2f *){font:500 42px/1.08 var(--serif);color:var(--navy);letter-spacing:-.01em;max-width:1000px}
+.slide.content .sub:is(#p2pilot,#p2pilot *,#p2f,#p2f *){font-size:16px;color:#7A756C}
+.slide.content .rail span.cur:is(#p2pilot,#p2pilot *,#p2f,#p2f *){color:var(--navy);font-weight:700}
+.slide.content .foot .rail:is(#p2pilot,#p2pilot *,#p2f,#p2f *){margin-left:auto;margin-right:14px;padding-right:14px;border-right:1px solid #CFC8BB}
 /* ---------------------------------------------------------------- the earlier online slides, now in the appendix (overview, offers, pickup rewards, case) */
 #oo .oo3{flex:1;min-height:0;display:grid;grid-template-columns:1fr 44px 1fr 44px 1fr;align-items:center;gap:6px;margin-top:14px}
 #oo .oon{height:100%;display:flex;flex-direction:column;align-items:center;gap:10px;padding:14px 16px 16px;background:#fff;border:1px solid var(--line);border-top:4px solid var(--navy);border-radius:16px;box-shadow:0 1px 2px rgba(0,0,0,.04),0 14px 34px -14px rgba(36,64,107,.22)}
@@ -3071,7 +3088,7 @@ aside.notes{display:none}
     <h2 class="head">Appendix: the detail behind each chapter</h2>
     <p class="sub">Supporting detail for the main presentation, in its order: Proposal 1, Proposal 2, Proposal 3, then shared material. Click a line to open it; use the agenda to return.</p>
     <div class="apxix">
-      <div><h5>Proposal 1 · online retailing</h5><ol><li data-go="p1x">Pilot smart pickup routing in one zone</li><li data-go="p1r">Your tea, sooner: the pickup race</li></ol><h5>Proposal 2 · in-store planning</h5><ol><li data-go="p2pilot">Eight-week zone pilot</li></ol></div>
+      <div><h5>Proposal 1 · online retailing</h5><ol><li data-go="p1x">Pilot smart pickup routing in one zone</li><li data-go="p1r">Your tea, sooner: the pickup race</li></ol><h5>Proposal 2 · in-store planning</h5><ol><li data-go="p2pilot">Eight-week zone pilot</li><li data-go="p2f">Financial case</li></ol></div>
       <div><h5>Proposal 3 · new store expansion</h5><ol><li data-go="a2">How the site forecast works</li><li data-go="ap">The new store in money: five-year P&amp;L</li><li data-go="x1">Four scores for every location</li><li data-go="e2t">The expansion decision as a table</li><li data-go="xo">Further application: existing outlets</li></ol></div>
       <div><h5>Shared · data and sources</h5><ol><li data-go="adata">Chagee's data collection</li><li data-go="a1">Sources and assumptions</li></ol></div>
     </div>
@@ -3158,15 +3175,15 @@ aside.notes{display:none}
         </div>
       </div>
       <div class="rt-right">
-        <div class="phone rt-phone"><div class="notch"></div><div class="scr">
+        <div class="phone rt-phone" data-near="{{pr.near_collect}}" data-far="{{pr.far_collect}}"><div class="notch"></div><div class="scr">
           <div class="scroll">
             <div class="bar"><span class="tm"></span><span>●●●</span></div>
             <div class="hd"><div class="brand"><i class="emb"></i>CHAGEE</div><small>Pickup · Suntec City</small><h3>Your tea, sooner</h3></div>
             <div class="bd">
               <div class="crd sug"><small class="tag ai">Suggested for you</small><h5 style="margin-top:3px">Collect at Raffles City in about {{pr.far_collect}} min</h5><p>instead of {{pr.near_collect}} min at Suntec City.</p></div>
               <div class="crd"><p>Optional: a complimentary carrier bag, if you need one.</p></div>
-              <button class="cta">Switch to Raffles City</button>
-              <button class="cta ghost">Keep Suntec City</button>
+              <button class="cta" data-rr="sw">Switch to Raffles City</button>
+              <button class="cta ghost" data-rr="kp">Keep Suntec City</button>
               <span class="sim">You choose before you pay.</span>
             </div>
           </div>
@@ -3214,6 +3231,37 @@ aside.notes{display:none}
   </div>
   <div class="foot"><span>OPIM639 · Group 3 · appendix · pilot design, proposed</span><span class="rail"></span><span class="pg"></span></div>
   <aside class="notes"><p>The pilot for proposal two. Weeks one and two: pick one busy outlet and one or two support outlets, audit the data and today's planning, and run shadow forecasts. Weeks three to six: test the AI rosters and staff moves against matched periods, counting travel time, cover at the lending outlet and holiday demand. Weeks seven and eight: review the benefit across the whole zone, and extend if holiday or peak observations are too thin. If one outlet takes about three times longer than its peers, investigate before adding capacity: arrivals and staffing before preparation, machines and layout during it, and the hand-over after.</p></aside>
+</section>
+
+<!-- ======================================================= APPENDIX: PROPOSAL 2 FINANCIAL CASE (the reference deck's p2f) -->
+<section class="slide content" id="p2f" data-chapter="Appendix" data-title="Proposal 2 financial case">
+  <div class="leafart" aria-hidden="true"></div>
+  <div class="inner">
+    <p class="kicker">Appendix · Business impact · Proposal 2 financial case</p>
+    <h2 class="head">The financial case depends on realised improvements</h2>
+    <p class="sub lede">Measure avoided paid hours, retained sales and equipment returns across the whole zone. <span class="golink" data-go="p2b">Back to how it works</span></p>
+    <div class="p2x-grid">
+      <div class="p2f-case">
+        <p class="hw-ohd">Illustrative monthly zone case</p>
+        <table class="p2f-t">
+          <tr><th>Benefit or cost</th><th>S$ a month</th></tr>
+          <tr><td>Avoided overtime: {{p2f.hours}} h × S${{p2f.wage|c2}}</td><td>{{p2f.saving}}</td></tr>
+          <tr><td>Recurring system and support cost</td><td>−{{p2f.cost}}</td></tr>
+          <tr class="tot"><td>Net, before set-up and sales upside</td><td>{{p2f.net}}</td></tr>
+        </table>
+        <div class="p2f-be"><b>{{p2f.be_hours}} paid hours a month</b><span>cover the S${{p2f.cost}} recurring cost. Set-up, training and transfer costs are extra.</span></div>
+      </div>
+      <div class="p2x-diag">
+        <p class="hw-ohd">What finance must verify</p>
+        <div class="dg"><b>Labour savings</b><span>Count only fewer paid hours or less overtime. Moving an employee is not itself a saving.</span></div>
+        <div class="dg"><b>Retained sales</b><span>Count otherwise-lost purchases at contribution margin, net of added costs.</span></div>
+        <div class="dg"><b>Waste</b><span>Count only lower write-offs of perishables, not stock moved between outlets.</span></div>
+        <div class="dg"><b>Equipment</b><span>Approve only if the extra cash benefit justifies the installed cost and running expense.</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>OPIM639 · Group 3 · appendix · illustrative assumptions, no Chagee cost or savings data</span><span class="rail"></span><span class="pg"></span></div>
+  <aside class="notes"><p>An illustrative monthly case for one pilot zone, on our assumptions, not Chagee's data. Avoiding {{p2f.hours}} overtime hours at the model's wage of about S${{p2f.wage|c2}} an hour saves about S${{p2f.saving}}; less a recurring system cost of S${{p2f.cost}}, that nets about S${{p2f.net}} a month before set-up costs and any sales upside. Put the other way, about {{p2f.be_hours}} paid hours a month cover the recurring cost. Finance should count only real reductions in paid hours, retained sales at contribution margin, and equipment only where the cash benefit justifies it.</p></aside>
 </section>
 
 <!-- ======================================================= APPENDIX: SITE FORECAST -->
