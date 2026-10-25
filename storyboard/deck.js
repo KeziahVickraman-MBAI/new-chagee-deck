@@ -53,16 +53,18 @@
   }
   function show(i, fromEnd = false) {
     // an auxiliary view (data-aux="its home slide", e.g. the illustrative explanation behind 04) is off the Next/Previous path:
-    // stepping passes over it, and stepping out of it, either way, returns to its home slide complete
+    // stepping passes over it, and stepping out of it, either way, returns to its home slide as it was left
+    const home = slides[cur]?.dataset.aux;
     if (!jump && Math.abs(i - cur) === 1) {
       const from = slides[cur], to = slides[i];
-      if (from?.dataset.aux) { i = slides.indexOf(document.getElementById(from.dataset.aux)); fromEnd = true; }
+      if (from?.dataset.aux) i = slides.indexOf(document.getElementById(from.dataset.aux));
       else if (to?.dataset.aux) i += i > cur ? 1 : -1;
     }
     jump = false;
+    const kept = home && slides[i]?.id === home ? slides[i]._b ?? -1 : null;   // back from an auxiliary view: its home's reveal state
     cur = Math.max(0, Math.min(slides.length - 1, i));
     slides.forEach((s, k) => s.classList.toggle("active", k === cur));
-    buildTo(slides[cur], fromEnd || revealAll || editingNow() ? Infinity : -1);
+    buildTo(slides[cur], fromEnd || revealAll || editingNow() ? Infinity : kept ?? -1);
     slides[cur]._intro?.enter(fromEnd);                             // a slide with its own steps (03 to 05, 10, the earlier online page) starts there
     const gt = $(document, "#goto"); if (document.activeElement !== gt) gt.value = cur + 1; $(document, "#count .tot").textContent = `/ ${slides.length}`;
     const n = $(slides[cur], "aside.notes");
