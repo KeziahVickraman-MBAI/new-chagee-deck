@@ -2016,7 +2016,7 @@ body.print #e2 *{transition:none!important}
    stages, a back link without the arrow, and a line of links */
 #p3x.slide .p2x-tl ol{counter-reset:p3s} #p3x.slide .p2x-tl li{counter-increment:p3s;grid-template-columns:28px 1fr}
 #p3x.slide .p2x-tl .wk{display:grid;place-items:center;width:28px;height:28px;padding:0;border-radius:50%} #p3x.slide .p2x-tl .wk::before{content:counter(p3s)}
-#p3x .golink.back:after{content:none}
+#p3x .golink.back:after{content:none} :is(#x1b,#x2) .golink.back:after{content:none} #p3x .golink.mlref{margin-left:0}
 #p3x .p3x-links{margin:10px 0 0;font:13px/1.4 var(--sans);color:var(--ink2)} #p3x .p3x-links .golink{margin:0 14px 0 6px}
 #p3x .gate b{display:block;font:600 14.5px/1.35 var(--sans)}
 #e2 .e2exec{flex:none;align-self:flex-end;margin:auto 0 0;padding:7px 14px;border-radius:999px;background:var(--navy);color:#fff;border:0;font:600 12.5px/1 var(--sans)}   /* as Proposal 2's Execution steps */
@@ -3283,7 +3283,7 @@ aside.notes{display:none}
         <p class="hw-ohd">Three validation stages</p>
         <ol>
           <li><span class="wk"></span><div><b>Validate demand</b><span>Rerun the analysis using real app searches and orders. Check distinct potential customers, demand across weeks and coverage by existing outlets.</span></div></li>
-          <li><span class="wk"></span><div><b>Validate the site</b><span>Shortlist available units. Check walking access, footfall, competition and nearby Chagee outlets. Where feasible, test purchase interest through a temporary activation or pickup trial.</span></div></li>
+          <li><span class="wk"></span><div><b>Validate the site</b><span>Shortlist available units. Check walking access, footfall, competition and nearby Chagee outlets. Where feasible, test purchase interest through a temporary activation or pickup trial. (<span class="golink mlref" data-go="x1b" tabindex="0" role="link">see simulated ML model</span>)</span></div></li>
           <li><span class="wk"></span><div><b>Validate the economics</b><span>Use actual rent quotes, fit-out costs, staffing requirements and realistic sales estimates. Recalculate cannibalisation, operating profit and payback under low, base and high demand.</span></div></li>
         </ol>
         <p class="p2x-own"><b>Owners</b> Expansion manager · operations · finance · data team</p>
@@ -4972,6 +4972,7 @@ aside.notes{display:none}
   <div class="leafart" aria-hidden="true"></div>
   <div class="inner stepper" data-steps="4">
     <p class="kicker">Considered · The supervised model behind the scores<span class="ext">Extension: where this scales next. Not included in the S$ benefit.</span></p>
+    <p class="exoback screenonly" style="position:absolute;right:72px;top:84px;margin:0;z-index:3;padding:2px 6px;border-radius:4px;background:rgba(255,255,255,.92)"><span class="golink back" data-go="p3x" tabindex="0" role="link">← Back to appendix</span></p>
     <h2 class="head" style="max-width:1000px">Trained on Singapore's outlets, the model picks where to open in a city where Chagee has no data yet</h2>
     <p class="sub">Supervised learning: keep only the inputs a new city has, test the model on outlets it has not seen, then let it score every spot in a hypothetical city (illustrative, synthetic).</p>
     <div class="body" style="grid-template-columns:1fr 318px;gap:18px;margin-top:10px">
@@ -5008,6 +5009,7 @@ aside.notes{display:none}
   <div class="leafart" aria-hidden="true"></div>
   <div class="inner stepper" data-steps="6">
     <p class="kicker">Considered · From pin to net profit · corporate expansion planning<span class="ext">Extension: where this scales next. Not included in the S$ benefit.</span></p>
+    <p class="exoback screenonly" style="position:absolute;right:72px;top:84px;margin:0;z-index:3;padding:2px 6px;border-radius:4px;background:rgba(255,255,255,.92)"><span class="golink back" data-go="p3x" tabindex="0" role="link">← Back to appendix</span></p>
     <h2 class="head">From pin to net profit</h2>
     <p class="sub">Six steps from a pin to a go / no-go, on profit net to Chagee overall (illustrative). Decision owner here: the expansion manager.</p>
     <div class="xsteps">
