@@ -396,6 +396,7 @@ html,body{margin:0;background:#E7E3DC;color:var(--ink);font-family:var(--sans);-
 :root{--dmg:#1F5A3A}   /* decision-maker labels: one deep green across the three solutions */
 .dm:not(:where(.k)){display:inline-flex;align-items:baseline;gap:6px;margin-left:12px;vertical-align:1px;background:var(--dmg);color:#fff;border-radius:999px;padding:4px 11px;font:600 11px/1.2 var(--sans);letter-spacing:.02em;text-transform:none;-webkit-print-color-adjust:exact;print-color-adjust:exact}   /* not slide 06's legend swatch, .k.dm */
 .dm i{white-space:nowrap;font:600 9px/1 var(--sans);font-style:normal;letter-spacing:.12em;text-transform:uppercase;color:#CFE3D6}
+.ctag i{font:600 9px/1 var(--sans);font-style:normal;letter-spacing:.12em;text-transform:uppercase;color:#C9D4E8;margin-right:6px;vertical-align:1px}
 .ctag{display:inline-block;margin-left:14px;vertical-align:1px;background:var(--navy);color:#fff;border-radius:999px;padding:4px 11px;font:600 11.5px/1.2 var(--sans);letter-spacing:.02em;text-transform:none}
 /* ---------- 08 machine ladder, decision view ---------- */
 .lchart{width:100%;height:auto;display:block;margin-top:4px;background:#fff;border:1px solid var(--line);border-radius:9px}
@@ -2240,7 +2241,7 @@ aside.notes{display:none}
 <section class="slide content" id="p1p" data-chapter="Online" data-reveal="all" data-title="When an outlet is swamped">
   <div class="leafart" aria-hidden="true"></div>
   <div class="inner">
-    <p class="kicker">03 · Online retailing · the business problem<span class="stg"><b>Online</b><i class="on">Problem</i><i>Solution</i><i>Decision</i></span><span class="dm"><i>Decision-maker</i>Digital commerce manager, with operations</span></p>
+    <p class="kicker">03 · Online retailing · the business problem<span class="dm"><i>Decision-maker</i>Digital commerce manager, with operations</span></p>
     <h2 class="head">Proposal 1: AI-enabled demand management</h2>
     <p class="bprob keep"><b>Key challenge</b><span>Demand management: crowded outlets lose sales, and the customer experience suffers.</span></p>
     <div class="p1panel keep">
@@ -2267,7 +2268,7 @@ aside.notes{display:none}
 <section class="slide content" id="p1h" data-chapter="Online" data-title="Proposal 1: how it works">
   <div class="leafart" aria-hidden="true"></div>
   <div class="inner">
-    <p class="kicker hk">04 · Online retailing · how it works<span class="stg"><b>Online</b><i>Problem</i><i class="on">Solution</i><i>Decision</i></span><span class="dm"><i>Decision-maker</i>Digital commerce manager, with operations</span></p>
+    <p class="kicker hk">04 · Online retailing · how it works<span class="dm"><i>Decision-maker</i>Digital commerce manager, with operations</span><span class="ctag"><i>Course link</i>Topics 3 &amp; 9 · Demand prediction and omnichannel fulfilment</span></p>
     <button class="btn auxb screenonly keep" data-go="p1b" title="The same solution, animated step by step (optional)">See illustrative explanation →</button>
     <h2 class="head">From Chagee's data to demand spread across outlets</h2>
     <p class="hsub keep">An AI agent uses predictive AI to recommend, generative AI explains, and people make the final call.</p>
@@ -2312,7 +2313,7 @@ aside.notes{display:none}
 <section class="slide content" id="p1b" data-chapter="Online" data-reveal="all" data-aux="p1h" data-title="How the solution works: illustrative explanation">
   <div class="leafart" aria-hidden="true"></div>
   <div class="inner">
-    <p class="kicker">Online retailing · illustrative explanation<span class="stg"><b>Online</b><i>Problem</i><i class="on">Solution</i><i>Decision</i></span><span class="dm"><i>Decision-maker</i>Digital commerce manager, with operations</span></p>
+    <p class="kicker">Online retailing · illustrative explanation<span class="dm"><i>Decision-maker</i>Digital commerce manager, with operations</span></p>
     <button class="btn auxb back screenonly" data-go="p1h">← Back to proposal</button>
     <h2 class="head">From Chagee's data to better-balanced demand</h2>
     <p class="bprob keep"><b>The solution</b><span>Predictive AI recommends, generative AI explains, and people decide.</span></p>
@@ -2418,7 +2419,7 @@ aside.notes{display:none}
 <section class="slide content" id="p1a" data-chapter="Online" data-reveal="all" data-title="The customer experience">
   <div class="leafart" aria-hidden="true"></div>
   <div class="inner">
-    <p class="kicker">05 · Online retailing · the customer experience<span class="stg"><b>Online</b><i>Problem</i><i class="on">Solution</i><i class="on">Decision</i></span><span class="dm"><i>Decision-maker</i>Digital commerce manager, with operations</span></p>
+    <p class="kicker">05 · Online retailing · the customer experience<span class="dm"><i>Decision-maker</i>Digital commerce manager, with operations</span></p>
     <h2 class="head">Customers get a faster outlet; managers approve delivery actions</h2>
     <p class="bprob keep"><b>Illustrative scenario</b><span data-cx="scen"></span></p>
     <div class="cxw keep" style="--emb:url({img:emblem})">
@@ -2494,7 +2495,7 @@ aside.notes{display:none}
 <section class="slide content" id="p2b" data-chapter="Serve" data-title="How AI-assisted staffing works" data-reveal="all">
   <div class="leafart" aria-hidden="true"></div>
   <div class="inner">
-    <p class="kicker">07 · In-store management · how it works</p>
+    <p class="kicker">07 · In-store management · how it works<span class="ctag"><i>Course link</i>Topics 3 &amp; 4 · Demand forecasting and resource allocation</span></p>
     <h2 class="head">Managers can use insights to plan and manage stores better</h2>
     <div class="db-flow">
       <span class="db-fl-lab">How it works</span>
@@ -2615,7 +2616,7 @@ aside.notes{display:none}
 <section class="slide content ovslide" id="c5" data-chapter="Expand" data-title="Predict demand for a new store">
   <div class="leafart" aria-hidden="true"></div>
   <div class="inner">
-    <p class="kicker">08 · Expand · where to open next<span class="stg"><b>Expand</b><i class="on">Problem</i><i class="on">Solution</i><i>Decision</i></span><span class="dm"><i>Decision-maker</i>Expansion manager</span><span class="ctag">Course link · Week 3 · Analytics and AI</span></p>
+    <p class="kicker">08 · Expand · where to open next<span class="dm"><i>Decision-maker</i>Expansion manager</span><span class="ctag"><i>Course link</i>Topic 3 · Analytics and AI: data-driven demand prediction</span></p>
     <h2 class="head">Proposal 3: Open where an outlet adds customers, not where it moves them</h2>
     <p class="bprob keep"><b>Business problem</b><span>Chagee needs to identify locations with sufficient additional demand and attractive economics: a new outlet may look successful while mostly moving sales from nearby stores.
       <span class="ev obs">Context</span> Chagee aims to expand rapidly in Singapore; the number of stores is confidential (Chagee source, anonymous). <span class="ev sim">Simulated</span> searches below.</span></p>
@@ -2742,7 +2743,7 @@ aside.notes{display:none}
     <p>If asked how DBSCAN works, press How it works: it replays the algorithm one search at a time on a toy set. The appendix lists every simulated number.</p>
     <p>The three sliders are the only inputs: cluster radius, minimum searches per cluster, and how far people will walk. The data is synthetic; with Chagee's real app logs, the same steps would run unchanged. About one and a half minutes.</p>
     <p>If asked to see both sites, press See it on the map on the takeaway. If asked what this means in money, press "What does this mean for P&amp;L?" under the result. The map gives way to five years of the same new outlet at the two sites, with the same opening date, equipment and staffing rule, so only the site differs. Toggle revenue, operating profit and cumulative operating profit; hover a year for both values and the gap. At our assumptions, the store beside the existing outlet adds about {{r.pnl_wo_rev5|sgm}} of network sales over {{r.pnl_years}} years but loses money, {{r.pnl_wo_op5|sgm}} of operating profit: the contribution lost at its neighbours, about {{r.pnl_wo_lost5|sgm}}, is more than it makes, and their rent and staff do not go away. The AI site adds about {{r.pnl_wi_rev5|sgm}} of sales and {{r.pnl_wi_op5|sgm}} of operating profit after the AI costs, and pays back its set-up in about {{r.pnl_wi_payback|g1}} years. The gap is about {{r.pnl_up_op5|sgm}} of operating profit. Say clearly: these are illustrative scenarios on our assumptions, DBSCAN finds the clusters and the assumed demand model estimates the sales; they are not a demonstrated causal gain from AI. Operating profit is before depreciation, interest and tax. Escape or Back to map returns to the map.</p>
-    <p>Course link, Week 3, Analytics and AI: in the Flashion example, demand for a new store was forecast from similar stores. We ask the same question with a different input: app searches around the site.</p>
+    <p>Course link, Topic 3, Analytics and AI: data-driven demand prediction. In the Flashion example, demand for a new store was forecast from similar stores. We ask the same question with a different input: app searches around the site; clustering them with DBSCAN is our own extension of the course concepts, not a method taught in class.</p>
     <p>Because the number of openings is confidential, the forecast ranks sites; it does not assume a number of openings.</p>
     <p>The expansion manager's decision, with the criteria side by side, is on the next slide.</p>    <p>Takeaway: Judge a site by what it adds to Chagee, not what it sells. The top cluster, near {{s.top_hub}}, adds about {{r.top_net}} cups a day; a store beside an existing outlet would sell plenty, but about {{r.nextdoor_cannibal|pct}} of it is moved from that outlet.</p>
   </aside>
@@ -2754,7 +2755,7 @@ aside.notes{display:none}
 <section class="slide content" id="e2" data-chapter="Expand" data-reveal="all" data-title="The expansion manager's decision">
   <div class="leafart" aria-hidden="true"></div>
   <div class="inner stepper" data-steps="3">
-    <p class="kicker">09 · Expand · the expansion manager's decision<span class="stg"><b>Expand</b><i>Problem</i><i>Solution</i><i class="on">Decision</i></span><span class="dm"><i>Decision-maker</i>Expansion manager</span></p>
+    <p class="kicker">09 · Expand · the expansion manager's decision<span class="dm"><i>Decision-maker</i>Expansion manager</span></p>
     <h2 class="head">{{s.top_hub}} brings in over three times the new cups. Investigate it first, then check the downside</h2>
     <div class="revctl screenonly" style="top:8px"><span class="lab">Step through</span><span class="ctl"></span></div>
     <div class="e2v">
