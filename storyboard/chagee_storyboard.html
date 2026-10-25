@@ -493,6 +493,8 @@ html,body{margin:0;background:#E7E3DC;color:var(--ink);font-family:var(--sans);-
 .pnlsl label{display:grid;grid-template-columns:1fr auto;font:11px var(--sans);color:var(--ink2);min-width:0}
 .pnlsl label .val{font-weight:600;color:var(--ink)} .pnlsl input{grid-column:1/-1;width:100%;height:14px;margin:0;accent-color:var(--red)}
 .pnltab .seg .btn{height:22px;font-size:11px;padding:0 9px}
+.pnltab{display:flex;align-items:center} .pnltab .seg{flex:none} .pnltab .pnlfull{flex:none;margin-left:auto;height:22px;padding:0 6px;font-size:10px;border-style:dashed;color:var(--ink2)}   /* to the appendix P&L page */
+#ap .pnlback{padding:0;border:0;border-bottom:1px dotted var(--red);background:none;font:inherit;font-weight:600;color:var(--red);cursor:pointer} #ap .pnlback:after{content:none}
 .pnlv svg{width:100%;flex:none;height:156px;display:block}
 .pnltip{position:absolute;display:none;pointer-events:none;z-index:4;background:var(--navy);color:#fff;border-radius:7px;padding:6px 10px;font:11.5px/1.4 var(--sans);white-space:nowrap;transform:translate(-50%,-100%)}
 .pnltip b{color:var(--gold)}
@@ -2944,6 +2946,7 @@ aside.notes{display:none}
     <div class="e2v">
       <div class="e2p">
         <span class="e2no"><span class="num">1</span>Who the new store serves</span>
+        <button class="btn exob screenonly" data-go="e2t" title="The same comparison with every criterion in one table (appendix)">See decision table →</button>
         <div class="e2blk" data-s="1">
           <h3>Customer access<i class="e2tip screenonly" tabindex="0" data-tip="Who buys there: the share of the store's cups bought by people with no Chagee outlet within 1.0 km. It is not the share of new cups; some of these customers already travel further to an outlet.">i</i></h3>
           <p class="e2sub">Share of its cups from people with no outlet within walking distance</p>
@@ -3304,6 +3307,7 @@ aside.notes{display:none}
   <div class="leafart" aria-hidden="true"></div>
   <div class="inner">
     <p class="kicker">Appendix · The new store in money, slide 08 · the printed copy of "What does this mean for P&amp;L?"</p>
+    <p class="exoback screenonly" style="position:absolute;right:250px;top:40px;margin:0"><button class="golink pnlback" title="Back to slide 08's P&amp;L view">← Back to P&amp;L</button></p>
     <h2 class="head" style="max-width:1010px">Same new outlet, same opening, same counter: the AI site adds about S$2.5m more operating profit over 5 years, in our model</h2>
     <div class="body" style="grid-template-columns:430px 1fr 290px;gap:14px;margin-top:10px">
       <div style="display:flex;flex-direction:column;gap:10px"><div class="chart"><h5>Annual incremental revenue to Chagee, S$</h5><svg class="pxa" viewBox="0 0 540 250" preserveAspectRatio="xMidYMid meet"></svg></div>
@@ -8787,7 +8791,7 @@ aside.notes{display:none}
       $$(pctl, "[data-m]").forEach(b => b.classList.toggle("on", b.dataset.m === pmet));
       if (!pside.dataset.built) {
         pside.dataset.built = 1;
-        pside.innerHTML = `<div class="pr"></div><div class="pnltab screenonly"><span class="seg"><button class="btn on" data-t="pa">Assumptions</button><button class="btn" data-t="pt">Test them</button></span></div>` +
+        pside.innerHTML = `<div class="pr"></div><div class="pnltab screenonly"><span class="seg"><button class="btn on" data-t="pa">Assumptions</button><button class="btn" data-t="pt">Test them</button></span><button class="btn pnlfull" data-x="full" title="Every line and assumption of this P&L, in the appendix">Full calculation breakdown →</button></div>` +
           `<div class="pnlsl pt" style="display:none">` +
           PSL.map(([k, lab, [lo, hi], st, get, f]) => `<label>${lab}<span class="val" data-v="${k}">${f(get())}</span><input type="range" data-k="${k}" min="${lo}" max="${hi}" step="${st}" value="${get()}"></label>`).join("") +
           `<button class="btn" data-k="reset" style="grid-column:1/-1;justify-self:start;height:22px;font-size:11px">Reset</button></div><div class="pa"></div>`;
@@ -8813,10 +8817,12 @@ aside.notes{display:none}
       if (b.dataset.x === "back") pnlClose(); else if (b.dataset.m) { pmet = b.dataset.m; pnlRender(); } });
     pside.addEventListener("input", e => { const d = PSL.find(x => x[0] === e.target.dataset?.k); if (!d) return; d[6](+e.target.value); pnlRender(); });
     pside.addEventListener("click", e => { const t = e.target.closest("[data-t]");
+      if (e.target.closest("[data-x=full]")) { e.stopPropagation(); e.target.closest("button").blur(); jump = true; show(slides.indexOf(document.getElementById("ap"))); return; }
       if (t) { $$(pside, "[data-t]").forEach(b => b.classList.toggle("on", b === t)); $(pside, ".pa").style.display = t.dataset.t === "pa" ? "" : "none"; $(pside, ".pt").style.display = t.dataset.t === "pt" ? "" : "none"; return; }
       if (e.target.closest("[data-k=reset]")) { pE = { ...PE0, ramp: [...PE0.ramp] };
       PSL.forEach(([k, , , , get]) => { const i = $(pside, `input[data-k="${k}"]`); if (i) i.value = get(); }); pnlRender(); } });
     addEventListener("keydown", e => { if (e.key === "Escape" && pnlOn && slides[cur] === slideEl) { e.preventDefault(); e.stopPropagation(); pnlClose(); } }, true);
+    slideEl._pnl = () => { if (!pnlOn) pnlOpen(); };                 // the appendix P&L page's Back to P&L: the view as it was left
     S.hooks.push(k => { step = k; if (M) draw(); });
     printers.push(() => { pnlClose(); pE = { ...PE0, ramp: [...PE0.ramp] }; pmet = "rev"; $$(pside, "input").forEach(i => { const d = PSL.find(x => x[0] === i.dataset.k); if (d) i.value = d[4](); }); });
     printers.push(() => { cmpv.classList.remove("open"); userPin = false; sel = null; search.value = ""; sl.forEach(([k, , key]) => (par[k] = SP[key].value)); $$(ctlEl, "input").forEach(i => (i.value = par[i.dataset.k])); rebuild(); });
@@ -11054,8 +11060,12 @@ aside.notes{display:none}
     const mo = new MutationObserver(closeAll); slides.forEach(sl => mo.observe(sl, { attributes: true, attributeFilter: ["class"] }));   // a slide change
     printers.push(closeAll);
   })();
+  // the appendix P&L page (#ap): Back to P&L returns to slide 08 with its forecaster shown (not the three-step overview) and
+  // the P&L view open, its chart tab, Assumptions / Test them and sliders as they were left
+  const pnlBack = $(document, "#ap .pnlback");
+  if (pnlBack) pnlBack.onclick = e => { e.stopPropagation(); pnlBack.blur(); const c5 = document.getElementById("c5"); jump = true; show(slides.indexOf(c5), true); c5._pnl?.(); };
   // appendix contents and in-slide links: each jumps to its page
-  $$(document, ".apxix li[data-go], .golink[data-go], .auxb[data-go]").forEach(li => (li.onclick = () => { jump = true; li.blur(); show(slides.indexOf(document.getElementById(li.dataset.go))); }));
+  $$(document, ".apxix li[data-go], .golink[data-go], .auxb[data-go], .exob[data-go]").forEach(li => (li.onclick = () => { jump = true; li.blur(); show(slides.indexOf(document.getElementById(li.dataset.go))); }));
 
   /* ---------------------------------------------------------------- print */
   function preparePrint() {

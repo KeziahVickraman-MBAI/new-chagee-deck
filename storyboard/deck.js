@@ -961,7 +961,7 @@
       $$(pctl, "[data-m]").forEach(b => b.classList.toggle("on", b.dataset.m === pmet));
       if (!pside.dataset.built) {
         pside.dataset.built = 1;
-        pside.innerHTML = `<div class="pr"></div><div class="pnltab screenonly"><span class="seg"><button class="btn on" data-t="pa">Assumptions</button><button class="btn" data-t="pt">Test them</button></span></div>` +
+        pside.innerHTML = `<div class="pr"></div><div class="pnltab screenonly"><span class="seg"><button class="btn on" data-t="pa">Assumptions</button><button class="btn" data-t="pt">Test them</button></span><button class="btn pnlfull" data-x="full" title="Every line and assumption of this P&L, in the appendix">Full calculation breakdown →</button></div>` +
           `<div class="pnlsl pt" style="display:none">` +
           PSL.map(([k, lab, [lo, hi], st, get, f]) => `<label>${lab}<span class="val" data-v="${k}">${f(get())}</span><input type="range" data-k="${k}" min="${lo}" max="${hi}" step="${st}" value="${get()}"></label>`).join("") +
           `<button class="btn" data-k="reset" style="grid-column:1/-1;justify-self:start;height:22px;font-size:11px">Reset</button></div><div class="pa"></div>`;
@@ -987,10 +987,12 @@
       if (b.dataset.x === "back") pnlClose(); else if (b.dataset.m) { pmet = b.dataset.m; pnlRender(); } });
     pside.addEventListener("input", e => { const d = PSL.find(x => x[0] === e.target.dataset?.k); if (!d) return; d[6](+e.target.value); pnlRender(); });
     pside.addEventListener("click", e => { const t = e.target.closest("[data-t]");
+      if (e.target.closest("[data-x=full]")) { e.stopPropagation(); e.target.closest("button").blur(); jump = true; show(slides.indexOf(document.getElementById("ap"))); return; }
       if (t) { $$(pside, "[data-t]").forEach(b => b.classList.toggle("on", b === t)); $(pside, ".pa").style.display = t.dataset.t === "pa" ? "" : "none"; $(pside, ".pt").style.display = t.dataset.t === "pt" ? "" : "none"; return; }
       if (e.target.closest("[data-k=reset]")) { pE = { ...PE0, ramp: [...PE0.ramp] };
       PSL.forEach(([k, , , , get]) => { const i = $(pside, `input[data-k="${k}"]`); if (i) i.value = get(); }); pnlRender(); } });
     addEventListener("keydown", e => { if (e.key === "Escape" && pnlOn && slides[cur] === slideEl) { e.preventDefault(); e.stopPropagation(); pnlClose(); } }, true);
+    slideEl._pnl = () => { if (!pnlOn) pnlOpen(); };                 // the appendix P&L page's Back to P&L: the view as it was left
     S.hooks.push(k => { step = k; if (M) draw(); });
     printers.push(() => { pnlClose(); pE = { ...PE0, ramp: [...PE0.ramp] }; pmet = "rev"; $$(pside, "input").forEach(i => { const d = PSL.find(x => x[0] === i.dataset.k); if (d) i.value = d[4](); }); });
     printers.push(() => { cmpv.classList.remove("open"); userPin = false; sel = null; search.value = ""; sl.forEach(([k, , key]) => (par[k] = SP[key].value)); $$(ctlEl, "input").forEach(i => (i.value = par[i.dataset.k])); rebuild(); });
@@ -3228,8 +3230,12 @@
     const mo = new MutationObserver(closeAll); slides.forEach(sl => mo.observe(sl, { attributes: true, attributeFilter: ["class"] }));   // a slide change
     printers.push(closeAll);
   })();
+  // the appendix P&L page (#ap): Back to P&L returns to slide 08 with its forecaster shown (not the three-step overview) and
+  // the P&L view open, its chart tab, Assumptions / Test them and sliders as they were left
+  const pnlBack = $(document, "#ap .pnlback");
+  if (pnlBack) pnlBack.onclick = e => { e.stopPropagation(); pnlBack.blur(); const c5 = document.getElementById("c5"); jump = true; show(slides.indexOf(c5), true); c5._pnl?.(); };
   // appendix contents and in-slide links: each jumps to its page
-  $$(document, ".apxix li[data-go], .golink[data-go], .auxb[data-go]").forEach(li => (li.onclick = () => { jump = true; li.blur(); show(slides.indexOf(document.getElementById(li.dataset.go))); }));
+  $$(document, ".apxix li[data-go], .golink[data-go], .auxb[data-go], .exob[data-go]").forEach(li => (li.onclick = () => { jump = true; li.blur(); show(slides.indexOf(document.getElementById(li.dataset.go))); }));
 
   /* ---------------------------------------------------------------- print */
   function preparePrint() {
