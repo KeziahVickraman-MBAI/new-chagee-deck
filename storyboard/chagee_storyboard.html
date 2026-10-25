@@ -2902,7 +2902,7 @@ aside.notes{display:none}
     <p class="sub">Supporting detail for the main presentation, in its order: Proposal 1, Proposal 2, Proposal 3, then shared material. Click a line to open it; use the agenda to return.</p>
     <div class="apxix">
       <div><h5>Proposal 1 · online retailing</h5><ol><li data-go="p1x">Proposal 1: execution steps and scenario</li></ol><h5>Proposal 2 · in-store planning</h5><ol><li data-go="p2pilot">Eight-week zone pilot</li></ol></div>
-      <div><h5>Proposal 3 · new store expansion</h5><ol><li data-go="a2">How the site forecast works</li><li data-go="ap">The new store in money: five-year P&amp;L</li><li data-go="x1">Four scores for every location</li><li data-go="x1b">The supervised model</li><li data-go="x2">From pin to net profit</li><li data-go="e2t">The expansion decision as a table</li><li data-go="xo">Further application: existing outlets</li></ol></div>
+      <div><h5>Proposal 3 · new store expansion</h5><ol><li data-go="a2">How the site forecast works</li><li data-go="ap">The new store in money: five-year P&amp;L</li><li data-go="x1">Four scores for every location</li><li data-go="e2t">The expansion decision as a table</li><li data-go="xo">Further application: existing outlets</li></ol></div>
       <div><h5>Optional extension · a new market</h5><ol><li data-go="tc">Divider: optional extension</li><li data-go="n1">What can we know before opening?</li><li data-go="n2">Which areas show potential?</li><li data-go="n3">Which operating setup under uncertain demand?</li><li data-go="n4">Pilot, learn, then expand</li><li data-go="an">New market: inputs and method</li></ol><h5>Shared · data and sources</h5><ol><li data-go="adata">Chagee's data collection</li><li data-go="a1">Sources and assumptions</li></ol></div>
     </div>
     <p class="nextl"><b>Also</b><span class="golink" data-go="cnd">Considered but not for presentation</span></p>
@@ -3050,84 +3050,6 @@ aside.notes{display:none}
     <p>An extension: where this scales next, and not part of the benefit figure. The decision owner here is the expansion manager. This builds on Jin's site-selection framework.</p>
     <p>Step through it. Corporate drops a pin; the model tags its attributes; three scores follow. Demand, delivery demand and competition are set by hand here, and you can drag a bar to test another value: in production, a supervised model would score them. We call the second one delivery demand, not delivery relief, because all Chagee delivery runs through third-party apps, according to an anonymous Chagee source; whether the platforms share this data is to confirm.</p>
     <p>The cannibalisation factor is computed by the same engine as slide 08: about 13% of site A's cups would move from existing outlets. Switch to the pin with an outlet inside the ring, or the one beside an outlet, and watch it jump. All synthetic. About thirty-five seconds.</p>
-  </aside>
-</section>
-
-<!-- ======================================================= APPENDIX: THE SUPERVISED MODEL -->
-<section class="slide content" id="x1b" data-chapter="Appendix" data-title="The supervised model">
-  <div class="leafart" aria-hidden="true"></div>
-  <div class="inner stepper" data-steps="4">
-    <p class="kicker">Appendix · The supervised model behind the scores<span class="ext">Extension: where this scales next. Not included in the S$ benefit.</span></p>
-    <h2 class="head" style="max-width:1000px">Trained on Singapore's outlets, the model picks where to open in a city where Chagee has no data yet</h2>
-    <p class="sub">Supervised learning: keep only the inputs a new city has, test the model on outlets it has not seen, then let it score every spot in a hypothetical city (illustrative, synthetic).</p>
-    <div class="body" style="grid-template-columns:1fr 318px;gap:18px;margin-top:10px">
-      <div class="panel smp" data-kind="smodel">
-        <div class="ptop"><span class="ptitle">Train on 44 outlets · toggle the inputs</span><span class="seg smpre screenonly"></span></div>
-        <div class="smf" data-s="2"></div>
-        <div class="visual smviz" style="margin-top:6px"><svg class="smsvg" viewBox="0 0 280 176" preserveAspectRatio="xMidYMid meet" aria-label="Each outlet's cups a day against the model's prediction when that outlet is held out"></svg><svg class="smcity" data-s="4" viewBox="0 0 280 176" preserveAspectRatio="xMidYMid meet" aria-label="A hypothetical new city: the model's forecast at every spot and the sites it picks"></svg></div>
-        <ol class="caps" style="min-height:36px">
-          <li data-s="1"><span class="n">1</span><span>Training data: each Singapore outlet's cups a day is the label (synthetic, from the slide 08 engine).</span></li>
-          <li data-s="2"><span class="n">2</span><span>Inputs: attributes at each outlet. Click to switch one off; the bar shows how much it moves the forecast.</span></li>
-          <li data-s="3"><span class="n">3</span><span>Test: each outlet is predicted by a model trained on the others. Dots on the line are perfect forecasts.</span></li>
-          <li data-s="4"><span class="n">4</span><span>New city, no Chagee data: only the inputs it has. The model scores every spot and picks the best, at least 2 km apart. Click the map to test a spot.</span></li>
-        </ol>
-      </div>
-      <div class="cards" style="gap:8px">
-        <div class="bc smacc" data-s="3"></div>
-        <div class="bc smnew" data-s="4"></div>
-      </div>
-    </div>
-    <div class="revctl screenonly" style="top:8px"><span class="lab">Step through</span><span class="ctl"></span></div>
-    <p class="xai" data-s="4" style="margin-top:8px"><b>What is AI here</b><span>Supervised learning (ridge regression) from site attributes to cups a day. The labels are the slide 08 engine's synthetic outlets, so the fit flatters; Chagee's real opening history would fit worse. Using Singapore to score another market assumes its customers behave alike: check against the first outlets' actuals.</span></p>
-    <p class="xill">Illustrative. Synthetic data, not Chagee data. Chagee's opening history is internal and we do not have it.</p>
-  </div>
-  <div class="foot"><span>OPIM639 · Group 3 · explainer figures are illustrative assumptions · synthetic data, not Chagee data</span><span class="rail"></span><span class="pg"></span></div>
-  <aside class="notes">
-    <p>This is the model behind step three of the framework, actually running. It learns cups a day from a site's attributes, trained on Singapore's 44 outlets. The labels are synthetic, from the slide 08 engine, so read it as the method, not a forecast.</p>
-    <p>We test it fairly: each outlet is predicted by a model that never saw it. With every input, it misses by about 41 cups a day on average. Now the proxy for a new market: there is no Chagee app history and no outlet network yet, so switch those inputs off. With only population and distance to a town centre, the error grows to about 83 cups a day, still better than guessing the average outlet, about 197.</p>
-    <p>Then the point of it: where to open in a place with no local data. The right-hand map is a hypothetical city, generated at the same density as our Singapore data. With only the inputs that city has, the model scores every spot and picks the best sites at least 2 km apart, so they do not take sales from each other. Each pick shows its forecast with the error band, and whether it clears break-even at Singapore costs, which stand in until local costs are known. Picks beyond what the model saw in Singapore are flagged. So the model can travel, but only on inputs the new market has, with wide ranges: pilot the top site first and recheck the model against its actuals. That is the continual-learning step on the next slide. About fifty seconds.</p>
-  </aside>
-</section>
-
-<!-- ======================================================= APPENDIX: PIN TO NET PROFIT -->
-<section class="slide content" id="x2" data-chapter="Appendix" data-title="From pin to net profit">
-  <div class="leafart" aria-hidden="true"></div>
-  <div class="inner stepper" data-steps="6">
-    <p class="kicker">Appendix · From pin to net profit · corporate expansion planning<span class="ext">Extension: where this scales next. Not included in the S$ benefit.</span></p>
-    <h2 class="head">From pin to net profit</h2>
-    <p class="sub">Six steps from a pin to a go / no-go, on profit net to Chagee overall (illustrative). Decision owner here: the expansion manager.</p>
-    <div class="xsteps">
-      <div class="st" data-s="1"><h4><span class="num">1</span>Pin a location</h4><p>Corporate clicks a point on the map.</p><span class="ai no">Not AI</span></div>
-      <div class="st" data-s="2"><h4><span class="num">2</span>Tag attributes</h4><p>People, transit, footfall, delivery, competitors, outlets nearby, rent.</p><span class="ai no">Data</span></div>
-      <div class="st" data-s="3"><h4><span class="num">3</span>Four scores</h4><p>Demand, delivery, competition, cannibalisation (previous slide).</p><span class="ai">AI · supervised model</span></div>
-      <div class="st" data-s="4"><h4><span class="num">4</span>Find look-alikes</h4><p>Anonymised outlets (Outlet 12, Outlet 27): their cups a day, what neighbours lost.</p><span class="ai">AI · similarity search</span></div>
-      <div class="st hot" data-s="5"><h4><span class="num">5</span>Forecast net profit</h4><p>Cups a day, running cost, minus the profit neighbours lose.</p><span class="ai no">Computed below</span></div>
-      <div class="st" data-s="6"><h4><span class="num">6</span>Decide</h4><p>Open, pilot or skip. Actuals feed back: continual learning.</p><span class="ai">AI · continual learning</span></div>
-    </div>
-    <div class="body" style="grid-template-columns:1fr 318px;gap:18px;margin-top:10px">
-      <div class="panel" data-kind="xprofit" data-s="5">
-        <div class="ptop"><span class="ptitle">Net profit to Chagee, a month · <span class="xpin">Site A</span></span><span class="seg xpins screenonly"></span></div>
-        <div class="visual" style="margin-top:2px"><svg class="xwf" viewBox="0 0 700 214" preserveAspectRatio="xMidYMid meet" aria-label="Waterfall: from cups times price times margin to net profit to Chagee"></svg></div>
-        <p class="lnote xrange"></p>
-      </div>
-      <div class="cards" style="gap:8px">
-        <div class="cset sitectl xctl screenonly" data-s="5"></div>
-        <div class="xrec" data-s="6"></div>
-      </div>
-    </div>
-    <div class="revctl screenonly" style="top:8px"><span class="lab">Step through</span><span class="ctl"></span></div>
-    <div class="xnote">
-      <p>A strong-demand site can still fail if rent or staffing is too high, or if it mostly takes sales from our own neighbours.</p>
-      <p>In practice this needs Chagee's opening history. With about 44 outlets in Singapore the model must stay simple (few attributes, ranges not point values).</p>
-    </div>
-    <p class="xill">Illustrative. Synthetic data, not Chagee data. Chagee's opening history is internal and we do not have it. Cups a day, price and margin are the benefit slide's; rent, delivery, utilities and set-up cost are assumptions, not Chagee data.</p>
-  </div>
-  <div class="foot"><span>OPIM639 · Group 3 · explainer figures are illustrative assumptions · synthetic data, not Chagee data</span><span class="rail"></span><span class="pg"></span></div>
-  <aside class="notes">
-    <p>Six steps from a pin to a go or no-go. Steps three, four and six are where the AI would sit in production: a supervised model for the scores, a similarity search for look-alike outlets, and continual learning as each new outlet reports actuals. On this slide only step five is computed.</p>
-    <p>The waterfall starts from cups a day times price times margin, the same inputs as the benefit slide: 556 cups a day. Take off the profit neighbours lose, delivery fees, the counter, rent and utilities: about S$16,011 a month net to Chagee, a payback of about 25 months. At the low end of the cups range it loses money, so the call is: Pilot. Move rent, delivery or set-up cost and watch the call change; these are our assumptions, not Chagee data.</p>
-    <p>The honest point: switch to the pin with an outlet 1.7 km away. It takes 44% of its cups from our own outlets and comes out at −S$2,697 a month, a skip. About forty-five seconds.</p>
-    <p>Later: reuse in new markets via transfer learning, out of scope.</p>
   </aside>
 </section>
 
@@ -3545,7 +3467,7 @@ aside.notes{display:none}
     <h2 class="head">Considered but not for presentation</h2>
     <p class="sub">Earlier versions and exploratory analyses, kept intact for reference. Click a line to open it; use the agenda to return.</p>
     <div class="apxix">
-      <div><h5>Earlier framing</h5><ol><li data-go="c3">The data trail</li><li data-go="c4">Our scope: the earlier three-part framing</li><li data-go="c1b">Network effects across the three parts</li></ol><h5>Online retailing · earlier version</h5><ol><li data-go="oo">Earlier version: overview</li><li data-go="ol">Earlier version: capacity-aware ordering</li><li data-go="od">Earlier version: targeted discounts</li><li data-go="os">Earlier version: self-pickup rewards</li><li data-go="oe">Earlier version: business case and decision</li><li data-go="aol1">Online retailing: business case and reconciliation</li><li data-go="aol2">Online retailing: offers, plan, team and sources</li></ol></div>
+      <div><h5>Earlier framing</h5><ol><li data-go="c3">The data trail</li><li data-go="c4">Our scope: the earlier three-part framing</li><li data-go="c1b">Network effects across the three parts</li></ol><h5>Online retailing · earlier version</h5><ol><li data-go="oo">Earlier version: overview</li><li data-go="ol">Earlier version: capacity-aware ordering</li><li data-go="od">Earlier version: targeted discounts</li><li data-go="os">Earlier version: self-pickup rewards</li><li data-go="oe">Earlier version: business case and decision</li><li data-go="aol1">Online retailing: business case and reconciliation</li><li data-go="aol2">Online retailing: offers, plan, team and sources</li></ol><h5>Expansion · corporate planning extension</h5><ol><li data-go="x1b">The supervised model</li><li data-go="x2">From pin to net profit</li></ol></div>
       <div><h5>Membership squads (Grow)</h5><ol><li data-go="m1">Members: when does joining feel worth it?</li><li data-go="m2">The proposed squad experience</li><li data-go="m2b">Every group order helps us serve customers better</li><li data-go="m3">Pilot squads with personalised suggestions?</li><li data-go="am1">Members: the model and its checks</li><li data-go="am2">Members: break-even, assumptions and sources</li><li data-go="am3">Group orders to forecasts: method and results</li></ol><h5>In-store · toppings and bucket brigade</h5><ol><li data-go="s2p">Can the same crew handle a more complex menu?</li><li data-go="s2r">What a bucket brigade actually does</li><li data-go="s2c">Fixed responsibilities or a bucket brigade?</li><li data-go="p2x">Proposal 2: execution steps and settings</li></ol><h5>In-store · flexible-assistance tablet</h5><ol><li data-go="s2b">Alternative: flexible assistance, the tablet</li><li data-go="s2t">Alternative: try the tablet</li><li data-go="s2x">Tablet: steps, inputs and rules</li></ol></div>
       <div><h5>In-store · earlier counter analysis</h5><ol><li data-go="o1">Earlier version: forecasting the crew</li><li data-go="sh">Earlier version: sharing the work at the peak</li><li data-go="c7">Equipment: a separate investigation</li><li data-go="o2">Earlier version: the operations manager's decision</li><li data-go="c6">Bucket brigade: sharing the work</li><li data-go="aops">Counter comparisons, every day type</li><li data-go="c8">The decisions in detail (draft)</li><li data-go="c9">The size of the benefit (draft)</li><li data-go="ab">The benefit in detail</li><li data-go="cm">Machine ladder</li><li data-go="a3">Machine ladder: tiers and sources</li></ol></div>
     </div>
@@ -4928,6 +4850,84 @@ aside.notes{display:none}
   </div>
   <div class="foot"><span>OPIM639 · Group 3 · Vendor and press figures; not Chagee data · model figures are illustrative assumptions</span><span class="rail"></span><span class="pg"></span></div>
   <aside class="notes"><p>Backup for the machine ladder. Every price is as the source publishes it; where a source gives no price we say not disclosed. Claims such as Gong cha's productivity figures are listed for context and are not inputs to our model. Soft copy only.</p></aside>
+</section>
+
+<!-- ======================================================= APPENDIX: THE SUPERVISED MODEL -->
+<section class="slide content" id="x1b" data-chapter="Appendix" data-title="The supervised model">
+  <div class="leafart" aria-hidden="true"></div>
+  <div class="inner stepper" data-steps="4">
+    <p class="kicker">Considered · The supervised model behind the scores<span class="ext">Extension: where this scales next. Not included in the S$ benefit.</span></p>
+    <h2 class="head" style="max-width:1000px">Trained on Singapore's outlets, the model picks where to open in a city where Chagee has no data yet</h2>
+    <p class="sub">Supervised learning: keep only the inputs a new city has, test the model on outlets it has not seen, then let it score every spot in a hypothetical city (illustrative, synthetic).</p>
+    <div class="body" style="grid-template-columns:1fr 318px;gap:18px;margin-top:10px">
+      <div class="panel smp" data-kind="smodel">
+        <div class="ptop"><span class="ptitle">Train on 44 outlets · toggle the inputs</span><span class="seg smpre screenonly"></span></div>
+        <div class="smf" data-s="2"></div>
+        <div class="visual smviz" style="margin-top:6px"><svg class="smsvg" viewBox="0 0 280 176" preserveAspectRatio="xMidYMid meet" aria-label="Each outlet's cups a day against the model's prediction when that outlet is held out"></svg><svg class="smcity" data-s="4" viewBox="0 0 280 176" preserveAspectRatio="xMidYMid meet" aria-label="A hypothetical new city: the model's forecast at every spot and the sites it picks"></svg></div>
+        <ol class="caps" style="min-height:36px">
+          <li data-s="1"><span class="n">1</span><span>Training data: each Singapore outlet's cups a day is the label (synthetic, from the slide 08 engine).</span></li>
+          <li data-s="2"><span class="n">2</span><span>Inputs: attributes at each outlet. Click to switch one off; the bar shows how much it moves the forecast.</span></li>
+          <li data-s="3"><span class="n">3</span><span>Test: each outlet is predicted by a model trained on the others. Dots on the line are perfect forecasts.</span></li>
+          <li data-s="4"><span class="n">4</span><span>New city, no Chagee data: only the inputs it has. The model scores every spot and picks the best, at least 2 km apart. Click the map to test a spot.</span></li>
+        </ol>
+      </div>
+      <div class="cards" style="gap:8px">
+        <div class="bc smacc" data-s="3"></div>
+        <div class="bc smnew" data-s="4"></div>
+      </div>
+    </div>
+    <div class="revctl screenonly" style="top:8px"><span class="lab">Step through</span><span class="ctl"></span></div>
+    <p class="xai" data-s="4" style="margin-top:8px"><b>What is AI here</b><span>Supervised learning (ridge regression) from site attributes to cups a day. The labels are the slide 08 engine's synthetic outlets, so the fit flatters; Chagee's real opening history would fit worse. Using Singapore to score another market assumes its customers behave alike: check against the first outlets' actuals.</span></p>
+    <p class="xill">Illustrative. Synthetic data, not Chagee data. Chagee's opening history is internal and we do not have it.</p>
+  </div>
+  <div class="foot"><span>OPIM639 · Group 3 · explainer figures are illustrative assumptions · synthetic data, not Chagee data</span><span class="rail"></span><span class="pg"></span></div>
+  <aside class="notes">
+    <p>This is the model behind step three of the framework, actually running. It learns cups a day from a site's attributes, trained on Singapore's 44 outlets. The labels are synthetic, from the slide 08 engine, so read it as the method, not a forecast.</p>
+    <p>We test it fairly: each outlet is predicted by a model that never saw it. With every input, it misses by about 41 cups a day on average. Now the proxy for a new market: there is no Chagee app history and no outlet network yet, so switch those inputs off. With only population and distance to a town centre, the error grows to about 83 cups a day, still better than guessing the average outlet, about 197.</p>
+    <p>Then the point of it: where to open in a place with no local data. The right-hand map is a hypothetical city, generated at the same density as our Singapore data. With only the inputs that city has, the model scores every spot and picks the best sites at least 2 km apart, so they do not take sales from each other. Each pick shows its forecast with the error band, and whether it clears break-even at Singapore costs, which stand in until local costs are known. Picks beyond what the model saw in Singapore are flagged. So the model can travel, but only on inputs the new market has, with wide ranges: pilot the top site first and recheck the model against its actuals. That is the continual-learning step on the next slide. About fifty seconds.</p>
+  </aside>
+</section>
+
+<!-- ======================================================= APPENDIX: PIN TO NET PROFIT -->
+<section class="slide content" id="x2" data-chapter="Appendix" data-title="From pin to net profit">
+  <div class="leafart" aria-hidden="true"></div>
+  <div class="inner stepper" data-steps="6">
+    <p class="kicker">Considered · From pin to net profit · corporate expansion planning<span class="ext">Extension: where this scales next. Not included in the S$ benefit.</span></p>
+    <h2 class="head">From pin to net profit</h2>
+    <p class="sub">Six steps from a pin to a go / no-go, on profit net to Chagee overall (illustrative). Decision owner here: the expansion manager.</p>
+    <div class="xsteps">
+      <div class="st" data-s="1"><h4><span class="num">1</span>Pin a location</h4><p>Corporate clicks a point on the map.</p><span class="ai no">Not AI</span></div>
+      <div class="st" data-s="2"><h4><span class="num">2</span>Tag attributes</h4><p>People, transit, footfall, delivery, competitors, outlets nearby, rent.</p><span class="ai no">Data</span></div>
+      <div class="st" data-s="3"><h4><span class="num">3</span>Four scores</h4><p>Demand, delivery, competition, cannibalisation (previous slide).</p><span class="ai">AI · supervised model</span></div>
+      <div class="st" data-s="4"><h4><span class="num">4</span>Find look-alikes</h4><p>Anonymised outlets (Outlet 12, Outlet 27): their cups a day, what neighbours lost.</p><span class="ai">AI · similarity search</span></div>
+      <div class="st hot" data-s="5"><h4><span class="num">5</span>Forecast net profit</h4><p>Cups a day, running cost, minus the profit neighbours lose.</p><span class="ai no">Computed below</span></div>
+      <div class="st" data-s="6"><h4><span class="num">6</span>Decide</h4><p>Open, pilot or skip. Actuals feed back: continual learning.</p><span class="ai">AI · continual learning</span></div>
+    </div>
+    <div class="body" style="grid-template-columns:1fr 318px;gap:18px;margin-top:10px">
+      <div class="panel" data-kind="xprofit" data-s="5">
+        <div class="ptop"><span class="ptitle">Net profit to Chagee, a month · <span class="xpin">Site A</span></span><span class="seg xpins screenonly"></span></div>
+        <div class="visual" style="margin-top:2px"><svg class="xwf" viewBox="0 0 700 214" preserveAspectRatio="xMidYMid meet" aria-label="Waterfall: from cups times price times margin to net profit to Chagee"></svg></div>
+        <p class="lnote xrange"></p>
+      </div>
+      <div class="cards" style="gap:8px">
+        <div class="cset sitectl xctl screenonly" data-s="5"></div>
+        <div class="xrec" data-s="6"></div>
+      </div>
+    </div>
+    <div class="revctl screenonly" style="top:8px"><span class="lab">Step through</span><span class="ctl"></span></div>
+    <div class="xnote">
+      <p>A strong-demand site can still fail if rent or staffing is too high, or if it mostly takes sales from our own neighbours.</p>
+      <p>In practice this needs Chagee's opening history. With about 44 outlets in Singapore the model must stay simple (few attributes, ranges not point values).</p>
+    </div>
+    <p class="xill">Illustrative. Synthetic data, not Chagee data. Chagee's opening history is internal and we do not have it. Cups a day, price and margin are the benefit slide's; rent, delivery, utilities and set-up cost are assumptions, not Chagee data.</p>
+  </div>
+  <div class="foot"><span>OPIM639 · Group 3 · explainer figures are illustrative assumptions · synthetic data, not Chagee data</span><span class="rail"></span><span class="pg"></span></div>
+  <aside class="notes">
+    <p>Six steps from a pin to a go or no-go. Steps three, four and six are where the AI would sit in production: a supervised model for the scores, a similarity search for look-alike outlets, and continual learning as each new outlet reports actuals. On this slide only step five is computed.</p>
+    <p>The waterfall starts from cups a day times price times margin, the same inputs as the benefit slide: 556 cups a day. Take off the profit neighbours lose, delivery fees, the counter, rent and utilities: about S$16,011 a month net to Chagee, a payback of about 25 months. At the low end of the cups range it loses money, so the call is: Pilot. Move rent, delivery or set-up cost and watch the call change; these are our assumptions, not Chagee data.</p>
+    <p>The honest point: switch to the pin with an outlet 1.7 km away. It takes 44% of its cups from our own outlets and comes out at −S$2,697 a month, a skip. About forty-five seconds.</p>
+    <p>Later: reuse in new markets via transfer learning, out of scope.</p>
+  </aside>
 </section>
 
 
