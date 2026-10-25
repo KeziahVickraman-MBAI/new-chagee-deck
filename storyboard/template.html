@@ -1796,6 +1796,19 @@ body.print #p1p :is(.pq-walker,.pq-in){animation:none} @media print{#p1p :is(.pq
 #p1p .pq-g3 i{flex:none;display:grid;place-items:center;width:22px;height:22px;margin-top:-2px;border-radius:50%;background:#2F6B45;color:#fff;font:700 12px/1 var(--sans);font-style:normal;-webkit-print-color-adjust:exact;print-color-adjust:exact}
 #p1p .pq-g3 span{max-width:320px;font:14px/21px var(--sans);color:var(--ink2)}
 #p1p .pq-g3 b{display:block;font:600 15.5px/18px var(--sans);color:var(--ink)}
+/* appendix: consolidated revenue and costs (#acr), the table built by build_storyboard.py consol_page */
+#acr .ctab{width:100%;margin-top:8px;border-collapse:collapse;font:11px/1.2 var(--sans);color:var(--ink)}
+#acr .ctab th{padding:3px 8px;background:#DCE2EC;color:var(--navy);font-weight:700;text-align:right;border:1px solid #fff;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+#acr .ctab th:last-child,#acr .ctab td:last-child{text-align:left;color:var(--ink2);font-size:10.5px}
+#acr .ctab td{padding:2px 8px;text-align:right;border-bottom:1px solid #EEE7DA;white-space:nowrap}
+#acr .ctab td:first-child{text-align:left;width:190px}
+#acr .ctab td:last-child{white-space:nowrap;width:330px}
+#acr .ctab .ng{color:var(--red)}
+#acr .ctab tr.sec td{padding:2px 8px;background:#8C877E;color:#fff;font-weight:700;text-align:left;font-size:10.5px;letter-spacing:.04em;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+#acr .ctab tr.tot td{background:#F1EEE8;font-weight:700;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+#acr .ctab tr.big td{background:#FBF1DD;font-weight:700;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+#acr .ctab tr.cum td{background:#26262A;color:#fff;font-weight:700;-webkit-print-color-adjust:exact;print-color-adjust:exact} #acr .ctab tr.cum td.ng{color:#FF8A80} #acr .ctab tr.cum td:last-child{color:#fff}
+#acr .cnote{margin:6px 0 0;font:10.5px/1.35 var(--sans);color:var(--ink2)}
 /* ---------------------------------------------------------------- slides 06 and 07: Proposal 2, and its pilot in the appendix
    Taken from the reference deck (chagee-deck.vercel.app, slides 8 and 9 and its Proposal 2 pilot page): the rules that style
    those slides, each scoped to them by an :is(#id,#id *) on its subject so nothing reaches the rest of this deck. #p2pilot is
@@ -3072,7 +3085,7 @@ aside.notes{display:none}
         </div>
       </div>
     </div>
-    <p class="lnote e2fn">Synthetic searches; illustrative assumptions, not a demonstrated causal gain from AI. Investment at opening: {{r.pnl_wo_invest|sgm}} {{s.bt_name}}; {{r.pnl_wi_invest|sgm}} {{s.top_hub}}, including AI share. At low volume {{s.top_hub}} earns {{r.pnl_wi_op5_lo|sgm2}} over five years: the downside to check. Definitions, DBSCAN versus the demand model, and the full table: appendix, Expand.</p>
+    <p class="lnote e2fn">Synthetic searches; illustrative assumptions, not a demonstrated causal gain from AI.</p>
     <div class="exo keep" role="dialog" aria-label="Further application: optimise the existing store network">
       <div class="exohd"><span class="exotag">Further application · optimise the existing store network</span><button class="btn screenonly" data-exo="close">← Back to the decision</button></div>
       <h3>Where should we open, strengthen, relocate or consolidate?</h3>
@@ -3167,7 +3180,7 @@ aside.notes{display:none}
     <div class="apxix">
       <div><h5>Proposal 1 · online retailing</h5><ol><li data-go="p1x">Pilot smart pickup routing in one zone</li><li data-go="p1r">Your tea, sooner: the pickup race</li></ol><h5>Proposal 2 · in-store planning</h5><ol><li data-go="p2pilot">Eight-week zone pilot</li><li data-go="p2f">Financial case</li></ol></div>
       <div><h5>Proposal 3 · new store expansion</h5><ol><li data-go="p3x">Validation plan: execution steps</li><li data-go="a2">How the site forecast works</li><li data-go="ap">The new store in money: five-year P&amp;L</li><li data-go="x1">Four scores for every location</li><li data-go="e2t">The expansion decision as a table</li><li data-go="xo">Further application: existing outlets</li></ol></div>
-      <div><h5>Shared · data and sources</h5><ol><li data-go="adata">Chagee's data collection</li><li data-go="a1">Sources and assumptions</li></ol></div>
+      <div><h5>Shared · data and sources</h5><ol><li data-go="acr">Consolidated revenue and costs, five years</li><li data-go="adata">Chagee's data collection</li><li data-go="a1">Sources and assumptions</li></ol></div>
     </div>
     <p class="nextl"><b>Also</b><span class="golink" data-go="cnd">Considered but not for presentation</span></p>
   </div>
@@ -3537,6 +3550,23 @@ aside.notes{display:none}
   <aside class="notes">
     <p>A further application of the expansion network view, opened from the expansion manager's decision slide. New-store selection stays the main story; this shows the same model looking at an existing outlet instead. The printed scenario takes the outlet whose nearest neighbour is closest and makes it temporarily unavailable: the demand model, run in reverse, splits its cups between nearby outlets and customers lost to Chagee, and compares how far customers travel before and after.</p>
     <p>It is an illustrative scenario, not a closure recommendation. The model has no capacity limit, so the extra work at receiving outlets needs checking against their real capacity and service levels. Low sales alone do not justify closure: a real decision needs costs actually avoided, lease and exit costs, customers' willingness to switch, nearby capacity, customer access and the store's strategic role. DBSCAN identifies demand clusters; closure or relocation needs a separate network and financial assessment, and no closure savings are added to any total.</p>
+  </aside>
+</section>
+
+<!-- ======================================================= APPENDIX: CONSOLIDATED REVENUE AND COSTS (five years)
+     The table is built by build_storyboard.py (consol_page) from assumptions.json "consolidated" and the deck's own inputs. -->
+<section class="slide content" id="acr" data-chapter="Appendix" data-title="Consolidated revenue and costs">
+  <div class="leafart" aria-hidden="true"></div>
+  <div class="inner">
+    <p class="kicker">Appendix · Business impact · all three proposals</p>
+    <h2 class="head">Consolidated revenue and costs for the next five years</h2>
+    <p class="sub">Revenue, savings and costs of the three proposals year by year, on the deck's assumptions plus a few labelled placeholders.</p>
+    <!--CONSOL-->
+  </div>
+  <div class="foot"><span>OPIM 639 · Group 3 · illustrative assumptions, not Chagee data</span><span class="rail"></span><span class="pg"></span></div>
+  <aside class="notes">
+    <p>The consolidated view, asked for in the course's revenue and cost format. Revenue comes from two places: peak orders kept by smart pickup routing at the busy outlets, and the two new stores, counted net of the sales they take from nearby outlets. In-store planning adds no revenue; it saves overtime and waste. Costs are the six-month build team and integration, the new stores' set-up, then a run team, cloud and licences, the zone system and the switch perk.</p>
+    <p>Most inputs are the deck's own or were approved earlier: price, margin, cups, wage, the day rate, integration and platform costs, the Proposal 2 zone case and the new-store P&amp;L. The rest are labelled placeholders to confirm with Chagee: how many outlets are busy, how many orders switch, and the waste share. The note under the table gives the downside if the second store sells at the low end, and the effect of a smaller run team. Each proposal touches different customers, so nothing is counted twice.</p>
   </aside>
 </section>
 

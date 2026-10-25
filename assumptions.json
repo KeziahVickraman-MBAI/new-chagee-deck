@@ -3614,5 +3614,108 @@
       "source": "assumption, illustrative scenario (team reference deck chagee-deck.vercel.app, appendix 'The pickup race'), not Chagee data",
       "rationale": "As on the reference slide; equals demand_mgmt.alt_ready_min."
     }
+  },
+  "consolidated": {
+    "_note": {
+      "value": "Appendix: consolidated revenue and costs for the next five years (2027 to 2031), all three proposals",
+      "unit": "text",
+      "range": null,
+      "source": "assumption",
+      "rationale": "Built at the user's request (26 Oct 2026) as a course-style revenue and cost table. Reuses the deck's own inputs wherever one exists (price, margin, cups, wage, Proposal 2's zone case, the new-store P&L, the approved day rate, integration and platform costs) and adds only the placeholders below. Every figure is illustrative, not Chagee data. The three proposals touch different customers: Proposal 1 only peak orders at busy CBD and mall outlets, Proposal 2 only labour and waste in existing outlets, Proposal 3 only two new heartland stores, after the sales they move from nearby outlets; so no order is counted twice."
+    },
+    "start_year": {
+      "value": 2027,
+      "unit": "first calendar year",
+      "range": null,
+      "source": "assumption",
+      "rationale": "The execution plan starts in January 2027 (slide 10)."
+    },
+    "p1_outlet_months": {
+      "value": [
+        176,
+        240,
+        240,
+        240,
+        240
+      ],
+      "unit": "outlet-months live with smart pickup routing, per year",
+      "range": null,
+      "source": "assumption, illustrative, to validate with Chagee",
+      "rationale": "Follows slide 10's timeline: one zone of 4 outlets in Jan-Feb (the City Hall-Marina zone, 8), three zones (12 outlets) in Mar-Jun (48), then all p1_busy_outlets from July (120): 176 in 2027; 20 x 12 = 240 a year after."
+    },
+    "p1_busy_outlets": {
+      "value": 20,
+      "unit": "outlets where peak queues form",
+      "range": [
+        10,
+        30
+      ],
+      "source": "assumption, illustrative, to validate with Chagee",
+      "rationale": "Our placeholder: about half of the 44 outlets, the CBD, mall and MRT-linked ones where the problem slide's peak crowding occurs. Chagee's own wait and walk-away data would set it."
+    },
+    "p1_switch_share_of_peak": {
+      "value": 0.05,
+      "unit": "share of peak-hour orders that accept a switch and get the perk",
+      "range": [
+        0.02,
+        0.1
+      ],
+      "source": "assumption, illustrative, to validate with Chagee",
+      "rationale": "Our placeholder: 1 in 20 peak orders. Retained orders (online_case.peak_retained_share, the team brief's 3%) are the subset that would otherwise have walked away; every switch costs the perk (online_case.pickup_reward, S$0.50)."
+    },
+    "p2_outlets_per_zone": {
+      "value": 4,
+      "unit": "outlets in a planning zone",
+      "range": null,
+      "source": "assumption",
+      "rationale": "As slide 10's pilot zone: Raffles Place, Suntec City, City Hall and Clarke Quay. 44 outlets make 11 zones."
+    },
+    "p2_zone_months": {
+      "value": [
+        79,
+        132,
+        132,
+        132,
+        132
+      ],
+      "unit": "zone-months live with in-store planning, per year",
+      "range": null,
+      "source": "assumption",
+      "rationale": "Follows slide 10: one test zone in Apr-May (2), all 11 zones from the June launch (7 x 11 = 77): 79 in 2027; 11 x 12 = 132 a year after. Each zone-month uses Proposal 2's financial case (p2_finance: 60 overtime hours avoided at the deck's wage, S$300 recurring cost)."
+    },
+    "p2_waste_share": {
+      "value": 0.005,
+      "unit": "share of an outlet's ingredient spend no longer written off",
+      "range": [
+        0.0,
+        0.01
+      ],
+      "source": "assumption, illustrative, to validate with Chagee",
+      "rationale": "Our placeholder: half a percent of ingredient spend (price x (1 - margin) x cups). Counts only lower write-offs, as the Proposal 2 financial case asks finance to verify."
+    },
+    "p3_stores": {
+      "value": [
+        "base",
+        "base"
+      ],
+      "unit": "volume scenario of each of the two new stores, from the new-store P&L (pnl)",
+      "range": null,
+      "source": "assumption",
+      "rationale": "Slide 10 plans two new stores in strong locations; both use the deck's recommended cluster site at base volume as a stand-in, opening mid-2027 (business_case.opening_year_share, so 2027 counts half a year). Revenue is net of sales moved from nearby outlets; operating profit is before the AI cost, which sits in the shared rows. Set-up is site_ext.setup_cost each. The page shows the second store at low volume as a downside."
+    },
+    "build_people": {
+      "value": 2,
+      "unit": "people in the build team, January to June 2027",
+      "range": null,
+      "source": "assumption",
+      "rationale": "Slide 10's project team from our side: a project manager and an AI engineer, at business_case.specialist_day_rate. Chagee's supply-chain, zone and store managers are existing staff and are not costed."
+    },
+    "run_from_month": {
+      "value": 7,
+      "unit": "month of 2027 the run team, cloud and licences start",
+      "range": null,
+      "source": "assumption",
+      "rationale": "After the six-month build on slide 10. Run team = business_case.maintenance_people at the same day rate; cloud and licences = business_case.platform_per_store_month for all 44 outlets."
+    }
   }
 }

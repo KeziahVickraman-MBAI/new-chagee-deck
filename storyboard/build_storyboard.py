@@ -1065,6 +1065,90 @@ def digit_check(tpl: str) -> None:
         raise SystemExit("build: typed digits in slide text (use a placeholder):\n  " + "\n  ".join(ctx))
 
 
+def consol_page(d: dict) -> str:
+    """Appendix: consolidated revenue and costs for the next five years, all three proposals (assumptions.json consolidated)."""
+    C, BC, SB, ST, OC, P2, X = RAW["consolidated"], RAW["business_case"], RAW["storyboard"], RAW["store"], RAW["online_case"], RAW["p2_finance"], RAW["site_ext"]
+    v = lambda sec, k: sec[k]["value"]
+    Y = 5; y0 = v(C, "start_year"); years = [y0 + i for i in range(Y)]
+    price, mg, cups, days = v(SB, "price_per_cup"), v(SB, "gross_margin_per_cup"), v(ST, "cups_per_store_per_year"), v(ST, "open_days_per_year")
+    outlets, wage, rate, wd = RAW["facts"]["sg_outlets"]["value"], v(RAW["costs"], "labour_cost_per_hour"), v(BC, "specialist_day_rate"), v(BC, "working_days_per_month")
+    peak_share = sum(sorted(v(ST, "hourly_demand_share"), reverse=True)[:v(OC, "peak_hours")])
+    app_share = 1 - v(X, "delivery_share_of_cups")                       # Grab delivery orders cannot be rerouted in Chagee's app
+    peak_cups = cups / days * peak_share                                 # peak-hour cups an outlet a day
+    om = v(C, "p1_outlet_months"); zm = v(C, "p2_zone_months"); opz = v(C, "p2_outlets_per_zone")
+    if len(om) != Y or len(zm) != Y or v(C, "p1_outlet_months")[-1] != 12 * v(C, "p1_busy_outlets") or zm[-1] != 12 * math.ceil(outlets / opz):
+        raise SystemExit("build: consolidated rollout no longer matches the busy outlets or the zones; check assumptions.json consolidated")
+    od = lambda o: o / 12 * days                                          # outlet-months to outlet trading days
+    p1_cups = [od(o) * peak_cups * app_share * v(OC, "peak_retained_share") for o in om]
+    p1_rev = [c * price for c in p1_cups]; p1_con = [r * mg for r in p1_rev]
+    p1_perk = [od(o) * peak_cups * app_share * v(C, "p1_switch_share_of_peak") * v(OC, "pickup_reward") for o in om]
+    p2_ot = [z * v(P2, "overtime_hours_per_month") * wage for z in zm]
+    p2_waste = [z * opz * cups / 12 * price * (1 - mg) * v(C, "p2_waste_share") for z in zm]
+    p2_sys = [z * v(P2, "recurring_cost_per_month") for z in zm]
+    half = v(BC, "opening_year_share")
+    def store(sc):                                                        # calendar years from a mid-year opening; AI cost sits in the shared rows
+        ys = d["pnl"]["wi"][sc]["years"]
+        return [{k: ys[i][k] * (half if i == 0 else 1) for k in ("netRev", "opProfit", "aiRec")} for i in range(Y)]
+    stores = [store(sc) for sc in v(C, "p3_stores")]
+    p3_rev = [sum(st[i]["netRev"] for st in stores) for i in range(Y)]
+    p3_op = [sum(st[i]["opProfit"] + st[i]["aiRec"] for st in stores) for i in range(Y)]
+    setup = [len(stores) * v(X, "setup_cost")] + [0] * (Y - 1)
+    bp, bm = v(C, "build_people"), v(BC, "build_months")
+    build = [bp * bm * wd * rate] + [0] * (Y - 1)
+    integ = [v(BC, "integration_one_time")] + [0] * (Y - 1)
+    run_m = [13 - v(C, "run_from_month")] + [12] * (Y - 1)
+    run = [v(BC, "maintenance_people") * m * wd * rate for m in run_m]
+    plat = [v(BC, "platform_per_store_month") * outlets * m for m in run_m]
+    rev = [p1_rev[i] + p3_rev[i] for i in range(Y)]
+    con = [p1_con[i] + p2_ot[i] + p2_waste[i] + p3_op[i] for i in range(Y)]
+    one = [build[i] + integ[i] + setup[i] for i in range(Y)]
+    rec = [run[i] + plat[i] + p2_sys[i] + p1_perk[i] for i in range(Y)]
+    net = [con[i] - one[i] - rec[i] for i in range(Y)]
+    cum = [sum(net[:i + 1]) for i in range(Y)]
+    pay = next((years[i] for i in range(Y) if cum[i] >= 0), None)
+    # sensitivities: the second store at low volume; one run engineer instead of two
+    low2 = [store(v(C, "p3_stores")[0]), store("low")]
+    d_low = sum(sum(st[i]["opProfit"] + st[i]["aiRec"] for st in low2) for i in range(Y)) - sum(p3_op)
+    d_run = sum(run) / v(BC, "maintenance_people")
+    k = lambda x: f"{'−' if x < -0.5 else ''}S${abs(x) / 1e3:,.0f}k" if abs(x) >= 0.5 else "–"
+    m1 = lambda x: f"{'−' if x < 0 else ''}S${abs(x) / 1e6:.2f}m"
+    neg = lambda x: f"<td class='ng'>{k(x)}</td>" if x < -0.5 else f"<td>{k(x)}</td>"
+    row = lambda lab, xs, note, cls="": f"<tr class='{cls}'><td>{lab}</td>{''.join(neg(x) for x in xs)}<td>{note}</td></tr>"
+    cost = lambda lab, xs, note: row(lab, [-x for x in xs], note)
+    sec = lambda t: f"<tr class='sec'><td colspan='{Y + 2}'>{t}</td></tr>"
+    pc = lambda x: f"{100 * x:g}%"
+    h = [f"<table class='ctab'><tr><th></th>{''.join(f'<th>{y}</th>' for y in years)}<th>Assumption (source)</th></tr>",
+         sec("Revenue added to Chagee"),
+         row("P1 · peak orders kept", p1_rev, f"{v(C, 'p1_busy_outlets')} busy outlets; {pc(v(OC, 'peak_retained_share'))} of app peak cups kept (team brief) × S${price:.2f}"),
+         row("P3 · two new stores", p3_rev, "net of sales moved from nearby outlets; open mid-2027 (P&amp;L, base)"),
+         row("Total revenue", rev, "", "tot"),
+         sec("Contribution and savings"),
+         row("P1 · contribution", p1_con, f"{pc(mg)} gross margin on kept orders"),
+         row("P2 · overtime avoided", p2_ot, f"{v(P2, 'overtime_hours_per_month')} h a zone-month × S${wage:.2f}; {math.ceil(outlets / opz)} zones from June"),
+         row("P2 · waste avoided", p2_waste, f"{pc(v(C, 'p2_waste_share'))} of ingredient spend, write-offs only"),
+         row("P3 · store operating profit", p3_op, "after rent, staff, delivery fees and lost neighbour profit"),
+         row("Total contribution", con, "", "tot"),
+         sec("One-time costs"),
+         cost("Build team", build, f"{bp} people × {bm} months × S${rate:,} a day (slide 10 team)"),
+         cost("Integration", integ, "POS, app and supplier feeds (approved)"),
+         cost("New-store set-up", setup, f"{len(stores)} × S${v(X, 'setup_cost') / 1e3:,.0f}k fit-out and equipment"),
+         sec("Recurring costs"),
+         cost("Run team", run, f"{v(BC, 'maintenance_people')} engineers from July, same day rate (approved)"),
+         cost("Cloud and licences", plat, f"S${v(BC, 'platform_per_store_month')} an outlet-month × {outlets} (approved)"),
+         cost("P2 · zone system and support", p2_sys, f"S${v(P2, 'recurring_cost_per_month')} a zone-month (Proposal 2 financial case)"),
+         cost("P1 · switch perk", p1_perk, f"{pc(v(C, 'p1_switch_share_of_peak'))} of app peak orders switch × S${v(OC, 'pickup_reward'):.2f}"),
+         row("Total costs", [-(one[i] + rec[i]) for i in range(Y)], "", "tot"),
+         row("Profit", net, "contribution less all costs", "big"),
+         row("Cumulative profit", cum, f"payback in {pay}" if pay else f"no payback by {years[-1]}", "cum"),
+         "</table>",
+         f"<p class='cnote'>Downside checks on the five-year total of {m1(cum[-1])}: the second store at low volume {m1(d_low)}; one run engineer instead of two +{m1(d_run)}. "
+         f"Each proposal touches different customers, so no order is counted twice. "
+         f"Not included: Chagee staff time, demand growth, inflation. Illustrative assumptions, not Chagee data.</p>"]
+    if abs(sum(net) - cum[-1]) > 1 or abs(sum(con) - sum(one) - sum(rec) - cum[-1]) > 1:
+        raise SystemExit("build: consolidated table does not add up")
+    return "".join(h)
+
+
 def build() -> Path:
     d = ensure_data()
     # the GM's decisions, recomputed from sim/ on every build (not read from data.json)
@@ -1093,6 +1177,7 @@ def build() -> Path:
     oa = online_appendix(d)
     html = html.replace("<!--ONLAPPX1-->", oa[0]).replace("<!--ONLAPPX2-->", oa[1])
     html = html.replace("<!--MBAPPX1-->", mx[0]).replace("<!--MBAPPX2-->", mx[1]).replace("<!--MBAPPX3-->", mx[2])
+    html = html.replace("<!--CONSOL-->", consol_page(d))
     html = html.replace("<!--APPENDIX-->", appendix()).replace("<!--NMAPPENDIX-->", nm_appendix()).replace("<!--TIERS-->", tiers_table())
     js = "\n".join((ROOT / "sim" / f).read_text(encoding="utf-8") for f in ("sim.js", "store.js", "counter.js", "sitepick.js", "ladder.js", "benefit.js", "siteext.js", "sitemodel.js", "newmarket.js", "pnl.js", "members.js", "squadcast.js", "crewtool.js", "toppings.js"))
     js += "\n" + (HERE / "deck.js").read_text(encoding="utf-8")
