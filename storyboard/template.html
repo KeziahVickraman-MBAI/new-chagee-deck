@@ -2062,7 +2062,7 @@ body.print #p1p :is(.pq-walker,.pq-in){animation:none} @media print{#p1p :is(.pq
    stages, a back link without the arrow, and a line of links */
 #p3x.slide .p2x-tl ol{counter-reset:p3s} #p3x.slide .p2x-tl li{counter-increment:p3s;grid-template-columns:28px 1fr}
 #p3x.slide .p2x-tl .wk{display:grid;place-items:center;width:28px;height:28px;padding:0;border-radius:50%} #p3x.slide .p2x-tl .wk::before{content:counter(p3s)}
-#p3x .golink.back:after{content:none} :is(#x1b,#x2) .golink.back:after{content:none} #p3x .golink.mlref{margin-left:0}
+#p3x .golink.back:after{content:none} :is(#x1b,#x2,#acr) .golink.back:after{content:none} #p3x .golink.mlref{margin-left:0}
 #p3x .p3x-links{margin:10px 0 0;font:13px/1.4 var(--sans);color:var(--ink2)} #p3x .p3x-links .golink{margin:0 14px 0 6px}
 #p3x .gate b{display:block;font:600 14.5px/1.35 var(--sans)}
 #e2 .e2exec{flex:none;align-self:flex-end;margin:auto 0 0;padding:7px 14px;border-radius:999px;background:var(--navy);color:#fff;border:0;font:600 12.5px/1 var(--sans)}   /* as Proposal 2's Execution steps */
@@ -3637,6 +3637,7 @@ aside.notes{display:none}
   <div class="leafart" aria-hidden="true"></div>
   <div class="inner">
     <p class="kicker">Appendix · Financial impact · Five-year model</p>
+    <p class="exoback screenonly" style="position:absolute;right:250px;top:40px;margin:0"><span class="golink back" data-go="fi" tabindex="0" role="link">← Back to financial impact</span></p>
     <h2 class="head">The five-year model behind the financial impact</h2>
     <div class="fmw"><!--FINMODEL--></div>
   </div>
