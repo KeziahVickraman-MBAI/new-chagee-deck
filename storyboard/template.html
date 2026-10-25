@@ -916,6 +916,14 @@ html,body{margin:0;background:#E7E3DC;color:var(--ink);font-family:var(--sans);-
 .dlist i{display:block;color:var(--red);font-style:normal;font-size:11px;margin-top:2px}
 .bars .grp{font:600 9.5px/1.2 var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--taupe);margin:4px 0 -2px}
 .bars .row.pil .b{opacity:.85}
+/* main proposal slides: the decision-maker runs up the left margin and the course link down the right one, as slim vertical
+   labels beside the content (outside .inner, so every reveal step and Show all keep them); centred on the body below the title */
+.edge{position:absolute;top:calc(50% + 46px);z-index:4;margin:0;display:flex;align-items:center;gap:8px;writing-mode:vertical-rl;white-space:nowrap;
+  padding:10px 4px;border-radius:6px;font:500 11.5px/1 var(--sans);letter-spacing:.01em;pointer-events:none;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.edge i{font:600 8.5px/1 var(--sans);font-style:normal;letter-spacing:.16em;text-transform:uppercase;opacity:.72}
+.edge b{font-weight:600}
+.edge.edm{left:24px;transform:translateY(-50%) rotate(180deg);background:#EAF1EC;color:#2F5A3E}
+.edge.ecl{right:24px;transform:translateY(-50%);background:#ECEFF5;color:#2D4670}
 /* 08 after its overview: Proposal 3's two-line title costs a line, so the map / P&L stage takes it back from the gaps and the
    space above the footer; the forecast card and the P&L table end above the takeaway */
 #c5:not(.c5ov)>.inner{padding-bottom:38px} #c5:not(.c5ov) .body{margin-top:12px} #c5:not(.c5ov) .inner>.takeaway{margin-top:10px}
@@ -2243,8 +2251,10 @@ aside.notes{display:none}
 <!-- ======================================================= 03 ONLINE RETAILING · PROPOSAL 1: THE BUSINESS PROBLEM -->
 <section class="slide content" id="p1p" data-chapter="Online" data-reveal="all" data-title="When an outlet is swamped">
   <div class="leafart" aria-hidden="true"></div>
+  <p class="edge edm"><i>Decision-maker</i><b>Digital commerce manager, with operations</b></p>
+  <p class="edge ecl"><i>Course link</i><b>Topics 3 &amp; 9 · Demand prediction and omnichannel fulfilment</b></p>
   <div class="inner">
-    <p class="kicker">03 · Online retailing · the business problem<span class="dm"><i>Decision-maker</i>Digital commerce manager, with operations</span></p>
+    <p class="kicker">03 · Online retailing · the business problem</p>
     <h2 class="head">Proposal 1: AI-enabled demand management</h2>
     <p class="bprob keep"><b>Key challenge</b><span>Demand management: crowded outlets lose sales, and the customer experience suffers.</span></p>
     <div class="p1panel keep">
@@ -2270,8 +2280,10 @@ aside.notes{display:none}
 <!-- ======================================================= 04 ONLINE RETAILING · PROPOSAL 1: HOW IT WORKS (overview; its illustrative explanation, #p1b, follows as an auxiliary view) -->
 <section class="slide content" id="p1h" data-chapter="Online" data-title="Proposal 1: how it works">
   <div class="leafart" aria-hidden="true"></div>
+  <p class="edge edm"><i>Decision-maker</i><b>Digital commerce manager, with operations</b></p>
+  <p class="edge ecl"><i>Course link</i><b>Topics 3 &amp; 9 · Demand prediction and omnichannel fulfilment</b></p>
   <div class="inner">
-    <p class="kicker hk">04 · Online retailing · how it works<span class="dm"><i>Decision-maker</i>Digital commerce manager, with operations</span><span class="ctag"><i>Course link</i>Topics 3 &amp; 9 · Demand prediction and omnichannel fulfilment</span></p>
+    <p class="kicker hk">04 · Online retailing · how it works</p>
     <button class="btn auxb screenonly keep" data-go="p1b" title="The same solution, animated step by step (optional)">See illustrative explanation →</button>
     <h2 class="head">From Chagee's data to demand spread across outlets</h2>
     <p class="hsub keep">An AI agent uses predictive AI to recommend, generative AI explains, and people make the final call.</p>
@@ -2315,8 +2327,10 @@ aside.notes{display:none}
      Next path; opened from 04's button, and Back to proposal, Next past its end or Previous before its start return to 04) -->
 <section class="slide content" id="p1b" data-chapter="Online" data-reveal="all" data-aux="p1h" data-title="How the solution works: illustrative explanation">
   <div class="leafart" aria-hidden="true"></div>
+  <p class="edge edm"><i>Decision-maker</i><b>Digital commerce manager, with operations</b></p>
+  <p class="edge ecl"><i>Course link</i><b>Topics 3 &amp; 9 · Demand prediction and omnichannel fulfilment</b></p>
   <div class="inner">
-    <p class="kicker">Online retailing · illustrative explanation<span class="dm"><i>Decision-maker</i>Digital commerce manager, with operations</span></p>
+    <p class="kicker">Online retailing · illustrative explanation</p>
     <button class="btn auxb back screenonly" data-go="p1h">← Back to proposal</button>
     <h2 class="head">From Chagee's data to better-balanced demand</h2>
     <p class="bprob keep"><b>The solution</b><span>Predictive AI recommends, generative AI explains, and people decide.</span></p>
@@ -2421,8 +2435,10 @@ aside.notes{display:none}
 <!-- ======================================================= 05 ONLINE RETAILING · PROPOSAL 1: THE CUSTOMER EXPERIENCE -->
 <section class="slide content" id="p1a" data-chapter="Online" data-reveal="all" data-title="The customer experience">
   <div class="leafart" aria-hidden="true"></div>
+  <p class="edge edm"><i>Decision-maker</i><b>Digital commerce manager, with operations</b></p>
+  <p class="edge ecl"><i>Course link</i><b>Topics 3 &amp; 9 · Demand prediction and omnichannel fulfilment</b></p>
   <div class="inner">
-    <p class="kicker">05 · Online retailing · the customer experience<span class="dm"><i>Decision-maker</i>Digital commerce manager, with operations</span></p>
+    <p class="kicker">05 · Online retailing · the customer experience</p>
     <h2 class="head">Customers get a faster outlet; managers approve delivery actions</h2>
     <p class="bprob keep"><b>Illustrative scenario</b><span data-cx="scen"></span></p>
     <div class="cxw keep" style="--emb:url({img:emblem})">
@@ -2456,6 +2472,8 @@ aside.notes{display:none}
 <!-- ======================================================= 06 IN-STORE MANAGEMENT · PROPOSAL 2: AI-ENABLED IN-STORE PLANNING -->
 <section class="slide content" id="p2p" data-chapter="Serve" data-title="AI-enabled in-store planning: the challenge">
   <div class="leafart" aria-hidden="true"></div>
+  <p class="edge edm"><i>Decision-maker</i><b>Zone manager / outlet GM</b></p>
+  <p class="edge ecl"><i>Course link</i><b>Topics 3 &amp; 4 · Demand forecasting and resource allocation</b></p>
   <div class="inner">
     <p class="kicker">06 · In-store management</p>
     <h2 class="head">Proposal 2: AI-enabled in-store planning to achieve high-performing outlets</h2>
@@ -2497,8 +2515,10 @@ aside.notes{display:none}
 <!-- ======================================================= 07 IN-STORE MANAGEMENT · PROPOSAL 2: HOW IT WORKS (the managers' dashboard) -->
 <section class="slide content" id="p2b" data-chapter="Serve" data-title="How AI-assisted staffing works" data-reveal="all">
   <div class="leafart" aria-hidden="true"></div>
+  <p class="edge edm"><i>Decision-maker</i><b>Zone manager / outlet GM</b></p>
+  <p class="edge ecl"><i>Course link</i><b>Topics 3 &amp; 4 · Demand forecasting and resource allocation</b></p>
   <div class="inner">
-    <p class="kicker">07 · In-store management · how it works<span class="ctag"><i>Course link</i>Topics 3 &amp; 4 · Demand forecasting and resource allocation</span></p>
+    <p class="kicker">07 · In-store management · how it works</p>
     <h2 class="head">Managers can use insights to plan and manage stores better</h2>
     <div class="db-flow">
       <span class="db-fl-lab">How it works</span>
@@ -2618,8 +2638,10 @@ aside.notes{display:none}
 <!-- ======================================================= 08 EXPAND: THE CANDIDATE-SITE MAP -->
 <section class="slide content ovslide" id="c5" data-chapter="Expand" data-title="Predict demand for a new store">
   <div class="leafart" aria-hidden="true"></div>
+  <p class="edge edm"><i>Decision-maker</i><b>Expansion manager</b></p>
+  <p class="edge ecl"><i>Course link</i><b>Topic 3 · Analytics and AI: data-driven demand prediction</b></p>
   <div class="inner">
-    <p class="kicker">08 · Expand · where to open next<span class="dm"><i>Decision-maker</i>Expansion manager</span><span class="ctag"><i>Course link</i>Topic 3 · Analytics and AI: data-driven demand prediction</span></p>
+    <p class="kicker">08 · Expand · where to open next</p>
     <h2 class="head">Proposal 3: Open where an outlet adds customers, not where it moves them</h2>
     <p class="bprob keep"><b>Business problem</b><span>Chagee needs to identify locations with sufficient additional demand and attractive economics: a new outlet may look successful while mostly moving sales from nearby stores.
       <span class="ev obs">Context</span> Chagee aims to expand rapidly in Singapore; the number of stores is confidential (Chagee source, anonymous). <span class="ev sim">Simulated</span> searches below.</span></p>
@@ -2757,8 +2779,10 @@ aside.notes{display:none}
      from DATA.site and DATA.pnl; the table version is in the appendix (#e2t). -->
 <section class="slide content" id="e2" data-chapter="Expand" data-reveal="all" data-title="The expansion manager's decision">
   <div class="leafart" aria-hidden="true"></div>
+  <p class="edge edm"><i>Decision-maker</i><b>Expansion manager</b></p>
+  <p class="edge ecl"><i>Course link</i><b>Topic 3 · Analytics and AI: data-driven demand prediction</b></p>
   <div class="inner stepper" data-steps="3">
-    <p class="kicker">09 · Expand · the expansion manager's decision<span class="dm"><i>Decision-maker</i>Expansion manager</span></p>
+    <p class="kicker">09 · Expand · the expansion manager's decision</p>
     <h2 class="head">{{s.top_hub}} brings in over three times the new cups. Investigate it first, then check the downside</h2>
     <div class="revctl screenonly" style="top:8px"><span class="lab">Step through</span><span class="ctl"></span></div>
     <div class="e2v">

@@ -2231,6 +2231,7 @@
       const pg = document.createElement("section"); pg.className = "slide content"; pg.id = `${sl.id}p`; pg.dataset.chapter = sl.dataset.chapter;
       pg.innerHTML = `<div class="leafart" aria-hidden="true"></div><div class="inner"></div>`;
       [".kicker", ".head", ".bprob"].forEach(q => $(pg, ".inner").appendChild($(sl, q).cloneNode(true)));
+      $$(sl, ":scope > .edge").forEach(e => pg.appendChild(e.cloneNode(true)));   // the margin labels go with the print copy
       const ov = box.cloneNode(true); ov.className = "c5intro static"; ov.removeAttribute("data-st");
       $$(ov, ".c5nav").forEach(n => n.remove()); $$(ov, ".c5k").forEach((k, i) => (k.textContent = `${i + 1}`));
       $(pg, ".inner").appendChild(ov); pg.appendChild($(sl, ".foot").cloneNode(true)); sl.before(pg);
