@@ -1300,14 +1300,15 @@ html,body{margin:0;background:#E7E3DC;color:var(--ink);font-family:var(--sans);-
 .p2scene .free,.p2scene .busy{opacity:0;transition:opacity .35s} .p2scene .free.on{opacity:1;animation:p2glow 1.8s ease-in-out infinite} .p2scene .busy.on{opacity:1}
 .p2scene .drip{animation:p2drip 1.1s ease-in infinite} .p2scene .press{animation:p2press 1.6s ease-in-out infinite}
 .p2scene .mgrw{animation:p2walk 1.4s ease-out 1s both} .p2scene .mbub{opacity:0;transition:opacity .45s} .p2panel:is([data-k="4"],[data-k="5"]) .mbub{opacity:1}
-.p2scene .tubs{opacity:0;transition:opacity .5s} .p2panel:not([data-k="1"]) .tubs{opacity:1} .p2scene .tk{animation:c5fade .35s ease-out both}
+.p2scene .tubs{opacity:0;transition:opacity .5s} .p2panel:not([data-k="1"]) .tubs{opacity:1}
 .bprob .ev.ctx{color:var(--red);border:1px dashed var(--red);background:#fff}
 @keyframes p2scroll{to{transform:translateY(-24px)}} @keyframes p2np{0%{transform:translateY(0);opacity:0}15%{opacity:1}75%{transform:translateY(-24px);opacity:1}100%{transform:translateY(-30px);opacity:0}}
 @keyframes p2pass{0%{transform:translateX(0);opacity:1}70%{opacity:1}100%{transform:translateX(26px);opacity:0}}
 @keyframes p2glow{0%,100%{filter:none}50%{filter:drop-shadow(0 0 5px rgba(47,107,69,.75))}} @keyframes p2drip{from{transform:translateY(0);opacity:1}to{transform:translateY(16px);opacity:0}}
 @keyframes p2press{0%,100%{transform:translateY(0)}50%{transform:translateY(9px)}} @keyframes p2walk{from{transform:translateX(-90px);opacity:0}to{transform:translateX(0);opacity:1}}
 .p2scene.paused *{animation-play-state:paused!important}
-@media print{.p2scene *{animation:none!important} .p2scene .hs{opacity:1!important} .p2scene .np{opacity:0!important} .p1tip{display:none}}
+@media print{.p2scene *{animation:none!important} .p2scene .hs{opacity:1!important} .p2scene .np{opacity:0!important} .p1tip{display:none}
+  .p2panel .p1row h5{font-size:15.5px} .p2panel .p1row p{font-size:11.5px;line-height:1.32} .p2panel .p1gains{margin-top:4px;padding:7px 10px} .p2panel .p1ghd{font-size:15.5px;margin-bottom:4px} .p2panel .p1gains div p{font-size:11px}}
 @media (prefers-reduced-motion:reduce){.p2scene *,:is(#s2b,#s2t) .s2bi *,:is(#s2b,#s2t) .tab2 *{animation:none!important;transition:none!important}}
 /* the tablet, how it works (appendix): three steps, as slide 04 */
 #s2b .c5intro{height:448px;padding:12px 22px}
@@ -1465,14 +1466,14 @@ html,body{margin:0;background:#E7E3DC;color:var(--ink);font-family:var(--sans);-
 #s2r .sx li.cur{color:#fff;background:var(--red);border-color:var(--red)} #s2r .sx li.cur .num{background:#fff;color:var(--red)}
 #s2r .c5s{margin-top:8px} #s2r .sc{position:relative;height:318px;flex:none}
 #s2r .c5cap{margin:6px 0 0;font-size:16px;padding-right:470px;white-space:nowrap}
-#s2r .sc1{display:grid;grid-template-columns:720px 1fr;gap:16px}
+#s2r .sc1{display:grid;grid-template-columns:720px 1fr;gap:16px} #s2r .sc3{display:block;margin-top:0}
 #s2r .bbox{position:relative;background:#fff;border-radius:12px;padding:8px 10px 6px;display:flex;flex-direction:column}
 #s2r .bclock,#s2c .tclk{display:inline-flex;align-items:baseline;gap:8px;align-self:flex-start;background:var(--navy);color:#fff;border-radius:999px;padding:4px 14px;font:13px/1.2 var(--sans)}
 #s2r .bclock .lab,#s2c .tclk .lab{font:600 9.5px var(--sans);letter-spacing:.12em;text-transform:uppercase;color:#C9D3E3}
 #s2r .bclock b,#s2c .tclk b{font:700 19px/1 var(--sans);font-variant-numeric:tabular-nums}
 #s2r .bclock .spd,#s2c .tclk .pb{font:600 12px var(--sans);color:#F1D9A6}
 #s2r .bsvg{display:block;width:100%;height:auto;margin-top:4px}
-#s2r .bcap{margin:2px 4px 0;min-height:40px;font:500 18px/1.25 var(--serif);color:var(--navy)} #s2r .bcap i{font-style:normal;color:var(--red)}
+#s2r .bcap{margin:0 4px;min-height:40px;font:500 18px/1.25 var(--serif);color:var(--navy)} #s2r .bcap i{font-style:normal;color:var(--red)}
 #s2r .rules{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:9px}
 #s2r .rules li{display:grid;grid-template-columns:30px 1fr;gap:10px;align-items:start;background:#fff;border-radius:12px;padding:10px 12px;border:2px solid transparent;opacity:.55;transition:opacity .35s,border-color .35s}
 #s2r .rules li.on{opacity:1;border-color:var(--red)} #s2r .rules li.done{opacity:1}
@@ -1506,12 +1507,12 @@ html,body{margin:0;background:#E7E3DC;color:var(--ink);font-family:var(--sans);-
 }
 /* 08 */
 #s2c .tcmp{position:relative;margin-top:8px;background:var(--cream);border-radius:14px;padding:8px 14px 8px;display:flex;flex-direction:column;gap:4px}
-#s2c .tcbar{display:flex;align-items:center;gap:14px}
+#s2c .tcbar{display:flex;align-items:center;gap:10px}
 #s2c .tsh{display:flex;align-items:center;gap:10px;background:#fff;border:2px solid var(--red);border-radius:10px;padding:4px 12px}
-#s2c .tsh .l{font:600 13.5px/1.15 var(--sans);color:var(--ink)} #s2c .tsh .l small{display:block;font:500 10.5px var(--sans);color:var(--taupe)}
-#s2c .tsh input{width:190px;accent-color:var(--red)} #s2c .tsh b{min-width:46px;font:700 22px/1 var(--sans);color:var(--red);font-variant-numeric:tabular-nums}
-#s2c .tclk{align-self:center} #s2c .tclk .of{font:12px var(--sans);color:#C9D3E3}
-#s2c .tply{display:flex;align-items:center;gap:6px} #s2c .tply .btn{padding:4px 9px;font-size:12.5px}
+#s2c .tsh .l{font:600 13.5px/1.15 var(--sans);color:var(--ink);white-space:nowrap} #s2c .tsh .l small{display:block;font:500 10.5px var(--sans);color:var(--taupe)}
+#s2c .tsh input{width:118px;accent-color:var(--red)} #s2c .tsh b{min-width:46px;font:700 22px/1 var(--sans);color:var(--red);font-variant-numeric:tabular-nums}
+#s2c .tclk{align-self:center;white-space:nowrap} #s2c .tclk .of{font:12px var(--sans);color:#C9D3E3}
+#s2c .tply{display:flex;align-items:center;gap:5px} #s2c .tply .btn,#s2c .asmb{padding:4px 9px;font-size:12.5px}
 #s2c .spd{display:inline-flex;border:1.5px solid var(--line);border-radius:8px;overflow:hidden;background:#fff}
 #s2c .spd button{all:unset;cursor:pointer;padding:4px 8px;font:600 12px var(--sans);color:var(--ink2)} #s2c .spd button+button{border-left:1px solid var(--line)} #s2c .spd button.on{background:var(--navy);color:#fff}
 #s2c .asmb{margin-left:auto}
@@ -2146,14 +2147,14 @@ aside.notes{display:none}
         <g class="hs hs-cai" data-hs="cai"><g transform="translate(556 168) scale(1.9)"><g class="wk"><path d="M-11 34 C-11 18 -7 12 0 12 C7 12 11 18 11 34 Z" fill="#2E3A55"/><path d="M-7 34 L-7 21 Q0 18 7 21 L7 34 Z" fill="#F6ECDD"/><circle cy="2" r="9" fill="#F1D3B8"/><path d="M-9 0 C-9 -9 9 -9 9 0 C6 -4 -6 -4 -9 0 Z" fill="#5A3E2B"/><path d="M-4 6 Q0 8.5 4 6" stroke="#7A4B3A" stroke-width="1.2" fill="none" stroke-linecap="round"/><circle cx="-3.5" cy="2" r="1.1" fill="#3B2F2A"/><circle cx="3.5" cy="2" r="1.1" fill="#3B2F2A"/></g></g>
           <rect x="500" y="208" width="112" height="5" rx="2" fill="#E6D3B6"/><g class="dcai"></g><g class="dready"></g></g>
         <rect x="18" y="224" width="604" height="11" rx="3" fill="#B8957A"/><rect x="22" y="235" width="596" height="56" rx="4" fill="#9C7A5B"/>
-        <g font-size="10.5" font-weight="700" fill="#FFF8EC" text-anchor="middle"><text x="86" y="256">Order screen</text><text x="180" y="256">Cup and ice</text><text x="275" y="256">Tea and milk</text><text x="352" y="256">Toppings and finishing</text><text x="455" y="256">Sealer</text><text x="556" y="256">Hand-over</text></g>
-        <g font-size="9.5" fill="#F1E5D2" text-anchor="middle"><text x="86" y="272">machine</text><text x="180" y="272">Ana</text><text x="275" y="272">machine · Ben</text><text x="352" y="272">Ben</text><text x="455" y="272">machine · Cai</text><text x="556" y="272">Cai</text></g>
+        <g font-size="10.5" font-weight="700" fill="#FFF8EC" text-anchor="middle"><text x="86" y="256">Order screen</text><text x="180" y="256">Cup and ice</text><text x="266" y="256">Tea and milk</text><text x="368" y="256" font-size="10">Toppings and finishing</text><text x="460" y="256">Sealer</text><text x="556" y="256">Hand-over</text></g>
+        <g font-size="9.5" fill="#F1E5D2" text-anchor="middle"><text x="86" y="272">machine</text><text x="180" y="272">Ana</text><text x="266" y="272">machine · Ben</text><text x="368" y="272">Ben</text><text x="460" y="272">machine · Cai</text><text x="556" y="272">Cai</text></g>
         <g class="hs hs-mgr" data-hs="mgr"><g transform="translate(54 412) scale(1.08)"><g class="mgrw"><path d="M-6 -48 L-9 0" stroke="#1C2F4F" stroke-width="9" stroke-linecap="round"/><path d="M6 -48 L9 0" stroke="#1C2F4F" stroke-width="9" stroke-linecap="round"/><ellipse cx="-10" cy="1" rx="7" ry="3.5" fill="#262626"/><ellipse cx="10" cy="1" rx="7" ry="3.5" fill="#262626"/><path d="M-20 -44 Q-22 -92 0 -94 Q22 -92 20 -44 Z" fill="#1F5A3A"/><path d="M-6 -93 L0 -76 L6 -93 Z" fill="#fff"/><path d="M-19 -88 Q-28 -66 -23 -48" stroke="#1F5A3A" stroke-width="8" fill="none" stroke-linecap="round"/><path d="M19 -88 Q30 -76 24 -62" stroke="#1F5A3A" stroke-width="8" fill="none" stroke-linecap="round"/><circle cy="-109" r="14" fill="#E8C4A0"/><path d="M-14 -111 Q-15 -127 0 -127 Q15 -127 14 -111 Q8 -119 0 -118 Q-8 -119 -14 -111 Z" fill="#3B2F2A"/><circle cx="-5" cy="-108" r="1.6" fill="#262626"/><circle cx="5" cy="-108" r="1.6" fill="#262626"/><path d="M-4 -102 Q0 -100 4 -102" stroke="#262626" stroke-width="1.4" fill="none" stroke-linecap="round"/><g transform="rotate(-8)"><rect x="12" y="-78" width="38" height="27" rx="3.5" fill="#2B2320"/><rect x="15" y="-75" width="32" height="21" rx="1.5" fill="#DCE2EC"/><rect x="18" y="-63" width="4" height="7" fill="#24406B"/><rect x="24" y="-66" width="4" height="10" fill="#24406B"/><rect x="30" y="-72" width="4" height="16" fill="#B8322B"/><rect x="36" y="-64" width="4" height="8" fill="#24406B"/><rect x="42" y="-62" width="4" height="6" fill="#24406B"/></g></g></g>
           <g class="mbub"><rect x="114" y="304" width="372" height="66" rx="16" fill="#fff" stroke="#1F5A3A" stroke-width="2"/><path d="M116 326 L90 314 L116 340" fill="#fff" stroke="#1F5A3A" stroke-width="2" stroke-linejoin="round"/><path d="M115.5 327 V339" stroke="#fff" stroke-width="3"/><text x="300" y="331" text-anchor="middle" font-family="Georgia, serif" font-size="18" fill="#262626">Can we share this extra work, or do</text><text x="300" y="356" text-anchor="middle" font-family="Georgia, serif" font-size="18" fill="#262626">we need dedicated capacity?</text><text x="128" y="388" font-size="10" font-weight="600" letter-spacing=".08em" fill="#1F5A3A">OUTLET MANAGER</text></g></g>
       </svg><div class="p1tip" aria-live="polite"></div></div>
       <div class="p1side">
         <p class="p1lhd">At the peak <span>· click a person, a machine or the screen</span></p>
-        <ol class="p1list"><li class="p1row" data-p="1"><span class="p1ic"><svg viewBox="0 0 22 22"><path d="M5 19 L4 7 H18 L17 19 Z M7 7 L8 3 H14 L15 7"/></svg></span><div><h5>Standard drinks flow</h5><p>Before toppings: each order is cup and ice, tea and milk, finishing, sealing and hand-over. Numbered cups move along; the crew keeps up.</p></div></li><li class="p1row" data-p="2"><span class="p1ic"><svg viewBox="0 0 22 22"><path d="M5 19 L4 7 H18 L17 19 Z"/><circle cx="8.5" cy="15.5" r="1.4"/><circle cx="11.5" cy="16" r="1.4"/><circle cx="14.5" cy="15.5" r="1.4"/></svg></span><div><h5>Toppings are introduced</h5><p>Some tickets now carry a topping icon. Those cups need an extra manual step at the topping bar. A proposed menu change, not today's workflow.</p></div></li><li class="p1row" data-p="3"><span class="p1ic"><svg viewBox="0 0 22 22"><path d="M3 18 H19 M6 18 V12 M11 18 V5 M16 18 V14"/></svg></span><div><h5>Workloads become uneven</h5><p>Every topping lands on Ben, so cups wait for Ben while Ana has time to spare. In our simulation at 50% toppings, Ben is busy about 88% of the peak and Ana about 34%.</p></div></li><li class="p1row" data-p="4"><span class="p1ic"><svg viewBox="0 0 22 22"><circle cx="11" cy="7" r="3.2"/><path d="M4.5 19 Q4.5 12.5 11 12.5 Q17.5 12.5 17.5 19"/></svg></span><div><h5>The manager considers the response</h5><p>Can we share this extra work, or do we need dedicated capacity? A queue at one step in a peak is not a failing: the question is where spare time sits.</p></div></li></ol>
+        <ol class="p1list"><li class="p1row" data-p="1"><span class="p1ic"><svg viewBox="0 0 22 22"><path d="M5 19 L4 7 H18 L17 19 Z M7 7 L8 3 H14 L15 7"/></svg></span><div><h5>Standard drinks flow</h5><p>Before toppings: cup and ice, tea and milk, finishing, sealing, hand-over. Follow the numbered cups; the crew keeps up.</p></div></li><li class="p1row" data-p="2"><span class="p1ic"><svg viewBox="0 0 22 22"><path d="M5 19 L4 7 H18 L17 19 Z"/><circle cx="8.5" cy="15.5" r="1.4"/><circle cx="11.5" cy="16" r="1.4"/><circle cx="14.5" cy="15.5" r="1.4"/></svg></span><div><h5>Toppings are introduced</h5><p>Some tickets now carry a topping icon: those cups need an extra manual step at the topping bar. A proposed change, not today's workflow.</p></div></li><li class="p1row" data-p="3"><span class="p1ic"><svg viewBox="0 0 22 22"><path d="M3 18 H19 M6 18 V12 M11 18 V5 M16 18 V14"/></svg></span><div><h5>Workloads become uneven</h5><p>Every topping lands on Ben, so cups wait while Ana has time to spare. Simulated at 50% toppings: Ben busy about 88% of the peak, Ana about 34%.</p></div></li><li class="p1row" data-p="4"><span class="p1ic"><svg viewBox="0 0 22 22"><circle cx="11" cy="7" r="3.2"/><path d="M4.5 19 Q4.5 12.5 11 12.5 Q17.5 12.5 17.5 19"/></svg></span><div><h5>The manager considers the response</h5><p>Can we share this extra work, or do we need dedicated capacity? A queue at one step is not a failing.</p></div></li></ol>
         <div class="p1gains" data-p="5"><p class="p1ghd">Proposal 2: test whether a bucket brigade can absorb topping complexity with the same crew <span class="odtag">proposed design, not a measured Chagee result</span></p>
           <div><p><i>✓</i><b>Anticipate demand</b>forecast how many orders will include toppings</p><p><i>✓</i><b>Balance the work</b>compare fixed responsibilities with a bucket brigade</p><p><i>✓</i><b>Know the limit</b>identify when dedicated staff or equipment is needed</p></div></div>
       </div>
@@ -2186,7 +2187,7 @@ aside.notes{display:none}
       <div class="c5s" data-k="1">
         <div class="sc sc1">
           <div class="bbox"><div class="bclock"><span class="lab">Simulated time</span><b data-r="clock"></b><span class="spd" data-r="speed"></span></div>
-            <svg class="bsvg" viewBox="0 0 1000 250" aria-label="The counter in our simulation, played slowly: Cai hands over an order, walks back and takes Ben's cup; Ben walks back and takes Ana's cup; Ana starts the next order"><g data-r="strip"></g></svg>
+            <svg class="bsvg" viewBox="0 26 1000 280" aria-label="The counter in our simulation, played slowly: Cai hands over an order, walks back and takes Ben's cup; Ben walks back and takes Ana's cup; Ana starts the next order"><g data-r="strip"></g></svg>
             <p class="bcap" data-r="cap"></p></div>
           <ol class="rules"><li data-rule="1"><span class="num">1</span><div><b>Carry forward</b><p>Each person carries an order forward through the steps they are trained for.</p></div></li>
             <li data-rule="2"><span class="num">2</span><div><b>Return and take over</b><p>When the last person hands an order over, they walk back and take over the upstream colleague's cup, as soon as that colleague finishes the step in hand.</p></div></li>
@@ -2244,14 +2245,14 @@ aside.notes{display:none}
     <h2 class="head">Fixed responsibilities or a bucket brigade?</h2>
     <div class="tcmp keep">
       <div class="tcbar">
-        <label class="tsh"><span class="l">Share of orders with toppings<small>in a pilot, the AI forecast; here you set it</small></span><input type="range" data-c="share" aria-label="Share of orders with toppings"><b data-c="sharev"></b></label>
+        <label class="tsh"><span class="l">Share of orders with toppings<small>in a pilot, from the AI forecast; here, set by hand</small></span><input type="range" data-c="share" aria-label="Share of orders with toppings"><b data-c="sharev"></b></label>
         <div class="tclk"><span class="lab">Simulated peak</span><b data-c="clock"></b><span class="of" data-c="of"></span><span class="pb" data-c="pb"></span></div>
         <div class="tply screenonly"><button class="btn" data-c="play" title="Play or pause">❚❚</button><button class="btn" data-c="restart" title="Restart the hour">↺</button><span class="spd" data-c="spd"></span><button class="btn" data-c="end" title="Skip to the end of the hour">Skip to end</button></div>
         <button class="btn asmb screenonly" data-c="asm">Assumptions</button>
       </div>
       <div class="lanes">
-        <div class="lane" data-m="fixed"><div class="lh"><b class="tag">A</b><b>Fixed responsibilities</b><small>each person keeps their own steps; cups wait on a pass shelf</small><span class="lr" data-c="liveA"></span></div><svg viewBox="0 0 1000 124" aria-label="View A: fixed responsibilities, the simulated counter"><g></g></svg></div>
-        <div class="lane" data-m="brigade"><div class="lh"><b class="tag">B</b><b>Bucket brigade</b><small>carry forward, walk back, take over at a safe point</small><span class="lr" data-c="liveB"></span></div><svg viewBox="0 0 1000 124" aria-label="View B: bucket brigade, the simulated counter"><g></g></svg></div>
+        <div class="lane" data-m="fixed"><div class="lh"><b class="tag">A</b><b>Fixed responsibilities</b><small>each person keeps their own steps; cups wait on a pass shelf</small><span class="lr" data-c="liveA"></span></div><svg viewBox="0 0 1000 110" aria-label="View A: fixed responsibilities, the simulated counter"><g></g></svg></div>
+        <div class="lane" data-m="brigade"><div class="lh"><b class="tag">B</b><b>Bucket brigade</b><small>carry forward, walk back, take over at a safe point</small><span class="lr" data-c="liveB"></span></div><svg viewBox="0 0 1000 110" aria-label="View B: bucket brigade, the simulated counter"><g></g></svg></div>
       </div>
       <div class="tout" data-c="out"></div>
       <p class="tdef" data-c="def"></p>
@@ -2259,15 +2260,15 @@ aside.notes{display:none}
     </div>
     <div class="mdec"><div class="who"><span class="lab">Manager's decision</span><b>Operations manager / outlet GM</b></div>
       <div><span class="q">As topping demand grows, can the existing crew balance the extra work, or should we add dedicated capacity?</span>
-        <span class="k">Proposed</span>Trial a bucket brigade against fixed responsibilities as toppings launch; keep the same crew while order-to-ready time and orders completed hold.</div>
-      <div><span class="k">If the crew cannot keep up</span>Follow-up alternatives: a dedicated topping person, or topping-dispensing equipment. A robotic arm stays an <span class="golink" data-go="c7">investigation (appendix)</span>.<br><span class="golink" data-go="p2x">See execution steps</span></div></div>
+        <span class="k">Proposed</span>Trial the brigade against fixed responsibilities as toppings launch; keep the crew while service holds.</div>
+      <div><span class="k">If the crew cannot keep up</span>A dedicated topping person or topping-dispensing equipment; a robotic arm only as an <span class="golink" data-go="c7">investigation</span>. <span class="golink" data-go="p2x">See execution steps</span></div></div>
     <p class="nextl"><b>Next</b>With orders sent to an outlet with room and the counter fulfilling them, where should the next outlet be?</p>
   </div>
   <div class="foot"><span>OPIM639 · Group 3 · illustrative simulation on assumed counter, training and timings · toppings plan to confirm · not Chagee's measured operations</span><span class="rail"></span><span class="pg"></span></div>
   <aside class="notes">
     <p>Now the comparison. Two views of the same counter: A, fixed responsibilities, and B, a bucket brigade. Held identical: the three people and their paid hour, the equipment, the incoming orders, which orders carry toppings, and every step's time; only the rule for sharing the work changes. The main slider is the share of orders with toppings: in a pilot that would come from the AI forecast; here you set it, and both views get the same order sequence with the same orders topped. The clock and playback speed are at the top; Skip to end shows the full hour. The numbers below are the average of 20 simulated peak hours; the animation plays one of them.</p>
     <p>At 50% toppings, 120 orders an hour: median order-to-ready time is about 2:09 under fixed responsibilities and 1:15 with the brigade, and orders completed in the hour about 112 against 116. Paid labour cost is the same, S$45 for the hour: the same three people. The brigade moves work to where the spare time is; it does not cut paid labour. Keep three measures apart: task duration, a topping adds 12 seconds to one step; work content, 42 seconds for a standard order and 54 with toppings, the same under both rules; and customer waiting, order to ready, which also includes time queued. Only the last changes between A and B.</p>
-    <p>Show where it gives little. Slide to no toppings: both complete about 116 and 117 orders, so the brigade adds little to throughput, though the median falls from 1:09 to 0:56. Slide to all orders topped: fixed falls to about 100 completed; the brigade keeps about 114. Open Assumptions: at the longest topping time, 30 seconds, with every order topped, the one-person topping bar would need 120% of its time, so no sharing rule can complete more than about 100 orders an hour there: fixed completes about 67, the brigade 82. Moving people cannot add bar time; a second position lifts the brigade to about 88. Training matters too: tick Cai trained and the brigade's median falls to about 1:14.</p>
+    <p>Show where it gives little. Slide to no toppings: both complete about 116 and 117 orders, so the brigade adds little to throughput, though the median falls from 1:09 to 0:56. Slide to all orders topped: fixed falls to about 100 completed; the brigade keeps about 114. Open Assumptions: at the longest topping time, 30 seconds, with every order topped, the one-person topping bar would need 120% of its time, so no sharing rule can complete more than about 100 orders an hour there: fixed completes about 67, the brigade 82. Moving people cannot add bar time; a second position lifts the brigade to about 88. Training Cai on toppings changes little here, a median of about 1:14 against 1:15, because Ana already has the spare time; with a different crew it may matter more, which Assumptions lets you test.</p>
     <p>The decision belongs to the operations manager or outlet GM: as topping demand grows, can the existing crew balance the extra work, or should we add dedicated capacity? We propose trialling the brigade against fixed responsibilities as toppings launch. Dedicated staff and topping-dispensing equipment are the follow-up alternatives; a robotic arm stays an investigation needing evidence on topping compatibility, cleaning, space, safety, throughput and cost. See execution steps for the plan. Then the transition: with orders sent to an outlet with room and the counter fulfilling them, where should the next outlet be? About one and a half minutes.</p>
   </aside>
 </section>
@@ -9575,7 +9576,7 @@ aside.notes{display:none}
     const f1 = x => (+x).toFixed(1);
     const pearls = (x, y, r = 1.7, g = 3.5) => [-g, 0, g].map((d, i) => `<circle cx="${f1(x + d)}" cy="${f1(y + (i === 1 ? .8 : 0))}" r="${r}" fill="#3B2F2A"/>`).join("");
     const cup = (c, x, y, s = 1, lab = true, fs = 8) => `<g transform="translate(${f1(x)} ${f1(y)}) scale(${s})"><path d="M-7 0 L-8.5 -15 H8.5 L7 0 Z" fill="${c.top ? "#D9B38C" : "#E3C29B"}" stroke="#fff" stroke-width=".8"/>${c.top ? pearls(0, -3) : ""}</g>` +
-      (lab ? `<text x="${f1(x)}" y="${f1(y - 15 * s - 3)}" text-anchor="middle" font-size="${fs}" font-weight="700" fill="#24406B">#${c.id}</text>` : "");
+      (lab ? `<text x="${f1(x)}" y="${f1(y - 15 * s - 3)}" text-anchor="middle" font-size="${fs}" font-weight="700" fill="#24406B" stroke="#fff" stroke-width="2.5" paint-order="stroke">#${c.id}</text>` : "");
     const person = (id, x, foot, s, faded) => `<g transform="translate(${f1(x)} ${f1(foot - 34 * s)}) scale(${s})"${faded ? ' opacity=".55"' : ""}>` +
       `<path d="M-11 34 C-11 18 -7 12 0 12 C7 12 11 18 11 34 Z" fill="#2E3A55"/><path d="M-7 34 L-7 21 Q0 18 7 21 L7 34 Z" fill="#F6ECDD"/><circle cy="2" r="9" fill="${SKIN[id]}"/>` +
       `<path d="M-9 0 C-9 -9 9 -9 9 0 C6 -4 -6 -4 -9 0 Z" fill="${HAIR[id]}"/><circle cx="-3.5" cy="2" r="1.1" fill="#3B2F2A"/><circle cx="3.5" cy="2" r="1.1" fill="#3B2F2A"/></g>`;
@@ -9584,12 +9585,13 @@ aside.notes{display:none}
     function strip(S, g) {
       const X = L => g.x0 + L * g.gap, y = g.foot, o = [], s = g.s;
       o.push(`<rect x="${g.x0 - 50}" y="${y}" width="${1000 - g.x0 + 44}" height="6" rx="2" fill="#B8957A"/><rect x="${g.x0 - 46}" y="${y + 6}" width="${1000 - g.x0 + 36}" height="${g.front}" rx="3" fill="#9C7A5B"/>`);
+      const bar = S.C.bar, sub = { tea_milk: "machine", topping: bar === 1 ? "one person at a time" : "two people side by side", shake_seal: "machine" };
       [["cup_ice", "Cup and ice"], ["tea_milk", "Tea and milk"], ["topping", "Toppings and finishing"], ["shake_seal", "Sealer"], ["handover", "Hand-over"]].forEach(([id, t]) =>
-        o.push(`<text x="${f1(X(LOC(K(id))))}" y="${y + 6 + g.front * .62}" text-anchor="middle" font-size="${g.lf}" font-weight="700" fill="#FFF8EC">${t}</text>`));
-      for (const id of ["tea_milk", "shake_seal"]) { const x = X(LOC(K(id))), h = g.mh; o.push(`<rect x="${f1(x - h * .42)}" y="${y - h}" width="${f1(h * .84)}" height="${h}" rx="4" fill="#24406B"/><rect x="${f1(x - h * .3)}" y="${f1(y - h * .86)}" width="${f1(h * .6)}" height="${f1(h * .2)}" rx="2" fill="#3D5C8F"/>`); }
-      const bx = X(LOC(TOP)), bar = S.C.bar;
-      for (let j = 0; j < 3; j++) o.push(`<rect x="${f1(bx + g.gap * .14 + j * 9 * s)}" y="${f1(y - 10 * s)}" width="${f1(8 * s)}" height="${f1(10 * s)}" rx="1.5" fill="#F6ECDD" stroke="#9C7A5B" stroke-width=".8"/><circle cx="${f1(bx + g.gap * .14 + j * 9 * s + 4 * s)}" cy="${f1(y - 7 * s)}" r="${f1(2 * s)}" fill="${["#3B2F2A", "#D99A93", "#C8A96A"][j]}"/>`);
-      o.push(`<text x="${f1(bx + g.gap * .14 + 13 * s)}" y="${f1(y - 12 * s - 3)}" text-anchor="middle" font-size="${g.lf - 1.5}" fill="#9A9387">${bar === 1 ? "one person at a time" : "two people side by side"}</text>`);
+        o.push(`<text x="${f1(X(LOC(K(id))))}" y="${f1(y + 6 + g.front * .5)}" text-anchor="middle" font-size="${g.lf}" font-weight="700" fill="#FFF8EC">${t}</text>` +
+          (sub[id] ? `<text x="${f1(X(LOC(K(id))))}" y="${f1(y + 6 + g.front * .88)}" text-anchor="middle" font-size="${g.lf - 1.5}" fill="#F1E5D2">${sub[id]}</text>` : "")));
+      for (const id of ["tea_milk", "shake_seal"]) { const x = X(LOC(K(id))) + g.gap * .27, h = g.mh; o.push(`<rect x="${f1(x - h * .42)}" y="${y - h}" width="${f1(h * .84)}" height="${h}" rx="4" fill="#24406B"/><rect x="${f1(x - h * .3)}" y="${f1(y - h * .86)}" width="${f1(h * .6)}" height="${f1(h * .2)}" rx="2" fill="#3D5C8F"/>`); }
+      const bx = X(LOC(TOP)) + g.gap * .2;
+      for (let j = 0; j < 3; j++) o.push(`<rect x="${f1(bx + j * 9 * s)}" y="${f1(y - 10 * s)}" width="${f1(8 * s)}" height="${f1(10 * s)}" rx="1.5" fill="#F6ECDD" stroke="#9C7A5B" stroke-width=".8"/><circle cx="${f1(bx + j * 9 * s + 4 * s)}" cy="${f1(y - 7 * s)}" r="${f1(2 * s)}" fill="${["#3B2F2A", "#D99A93", "#C8A96A"][j]}"/>`);
       // the order screen
       const sw = g.sw, sh = g.sh, sy = g.sy;
       o.push(`<rect x="6" y="${sy}" width="${sw}" height="${sh}" rx="6" fill="#24406B"/><rect x="10" y="${sy + 4}" width="${sw - 8}" height="${sh - 8}" rx="3" fill="#EEF1F6"/><text x="16" y="${sy + 15}" font-size="${g.lf - 1}" font-weight="700" letter-spacing="1" fill="#24406B">ORDERS · ${S.screen.length}</text>`);
@@ -9604,14 +9606,15 @@ aside.notes{display:none}
         if (n >= 2) o.push(`<text x="${f1(x0 - 20 * s)}" y="${f1(y - 30 * s)}" text-anchor="middle" font-size="${g.lf - 1}" font-weight="700" fill="${n >= 3 ? "#B8322B" : "#4A4A4A"}">${n} waiting</text>`); });
       // ready
       S.delivered.slice(-2).forEach((c, j, a) => o.push(cup(c, 1000 - 22 - (a.length - 1 - j) * 22 * s, y, s * .8, j === a.length - 1, g.lf - 2)));
-      o.push(`<text x="${1000 - 8}" y="${y + 6 + g.front * .62}" text-anchor="end" font-size="${g.lf - 1}" fill="#F1E5D2">ready ${S.delivered.length}</text>`);
+      o.push(`<text x="985" y="${f1(y + 6 + g.front * .88)}" text-anchor="end" font-size="${g.lf - 1.5}" fill="#F1E5D2">ready ${S.delivered.length}</text>`);
       // people, side by side when they stand at the same spot
       const xs = S.workers.map(w => X(w.x));
-      S.workers.forEach((w, i) => { if (i && Math.abs(xs[i] - xs[i - 1]) < 14 * s) xs[i] = xs[i - 1] + 26 * s; });
+      S.workers.forEach((w, i) => { if (i && xs[i] - xs[i - 1] < 40 * s) xs[i] = xs[i - 1] + 40 * s; });
       S.workers.forEach((w, i) => {
         const x = xs[i], st = state(w);
         o.push(person(w.id, x, y, s, st === "walking"));
-        o.push(`<text x="${f1(x)}" y="${f1(y - 34 * s - 12 * s)}" text-anchor="middle" font-size="${g.nf}" font-weight="700" fill="#262626">${w.name}${g.status && st !== "working" ? `<tspan font-weight="400" fill="${st === "waiting" ? "#2F6B45" : "#9A9387"}"> · ${st}</tspan>` : ""}</text>`);
+        o.push(`<text x="${f1(x)}" y="${f1(y - 34 * s - 12 * s - (g.status ? g.nf * .9 : 0))}" text-anchor="middle" font-size="${g.nf}" font-weight="700" fill="#262626">${w.name}</text>` +
+          (g.status && st !== "working" ? `<text x="${f1(x)}" y="${f1(y - 34 * s - 12 * s)}" text-anchor="middle" font-size="${g.nf * .82}" fill="${st === "waiting" ? "#2F6B45" : "#9A9387"}">${st}</text>` : ""));
         if (w.cup) o.push(cup(w.cup, x + 14 * s, y, s * .9, true, g.lf - 1));
       });
       return o.join("");
@@ -9634,13 +9637,13 @@ aside.notes{display:none}
       const built = () => { fresh(); advance(S, SC.plain_minutes * 60); S.share = DEF; advance(S, SC.build_minute * 60); };
       function draw() {
         const [ana, ben, cai] = S.workers;
-        G.scr.innerHTML = S.screen.slice(0, 5).map((c, j) => `<g class="tk"><rect x="40" y="${94 + 12 * j}" width="116" height="10" rx="3" fill="#fff" stroke="#C9D3E3"/><text x="45" y="${101.5 + 12 * j}" font-size="7.5" font-weight="700" fill="#262626">#${c.id}</text>` +
+        G.scr.innerHTML = S.orders.filter(c => c.top != null && c.ready == null).slice(0, 5).map((c, j) => `<g class="tk"><rect x="40" y="${94 + 12 * j}" width="116" height="10" rx="3" fill="#fff" stroke="#C9D3E3"/><text x="45" y="${101.5 + 12 * j}" font-size="7.5" font-weight="700" fill="#262626">#${c.id}</text>` +
           (c.top ? `${pearls(146, 98.8 + 12 * j, 1.6, 3.6)}<text x="136" y="${101.5 + 12 * j}" text-anchor="end" font-size="7" fill="#4A4A4A">toppings</text>` : `<text x="152" y="${101.5 + 12 * j}" text-anchor="end" font-size="7" fill="#9A9387">standard</text>`) + "</g>").join("");
         G.ana.innerHTML = ana.cup ? cup(ana.cup, ana.mode === "drop" ? 236 : 222, 226, 1, true, 8) : "";
-        G.shelf.innerHTML = ben.inq.slice(0, 5).map((c, j) => cup(c, 300 + 14 * j, 226, .85, j < 3, 6.5)).join("") + (ben.inq.length > 5 ? `<text x="372" y="222" font-size="8" font-weight="700" fill="#B8322B">+${ben.inq.length - 5}</text>` : "");
+        G.shelf.innerHTML = ben.inq.slice(0, 5).map((c, j) => cup(c, 300 + 14 * j, 226, .85, false) + `<text x="${300 + 14 * j}" y="${j % 2 ? 199 : 207}" text-anchor="middle" font-size="6.5" font-weight="700" fill="#24406B">#${c.id}</text>`).join("") + (ben.inq.length > 5 ? `<text x="372" y="222" font-size="8" font-weight="700" fill="#B8322B">+${ben.inq.length - 5}</text>` : "");
         G.ben.innerHTML = ben.cup ? cup(ben.cup, ben.k === K("tea_milk") ? 264 : ben.mode === "drop" ? 428 : 424, 226, 1, true, 8) : "";
-        G.cai.innerHTML = cai.inq.slice(0, 2).map((c, j) => cup(c, 492 + 14 * j, 226, .85, j === 0, 6.5)).join("") + (cai.cup ? cup(cai.cup, cai.k === K("shake_seal") ? 455 : 588, cai.k === K("shake_seal") ? 224 : 208, 1, true, 8) : "");
-        G.ready.innerHTML = S.delivered.slice(-2).map((c, j, a) => cup(c, 606 - (a.length - 1 - j) * 15, 208, .85, j === a.length - 1, 6.5)).join("");
+        G.cai.innerHTML = cai.inq.slice(0, 2).map((c, j) => cup(c, 492 + 14 * j, 226, .85, j === 0, 6.5)).join("") + (cai.cup ? cup(cai.cup, cai.k === K("shake_seal") ? 455 : 578, cai.k === K("shake_seal") ? 224 : 208, 1, true, 8) : "");
+        G.ready.innerHTML = S.delivered.slice(-2).map((c, j, a) => cup(c, 614 - (a.length - 1 - j) * 15, 208, .85, j === a.length - 1, 6.5)).join("");
         $(sp, ".free").classList.toggle("on", k >= 3 && ana.mode === "idle");
         $(sp, ".busy").classList.toggle("on", k >= 3 && ben.inq.length >= 3);
         G.clock.textContent = `Simulated peak · minute ${mmss(Math.floor(S.t))} · ${SC.speed}× speed`;
@@ -9681,7 +9684,7 @@ aside.notes{display:none}
     const sr = document.getElementById("s2r");
     if (sr) {
       const box = $(sr, ".c5intro"), N = $$(box, ".c5s").length, g = $(sr, '[data-r="strip"]'), capEl = $(sr, '[data-r="cap"]'), rules = $$(sr, ".rules li");
-      const GEO = { x0: 215, gap: 170, foot: 170, front: 52, s: 2, lf: 12, nf: 15, mh: 46, sw: 150, sh: 128, sy: 22, rows: 4, rh: 24, status: true };
+      const GEO = { x0: 238, gap: 168, foot: 236, front: 58, s: 3.3, lf: 15, nf: 19, mh: 66, sw: 172, sh: 160, sy: 60, rows: 4, rh: 32, status: true };
       let st = 1, S = null, phase = 0, end = null;
       const cyc = () => {
         S = TM.create(E, Sim, { mode: "brigade", share: 0, events: true }); S.stage(TR.cycle_stage.value); phase = 0; end = null;
@@ -9727,7 +9730,7 @@ aside.notes{display:none}
     const sc8 = document.getElementById("s2c");
     if (sc8) {
       const tc = $(sc8, ".tcmp"), sh = $(sc8, '[data-c="share"]'), asmb = $(sc8, '[data-c="asmb"]');
-      const GEO = { x0: 215, gap: 168, foot: 84, front: 30, s: 1.25, lf: 10.5, nf: 11.5, mh: 30, sw: 144, sh: 80, sy: 4, rows: 3, rh: 16, status: true };
+      const GEO = { x0: 210, gap: 166, foot: 74, front: 30, s: 1.05, lf: 10.5, nf: 11, mh: 26, sw: 140, sh: 70, sy: 4, rows: 2, rh: 19, status: true };
       const SPD = SC.compare_speeds, base = () => ({ share: DEF, toppingSec: E.toppingSec.value, walkSec: E.walkSec.value, handSec: E.handSec.value, bar: E.bar.value,
         speeds: Object.fromEntries(E.crew.map(c => [c.id, c.v])), trained: Object.fromEntries(E.crew.map(c => [c.id, c.trained])) });
       let O = base(), speed = SC.compare_speed, L = null, R = null, t = 0, timer = 0;
@@ -9744,7 +9747,7 @@ aside.notes{display:none}
           $(ln, ".lr").textContent = `ready ${S.delivered.filter(c => c.ready <= S.H).length} · in progress ${busy}`; });
         const H = E.minutes * 60, tt = Math.min(t, H);
         $(sc8, '[data-c="clock"]').textContent = mmss(Math.floor(tt)); $(sc8, '[data-c="of"]').textContent = `of ${mmss(H)}`;
-        $(sc8, '[data-c="pb"]').textContent = tt >= H ? "end of the peak hour" : `playback ${speed}×`;
+        $(sc8, '[data-c="pb"]').textContent = tt >= H ? "hour over" : `playback ${speed}×`;
         $$(sc8, "[data-sp]").forEach(b => b.classList.toggle("on", +b.dataset.sp === speed));
       }
       function drawOut() {
@@ -9752,12 +9755,12 @@ aside.notes{display:none}
         const ms = x => mmss(Math.round(x)), cost = `S$${Math.round(R.cost)}`;
         $(sc8, '[data-c="out"]').innerHTML =
           `<div class="mc"><p class="mh">Order-to-ready time<small>median · 90th percentile</small></p><div class="mv"><span class="a"><i>A</i><b>${ms(A.median)}</b><small>${ms(A.p90)}</small></span><span class="b"><i>B</i><b>${ms(B.median)}</b><small>${ms(B.p90)}</small></span>` +
-          chip(B.median - A.median, 5, d => `B ${Math.round(Math.abs(d))} s ${d < 0 ? "faster" : "slower"}`, true) + `</div></div>` +
+          chip(B.median - A.median, 5, d => `B ${Math.abs(d) < 60 ? `${Math.round(Math.abs(d))} s` : mmss(Math.round(Math.abs(d)))} ${d < 0 ? "faster" : "slower"}`, true) + `</div></div>` +
           `<div class="mc"><p class="mh">Orders completed in the peak<small>of ${Math.round(A.placed)} placed</small></p><div class="mv"><span class="a"><i>A</i><b>${Math.round(A.completed)}</b></span><span class="b"><i>B</i><b>${Math.round(B.completed)}</b></span>` +
           chip(B.completed - A.completed, 0.5, d => `${d > 0 ? "+" : "−"}${Math.round(Math.abs(d))} with B`, false) + `</div></div>` +
           `<div class="mc"><p class="mh">Paid labour cost, this hour<small>${R.people} people × S$${E.wage.toFixed(2)}</small></p><div class="mv"><span class="a"><i>A</i><b>${cost}</b></span><span class="b"><i>B</i><b>${cost}</b></span><em class="dch">same crew · S$${(R.cost / A.completed).toFixed(2)} vs S$${(R.cost / B.completed).toFixed(2)} an order</em></div></div>`;
-        const lim = barLoad >= 0.9 ? `<span class="lim">Topping bar at its limit: it would need ${pct(barLoad)} of its time with ${O.bar === 1 ? "one person at a time" : "two positions"}. Moving people cannot add bar time; ${O.bar === 1 ? "a second position, " : ""}topping-dispensing equipment or a shorter recipe would.</span> ` : "";
-        $(sc8, '[data-c="def"]').innerHTML = lim + `<b>Task:</b> toppings add ${Math.round(ct.toppingSec)} s to one step · <b>Work content:</b> ${Math.round(ct.standard)} s a standard order, ${Math.round(ct.topped)} s with toppings, the same under A and B · <b>Customer waiting:</b> order to ready, including time queued: the rules change only this · average of ${E.seeds} simulated peak hours; the animation plays one`;
+        const lim = barLoad >= 0.9 ? `<span class="lim">Topping bar at its limit: it would need ${pct(barLoad)} of its time. Moving people cannot add bar time; ${O.bar === 1 ? "a second position, " : ""}dispensing equipment or a shorter recipe would.</span> ` : "";
+        $(sc8, '[data-c="def"]').innerHTML = lim + `<b>Task:</b> toppings add ${Math.round(ct.toppingSec)} s to one step · <b>Work content:</b> ${Math.round(ct.standard)} s standard, ${Math.round(ct.topped)} s with toppings, the same on A and B · <b>Customer waiting:</b> order to ready, including queueing; only this changes · mean of ${E.seeds} simulated peak hours; the animation plays one`;
       }
       function asmForm() {
         const r = (k, lo, hi, st, v, u) => `<label><input type="range" data-a="${k}" min="${lo}" max="${hi}" step="${st}" value="${v}"><b>${v} ${u}</b></label>`;

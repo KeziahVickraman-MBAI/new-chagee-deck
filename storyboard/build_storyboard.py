@@ -570,6 +570,8 @@ def values(d: dict) -> dict:
     v["tp.f_full"], v["tp.b_full"] = sw[-1]["fixed"]["completed"], sw[-1]["brigade"]["completed"]
     v["tp.top_max"], v["tp.bar_need"], v["tp.bar_cap"] = top_max, bar_need, 3600 / (fin + top_max)
     v["tp.bar1_a"], v["tp.bar1_b"], v["tp.bar2_b"] = one["fixed"]["completed"], one["brigade"]["completed"], two["brigade"]["completed"]
+    if not abs(TPd["cai"]["brigade"]["median"] - B_["median"]) < 10:
+        raise SystemExit("build: slide 08's notes say training Cai changes little at the default; rewrite them")
     v["tp.cai_b_med"] = TPd["cai"]["brigade"]["median"]
     sc_ = TPd["scene"]
     if not (sc_["shown"] > sc_["median"] and RAW["toppings"]["scene"]["value"]["plain_minutes"] < RAW["toppings"]["scene"]["value"]["build_minute"]):

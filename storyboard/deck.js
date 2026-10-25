@@ -2710,7 +2710,7 @@
     const f1 = x => (+x).toFixed(1);
     const pearls = (x, y, r = 1.7, g = 3.5) => [-g, 0, g].map((d, i) => `<circle cx="${f1(x + d)}" cy="${f1(y + (i === 1 ? .8 : 0))}" r="${r}" fill="#3B2F2A"/>`).join("");
     const cup = (c, x, y, s = 1, lab = true, fs = 8) => `<g transform="translate(${f1(x)} ${f1(y)}) scale(${s})"><path d="M-7 0 L-8.5 -15 H8.5 L7 0 Z" fill="${c.top ? "#D9B38C" : "#E3C29B"}" stroke="#fff" stroke-width=".8"/>${c.top ? pearls(0, -3) : ""}</g>` +
-      (lab ? `<text x="${f1(x)}" y="${f1(y - 15 * s - 3)}" text-anchor="middle" font-size="${fs}" font-weight="700" fill="#24406B">#${c.id}</text>` : "");
+      (lab ? `<text x="${f1(x)}" y="${f1(y - 15 * s - 3)}" text-anchor="middle" font-size="${fs}" font-weight="700" fill="#24406B" stroke="#fff" stroke-width="2.5" paint-order="stroke">#${c.id}</text>` : "");
     const person = (id, x, foot, s, faded) => `<g transform="translate(${f1(x)} ${f1(foot - 34 * s)}) scale(${s})"${faded ? ' opacity=".55"' : ""}>` +
       `<path d="M-11 34 C-11 18 -7 12 0 12 C7 12 11 18 11 34 Z" fill="#2E3A55"/><path d="M-7 34 L-7 21 Q0 18 7 21 L7 34 Z" fill="#F6ECDD"/><circle cy="2" r="9" fill="${SKIN[id]}"/>` +
       `<path d="M-9 0 C-9 -9 9 -9 9 0 C6 -4 -6 -4 -9 0 Z" fill="${HAIR[id]}"/><circle cx="-3.5" cy="2" r="1.1" fill="#3B2F2A"/><circle cx="3.5" cy="2" r="1.1" fill="#3B2F2A"/></g>`;
@@ -2719,12 +2719,13 @@
     function strip(S, g) {
       const X = L => g.x0 + L * g.gap, y = g.foot, o = [], s = g.s;
       o.push(`<rect x="${g.x0 - 50}" y="${y}" width="${1000 - g.x0 + 44}" height="6" rx="2" fill="#B8957A"/><rect x="${g.x0 - 46}" y="${y + 6}" width="${1000 - g.x0 + 36}" height="${g.front}" rx="3" fill="#9C7A5B"/>`);
+      const bar = S.C.bar, sub = { tea_milk: "machine", topping: bar === 1 ? "one person at a time" : "two people side by side", shake_seal: "machine" };
       [["cup_ice", "Cup and ice"], ["tea_milk", "Tea and milk"], ["topping", "Toppings and finishing"], ["shake_seal", "Sealer"], ["handover", "Hand-over"]].forEach(([id, t]) =>
-        o.push(`<text x="${f1(X(LOC(K(id))))}" y="${y + 6 + g.front * .62}" text-anchor="middle" font-size="${g.lf}" font-weight="700" fill="#FFF8EC">${t}</text>`));
-      for (const id of ["tea_milk", "shake_seal"]) { const x = X(LOC(K(id))), h = g.mh; o.push(`<rect x="${f1(x - h * .42)}" y="${y - h}" width="${f1(h * .84)}" height="${h}" rx="4" fill="#24406B"/><rect x="${f1(x - h * .3)}" y="${f1(y - h * .86)}" width="${f1(h * .6)}" height="${f1(h * .2)}" rx="2" fill="#3D5C8F"/>`); }
-      const bx = X(LOC(TOP)), bar = S.C.bar;
-      for (let j = 0; j < 3; j++) o.push(`<rect x="${f1(bx + g.gap * .14 + j * 9 * s)}" y="${f1(y - 10 * s)}" width="${f1(8 * s)}" height="${f1(10 * s)}" rx="1.5" fill="#F6ECDD" stroke="#9C7A5B" stroke-width=".8"/><circle cx="${f1(bx + g.gap * .14 + j * 9 * s + 4 * s)}" cy="${f1(y - 7 * s)}" r="${f1(2 * s)}" fill="${["#3B2F2A", "#D99A93", "#C8A96A"][j]}"/>`);
-      o.push(`<text x="${f1(bx + g.gap * .14 + 13 * s)}" y="${f1(y - 12 * s - 3)}" text-anchor="middle" font-size="${g.lf - 1.5}" fill="#9A9387">${bar === 1 ? "one person at a time" : "two people side by side"}</text>`);
+        o.push(`<text x="${f1(X(LOC(K(id))))}" y="${f1(y + 6 + g.front * .5)}" text-anchor="middle" font-size="${g.lf}" font-weight="700" fill="#FFF8EC">${t}</text>` +
+          (sub[id] ? `<text x="${f1(X(LOC(K(id))))}" y="${f1(y + 6 + g.front * .88)}" text-anchor="middle" font-size="${g.lf - 1.5}" fill="#F1E5D2">${sub[id]}</text>` : "")));
+      for (const id of ["tea_milk", "shake_seal"]) { const x = X(LOC(K(id))) + g.gap * .27, h = g.mh; o.push(`<rect x="${f1(x - h * .42)}" y="${y - h}" width="${f1(h * .84)}" height="${h}" rx="4" fill="#24406B"/><rect x="${f1(x - h * .3)}" y="${f1(y - h * .86)}" width="${f1(h * .6)}" height="${f1(h * .2)}" rx="2" fill="#3D5C8F"/>`); }
+      const bx = X(LOC(TOP)) + g.gap * .2;
+      for (let j = 0; j < 3; j++) o.push(`<rect x="${f1(bx + j * 9 * s)}" y="${f1(y - 10 * s)}" width="${f1(8 * s)}" height="${f1(10 * s)}" rx="1.5" fill="#F6ECDD" stroke="#9C7A5B" stroke-width=".8"/><circle cx="${f1(bx + j * 9 * s + 4 * s)}" cy="${f1(y - 7 * s)}" r="${f1(2 * s)}" fill="${["#3B2F2A", "#D99A93", "#C8A96A"][j]}"/>`);
       // the order screen
       const sw = g.sw, sh = g.sh, sy = g.sy;
       o.push(`<rect x="6" y="${sy}" width="${sw}" height="${sh}" rx="6" fill="#24406B"/><rect x="10" y="${sy + 4}" width="${sw - 8}" height="${sh - 8}" rx="3" fill="#EEF1F6"/><text x="16" y="${sy + 15}" font-size="${g.lf - 1}" font-weight="700" letter-spacing="1" fill="#24406B">ORDERS · ${S.screen.length}</text>`);
@@ -2739,14 +2740,15 @@
         if (n >= 2) o.push(`<text x="${f1(x0 - 20 * s)}" y="${f1(y - 30 * s)}" text-anchor="middle" font-size="${g.lf - 1}" font-weight="700" fill="${n >= 3 ? "#B8322B" : "#4A4A4A"}">${n} waiting</text>`); });
       // ready
       S.delivered.slice(-2).forEach((c, j, a) => o.push(cup(c, 1000 - 22 - (a.length - 1 - j) * 22 * s, y, s * .8, j === a.length - 1, g.lf - 2)));
-      o.push(`<text x="${1000 - 8}" y="${y + 6 + g.front * .62}" text-anchor="end" font-size="${g.lf - 1}" fill="#F1E5D2">ready ${S.delivered.length}</text>`);
+      o.push(`<text x="985" y="${f1(y + 6 + g.front * .88)}" text-anchor="end" font-size="${g.lf - 1.5}" fill="#F1E5D2">ready ${S.delivered.length}</text>`);
       // people, side by side when they stand at the same spot
       const xs = S.workers.map(w => X(w.x));
-      S.workers.forEach((w, i) => { if (i && Math.abs(xs[i] - xs[i - 1]) < 14 * s) xs[i] = xs[i - 1] + 26 * s; });
+      S.workers.forEach((w, i) => { if (i && xs[i] - xs[i - 1] < 40 * s) xs[i] = xs[i - 1] + 40 * s; });
       S.workers.forEach((w, i) => {
         const x = xs[i], st = state(w);
         o.push(person(w.id, x, y, s, st === "walking"));
-        o.push(`<text x="${f1(x)}" y="${f1(y - 34 * s - 12 * s)}" text-anchor="middle" font-size="${g.nf}" font-weight="700" fill="#262626">${w.name}${g.status && st !== "working" ? `<tspan font-weight="400" fill="${st === "waiting" ? "#2F6B45" : "#9A9387"}"> · ${st}</tspan>` : ""}</text>`);
+        o.push(`<text x="${f1(x)}" y="${f1(y - 34 * s - 12 * s - (g.status ? g.nf * .9 : 0))}" text-anchor="middle" font-size="${g.nf}" font-weight="700" fill="#262626">${w.name}</text>` +
+          (g.status && st !== "working" ? `<text x="${f1(x)}" y="${f1(y - 34 * s - 12 * s)}" text-anchor="middle" font-size="${g.nf * .82}" fill="${st === "waiting" ? "#2F6B45" : "#9A9387"}">${st}</text>` : ""));
         if (w.cup) o.push(cup(w.cup, x + 14 * s, y, s * .9, true, g.lf - 1));
       });
       return o.join("");
@@ -2769,13 +2771,13 @@
       const built = () => { fresh(); advance(S, SC.plain_minutes * 60); S.share = DEF; advance(S, SC.build_minute * 60); };
       function draw() {
         const [ana, ben, cai] = S.workers;
-        G.scr.innerHTML = S.screen.slice(0, 5).map((c, j) => `<g class="tk"><rect x="40" y="${94 + 12 * j}" width="116" height="10" rx="3" fill="#fff" stroke="#C9D3E3"/><text x="45" y="${101.5 + 12 * j}" font-size="7.5" font-weight="700" fill="#262626">#${c.id}</text>` +
+        G.scr.innerHTML = S.orders.filter(c => c.top != null && c.ready == null).slice(0, 5).map((c, j) => `<g class="tk"><rect x="40" y="${94 + 12 * j}" width="116" height="10" rx="3" fill="#fff" stroke="#C9D3E3"/><text x="45" y="${101.5 + 12 * j}" font-size="7.5" font-weight="700" fill="#262626">#${c.id}</text>` +
           (c.top ? `${pearls(146, 98.8 + 12 * j, 1.6, 3.6)}<text x="136" y="${101.5 + 12 * j}" text-anchor="end" font-size="7" fill="#4A4A4A">toppings</text>` : `<text x="152" y="${101.5 + 12 * j}" text-anchor="end" font-size="7" fill="#9A9387">standard</text>`) + "</g>").join("");
         G.ana.innerHTML = ana.cup ? cup(ana.cup, ana.mode === "drop" ? 236 : 222, 226, 1, true, 8) : "";
-        G.shelf.innerHTML = ben.inq.slice(0, 5).map((c, j) => cup(c, 300 + 14 * j, 226, .85, j < 3, 6.5)).join("") + (ben.inq.length > 5 ? `<text x="372" y="222" font-size="8" font-weight="700" fill="#B8322B">+${ben.inq.length - 5}</text>` : "");
+        G.shelf.innerHTML = ben.inq.slice(0, 5).map((c, j) => cup(c, 300 + 14 * j, 226, .85, false) + `<text x="${300 + 14 * j}" y="${j % 2 ? 199 : 207}" text-anchor="middle" font-size="6.5" font-weight="700" fill="#24406B">#${c.id}</text>`).join("") + (ben.inq.length > 5 ? `<text x="372" y="222" font-size="8" font-weight="700" fill="#B8322B">+${ben.inq.length - 5}</text>` : "");
         G.ben.innerHTML = ben.cup ? cup(ben.cup, ben.k === K("tea_milk") ? 264 : ben.mode === "drop" ? 428 : 424, 226, 1, true, 8) : "";
-        G.cai.innerHTML = cai.inq.slice(0, 2).map((c, j) => cup(c, 492 + 14 * j, 226, .85, j === 0, 6.5)).join("") + (cai.cup ? cup(cai.cup, cai.k === K("shake_seal") ? 455 : 588, cai.k === K("shake_seal") ? 224 : 208, 1, true, 8) : "");
-        G.ready.innerHTML = S.delivered.slice(-2).map((c, j, a) => cup(c, 606 - (a.length - 1 - j) * 15, 208, .85, j === a.length - 1, 6.5)).join("");
+        G.cai.innerHTML = cai.inq.slice(0, 2).map((c, j) => cup(c, 492 + 14 * j, 226, .85, j === 0, 6.5)).join("") + (cai.cup ? cup(cai.cup, cai.k === K("shake_seal") ? 455 : 578, cai.k === K("shake_seal") ? 224 : 208, 1, true, 8) : "");
+        G.ready.innerHTML = S.delivered.slice(-2).map((c, j, a) => cup(c, 614 - (a.length - 1 - j) * 15, 208, .85, j === a.length - 1, 6.5)).join("");
         $(sp, ".free").classList.toggle("on", k >= 3 && ana.mode === "idle");
         $(sp, ".busy").classList.toggle("on", k >= 3 && ben.inq.length >= 3);
         G.clock.textContent = `Simulated peak · minute ${mmss(Math.floor(S.t))} · ${SC.speed}× speed`;
@@ -2816,7 +2818,7 @@
     const sr = document.getElementById("s2r");
     if (sr) {
       const box = $(sr, ".c5intro"), N = $$(box, ".c5s").length, g = $(sr, '[data-r="strip"]'), capEl = $(sr, '[data-r="cap"]'), rules = $$(sr, ".rules li");
-      const GEO = { x0: 215, gap: 170, foot: 170, front: 52, s: 2, lf: 12, nf: 15, mh: 46, sw: 150, sh: 128, sy: 22, rows: 4, rh: 24, status: true };
+      const GEO = { x0: 238, gap: 168, foot: 236, front: 58, s: 3.3, lf: 15, nf: 19, mh: 66, sw: 172, sh: 160, sy: 60, rows: 4, rh: 32, status: true };
       let st = 1, S = null, phase = 0, end = null;
       const cyc = () => {
         S = TM.create(E, Sim, { mode: "brigade", share: 0, events: true }); S.stage(TR.cycle_stage.value); phase = 0; end = null;
@@ -2862,7 +2864,7 @@
     const sc8 = document.getElementById("s2c");
     if (sc8) {
       const tc = $(sc8, ".tcmp"), sh = $(sc8, '[data-c="share"]'), asmb = $(sc8, '[data-c="asmb"]');
-      const GEO = { x0: 215, gap: 168, foot: 84, front: 30, s: 1.25, lf: 10.5, nf: 11.5, mh: 30, sw: 144, sh: 80, sy: 4, rows: 3, rh: 16, status: true };
+      const GEO = { x0: 210, gap: 166, foot: 74, front: 30, s: 1.05, lf: 10.5, nf: 11, mh: 26, sw: 140, sh: 70, sy: 4, rows: 2, rh: 19, status: true };
       const SPD = SC.compare_speeds, base = () => ({ share: DEF, toppingSec: E.toppingSec.value, walkSec: E.walkSec.value, handSec: E.handSec.value, bar: E.bar.value,
         speeds: Object.fromEntries(E.crew.map(c => [c.id, c.v])), trained: Object.fromEntries(E.crew.map(c => [c.id, c.trained])) });
       let O = base(), speed = SC.compare_speed, L = null, R = null, t = 0, timer = 0;
@@ -2879,7 +2881,7 @@
           $(ln, ".lr").textContent = `ready ${S.delivered.filter(c => c.ready <= S.H).length} · in progress ${busy}`; });
         const H = E.minutes * 60, tt = Math.min(t, H);
         $(sc8, '[data-c="clock"]').textContent = mmss(Math.floor(tt)); $(sc8, '[data-c="of"]').textContent = `of ${mmss(H)}`;
-        $(sc8, '[data-c="pb"]').textContent = tt >= H ? "end of the peak hour" : `playback ${speed}×`;
+        $(sc8, '[data-c="pb"]').textContent = tt >= H ? "hour over" : `playback ${speed}×`;
         $$(sc8, "[data-sp]").forEach(b => b.classList.toggle("on", +b.dataset.sp === speed));
       }
       function drawOut() {
@@ -2887,12 +2889,12 @@
         const ms = x => mmss(Math.round(x)), cost = `S$${Math.round(R.cost)}`;
         $(sc8, '[data-c="out"]').innerHTML =
           `<div class="mc"><p class="mh">Order-to-ready time<small>median · 90th percentile</small></p><div class="mv"><span class="a"><i>A</i><b>${ms(A.median)}</b><small>${ms(A.p90)}</small></span><span class="b"><i>B</i><b>${ms(B.median)}</b><small>${ms(B.p90)}</small></span>` +
-          chip(B.median - A.median, 5, d => `B ${Math.round(Math.abs(d))} s ${d < 0 ? "faster" : "slower"}`, true) + `</div></div>` +
+          chip(B.median - A.median, 5, d => `B ${Math.abs(d) < 60 ? `${Math.round(Math.abs(d))} s` : mmss(Math.round(Math.abs(d)))} ${d < 0 ? "faster" : "slower"}`, true) + `</div></div>` +
           `<div class="mc"><p class="mh">Orders completed in the peak<small>of ${Math.round(A.placed)} placed</small></p><div class="mv"><span class="a"><i>A</i><b>${Math.round(A.completed)}</b></span><span class="b"><i>B</i><b>${Math.round(B.completed)}</b></span>` +
           chip(B.completed - A.completed, 0.5, d => `${d > 0 ? "+" : "−"}${Math.round(Math.abs(d))} with B`, false) + `</div></div>` +
           `<div class="mc"><p class="mh">Paid labour cost, this hour<small>${R.people} people × S$${E.wage.toFixed(2)}</small></p><div class="mv"><span class="a"><i>A</i><b>${cost}</b></span><span class="b"><i>B</i><b>${cost}</b></span><em class="dch">same crew · S$${(R.cost / A.completed).toFixed(2)} vs S$${(R.cost / B.completed).toFixed(2)} an order</em></div></div>`;
-        const lim = barLoad >= 0.9 ? `<span class="lim">Topping bar at its limit: it would need ${pct(barLoad)} of its time with ${O.bar === 1 ? "one person at a time" : "two positions"}. Moving people cannot add bar time; ${O.bar === 1 ? "a second position, " : ""}topping-dispensing equipment or a shorter recipe would.</span> ` : "";
-        $(sc8, '[data-c="def"]').innerHTML = lim + `<b>Task:</b> toppings add ${Math.round(ct.toppingSec)} s to one step · <b>Work content:</b> ${Math.round(ct.standard)} s a standard order, ${Math.round(ct.topped)} s with toppings, the same under A and B · <b>Customer waiting:</b> order to ready, including time queued: the rules change only this · average of ${E.seeds} simulated peak hours; the animation plays one`;
+        const lim = barLoad >= 0.9 ? `<span class="lim">Topping bar at its limit: it would need ${pct(barLoad)} of its time. Moving people cannot add bar time; ${O.bar === 1 ? "a second position, " : ""}dispensing equipment or a shorter recipe would.</span> ` : "";
+        $(sc8, '[data-c="def"]').innerHTML = lim + `<b>Task:</b> toppings add ${Math.round(ct.toppingSec)} s to one step · <b>Work content:</b> ${Math.round(ct.standard)} s standard, ${Math.round(ct.topped)} s with toppings, the same on A and B · <b>Customer waiting:</b> order to ready, including queueing; only this changes · mean of ${E.seeds} simulated peak hours; the animation plays one`;
       }
       function asmForm() {
         const r = (k, lo, hi, st, v, u) => `<label><input type="range" data-a="${k}" min="${lo}" max="${hi}" step="${st}" value="${v}"><b>${v} ${u}</b></label>`;
