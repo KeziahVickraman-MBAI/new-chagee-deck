@@ -62,7 +62,7 @@ html,body{margin:0;background:#E7E3DC;color:var(--ink);font-family:var(--sans);-
 .takeaway{margin-top:14px;background:var(--navy);color:#fff;border-radius:10px;padding:12px 22px;display:flex;align-items:center;gap:18px;font:15px/1.38 var(--sans)}
 .takeaway .lab{flex:none;font:600 11px/1 var(--sans);letter-spacing:.22em;color:var(--gold);padding-right:18px;border-right:1px solid rgba(255,255,255,.25)}
 .foot{position:absolute;left:72px;right:56px;bottom:18px;display:flex;align-items:center;justify-content:space-between;font:11px/1 var(--sans);color:var(--taupe)}
-.rail{display:flex;gap:12px}
+.rail{display:flex;gap:12px} .foot .rail{margin-left:auto;margin-right:14px;padding-right:14px;border-right:1px solid #CFC8BB}   /* the chapter rail sits at the same place on every slide, right-aligned before the page number */
 .rail span.cur{color:var(--red);font-weight:600}
 .rail span.past{color:var(--ink2)}
 .pg{font:12px var(--sans);color:var(--taupe);min-width:20px;text-align:right}
@@ -2036,7 +2036,6 @@ body.print #p1p :is(.pq-walker,.pq-in){animation:none} @media print{#p1p :is(.pq
 #p2b .db-name:is(#p2b,#p2b *){color:#9E2A24;font-weight:700}
 #p2b .db-card:is(#p2b,#p2b *){background:#fff;border-radius:14px;box-shadow:0 3px 12px -8px rgba(36,64,107,.3)}
 .slide.content:is(#p2p,#p2p *,#p2b,#p2b *){background:linear-gradient(180deg,var(--wash) 0,#fff 120px)}
-.slide.content .foot .rail:is(#p2p,#p2p *,#p2b,#p2b *){margin-left:auto;margin-right:14px;padding-right:14px;border-right:1px solid #CFC8BB}
 @keyframes dbspin{to{transform:rotate(360deg)}}
 /* appendix: Proposal 3 validation plan (#p3x): the Proposal 2 pilot's panels and the Proposal 1 gate (scopes above), numbered
    stages, a back link without the arrow, and a line of links */
@@ -2127,7 +2126,6 @@ body.print #p1p :is(.pq-walker,.pq-in){animation:none} @media print{#p1p :is(.pq
 .slide.content .kicker:is(#ep,#ep *){font:600 12px/1.2 var(--sans);letter-spacing:.16em;color:#4A6699;margin:0 0 10px}
 .slide.content .head:is(#ep,#ep *){font:500 42px/1.08 var(--serif);color:var(--navy);letter-spacing:-.01em;max-width:1000px}
 .slide.content .sub:is(#ep,#ep *){font-size:16px;color:#7A756C}
-.slide.content .foot .rail:is(#ep,#ep *){margin-left:auto;margin-right:14px;padding-right:14px;border-right:1px solid #CFC8BB}
 /* the appendix pilot and financial case (#p2pilot, #p2f) as on the reference deck (its #p2x and #p2f, slides 18 and 19): its
    rules for them, scoped the same way; their headers use the shared style (red label, black title) */
 .slide.content .lede:is(#p2pilot,#p2pilot *,#p2f,#p2f *,#p3x,#p3x *){margin:10px 0 0;font:400 19px/1.35 var(--sans);color:var(--ink2)}
@@ -2155,7 +2153,6 @@ body.print #p1p :is(.pq-walker,.pq-in){animation:none} @media print{#p1p :is(.pq
 .hw-ohd:is(#p2pilot,#p2pilot *,#p2f,#p2f *,#p3x,#p3x *){margin:0 0 8px;font:700 13px/1.2 var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--red)}
 .slide.content:is(#p2pilot,#p2pilot *,#p2f,#p2f *,#p3x,#p3x *){background:linear-gradient(180deg,var(--wash) 0,#fff 120px)}
 .slide.content .sub:is(#p2pilot,#p2pilot *,#p2f,#p2f *,#p3x,#p3x *){font-size:16px;color:#7A756C}
-.slide.content .foot .rail:is(#p2pilot,#p2pilot *,#p2f,#p2f *,#p3x,#p3x *){margin-left:auto;margin-right:14px;padding-right:14px;border-right:1px solid #CFC8BB}
 /* ---------------------------------------------------------------- the earlier online slides, now in the appendix (overview, offers, pickup rewards, case) */
 #oo .oo3{flex:1;min-height:0;display:grid;grid-template-columns:1fr 44px 1fr 44px 1fr;align-items:center;gap:6px;margin-top:14px}
 #oo .oon{height:100%;display:flex;flex-direction:column;align-items:center;gap:10px;padding:14px 16px 16px;background:#fff;border:1px solid var(--line);border-top:4px solid var(--navy);border-radius:16px;box-shadow:0 1px 2px rgba(0,0,0,.04),0 14px 34px -14px rgba(36,64,107,.22)}
