@@ -70,7 +70,11 @@
     const n = $(slides[cur], "aside.notes");
     $(document, "#notes .nb").innerHTML = n ? n.innerHTML : "";
     history.replaceState(null, "", `${location.search}#${cur + 1}`);
+    runRace(slides[cur]);
   }
+  // the appendix pickup race (#p1r, from the reference deck): it plays each time the slide opens (screen only); Replay runs it again
+  function runRace(sl) { const r = sl && $(sl, ".race"); if (!r || PRINT) return; r.classList.remove("run"); void r.offsetWidth; r.classList.add("run"); }
+  $$(document, ".rt-play").forEach(b => (b.onclick = () => { b.blur(); runRace(b.closest(".slide")); }));
   const editingNow = () => document.body.classList.contains("editing");
   // a band revealed by click (.vs.clickrev, slide 05): 0 hidden, 1 Without AI, 2 both; arrows step it after the panel's steps
   function setRev(el, r) { el._r = r; el.classList.toggle("r1", r >= 1); el.classList.toggle("r2", r >= 2); }

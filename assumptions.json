@@ -3554,5 +3554,42 @@
       "source": "assumption",
       "rationale": "Proposed steps, not a measured result. The operations manager or outlet GM decides after each."
     }
+  },
+  "pickup_race": {
+    "_note": {
+      "value": "Appendix: Proposal 1's pickup race (the reference deck's p1r), reproduced as it is there",
+      "unit": "text",
+      "range": null,
+      "source": "assumption",
+      "rationale": "These are the reference slide's own illustrative times. They differ from demand_mgmt in one place: the walk to the busy outlet is 5 minutes here and demand_mgmt.busy_travel_min is 3; both are illustrative."
+    },
+    "near_travel_min": {
+      "value": 5,
+      "unit": "minutes the customer travels to the nearer, busy outlet (Suntec City)",
+      "range": null,
+      "source": "assumption, illustrative scenario (team reference deck chagee-deck.vercel.app, appendix 'The pickup race'), not Chagee data",
+      "rationale": "As on the reference slide's map and race."
+    },
+    "near_ready_min": {
+      "value": 60,
+      "unit": "minutes until the drink is ready at the busy outlet",
+      "range": null,
+      "source": "assumption, illustrative scenario (team reference deck chagee-deck.vercel.app, appendix 'The pickup race'), not Chagee data",
+      "rationale": "As on the reference slide; equals demand_mgmt.busy_ready_min."
+    },
+    "far_travel_min": {
+      "value": 15,
+      "unit": "minutes the customer travels to the farther, quiet outlet (Raffles City)",
+      "range": null,
+      "source": "assumption, illustrative scenario (team reference deck chagee-deck.vercel.app, appendix 'The pickup race'), not Chagee data",
+      "rationale": "As on the reference slide; equals demand_mgmt.alt_travel_min."
+    },
+    "far_ready_min": {
+      "value": 10,
+      "unit": "minutes until the drink is ready at the quiet outlet",
+      "range": null,
+      "source": "assumption, illustrative scenario (team reference deck chagee-deck.vercel.app, appendix 'The pickup race'), not Chagee data",
+      "rationale": "As on the reference slide; equals demand_mgmt.alt_ready_min."
+    }
   }
 }

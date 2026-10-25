@@ -92,6 +92,13 @@ def values(d: dict) -> dict:
     v["sb.staff_max"] = RAW["storyboard"]["staff_choices"]["value"][1]
     v["a.target_wait"] = RAW["service"]["target_wait_minutes"]["value"]
     v["dm.wait_threshold"] = RAW["demand_mgmt"]["wait_threshold_min"]["value"]
+    # the appendix pickup race (the reference deck's p1r): each customer collects when both travel and preparation are done
+    PRr = {k: o["value"] for k, o in RAW["pickup_race"].items() if not k.startswith("_")}
+    for k, x in PRr.items(): v[f"pr.{k}"] = x
+    v["pr.near_collect"] = max(PRr["near_travel_min"], PRr["near_ready_min"]); v["pr.far_collect"] = max(PRr["far_travel_min"], PRr["far_ready_min"])
+    v["pr.sooner"] = v["pr.near_collect"] - v["pr.far_collect"]
+    if not v["pr.sooner"] > 0:
+        raise SystemExit("build: the pickup race says the farther outlet hands over sooner; rewrite it")
     inc_ = RAW["demand_mgmt"]["switch_incentive"]["value"]                     # slide 10's Proposal 1 card names the switch perk
     v["s.dm_incentive"] = inc_[0].lower() + inc_[1:]
     v["a.surge_hours"] = RAW["surge"]["surge_hours"]["value"]

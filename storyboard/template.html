@@ -572,7 +572,7 @@ html,body{margin:0;background:#E7E3DC;color:var(--ink);font-family:var(--sans);-
 .apxix h5{margin:0 0 4px;font:600 11px/1.3 var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--red)}
 .apxix ol{list-style:none;margin:0;padding:0} .apxix li{padding:5px 0;border-bottom:1px solid var(--line);font:14px/1.35 var(--sans);color:var(--ink);cursor:pointer}
 .apxix li:hover{color:var(--red)}
-.apxix ol+h5{margin-top:14px} #cnx .apxix li{padding:3px 0;font-size:14px} #cnx .apxix ol+h5{margin-top:11px}
+.apxix ol+h5{margin-top:14px} #cnx .apxix li{padding:2px 0;font-size:13.5px} #cnx .apxix ol+h5{margin-top:10px}
 /* 04: three connected panels */
 .s3{flex:1;display:grid;grid-template-columns:1fr 40px 1fr 40px 1fr;align-items:stretch;margin-top:14px}
 .s3p{background:#fff;border:1px solid var(--line);border-top:4px solid var(--navy);border-radius:12px;padding:20px 22px;display:flex;flex-direction:column;gap:12px}
@@ -1624,6 +1624,152 @@ body.print #e2 *{transition:none!important}
 #s2c .mdec{grid-template-columns:150px 1.55fr 1fr;font-size:12.5px;line-height:1.35} #s2c .mdec>div{padding:6px 12px} #s2c .mdec .q{margin-bottom:2px} #s2c .mdec .who b{font-size:14px}
 #s2c .mdec .golink{margin-left:0;font-size:12.5px}
 @media print{#s2c .tasm{display:none!important} #s2c .tsh input{display:none} #s2c .tsh{border-width:1.5px}}
+/* ---------------------------------------------------------------- appendix: Proposal 1's pilot (#p1x) and the pickup race (#p1r)
+   Taken from the reference deck (chagee-deck.vercel.app, its #p1x and #p1r): every rule that styles those two slides, each scoped
+   to them by an :is(#id,#id *) on its subject, so they look as they do there and nothing reaches the rest of this deck. */
+:is(#p1x,#p1r){--wash:#FAF8F3} #p1r{--emb:url({img:emblem})}
+.slide.content:is(#p1x,#p1r){background:linear-gradient(180deg,var(--wash) 0,#fff 120px)}
+.kicker:is(#p1x,#p1x *,#p1r,#p1r *){font: 500 12px/1 var(--sans); letter-spacing: 0.2em; text-transform: uppercase; color: var(--red); margin: 0px 0px 10px;}
+.head:is(#p1x,#p1x *,#p1r,#p1r *){margin: 0px; max-width: 960px; font: 500 37px/1.1 var(--serif); color: var(--ink); letter-spacing: -0.005em;}
+.sub:is(#p1x,#p1x *,#p1r,#p1r *){margin: 8px 0px 0px; max-width: 900px; font: italic 400 16.5px/1.4 var(--sans); color: var(--taupe);}
+.btn:is(#p1r,#p1r *){height: 28px; padding: 0px 12px; border-radius: 999px; border: 1px solid rgb(216, 209, 195); background: rgb(255, 255, 255); color: var(--navy); font: 500 12px/1 var(--sans); cursor: pointer; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap;}
+.btn:is(#p1r,#p1r *):hover{border-color: var(--navy);}
+.tag:is(#p1r,#p1r *){display: inline-block; font: 600 10.5px/1 var(--sans); letter-spacing: 0.14em; text-transform: uppercase; padding: 5px 8px; border-radius: 5px;}
+.flag:is(#p1r,#p1r *){font: 11px/1.35 var(--sans); color: var(--taupe);}
+.slide.content .lede:is(#p1x,#p1x *,#p1r,#p1r *){margin: 10px 0px 0px; font: 400 19px/1.35 var(--sans); color: var(--ink2);}
+.slide.content .sub.lede:is(#p1x,#p1x *,#p1r,#p1r *){font-style: normal;}
+.lane:is(#p1r,#p1r *){background: rgb(255, 255, 255); border: 1px solid var(--line); border-radius: 10px; padding: 5px 10px 2px; margin-top: 7px;}
+.phone:is(#p1r,#p1r *){position: relative; width: 236px; height: 392px; border-radius: 36px; background: rgb(30, 36, 48); padding: 10px; box-shadow: rgba(30, 36, 48, 0.22) 0px 10px 24px;}
+.phone .notch:is(#p1r,#p1r *){position: absolute; left: 50%; top: 10px; width: 86px; height: 18px; margin-left: -43px; border-radius: 0px 0px 12px 12px; background: rgb(30, 36, 48); z-index: 2;}
+.phone .scr:is(#p1r,#p1r *){position: relative; width: 100%; height: 100%; border-radius: 27px; background: rgb(251, 248, 242); overflow: hidden; font: 12px/1.35 var(--sans); color: var(--ink);}
+.scr .bar:is(#p1r,#p1r *){display: flex; justify-content: space-between; padding: 8px 18px 0px; font: 600 10px var(--sans); color: var(--ink2);}
+.scr .hd:is(#p1r,#p1r *){padding: 12px 14px 6px; background: var(--navy); color: rgb(255, 255, 255);}
+.scr .hd small:is(#p1r,#p1r *){display: block; opacity: 0.75; font-size: 10.5px;}
+.scr .hd h3:is(#p1r,#p1r *){margin: 2px 0px 0px; font: 500 19px/1.2 var(--serif);}
+.scr .bd:is(#p1r,#p1r *){padding: 8px 11px;}
+.scr .crd:is(#p1r,#p1r *){background: rgb(255, 255, 255); border: 1px solid var(--line); border-radius: 12px; padding: 7px 10px; margin: 0px 0px 6px;}
+.scr .crd h5:is(#p1r,#p1r *){margin: 0px 0px 3px; font: 600 12.5px var(--sans);}
+.scr .crd p:is(#p1r,#p1r *){margin: 0px; font-size: 11.2px; color: var(--ink2);}
+.scr .cta:is(#p1r,#p1r *){display: block; width: 100%; margin-top: 6px; padding: 8px; border: 0px; border-radius: 10px; background: var(--red); color: rgb(255, 255, 255); font: 600 12px var(--sans); cursor: pointer;}
+.scr .cta.ghost:is(#p1r,#p1r *){background: rgb(255, 255, 255); color: var(--navy); border: 1.5px solid var(--navy);}
+.scr .tag:is(#p1r,#p1r *){font: 600 9.5px var(--sans); padding: 1px 6px; border-radius: 999px; background: rgb(251, 241, 221); color: rgb(138, 100, 22);}
+.scr .sim:is(#p1r,#p1r *){display: block; text-align: center; margin-top: 6px; font-size: 9.5px; color: var(--taupe);}
+.scr .crd.sug:is(#p1r,#p1r *){border-color: var(--gold);}
+.scr .tag.ai:is(#p1r,#p1r *){background: rgb(238, 241, 247); color: var(--navy);}
+.scr .crd.sug p:is(#p1r,#p1r *){font-size: 10.5px;}
+.golink:is(#p1x,#p1x *){display: inline-block; margin-left: 4px; color: var(--red); font-weight: 600; cursor: pointer; border-bottom: 1px dotted var(--red);}
+.golink:is(#p1x,#p1x *)::after{content: " →";}
+.phone:is(#p1r,#p1r *){background: rgb(233, 230, 225); box-shadow: rgba(30, 36, 48, 0.18) 0px 14px 30px, rgb(214, 209, 200) 0px 0px 0px 2px inset;}
+.phone .notch:is(#p1r,#p1r *){background: rgb(233, 230, 225);}
+.phone .scr:is(#p1r,#p1r *){background: rgb(255, 255, 255); display: flex; flex-direction: column;}
+.scr .scroll:is(#p1r,#p1r *){flex: 1 1 0%; min-height: 0px; overflow: hidden; position: relative;}
+.scr .bar:is(#p1r,#p1r *){color: rgb(17, 17, 17);}
+.scr .hd:is(#p1r,#p1r *){background: rgb(255, 255, 255); color: rgb(17, 17, 17); padding: 4px 14px 2px;}
+.scr .hd .brand:is(#p1r,#p1r *){display: flex; align-items: center; gap: 6px; font: 800 12px/1 var(--sans); letter-spacing: 0.32em; color: rgb(17, 17, 17); margin-bottom: 4px;}
+.scr .hd .emb:is(#p1r,#p1r *){width: 20px; height: 20px; background: var(--emb) no-repeat center/contain;}
+.scr .hd small:is(#p1r,#p1r *){color: rgb(138, 138, 138); opacity: 1; font-size: 9.5px;}
+.scr .hd h3:is(#p1r,#p1r *){font: 800 14px/1.2 var(--sans); text-transform: uppercase; letter-spacing: 0.02em; color: rgb(17, 17, 17); margin-top: 2px;}
+.scr .hd h3:is(#p1r,#p1r *)::after{content: ""; display: block; width: 22px; height: 3px; border-radius: 2px; background: rgb(230, 0, 18); margin-top: 3px;}
+.scr .crd:is(#p1r,#p1r *){background: rgb(247, 241, 232); border: 0px; border-radius: 10px; margin-bottom: 5px;}
+.scr .crd.sug:is(#p1r,#p1r *){background: rgb(255, 255, 255); border: 1.5px solid rgb(242, 215, 166);}
+.scr .cta:is(#p1r,#p1r *){background: rgb(230, 0, 18); border-radius: 999px;}
+.scr .cta.ghost:is(#p1r,#p1r *){background: rgb(255, 255, 255); color: rgb(17, 17, 17); border: 1.5px solid rgb(17, 17, 17);}
+.scr .tag:is(#p1r,#p1r *){background: rgb(242, 231, 214); color: rgb(122, 90, 43);}
+.scr .tag.ai:is(#p1r,#p1r *){background: rgb(253, 231, 232); color: rgb(196, 0, 15);}
+.scr .tabs:is(#p1r,#p1r *){flex: 0 0 auto; display: flex; justify-content: space-around; padding: 5px 6px 8px; border-top: 1px solid rgb(238, 238, 238); background: rgb(255, 255, 255);}
+.scr .tabs span:is(#p1r,#p1r *){display: flex; flex-direction: column; align-items: center; gap: 1px; font: 500 8.5px var(--sans); color: rgb(154, 154, 154);}
+.scr .tabs svg:is(#p1r,#p1r *){width: 15px; height: 15px; fill: none; stroke: rgb(154, 154, 154); stroke-width: 1.7; stroke-linejoin: round;}
+.scr .tabs .on:is(#p1r,#p1r *){color: rgb(230, 0, 18);}
+.scr .tabs .on svg:is(#p1r,#p1r *){stroke: rgb(230, 0, 18);}
+.rt-body:is(#p1r,#p1r *){flex: 1 1 0%; min-height: 0px; display: grid; grid-template-columns: 1fr 250px; gap: 34px; margin-top: 16px;}
+.rt-left:is(#p1r,#p1r *){display: flex; flex-direction: column; min-width: 0px;}
+.rt-map svg:is(#p1r,#p1r *){width: 100%; height: auto; display: block;}
+.rt-t:is(#p1r,#p1r *){font: 500 13px var(--sans); fill: rgb(141, 134, 122);}
+.rt-t.b:is(#p1r,#p1r *){font-weight: 700; fill: var(--ink);}
+.rt-t.r:is(#p1r,#p1r *){fill: var(--red);}
+.rt-t.b.r:is(#p1r,#p1r *){fill: var(--red);}
+.rt-racehd:is(#p1r,#p1r *){display: flex; align-items: center; justify-content: space-between; margin: 14px 0px 8px; font: 600 11.5px/1 var(--sans); letter-spacing: 0.14em; text-transform: uppercase; color: rgb(74, 102, 153);}
+.rt-play:is(#p1r,#p1r *){height: 24px; font-size: 11px;}
+.race:is(#p1r,#p1r *){display: flex; flex-direction: column; gap: 12px;}
+.race .lane:is(#p1r,#p1r *){display: grid; grid-template-columns: 118px 1fr; gap: 14px; align-items: center;}
+.race .ln:is(#p1r,#p1r *){display: flex; flex-direction: column; line-height: 1.2;}
+.race .ln b:is(#p1r,#p1r *){font: 700 14.5px var(--sans); color: var(--ink);}
+.race .ln small:is(#p1r,#p1r *){font: 12px var(--sans); color: var(--taupe);}
+.race .lane.far .ln b:is(#p1r,#p1r *){color: var(--red);}
+.race .track:is(#p1r,#p1r *){position: relative; height: 46px; border-radius: 12px; background: rgb(247, 243, 236); padding: 6px 0px;}
+.race .bar:is(#p1r,#p1r *){position: absolute; left: 0px; height: 15px; border-radius: 999px; width: calc(var(--v) / var(--max) * 100%); display: flex; align-items: center; overflow: visible;}
+.race .bar.travel:is(#p1r,#p1r *){top: 6px; background: rgb(61, 92, 143);}
+.race .bar.prep:is(#p1r,#p1r *){top: 25px; background: repeating-linear-gradient(135deg, rgb(226, 163, 155) 0px, rgb(226, 163, 155) 6px, rgb(235, 185, 178) 6px, rgb(235, 185, 178) 12px);}
+.race .lane.far .bar.prep:is(#p1r,#p1r *){background: repeating-linear-gradient(135deg, rgb(184, 50, 43) 0px, rgb(184, 50, 43) 6px, rgb(201, 81, 74) 6px, rgb(201, 81, 74) 12px);}
+.race .bar em:is(#p1r,#p1r *){position: absolute; left: calc(100% + 8px); white-space: nowrap; font: italic 11.5px var(--sans); color: var(--ink2);}
+.race .lane.near .bar.prep em:is(#p1r,#p1r *){left: auto; right: 10px; color: rgb(122, 58, 53); font-style: normal; font-weight: 600;}
+.race .flag:is(#p1r,#p1r *){position: absolute; top: -4px; bottom: -4px; left: calc(var(--v) / var(--max) * 100%); width: 2px; background: var(--ink);}
+.race .flag b:is(#p1r,#p1r *){position: absolute; right: 6px; top: 50%; transform: translateY(-50%); padding: 3px 9px; border-radius: 999px; background: var(--ink); color: rgb(255, 255, 255); font: 700 12px/1 var(--sans); white-space: nowrap;}
+.race .lane.far .flag:is(#p1r,#p1r *){background: var(--red);}
+.race .lane.far .flag b:is(#p1r,#p1r *){left: 8px; right: auto; background: var(--red);}
+.rt-key:is(#p1r,#p1r *){display: flex; gap: 18px; margin: 2px 0px 0px 132px; font: 12px var(--sans); color: var(--taupe);}
+.rt-key span:is(#p1r,#p1r *){display: inline-flex; align-items: center; gap: 6px;}
+.rt-key i:is(#p1r,#p1r *){display: inline-block; width: 18px; height: 8px; border-radius: 999px;}
+.rt-key .k-tr:is(#p1r,#p1r *){background: rgb(61, 92, 143);}
+.rt-key .k-pr:is(#p1r,#p1r *){background: repeating-linear-gradient(135deg, rgb(184, 50, 43) 0px, rgb(184, 50, 43) 4px, rgb(201, 81, 74) 4px, rgb(201, 81, 74) 8px);}
+.rt-key .k-fl:is(#p1r,#p1r *){width: 2px; height: 14px; border-radius: 0px; background: var(--ink);}
+.race.run .bar:is(#p1r,#p1r *){animation: rtgrow calc(var(--v) * .07s) linear both;}
+.race.run .flag:is(#p1r,#p1r *){animation-duration: 0.35s; animation-timing-function: ease-out; animation-iteration-count: 1; animation-direction: normal; animation-fill-mode: both; animation-play-state: running; animation-name: rtpop; animation-timeline: auto; animation-range: normal; animation-delay: calc(var(--v) * .07s);}
+@media print{
+.race.run .bar:is(#p1r,#p1r *),.race.run .flag:is(#p1r,#p1r *){animation: auto ease 0s 1 normal none running none;}
+}
+.rt-right:is(#p1r,#p1r *){display: flex; flex-direction: column; align-items: center; gap: 8px;}
+.rt-phone:is(#p1r,#p1r *){height: 380px;}
+.rt-phone .tm:is(#p1r,#p1r *)::before{content: "9:41";}
+.rt-phone .scr .crd h5:is(#p1r,#p1r *){font-size: 12.5px; line-height: 1.3;}
+.rt-cap:is(#p1r,#p1r *){margin: 0px; font: 600 10px/1.3 var(--sans); letter-spacing: 0.14em; text-transform: uppercase; color: var(--taupe);}
+.rt-win:is(#p1r,#p1r *){display: flex; align-items: baseline; gap: 18px; margin-top: 10px; padding-top: 12px; border-top: 1px solid rgb(238, 232, 220);}
+.rt-win b:is(#p1r,#p1r *){font: 500 34px/1 var(--serif); color: var(--red); white-space: nowrap;}
+.rt-win span:is(#p1r,#p1r *){font: 15.5px/1.4 var(--sans); color: var(--ink2);}
+.race .lane:is(#p1r,#p1r *){border: 0px; background: none; padding: 0px; box-shadow: none; border-radius: 0px;}
+.race .track:is(#p1r,#p1r *){height: 56px; padding: 0px;}
+.race .bar:is(#p1r,#p1r *){height: 18px;}
+.race .bar.travel:is(#p1r,#p1r *){top: 7px;}
+.race .bar.prep:is(#p1r,#p1r *){top: 31px;}
+.race .lane.near .bar.prep em:is(#p1r,#p1r *){left: 14px; right: auto;}
+.race .lane.far .bar.travel em:is(#p1r,#p1r *){left: 12px; color: rgb(255, 255, 255); font-style: normal; font-weight: 600;}
+.race .lane.far .flag b:is(#p1r,#p1r *){top: auto; bottom: -2px; transform: none;}
+.race .lane.near .flag b:is(#p1r,#p1r *){top: -2px; transform: none;}
+.race:is(#p1r,#p1r *){gap: 16px;}
+.rt-phone .scr .bd:is(#p1r,#p1r *){padding: 6px 11px;}
+.rt-phone .scr .crd:is(#p1r,#p1r *){padding: 6px 10px; margin-bottom: 5px;}
+.rt-phone .scr .cta:is(#p1r,#p1r *){padding: 7px; margin-top: 5px;}
+.ag-bottom.p1x-bottom:is(#p1x,#p1x *){margin-top: 26px; flex: 0 0 auto; min-height: 0px; align-items: start;}
+.p1x-bottom .ag-pilot:is(#p1x,#p1x *),.p1x-bottom .ag-learn:is(#p1x,#p1x *){padding: 20px 26px 22px;}
+.ag-bottom:is(#p1x,#p1x *){flex: 1 1 0%; min-height: 0px; display: grid; grid-template-columns: 1fr 1.15fr; gap: 22px; margin-top: 12px;}
+.ag-pilot:is(#p1x,#p1x *),.ag-learn:is(#p1x,#p1x *){border-radius: 16px; background: rgb(250, 246, 239); padding: 12px 22px;}
+.ag-bottom h4:is(#p1x,#p1x *){margin: 0px 0px 8px; font: 500 21px/1.1 var(--serif); color: var(--navy);}
+.zone:is(#p1x,#p1x *){display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 12px;}
+.zo:is(#p1x,#p1x *){background: rgb(255, 255, 255); border-radius: 12px; padding: 9px 14px; display: flex; flex-direction: column; border: 1px solid rgb(238, 231, 218);}
+.zo b:is(#p1x,#p1x *){font: 700 14px var(--sans); color: var(--ink);}
+.zo small:is(#p1x,#p1x *){font: 12px var(--sans); color: var(--taupe);}
+.zo.busy:is(#p1x,#p1x *){border-left: 4px solid rgb(154, 147, 135);}
+.zo.sup:is(#p1x,#p1x *){border-left: 4px solid var(--red);}
+.zo.sup b:is(#p1x,#p1x *){color: var(--red);}
+.zarrow:is(#p1x,#p1x *){font-size: 20px; color: var(--taupe);}
+.zn:is(#p1x,#p1x *){margin: 8px 0px 0px; font: 13.5px/1.4 var(--sans); color: var(--ink2);}
+.ag-arms:is(#p1x,#p1x *){display: flex; align-items: center; gap: 8px; margin-top: 10px; flex-wrap: wrap;}
+.ag-arms span:is(#p1x,#p1x *){padding: 4px 11px; border-radius: 999px; background: rgb(255, 255, 255); border: 1px solid rgb(228, 220, 205); font: 600 12px/1.2 var(--sans); color: var(--navy);}
+.ag-arms i:is(#p1x,#p1x *){font-style: normal; color: var(--taupe);}
+.ag-learn ol:is(#p1x,#p1x *){margin: 0px; padding-left: 20px; font: 13.5px/1.42 var(--sans); color: var(--ink2); display: flex; flex-direction: column; gap: 4px;}
+.ag-learn ol li:is(#p1x,#p1x *)::marker{color: var(--red); font-weight: 700;}
+.ag-learn ol b:is(#p1x,#p1x *){color: var(--ink);}
+.gate:is(#p1x,#p1x *){margin: 10px 0px 0px; padding: 7px 14px; border-radius: 12px; background: rgb(255, 255, 255); border-left: 4px solid var(--navy); font: 13.5px/1.4 var(--sans); color: var(--navy);}
+.gate .lab:is(#p1x,#p1x *){display: block; margin-bottom: 2px; font: 700 10px/1.3 var(--sans); letter-spacing: 0.14em; text-transform: uppercase; color: rgb(74, 102, 153);}
+.slide.content .kicker:is(#p1x,#p1x *,#p1r,#p1r *){font: 600 12px/1.2 var(--sans); letter-spacing: 0.16em; color: rgb(74, 102, 153); margin: 0px 0px 10px;}
+.slide.content .head:is(#p1x,#p1x *,#p1r,#p1r *){font: 500 42px/1.08 var(--serif); color: var(--navy); letter-spacing: -0.01em; max-width: 1000px;}
+.slide.content .sub:is(#p1x,#p1x *,#p1r,#p1r *){font-size: 16px; color: rgb(122, 117, 108);}
+@keyframes rtgrow { 
+  0% { width: 0px; }
+}
+@keyframes rtpop { 
+  0% { opacity: 0; transform: scaleY(0.2); }
+}
 /* ---------------------------------------------------------------- slides 06 and 07: Proposal 2, and its pilot in the appendix
    Taken from the reference deck (chagee-deck.vercel.app, slides 8 and 9 and its Proposal 2 pilot page): the rules that style
    those slides, each scoped to them by an :is(#id,#id *) on its subject so nothing reaches the rest of this deck. #p2pilot is
@@ -2459,13 +2605,13 @@ aside.notes{display:none}
       
       <div class="cxexecp"><div class="ptop"><span class="ptitle">Execution steps · proposed plan, reusing the online roadmap's timing and gates</span><button class="btn" data-cx="back">← Back to the demonstration</button></div><div class="p1xsteps"><!--P1XSTEPS--></div></div>
     </div>
-    <p class="cxmore screenonly"><button class="btn" data-cx="reset">↺ Reset both</button><span class="golink" data-cx="exec">See execution steps</span></p>
+    <p class="cxmore screenonly"><button class="btn" data-cx="reset">↺ Reset both</button><span class="golink" data-go="p1x">See execution steps</span></p>
   </div>
   <div class="foot"><span>OPIM639 · Group 3 · mock-ups and times are illustrative, not live Chagee or delivery-app data</span><span class="rail"></span><span class="pg"></span></div>
   <aside class="notes">
     <p>What the customer sees, in two channels; switch with the toggle. Pickup, in the Chagee app: the customer near Suntec City sees their outlet and an estimated collection time, a suggested alternative at Raffles City with its collection time, including the walk, and an optional switch incentive. Choose Switch outlet or Keep my outlet: the confirmation and both outlets' workload update. The customer chooses before paying. Tick the fill-up box: once Raffles City is busy too, the saving falls below the approved minimum and the suggestion is withdrawn.</p>
     <p>Delivery, in an illustrative third-party app: the agent's recommendation goes to the zone manager first, who can approve a temporary pause at the busy outlet, promote the alternative outlet instead, or decline. Only then does the customer-facing screen change. Orders already placed are not moved, customers are free to order elsewhere or not at all, and the platform, not Chagee, controls its ranking; platform integration and permissions are requirements to confirm.</p>
-    <p>See execution steps opens the plan: confirm data access and instrument outcomes, run in shadow mode, pilot customer choices and manager-approved actions, then evaluate before scaling, on the online roadmap's phases and gates. The same steps are printed in the appendix. Every time here is an illustrative scenario from the reference deck, not Chagee data. Then the transition: with demand spread across outlets, how should each outlet plan its staff, machines and fresh stock for the week? About one minute.</p>
+    <p>See execution steps opens the pilot in the appendix: one zone, a busy origin outlet with a nearby support outlet, normal checkout, then routing alone, then routing with the bag offer, measured and refined against a rollout gate; the pickup race follows it. Every time here is an illustrative scenario from the reference deck, not Chagee data. Then the transition: with demand spread across outlets, how should each outlet plan its staff, machines and fresh stock for the week? About one minute.</p>
   </aside>
 </section>
 
@@ -2912,7 +3058,7 @@ aside.notes{display:none}
     <h1>Appendix</h1>
     <p class="tl">Supporting detail for the main presentation</p>
     <div class="rule"></div>
-    <p class="meta">Proposal 1 · Proposal 2 · Proposal 3 · optional new-market extension · data and sources</p>
+    <p class="meta">Proposal 1 · Proposal 2 · Proposal 3 · data and sources</p>
   </div>
   <aside class="notes"><p>The appendix, for questions: the detail behind the main slides, in their order. The contents follow on the next slide.</p></aside>
 </section>
@@ -2925,24 +3071,119 @@ aside.notes{display:none}
     <h2 class="head">Appendix: the detail behind each chapter</h2>
     <p class="sub">Supporting detail for the main presentation, in its order: Proposal 1, Proposal 2, Proposal 3, then shared material. Click a line to open it; use the agenda to return.</p>
     <div class="apxix">
-      <div><h5>Proposal 1 · online retailing</h5><ol><li data-go="p1x">Proposal 1: execution steps and scenario</li></ol><h5>Proposal 2 · in-store planning</h5><ol><li data-go="p2pilot">Eight-week zone pilot</li></ol></div>
+      <div><h5>Proposal 1 · online retailing</h5><ol><li data-go="p1x">Pilot smart pickup routing in one zone</li><li data-go="p1r">Your tea, sooner: the pickup race</li></ol><h5>Proposal 2 · in-store planning</h5><ol><li data-go="p2pilot">Eight-week zone pilot</li></ol></div>
       <div><h5>Proposal 3 · new store expansion</h5><ol><li data-go="a2">How the site forecast works</li><li data-go="ap">The new store in money: five-year P&amp;L</li><li data-go="x1">Four scores for every location</li><li data-go="e2t">The expansion decision as a table</li><li data-go="xo">Further application: existing outlets</li></ol></div>
-      <div><h5>Optional extension · a new market</h5><ol><li data-go="tc">Divider: optional extension</li><li data-go="n1">What can we know before opening?</li><li data-go="n2">Which areas show potential?</li><li data-go="n3">Which operating setup under uncertain demand?</li><li data-go="n4">Pilot, learn, then expand</li><li data-go="an">New market: inputs and method</li></ol><h5>Shared · data and sources</h5><ol><li data-go="adata">Chagee's data collection</li><li data-go="a1">Sources and assumptions</li></ol></div>
+      <div><h5>Shared · data and sources</h5><ol><li data-go="adata">Chagee's data collection</li><li data-go="a1">Sources and assumptions</li></ol></div>
     </div>
     <p class="nextl"><b>Also</b><span class="golink" data-go="cnd">Considered but not for presentation</span></p>
   </div>
   <div class="foot"><span>OPIM639 · Group 3 · appendix · for questions</span><span class="rail"></span><span class="pg"></span></div>
-  <aside class="notes"><p>The appendix holds the supporting detail for the main presentation, in its order: the execution steps for Proposal 1 and the pilot for Proposal 2, the site forecast, P&amp;L, scores and decision table for Proposal 3, the optional new-market extension, then the data and sources. Click a line to jump to it. Earlier and exploratory material is in the next section, considered but not for presentation.</p></aside>
+  <aside class="notes"><p>The appendix holds the supporting detail for the main presentation, in its order: the execution steps for Proposal 1 and the pilot for Proposal 2, the site forecast, P&amp;L, scores and decision table for Proposal 3, then the data and sources. Click a line to jump to it. Earlier and exploratory material is in the next section, considered but not for presentation.</p></aside>
 </section>
 
-<!-- ======================================================= APPENDIX: PROPOSAL 1 EXECUTION STEPS (slides 03 to 05) -->
-<section class="slide content" id="p1x" data-chapter="Appendix" data-title="Proposal 1: execution steps">
+<!-- ======================================================= APPENDIX: PROPOSAL 1 PILOT AND THE PICKUP RACE (the reference deck's p1x and p1r,
+     reproduced as they are there; its times are pickup_race.* placeholders) -->
+<section class="slide content" id="p1x" data-chapter="Appendix" data-title="Proposal 1 pilot">
+  <div class="leafart" aria-hidden="true"></div>
   <div class="inner">
-    <p class="kicker">Appendix · Online retailing · Proposal 1: execution steps, the illustrative scenario and what we checked</p>
-    <div class="body wide" style="margin-top:6px"><div class="mbapx onlapx p1xsteps"><!--P1XPAGE--></div></div>
+    <p class="kicker">Appendix · Execution steps · Proposal 1 pilot</p>
+    <h2 class="head">Pilot smart pickup routing in one zone, then expand on evidence</h2>
+    <p class="sub lede">A zone is a group of reachable outlets. Start with one busy outlet and a nearby support outlet. <span class="golink" data-go="p1h">Back to how it works</span></p>
+    <div class="ag-bottom p1x-bottom">
+      <div class="ag-pilot">
+        <h4>Zone pilot</h4>
+        <div class="zone"><div class="zo busy"><b>Suntec City</b><small>busy origin outlet</small></div><span class="zarrow">⇄</span><div class="zo sup"><b>Raffles City</b><small>support when capacity permits</small></div></div>
+        <p class="zn">A zone is a group of reachable outlets; an outlet can change roles as demand shifts.</p>
+        <div class="ag-arms"><span>Normal checkout</span><i>→</i><span>Routing alone</span><i>→</i><span>Routing + bag offer</span></div>
+      </div>
+      <div class="ag-learn">
+        <h4>Measure, assess, refine</h4>
+        <ol><li><b>Measure</b> switches, actual collection times, both queues and zone contribution</li>
+          <li><b>Assess</b> the traffic shift: generative AI summarises results and flags congestion moving</li>
+          <li><b>Refine and expand</b>: managers approve policy changes and new zones</li></ol>
+        <p class="gate"><span class="lab">Rollout gate</span>Faster collection, reliable support outlets and positive net contribution across the zone.</p>
+      </div>
+    </div>
   </div>
-  <div class="foot"><span>OPIM639 · Group 3 · appendix · proposed plan; times are illustrative</span><span class="rail"></span><span class="pg"></span></div>
-  <aside class="notes"><p>The printed copy of slide 05's execution steps, with the illustrative scenario's values and what we checked. The steps reuse the online roadmap's phases, months and gates; their scope and the gate tests are ours. No sales or profit uplift is claimed for this proposal.</p></aside>
+  <div class="foot"><span>OPIM639 · Group 3 · appendix · pilot design, proposed</span><span class="rail"></span><span class="pg"></span></div>
+  <aside class="notes"><p>The pilot for proposal one, kept here with the execution steps. Pilot in one zone: a busy origin outlet like Suntec City with a nearby support outlet like Raffles City; roles can swap as demand shifts. Test normal checkout, then routing alone, then routing with the bag offer. Measure switches, actual collection times, both queues and zone contribution; generative AI summarises the results and flags congestion moving. Managers approve policy changes and new zones. The rollout gate: faster collection, reliable support outlets and positive net contribution across the zone.</p></aside>
+</section>
+
+<section class="slide content" id="p1r" data-chapter="Appendix" data-title="The pickup race (earlier version)" data-reveal="all">
+  <div class="leafart" aria-hidden="true"></div>
+  <div class="inner">
+    <p class="kicker">Appendix · Proposal 1 · The pickup race (earlier version)</p>
+    <h2 class="head">Your tea, sooner: AI routes pickups to a faster outlet</h2>
+    <p class="sub lede">When one outlet is swamped, the app offers a nearby outlet that can hand over the drink sooner, and the customer chooses.</p>
+    <div class="rt-body">
+      <div class="rt-left">
+        <div class="rt-map">
+          <svg viewBox="0 0 760 178" aria-label="Map: the customer, Suntec City nearby but busy, Raffles City farther but quiet">
+            <rect x="0" y="0" width="760" height="178" rx="18" fill="#FBF7F0"/>
+            <path d="M0 150 C120 128 210 160 330 140 S560 96 760 120" stroke="#DCE7F2" stroke-width="16" fill="none" stroke-linecap="round"/>
+            <g stroke="#EFE7DA" stroke-width="2"><path d="M60 0 V178 M190 0 V178 M455 0 V178 M640 0 V178 M0 46 H760 M0 98 H760"/></g>
+            <path d="M262 112 L342 62" stroke="#B9B2A6" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+            <path d="M262 112 C380 140 500 132 588 104" stroke="#B8322B" stroke-width="3" fill="none" stroke-linecap="round"/>
+            <g transform="translate(262 112)"><circle r="16" fill="#24406B" opacity=".12"/><circle r="8" fill="#24406B"/><circle r="3" fill="#fff"/></g>
+            <text x="262" y="150" text-anchor="middle" class="rt-t b">You</text>
+            <g transform="translate(342 62)"><path d="M0 0 c-9 -11 -13 -16 -13 -22 a13 13 0 0 1 26 0 c0 6 -4 11 -13 22 Z" fill="#9A9387"/><circle cy="-22" r="5" fill="#fff"/></g>
+            <text x="362" y="40" class="rt-t b">Suntec City</text>
+            <text x="362" y="58" class="rt-t">{{pr.near_travel_min}} min away · long queue</text>
+            <g fill="#D99A93"><circle cx="370" cy="72" r="4"/><circle cx="381" cy="72" r="4"/><circle cx="392" cy="72" r="4"/><circle cx="403" cy="72" r="4"/><circle cx="414" cy="72" r="4"/><circle cx="425" cy="72" r="4"/></g>
+            <g transform="translate(588 104)"><path d="M0 0 c-9 -11 -13 -16 -13 -22 a13 13 0 0 1 26 0 c0 6 -4 11 -13 22 Z" fill="#B8322B"/><circle cy="-22" r="5" fill="#fff"/></g>
+            <text x="606" y="80" class="rt-t b r">Raffles City</text>
+            <text x="606" y="98" class="rt-t">{{pr.far_travel_min}} min away · quiet</text>
+            <text x="440" y="150" text-anchor="middle" class="rt-t r">suggested route</text>
+          </svg>
+        </div>
+        <div class="rt-racehd"><span>The race to your drink</span><button class="btn rt-play screenonly">▶ Replay</button></div>
+        <div class="race" style="--max:{{pr.near_collect}}">
+          <div class="lane near">
+            <div class="ln"><b>Suntec City</b><small>nearer, busy</small></div>
+            <div class="track">
+              <span class="bar travel" style="--v:{{pr.near_travel_min}}"><em>travel</em></span>
+              <span class="bar prep" style="--v:{{pr.near_ready_min}}"><em>drink ready in {{pr.near_ready_min}} min</em></span>
+              <span class="flag" style="--v:{{pr.near_collect}}"><b>{{pr.near_collect}} min</b></span>
+            </div>
+          </div>
+          <div class="lane far">
+            <div class="ln"><b>Raffles City</b><small>farther, quiet</small></div>
+            <div class="track">
+              <span class="bar travel" style="--v:{{pr.far_travel_min}}"><em>travel {{pr.far_travel_min}} min</em></span>
+              <span class="bar prep" style="--v:{{pr.far_ready_min}}"><em>ready</em></span>
+              <span class="flag" style="--v:{{pr.far_collect}}"><b>{{pr.far_collect}} min</b></span>
+            </div>
+          </div>
+          <div class="rt-key"><span><i class="k-tr"></i>Customer travelling</span><span><i class="k-pr"></i>Drink being made</span><span><i class="k-fl"></i>Collect when both are done</span></div>
+        </div>
+      </div>
+      <div class="rt-right">
+        <div class="phone rt-phone"><div class="notch"></div><div class="scr">
+          <div class="scroll">
+            <div class="bar"><span class="tm"></span><span>●●●</span></div>
+            <div class="hd"><div class="brand"><i class="emb"></i>CHAGEE</div><small>Pickup · Suntec City</small><h3>Your tea, sooner</h3></div>
+            <div class="bd">
+              <div class="crd sug"><small class="tag ai">Suggested for you</small><h5 style="margin-top:3px">Collect at Raffles City in about {{pr.far_collect}} min</h5><p>instead of {{pr.near_collect}} min at Suntec City.</p></div>
+              <div class="crd"><p>Optional: a complimentary carrier bag, if you need one.</p></div>
+              <button class="cta">Switch to Raffles City</button>
+              <button class="cta ghost">Keep Suntec City</button>
+              <span class="sim">You choose before you pay.</span>
+            </div>
+          </div>
+          <div class="tabs"><span><svg viewBox="0 0 24 24"><path d="M4 11 L12 4 L20 11 V20 H4 Z"/></svg>Home</span><span class="on"><svg viewBox="0 0 24 24"><path d="M7 7 H17 L16 20 H8 Z M6 7 H18 M10 4 H14"/></svg>Menu</span><span><svg viewBox="0 0 24 24"><rect x="6" y="4" width="12" height="16" rx="1.5"/><path d="M9 9 H15 M9 13 H15"/></svg>Orders</span><span><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"/><path d="M5 20 C5 15 8.5 13 12 13 C15.5 13 19 15 19 20"/></svg>Me</span></div>
+        </div></div>
+        <p class="rt-cap">Generative AI message · mock-up</p>
+      </div>
+    </div>
+    <div class="rt-win"><b>{{pr.sooner}} minutes sooner</b><span>Travel and preparation happen at the same time, so the customer collects as soon as both are done.</span></div>
+  </div>
+  <div class="foot"><span>OPIM639 · Group 3 · travel and readiness times are illustrative, not live Chagee data</span><span class="rail"></span><span class="pg"></span></div>
+  <aside class="notes">
+    <p>Proposal one tackles online retailing: using data for better sales, loyalty and cost management. The idea is smart pickup routing.</p>
+    <p>Picture a customer at peak. Suntec City is the nearest outlet, {{pr.near_travel_min}} minutes away, but it is swamped: the drink will not be ready for {{pr.near_ready_min}} minutes. Raffles City is farther, {{pr.far_travel_min}} minutes away, but quiet: the drink is ready in {{pr.far_ready_min}}.</p>
+    <p>Watch the race. Travel and preparation happen at the same time, so you collect when both are done: {{pr.near_collect}} minutes at Suntec, {{pr.far_collect}} at Raffles. That is {{pr.sooner}} minutes sooner for the customer, and the busy outlet's queue gets relief.</p>
+    <p>On the right is how it would look in the Chagee app: generative AI writes a short, clear message, with an optional complimentary carrier bag, and the customer chooses before paying. Nothing switches without consent. All times here are illustrative, not live Chagee data. About fifty seconds.</p>
+  </aside>
 </section>
 
 <!-- ======================================================= APPENDIX: PROPOSAL 2 PILOT (the reference deck's p2x) -->
@@ -3142,185 +3383,6 @@ aside.notes{display:none}
   </aside>
 </section>
 
-<!-- ======================================================= THINGS TO CONSIDER (divider) -->
-<section class="slide cover" id="tc" data-title="Optional extension: a new market">
-  <img class="ll" src="{img:leaves_left}" alt="">
-  <img class="sand" src="{img:sand}" alt="">
-  <div class="t" style="top:190px">
-    <h1>Optional extension</h1>
-    <p class="tl">A new market without app history: Australia</p>
-    <div class="rule"></div>
-    <p class="meta">What we can know before opening · which areas · which setup · pilot, learn, then expand</p>
-  </div>
-  <aside class="notes"><p>Optional, after the close, for questions about a new market. It sits outside the three-part story and none of it feeds the main slides' numbers. Skip to the appendix with the agenda or the slide number box.</p></aside>
-</section>
-
-<!-- ======================================================= 8A NEW MARKET: WHAT CAN WE KNOW BEFORE OPENING (temporary label) -->
-<section class="slide content nm" id="n1" data-chapter="Extension" data-title="New markets: what can we know before opening?">
-  <div class="leafart" aria-hidden="true"></div>
-  <div class="inner stepper" data-steps="4">
-    <p class="kicker">Extension · New market · what can we know before opening?<span class="ext">New-market worked example · Australia · scenario assumptions</span></p>
-    <h2 class="head" style="max-width:1010px">No Chagee sales history is not the same as no data: profile each area on what a new market can measure</h2>
-    <p class="sub">Archetype candidate areas in one Australian state capital, standing in for real suburbs until the data is pulled. We assume Chagee has no operating history there.</p>
-    <div class="body" style="grid-template-columns:1fr 286px;gap:18px;margin-top:8px">
-      <div class="panel">
-        <div class="ptop"><span class="ptitle">Candidate-area profiles · consistent features, every area</span></div>
-        <table class="res nmprof" data-k="4"></table>
-        <p class="nmareas lnote"></p>
-        <ol class="caps" style="min-height:30px">
-          <li data-s="1"><span class="n">1</span><span>Features a market with no Chagee history can still measure, and what each stands in for.</span></li>
-          <li data-s="2"><span class="n">2</span><span>The same features for every candidate area, so the areas compare like for like.</span></li>
-          <li data-s="3"><span class="n">3</span><span>Where a real value would come from, and what the value on this slide is: a scenario assumption.</span></li>
-          <li data-s="4"><span class="n">4</span><span>What we leave out: anything that needs Chagee to be trading there already.</span></li>
-        </ol>
-      </div>
-      <div class="cards" style="gap:8px">
-        <div class="bc" data-s="3"><div class="k">Four kinds of input</div>
-          <p class="nmkind"><span class="chip ob">Sourced observation</span> none yet: no Australian data retrieved for this deck</p>
-          <p class="nmkind"><span class="chip px">Proxy</span> what each feature stands in for, such as workers for weekday demand</p>
-          <p class="nmkind"><span class="chip as">Scenario assumption</span> every value in the table</p>
-          <p class="nmkind"><span class="chip na">Unavailable</span> before opening; left out, below</p></div>
-        <div class="bc warn" data-s="4"><div class="k">Left out · needs Chagee activity</div><ul class="lnote nmexcl" style="padding-left:16px;margin-top:3px"></ul></div>
-        <div class="bc" data-s="4"><h4>Missing is unknown, not zero</h4><p>No area has app searches or delivery orders yet. Set to zero, they would read as no demand; left out, the areas are compared only on what all of them have.</p></div>
-      </div>
-    </div>
-    <div class="revctl screenonly" style="top:8px"><span class="lab">Step through</span><span class="ctl"></span></div>
-    <p class="xai" data-s="4"><b>What is AI here</b><span>Nothing yet. This is the data step the models on the next slides need; every value stays a scenario assumption until census and market data are pulled.</span></p>
-  </div>
-  <div class="foot"><span>OPIM639 · Group 3 · illustrative assumptions · Australian inputs are scenario assumptions, not sourced · A$</span><span class="rail"></span><span class="pg"></span></div>
-  <aside class="notes">
-    <p>To consider: a new market. The main story was Singapore, where Chagee already trades. Now the harder case: a new market where Chagee has no local operating history. We use Australia as the worked example, and we assume no Chagee history there; that is to confirm.</p>
-    <p>No sales history does not mean no data. Before opening, a market still has residents, workers, students, income, transport access, competitors and rents. Step one: those are the features, and each is a proxy for something we care about, such as workers for weekday lunch demand. Step two: the same features for every candidate area, so the areas compare like for like.</p>
-    <p>Step three, be honest about the values. The areas are archetypes, a CBD office core, a university precinct, a suburban rail interchange and an outer-suburb shopping centre, not real suburbs. Every value is a scenario assumption. The table says where a real value would come from, such as the census, but we have not retrieved any Australian data, so there are no sourced observations on this slide yet.</p>
-    <p>Step four, what we leave out. App searches, delivery orders, distance to the nearest Chagee outlet and the sales of outlets nearby all need Chagee to be trading already. We leave them out rather than set them to zero: zero would read as no demand, when the truth is that we do not know. About forty-five seconds.</p>
-  </aside>
-</section>
-
-<!-- ======================================================= 8B AUSTRALIA: WHICH AREAS SHOW POTENTIAL (temporary label) -->
-<section class="slide content nm" id="n2" data-chapter="Extension" data-title="Australia case study: which areas show potential?">
-  <div class="leafart" aria-hidden="true"></div>
-  <div class="inner stepper" data-steps="4">
-    <p class="kicker">Extension · New market · which areas show potential?<span class="ext">New-market worked example · Australia · scenario assumptions</span></p>
-    <h2 class="head" style="max-width:1010px">{{s.nm_contenders}} can each rank first as the weights move; the score shortlists areas, it does not forecast their sales</h2>
-    <div class="body" style="grid-template-columns:1fr 300px;gap:18px;margin-top:10px">
-      <div class="panel">
-        <div class="ptop"><span class="ptitle">Suitability score out of {{x.score_max}} · illustrative weights</span><span class="seg nmopen screenonly"></span></div>
-        <div class="visual" data-s="1"><svg class="nmbars" viewBox="0 0 600 176" preserveAspectRatio="xMidYMid meet" aria-label="Suitability score per candidate area, split by feature"></svg></div>
-        <p class="lnote nmleg" data-s="1"></p>
-        <div class="nmscen" data-s="3">
-          <div class="k">Demand scenarios, cups a day · the same for every area</div>
-          <div class="sc"><span>Low</span><b>{{x.nm_d_low}}</b></div><div class="sc"><span>Base</span><b>{{x.nm_d_base}}</b></div><div class="sc"><span>High</span><b>{{x.nm_d_high}}</b></div>
-          <p>A placeholder scale: our Singapore per-outlet volume assumption, reused. With no calibration from real outlets, the score cannot turn into cups, so every area faces this range.</p>
-        </div>
-        <ol class="caps" style="min-height:30px">
-          <li data-s="1"><span class="n">1</span><span>Each feature is scaled across the areas, from worst to best, and weighted. Competitors and rent count against.</span></li>
-          <li data-s="2"><span class="n">2</span><span>Move the weights: the order of the top areas changes. The check on the right re-ranks with each weight dropped, then doubled.</span></li>
-          <li data-s="3"><span class="n">3</span><span>The score ranks; it does not set cups. Volume is a range of scenarios until a pilot supplies real outcomes.</span></li>
-          <li data-s="4"><span class="n">4</span><span>First opening: no Chagee outlet nearby, so no own-store cannibalisation. Switch to the next opening to see it appear.</span></li>
-        </ol>
-      </div>
-      <div class="cards" style="gap:8px">
-        <div class="cset sitectl xctl nmw screenonly" data-s="2"></div>
-        <div class="bc printonly nmwp"></div>
-        <div class="bc nmsens" data-s="2"></div>
-        <div class="bc" data-s="4"><div class="k">With real outcomes · supervised learning</div><p>If outlets in existing markets had real sales, with these same features measured around each, a supervised model could learn the weights instead of us choosing them, tested on markets it has not seen. The supervised site model, also under Things to consider, is trained on synthetic Singapore data: <b>not validated for Australia</b>, and not used here.</p></div>
-      </div>
-    </div>
-    <div class="revctl screenonly" style="top:8px"><span class="lab">Step through</span><span class="ctl"></span></div>
-    <p class="xill">Illustrative. Archetype areas and scenario assumptions: not Australian data, not Chagee data.</p>
-  </div>
-  <div class="foot"><span>OPIM639 · Group 3 · explainer figures are illustrative assumptions · Australian inputs are scenario assumptions, not sourced</span><span class="rail"></span><span class="pg"></span></div>
-  <aside class="notes">
-    <p>Same features, same definitions, every area. Step one: each feature is scaled across the {{x.nm_areas}} areas from worst to best, competitors and rent count against, and the weights add them up. At our weights the {{s.nm_top_name}} scores {{x.nm_score_top}}, the {{s.nm_last_name}} only {{x.nm_score_last}}.</p>
-    <p>Step two, and this is the point: move the weights. The check re-ranks {{x.nm_variants}} times, with each weight dropped and then doubled. {{s.nm_contenders}} each come first in some of them; the {{s.nm_last_name}} is last in every one. So the score gives a shortlist, not a winner.</p>
-    <p>Step three: the score does not become a sales forecast. Turning it into cups needs a calibration from real outlets, which we do not have. So every area faces the same low, base and high range, {{x.nm_d_low}}, {{x.nm_d_base}} and {{x.nm_d_high}} cups a day, borrowed from our Singapore per-outlet assumption as a placeholder scale.</p>
-    <p>Where supervised learning fits: with real outcomes from outlets in existing markets, a model could learn these weights, tested on markets it has not seen. Our supervised site model is trained on synthetic Singapore data, so it is not validated for Australia, and we do not use it here.</p>
-    <p>Step four, cannibalisation. For the first opening it is zero: there is no Chagee outlet in any catchment. Switch to the next opening and it appears: an area within {{x.nm_overlap_km|g}} km of the pilot loses up to {{x.nm_cann_max|pct}} of its cups to it. About one minute.</p>
-  </aside>
-</section>
-
-<!-- ======================================================= 8C WHICH OPERATING SETUP UNDER UNCERTAIN DEMAND (temporary label) -->
-<section class="slide content nm" id="n3" data-chapter="Extension" data-title="Which operating setup works under uncertain demand?">
-  <div class="leafart" aria-hidden="true"></div>
-  <div class="inner">
-    <p class="kicker">Extension · New market · which operating setup under uncertain demand?<span class="ext">New-market worked example · Australia · A$ scenario assumptions</span></p>
-    <h2 class="head" style="max-width:1010px">With our A$ assumptions, machine-made drink holds up best in the worst case; human-only wins if a machine unit costs more than about A${{x.nm_flip_machine}} a month</h2>
-    <div class="body" style="grid-template-columns:1fr 300px;gap:18px;margin-top:8px">
-      <div class="panel">
-        <div class="ptop"><span class="ptitle">Operating contribution, A$ a day, year average · with AI staffing, exact forecast</span></div>
-        <div class="visual" style="flex:none;height:150px"><svg class="nmchart" style="width:100%;height:100%" viewBox="0 0 600 150" preserveAspectRatio="xMidYMid meet" aria-label="Operating contribution against realised cups a day, human-only and machine-made drink"></svg></div>
-        <table class="res nmtab"></table>
-      </div>
-      <div class="cards" style="gap:8px">
-        <div class="cset sitectl nmctl screenonly"></div>
-        <div class="bc printonly nmctlp"></div>
-        <div class="bc nmbe"></div>
-        <div class="bc nmpref"></div>
-      </div>
-    </div>
-    <p class="aikey"><b>Machines = automation</b>: equipment sized before opening, held fixed. <b>AI = AI-assisted staffing</b>: the forecast sets the crew; realised demand unchanged. <span class="ai-day">Event day</span> · peak hour · {{a.seeds}} runs · illustrative</p>
-    <div class="vs clickrev ai nmband" title="Click to reveal the AI intelligence impact"><div class="wo"><span class="lab">Without AI intelligence<br><small style="letter-spacing:.06em;text-transform:none;font-weight:400">one crew, all day</small></span><span class="ai-without"></span></div><div class="wi"><span class="lab">With AI intelligence<br><small style="letter-spacing:.06em;text-transform:none;font-weight:400">forecast roster</small></span><span class="ai-with"></span></div></div>
-  </div>
-  <div class="foot"><span>OPIM639 · Group 3 · illustrative assumptions · A$ wage, price, rent and machine costs are scenario assumptions, not sourced</span><span class="rail"></span><span class="pg"></span></div>
-  <aside class="notes">
-    <p>Now feed the demand scenarios into the same counter simulation as the counter pages in the appendix, with Australian costs in Australian dollars: a wage of A${{x.nm_wage}} an hour, A${{x.nm_machine}} a month per machine unit, A${{x.nm_price|g}} a cup and A${{x.nm_rent}} a month rent at the {{s.nm_pilot_name}}. All scenario assumptions, none sourced. We compare human-only with machine-made drink. Equipment is sized before opening for the base scenario and does not change.</p>
-    <p>The chart is the year-average operating contribution, before set-up cost, delivery and overheads, as realised demand moves. Machine-made drink is above human-only across the range here, and both are below zero at the low end: break-even is about {{x.nm_be_mdd}} cups a day for machine-made drink and {{x.nm_be_hand}} for human-only, against a low scenario of {{x.nm_d_low}}.</p>
-    <p>Then the AI layer, revealed in the band. Without AI the counter runs one crew all day, set once for a normal day's planned peak. With AI the forecast sets the roster for the day type, but the forecast is not perfect: it can miss realised demand by {{x.nm_err|pct}} either way. On an event day at base demand, human-only without AI loses about {{x.nm_hand_wo_lost|pct}} of peak-hour orders; with an exact forecast, {{x.nm_hand_ai_staff}} people bring that to {{x.nm_hand_ai_lost|pct}}, and the day's contribution rises to about A${{x.nm_hand_ai_c}} from A${{x.nm_hand_wo_c}}. An under-forecast puts on {{x.nm_hand_aim_staff}} and gives some back: {{x.nm_hand_aim_lost|pct}} walk away. On machine-made drink the forecast keeps {{x.nm_mdd_ai_staff}} person even on an event day, so {{x.nm_mdd_ai_lost|pct1}} still walk away: the staffing rule's own capacity estimate is the limit there, not the forecast.</p>
-    <p>When does the answer change? We judge by the worst case across demand scenarios and forecast errors. Machine-made drink keeps about A${{x.nm_worst_mdd}} a day, human-only A${{x.nm_worst_hand}}. That flips if a machine unit costs more than about A${{x.nm_flip_machine}} a month; across our wage range, A${{x.nm_wage_lo}} to A${{x.nm_wage_hi}} an hour, machine-made drink stays ahead. Move the sliders to test it. Walk-aways are counted at the peak-hour rate over the busiest hours only, an approximation. About one and a half minutes.</p>
-  </aside>
-</section>
-
-<!-- ======================================================= 8D PILOT, LEARN, THEN EXPAND (temporary label) -->
-<section class="slide content nm" id="n4" data-chapter="Extension" data-title="Pilot, learn, then expand">
-  <div class="leafart" aria-hidden="true"></div>
-  <div class="inner stepper" data-steps="4">
-    <p class="kicker">Extension · New market · pilot, learn, then expand<span class="ext">New-market worked example · Australia · scenario assumptions</span></p>
-    <h2 class="head" style="max-width:1010px">Pilot one machine-made drink counter in the {{s.nm_pilot_name}}, then let the pilot's own data decide the next step</h2>
-    <div class="body" style="grid-template-columns:300px 1fr 280px;gap:16px;margin-top:10px">
-      <div class="bc nmrec" data-s="1"><div class="k">Recommendation · conditional</div>
-        <h4>Where: the {{s.nm_pilot_name}} ({{s.nm_pilot}})</h4><p>First at our weights; {{s.nm_contenders}} are the shortlist. No own-store cannibalisation.</p>
-        <h4>Setup: {{s.nm_robust}}, AI staffing</h4><p>Best worst case, A${{x.nm_worst_mdd}} a day against A${{x.nm_worst_hand}} for {{s.nm_other}}.</p>
-        <h4>Holds only if</h4><ul class="lnote" style="padding-left:16px;margin-top:2px"><li>a machine unit costs under about A${{x.nm_flip_machine}} a month</li><li>volume lands in the placeholder range, {{x.nm_d_low}} to {{x.nm_d_high}} cups a day; break-even is about {{x.nm_be_mdd}}</li><li>the A$ wage, price and rent hold</li><li>the forecast misses by no more than {{x.nm_err|pct}}</li></ul></div>
-      <div class="panel" data-s="2" style="padding-top:10px">
-        <div class="ptop"><span class="ptitle">What the pilot measures, and what it updates</span></div>
-        <table class="res nmmeas">
-          <tr><th>Measure</th><th>How</th><th class="u">Updates</th></tr>
-          <tr><td><b>Orders, cups a day</b></td><td>till and app records, daily</td><td class="u">the placeholder low, base and high range</td></tr>
-          <tr><td><b>Hourly demand</b></td><td>order times by hour, by day type</td><td class="u">the hourly shape and peak the roster is built on</td></tr>
-          <tr><td><b>Conversion, where measurable</b></td><td>store-locator views or footfall against orders</td><td class="u">the first link from score to cups</td></tr>
-          <tr><td><b>Service times</b></td><td>order to hand-over, per station</td><td class="u">station seconds in the counter simulation</td></tr>
-          <tr><td><b>Labour needed</b></td><td>crew against waits and walk-aways each hour</td><td class="u">the staffing rule and minimum crew</td></tr>
-          <tr><td><b>Machine cost and uptime</b></td><td>the lease quote, downtime log</td><td class="u">the A$ machine cost and the setup choice</td></tr>
-        </table>
-        <p class="lnote" data-s="3"><b>Then rerun:</b> the area ranking with the area's real outcome, the setup comparison with real demand and times. Once several outlets trade, outcomes can train the supervised model; until then, weights stay a judgement.</p>
-      </div>
-      <div class="cards" style="gap:8px" data-s="4">
-        <div class="cset sitectl nmtry screenonly"></div>
-        <div class="bc nmtrig"></div>
-      </div>
-    </div>
-    <div class="revctl screenonly" style="top:8px"><span class="lab">Step through</span><span class="ctl"></span></div>
-    <p class="decide" data-s="4"><b>Expand when</b><span>the pilot clears break-even for {{x.nm_weeks}} weeks in a row, and the next area, the {{s.nm_next_name}}, still clears it after losing about {{x.nm_next_cann|pct}} of its cups to the pilot. Every figure here is a scenario assumption until the pilot replaces it.</span></p>
-  </div>
-  <div class="foot"><span>OPIM639 · Group 3 · illustrative assumptions · Australian inputs are scenario assumptions, not sourced · A$</span><span class="rail"></span><span class="pg"></span></div>
-  <aside class="notes">
-    <p>So the answer to where, with what, and what next. Where: the {{s.nm_pilot_name}}, first at our weights, with {{s.nm_contenders}} as the shortlist. With what: a machine-made drink counter with AI staffing, because it keeps the most in the worst case, about A${{x.nm_worst_mdd}} a day. It is conditional: it holds only while a machine unit costs under about A${{x.nm_flip_machine}} a month, the A$ wage, price and rent hold, and volume lands in our placeholder range. Break-even is about {{x.nm_be_mdd}} cups a day.</p>
-    <p>Step two, what the pilot measures: orders and cups a day, demand by hour and day type, conversion where we can measure it, service times per station, the labour each hour actually needs, and the real machine cost and uptime. Step three, how that updates the analysis: real volume replaces the placeholder range, real hourly demand replaces the Singapore shape, service times replace our station seconds, and the area's real outcome is the first calibration from score to cups. Once several outlets trade, those outcomes can train the supervised model.</p>
-    <p>Step four, the evidence to act, each held for {{x.nm_weeks}} weeks in a row. Add staff when peak-hour walk-aways stay above {{sb.walkaway_target|pct}} on the forecast roster. Revisit the setup if the firm machine quote is above about A${{x.nm_flip_machine}} a unit a month. Open the next outlet, the {{s.nm_next_name}}, only if the pilot clears break-even and the next site still clears it after losing about {{x.nm_next_cann|pct}} of its cups to the pilot. Try a pilot result on the right. About one minute.</p>
-  </aside>
-</section>
-
-<section class="slide content" id="an" data-chapter="Appendix" data-title="New market: inputs and method">
-  <div class="leafart" aria-hidden="true"></div>
-  <div class="inner">
-    <p class="kicker">Appendix · New market (Things to consider): inputs and method</p>
-    <h2 class="head">Every Australian input is a scenario assumption</h2>
-    <div class="body wide" style="margin-top:12px"><div class="apx"><!--NMAPPENDIX--></div></div>
-  </div>
-  <div class="foot"><span>OPIM639 · Group 3 · explainer figures are illustrative assumptions · Australian inputs are scenario assumptions, not sourced</span><span class="rail"></span><span class="pg"></span></div>
-  <aside class="notes"><p>Soft copy only. Backup for the new-market slides: every new-market input, how the numbers are worked out, and what we do not claim.</p></aside>
-</section>
-
 <!-- ======================================================= APPENDIX: CHAGEE'S DATA COLLECTION -->
 <section class="slide content" id="adata" data-chapter="Appendix" data-title="Chagee's data collection">
   <div class="leafart" aria-hidden="true"></div>
@@ -3384,9 +3446,9 @@ aside.notes{display:none}
     <h2 class="head">Considered but not for presentation</h2>
     <p class="sub">Earlier versions and exploratory analyses, kept intact for reference. Click a line to open it; use the agenda to return.</p>
     <div class="apxix">
-      <div><h5>Earlier framing</h5><ol><li data-go="c3">The data trail</li><li data-go="c4">Our scope: the earlier three-part framing</li><li data-go="c1b">Network effects across the three parts</li></ol><h5>Online retailing · earlier version</h5><ol><li data-go="oo">Earlier version: overview</li><li data-go="ol">Earlier version: capacity-aware ordering</li><li data-go="od">Earlier version: targeted discounts</li><li data-go="os">Earlier version: self-pickup rewards</li><li data-go="oe">Earlier version: business case and decision</li><li data-go="aol1">Online retailing: business case and reconciliation</li><li data-go="aol2">Online retailing: offers, plan, team and sources</li></ol><h5>Expansion · corporate planning extension</h5><ol><li data-go="x1b">The supervised model</li><li data-go="x2">From pin to net profit</li></ol></div>
+      <div><h5>Earlier framing</h5><ol><li data-go="c3">The data trail</li><li data-go="c4">Our scope: the earlier three-part framing</li><li data-go="c1b">Network effects across the three parts</li></ol><h5>Online retailing · earlier version</h5><ol><li data-go="oo">Earlier version: overview</li><li data-go="ol">Earlier version: capacity-aware ordering</li><li data-go="od">Earlier version: targeted discounts</li><li data-go="os">Earlier version: self-pickup rewards</li><li data-go="oe">Earlier version: business case and decision</li><li data-go="aol1">Online retailing: business case and reconciliation</li><li data-go="aol2">Online retailing: offers, plan, team and sources</li><li data-go="p1xo">Earlier version: execution steps and scenario</li></ol><h5>Expansion · corporate planning extension</h5><ol><li data-go="x1b">The supervised model</li><li data-go="x2">From pin to net profit</li></ol></div>
       <div><h5>Membership squads (Grow)</h5><ol><li data-go="m1">Members: when does joining feel worth it?</li><li data-go="m2">The proposed squad experience</li><li data-go="m2b">Every group order helps us serve customers better</li><li data-go="m3">Pilot squads with personalised suggestions?</li><li data-go="am1">Members: the model and its checks</li><li data-go="am2">Members: break-even, assumptions and sources</li><li data-go="am3">Group orders to forecasts: method and results</li></ol><h5>In-store · toppings and bucket brigade</h5><ol><li data-go="s2p">Can the same crew handle a more complex menu?</li><li data-go="s2r">What a bucket brigade actually does</li><li data-go="s2c">Fixed responsibilities or a bucket brigade?</li><li data-go="p2x">Proposal 2: execution steps and settings</li></ol><h5>In-store · flexible-assistance tablet</h5><ol><li data-go="s2b">Alternative: flexible assistance, the tablet</li><li data-go="s2t">Alternative: try the tablet</li><li data-go="s2x">Tablet: steps, inputs and rules</li></ol></div>
-      <div><h5>In-store · earlier counter analysis</h5><ol><li data-go="o1">Earlier version: forecasting the crew</li><li data-go="sh">Earlier version: sharing the work at the peak</li><li data-go="c7">Equipment: a separate investigation</li><li data-go="o2">Earlier version: the operations manager's decision</li><li data-go="c6">Bucket brigade: sharing the work</li><li data-go="aops">Counter comparisons, every day type</li><li data-go="c8">The decisions in detail (draft)</li><li data-go="c9">The size of the benefit (draft)</li><li data-go="ab">The benefit in detail</li><li data-go="cm">Machine ladder</li><li data-go="a3">Machine ladder: tiers and sources</li></ol></div>
+      <div><h5>In-store · earlier counter analysis</h5><ol><li data-go="o1">Earlier version: forecasting the crew</li><li data-go="sh">Earlier version: sharing the work at the peak</li><li data-go="c7">Equipment: a separate investigation</li><li data-go="o2">Earlier version: the operations manager's decision</li><li data-go="c6">Bucket brigade: sharing the work</li><li data-go="aops">Counter comparisons, every day type</li><li data-go="c8">The decisions in detail (draft)</li><li data-go="c9">The size of the benefit (draft)</li><li data-go="ab">The benefit in detail</li><li data-go="cm">Machine ladder</li><li data-go="a3">Machine ladder: tiers and sources</li></ol><h5>Optional extension · a new market</h5><ol><li data-go="tc">Divider: optional extension</li><li data-go="n1">What can we know before opening?</li><li data-go="n2">Which areas show potential?</li><li data-go="n3">Which operating setup under uncertain demand?</li><li data-go="n4">Pilot, learn, then expand</li><li data-go="an">New market: inputs and method</li></ol></div>
     </div>
     <p class="nextl"><b>Back</b><span class="golink" data-go="ax">Appendix contents</span></p>
   </div>
@@ -3837,6 +3899,16 @@ aside.notes{display:none}
   </div>
   <div class="foot"><span>OPIM639 · Group 3 · appendix · proposed policy and plan from the team brief; sources checked October 2026</span><span class="rail"></span><span class="pg"></span></div>
   <aside class="notes"><p>Backup for the earlier online slides: the brief's offer rules as a proposed policy, the three phases and two gates with the team as it joins and what it costs, and each cited source with what it does and does not support. Research findings come from other settings; they support the direction, not the size, of any Chagee effect. Soft copy only.</p></aside>
+</section>
+
+<!-- ======================================================= APPENDIX: PROPOSAL 1 EXECUTION STEPS (slides 03 to 05) -->
+<section class="slide content" id="p1xo" data-chapter="Appendix" data-title="Proposal 1: execution steps (earlier version)">
+  <div class="inner">
+    <p class="kicker">Considered · Online retailing · Proposal 1: execution steps, the illustrative scenario and what we checked</p>
+    <div class="body wide" style="margin-top:6px"><div class="mbapx onlapx p1xsteps"><!--P1XPAGE--></div></div>
+  </div>
+  <div class="foot"><span>OPIM639 · Group 3 · appendix · proposed plan; times are illustrative</span><span class="rail"></span><span class="pg"></span></div>
+  <aside class="notes"><p>The printed copy of slide 05's execution steps, with the illustrative scenario's values and what we checked. The steps reuse the online roadmap's phases, months and gates; their scope and the gate tests are ours. No sales or profit uplift is claimed for this proposal.</p></aside>
 </section>
 
 <!-- ======================================================= 05 GROW: THE PROBLEM AND THE EFFORT MODEL -->
@@ -4759,6 +4831,185 @@ aside.notes{display:none}
     <p>The honest point: switch to the pin with an outlet {{x.c_nb_km|km}} km away. It takes {{x.c_share|pct}} of its cups from our own outlets and comes out at {{s.x_c_net}} a month, a {{s.x_c_rec}}. About forty-five seconds.</p>
     <p>Later: reuse in new markets via transfer learning, out of scope.</p>
   </aside>
+</section>
+
+<!-- ======================================================= THINGS TO CONSIDER (divider) -->
+<section class="slide cover" id="tc" data-title="Optional extension: a new market">
+  <img class="ll" src="{img:leaves_left}" alt="">
+  <img class="sand" src="{img:sand}" alt="">
+  <div class="t" style="top:190px">
+    <h1>Optional extension</h1>
+    <p class="tl">A new market without app history: Australia</p>
+    <div class="rule"></div>
+    <p class="meta">What we can know before opening · which areas · which setup · pilot, learn, then expand</p>
+  </div>
+  <aside class="notes"><p>Optional, after the close, for questions about a new market. It sits outside the three-part story and none of it feeds the main slides' numbers. Skip to the appendix with the agenda or the slide number box.</p></aside>
+</section>
+
+<!-- ======================================================= 8A NEW MARKET: WHAT CAN WE KNOW BEFORE OPENING (temporary label) -->
+<section class="slide content nm" id="n1" data-chapter="Extension" data-title="New markets: what can we know before opening?">
+  <div class="leafart" aria-hidden="true"></div>
+  <div class="inner stepper" data-steps="4">
+    <p class="kicker">Extension · New market · what can we know before opening?<span class="ext">New-market worked example · Australia · scenario assumptions</span></p>
+    <h2 class="head" style="max-width:1010px">No Chagee sales history is not the same as no data: profile each area on what a new market can measure</h2>
+    <p class="sub">Archetype candidate areas in one Australian state capital, standing in for real suburbs until the data is pulled. We assume Chagee has no operating history there.</p>
+    <div class="body" style="grid-template-columns:1fr 286px;gap:18px;margin-top:8px">
+      <div class="panel">
+        <div class="ptop"><span class="ptitle">Candidate-area profiles · consistent features, every area</span></div>
+        <table class="res nmprof" data-k="4"></table>
+        <p class="nmareas lnote"></p>
+        <ol class="caps" style="min-height:30px">
+          <li data-s="1"><span class="n">1</span><span>Features a market with no Chagee history can still measure, and what each stands in for.</span></li>
+          <li data-s="2"><span class="n">2</span><span>The same features for every candidate area, so the areas compare like for like.</span></li>
+          <li data-s="3"><span class="n">3</span><span>Where a real value would come from, and what the value on this slide is: a scenario assumption.</span></li>
+          <li data-s="4"><span class="n">4</span><span>What we leave out: anything that needs Chagee to be trading there already.</span></li>
+        </ol>
+      </div>
+      <div class="cards" style="gap:8px">
+        <div class="bc" data-s="3"><div class="k">Four kinds of input</div>
+          <p class="nmkind"><span class="chip ob">Sourced observation</span> none yet: no Australian data retrieved for this deck</p>
+          <p class="nmkind"><span class="chip px">Proxy</span> what each feature stands in for, such as workers for weekday demand</p>
+          <p class="nmkind"><span class="chip as">Scenario assumption</span> every value in the table</p>
+          <p class="nmkind"><span class="chip na">Unavailable</span> before opening; left out, below</p></div>
+        <div class="bc warn" data-s="4"><div class="k">Left out · needs Chagee activity</div><ul class="lnote nmexcl" style="padding-left:16px;margin-top:3px"></ul></div>
+        <div class="bc" data-s="4"><h4>Missing is unknown, not zero</h4><p>No area has app searches or delivery orders yet. Set to zero, they would read as no demand; left out, the areas are compared only on what all of them have.</p></div>
+      </div>
+    </div>
+    <div class="revctl screenonly" style="top:8px"><span class="lab">Step through</span><span class="ctl"></span></div>
+    <p class="xai" data-s="4"><b>What is AI here</b><span>Nothing yet. This is the data step the models on the next slides need; every value stays a scenario assumption until census and market data are pulled.</span></p>
+  </div>
+  <div class="foot"><span>OPIM639 · Group 3 · illustrative assumptions · Australian inputs are scenario assumptions, not sourced · A$</span><span class="rail"></span><span class="pg"></span></div>
+  <aside class="notes">
+    <p>To consider: a new market. The main story was Singapore, where Chagee already trades. Now the harder case: a new market where Chagee has no local operating history. We use Australia as the worked example, and we assume no Chagee history there; that is to confirm.</p>
+    <p>No sales history does not mean no data. Before opening, a market still has residents, workers, students, income, transport access, competitors and rents. Step one: those are the features, and each is a proxy for something we care about, such as workers for weekday lunch demand. Step two: the same features for every candidate area, so the areas compare like for like.</p>
+    <p>Step three, be honest about the values. The areas are archetypes, a CBD office core, a university precinct, a suburban rail interchange and an outer-suburb shopping centre, not real suburbs. Every value is a scenario assumption. The table says where a real value would come from, such as the census, but we have not retrieved any Australian data, so there are no sourced observations on this slide yet.</p>
+    <p>Step four, what we leave out. App searches, delivery orders, distance to the nearest Chagee outlet and the sales of outlets nearby all need Chagee to be trading already. We leave them out rather than set them to zero: zero would read as no demand, when the truth is that we do not know. About forty-five seconds.</p>
+  </aside>
+</section>
+
+<!-- ======================================================= 8B AUSTRALIA: WHICH AREAS SHOW POTENTIAL (temporary label) -->
+<section class="slide content nm" id="n2" data-chapter="Extension" data-title="Australia case study: which areas show potential?">
+  <div class="leafart" aria-hidden="true"></div>
+  <div class="inner stepper" data-steps="4">
+    <p class="kicker">Extension · New market · which areas show potential?<span class="ext">New-market worked example · Australia · scenario assumptions</span></p>
+    <h2 class="head" style="max-width:1010px">{{s.nm_contenders}} can each rank first as the weights move; the score shortlists areas, it does not forecast their sales</h2>
+    <div class="body" style="grid-template-columns:1fr 300px;gap:18px;margin-top:10px">
+      <div class="panel">
+        <div class="ptop"><span class="ptitle">Suitability score out of {{x.score_max}} · illustrative weights</span><span class="seg nmopen screenonly"></span></div>
+        <div class="visual" data-s="1"><svg class="nmbars" viewBox="0 0 600 176" preserveAspectRatio="xMidYMid meet" aria-label="Suitability score per candidate area, split by feature"></svg></div>
+        <p class="lnote nmleg" data-s="1"></p>
+        <div class="nmscen" data-s="3">
+          <div class="k">Demand scenarios, cups a day · the same for every area</div>
+          <div class="sc"><span>Low</span><b>{{x.nm_d_low}}</b></div><div class="sc"><span>Base</span><b>{{x.nm_d_base}}</b></div><div class="sc"><span>High</span><b>{{x.nm_d_high}}</b></div>
+          <p>A placeholder scale: our Singapore per-outlet volume assumption, reused. With no calibration from real outlets, the score cannot turn into cups, so every area faces this range.</p>
+        </div>
+        <ol class="caps" style="min-height:30px">
+          <li data-s="1"><span class="n">1</span><span>Each feature is scaled across the areas, from worst to best, and weighted. Competitors and rent count against.</span></li>
+          <li data-s="2"><span class="n">2</span><span>Move the weights: the order of the top areas changes. The check on the right re-ranks with each weight dropped, then doubled.</span></li>
+          <li data-s="3"><span class="n">3</span><span>The score ranks; it does not set cups. Volume is a range of scenarios until a pilot supplies real outcomes.</span></li>
+          <li data-s="4"><span class="n">4</span><span>First opening: no Chagee outlet nearby, so no own-store cannibalisation. Switch to the next opening to see it appear.</span></li>
+        </ol>
+      </div>
+      <div class="cards" style="gap:8px">
+        <div class="cset sitectl xctl nmw screenonly" data-s="2"></div>
+        <div class="bc printonly nmwp"></div>
+        <div class="bc nmsens" data-s="2"></div>
+        <div class="bc" data-s="4"><div class="k">With real outcomes · supervised learning</div><p>If outlets in existing markets had real sales, with these same features measured around each, a supervised model could learn the weights instead of us choosing them, tested on markets it has not seen. The supervised site model, also under Things to consider, is trained on synthetic Singapore data: <b>not validated for Australia</b>, and not used here.</p></div>
+      </div>
+    </div>
+    <div class="revctl screenonly" style="top:8px"><span class="lab">Step through</span><span class="ctl"></span></div>
+    <p class="xill">Illustrative. Archetype areas and scenario assumptions: not Australian data, not Chagee data.</p>
+  </div>
+  <div class="foot"><span>OPIM639 · Group 3 · explainer figures are illustrative assumptions · Australian inputs are scenario assumptions, not sourced</span><span class="rail"></span><span class="pg"></span></div>
+  <aside class="notes">
+    <p>Same features, same definitions, every area. Step one: each feature is scaled across the {{x.nm_areas}} areas from worst to best, competitors and rent count against, and the weights add them up. At our weights the {{s.nm_top_name}} scores {{x.nm_score_top}}, the {{s.nm_last_name}} only {{x.nm_score_last}}.</p>
+    <p>Step two, and this is the point: move the weights. The check re-ranks {{x.nm_variants}} times, with each weight dropped and then doubled. {{s.nm_contenders}} each come first in some of them; the {{s.nm_last_name}} is last in every one. So the score gives a shortlist, not a winner.</p>
+    <p>Step three: the score does not become a sales forecast. Turning it into cups needs a calibration from real outlets, which we do not have. So every area faces the same low, base and high range, {{x.nm_d_low}}, {{x.nm_d_base}} and {{x.nm_d_high}} cups a day, borrowed from our Singapore per-outlet assumption as a placeholder scale.</p>
+    <p>Where supervised learning fits: with real outcomes from outlets in existing markets, a model could learn these weights, tested on markets it has not seen. Our supervised site model is trained on synthetic Singapore data, so it is not validated for Australia, and we do not use it here.</p>
+    <p>Step four, cannibalisation. For the first opening it is zero: there is no Chagee outlet in any catchment. Switch to the next opening and it appears: an area within {{x.nm_overlap_km|g}} km of the pilot loses up to {{x.nm_cann_max|pct}} of its cups to it. About one minute.</p>
+  </aside>
+</section>
+
+<!-- ======================================================= 8C WHICH OPERATING SETUP UNDER UNCERTAIN DEMAND (temporary label) -->
+<section class="slide content nm" id="n3" data-chapter="Extension" data-title="Which operating setup works under uncertain demand?">
+  <div class="leafart" aria-hidden="true"></div>
+  <div class="inner">
+    <p class="kicker">Extension · New market · which operating setup under uncertain demand?<span class="ext">New-market worked example · Australia · A$ scenario assumptions</span></p>
+    <h2 class="head" style="max-width:1010px">With our A$ assumptions, machine-made drink holds up best in the worst case; human-only wins if a machine unit costs more than about A${{x.nm_flip_machine}} a month</h2>
+    <div class="body" style="grid-template-columns:1fr 300px;gap:18px;margin-top:8px">
+      <div class="panel">
+        <div class="ptop"><span class="ptitle">Operating contribution, A$ a day, year average · with AI staffing, exact forecast</span></div>
+        <div class="visual" style="flex:none;height:150px"><svg class="nmchart" style="width:100%;height:100%" viewBox="0 0 600 150" preserveAspectRatio="xMidYMid meet" aria-label="Operating contribution against realised cups a day, human-only and machine-made drink"></svg></div>
+        <table class="res nmtab"></table>
+      </div>
+      <div class="cards" style="gap:8px">
+        <div class="cset sitectl nmctl screenonly"></div>
+        <div class="bc printonly nmctlp"></div>
+        <div class="bc nmbe"></div>
+        <div class="bc nmpref"></div>
+      </div>
+    </div>
+    <p class="aikey"><b>Machines = automation</b>: equipment sized before opening, held fixed. <b>AI = AI-assisted staffing</b>: the forecast sets the crew; realised demand unchanged. <span class="ai-day">Event day</span> · peak hour · {{a.seeds}} runs · illustrative</p>
+    <div class="vs clickrev ai nmband" title="Click to reveal the AI intelligence impact"><div class="wo"><span class="lab">Without AI intelligence<br><small style="letter-spacing:.06em;text-transform:none;font-weight:400">one crew, all day</small></span><span class="ai-without"></span></div><div class="wi"><span class="lab">With AI intelligence<br><small style="letter-spacing:.06em;text-transform:none;font-weight:400">forecast roster</small></span><span class="ai-with"></span></div></div>
+  </div>
+  <div class="foot"><span>OPIM639 · Group 3 · illustrative assumptions · A$ wage, price, rent and machine costs are scenario assumptions, not sourced</span><span class="rail"></span><span class="pg"></span></div>
+  <aside class="notes">
+    <p>Now feed the demand scenarios into the same counter simulation as the counter pages in the appendix, with Australian costs in Australian dollars: a wage of A${{x.nm_wage}} an hour, A${{x.nm_machine}} a month per machine unit, A${{x.nm_price|g}} a cup and A${{x.nm_rent}} a month rent at the {{s.nm_pilot_name}}. All scenario assumptions, none sourced. We compare human-only with machine-made drink. Equipment is sized before opening for the base scenario and does not change.</p>
+    <p>The chart is the year-average operating contribution, before set-up cost, delivery and overheads, as realised demand moves. Machine-made drink is above human-only across the range here, and both are below zero at the low end: break-even is about {{x.nm_be_mdd}} cups a day for machine-made drink and {{x.nm_be_hand}} for human-only, against a low scenario of {{x.nm_d_low}}.</p>
+    <p>Then the AI layer, revealed in the band. Without AI the counter runs one crew all day, set once for a normal day's planned peak. With AI the forecast sets the roster for the day type, but the forecast is not perfect: it can miss realised demand by {{x.nm_err|pct}} either way. On an event day at base demand, human-only without AI loses about {{x.nm_hand_wo_lost|pct}} of peak-hour orders; with an exact forecast, {{x.nm_hand_ai_staff}} people bring that to {{x.nm_hand_ai_lost|pct}}, and the day's contribution rises to about A${{x.nm_hand_ai_c}} from A${{x.nm_hand_wo_c}}. An under-forecast puts on {{x.nm_hand_aim_staff}} and gives some back: {{x.nm_hand_aim_lost|pct}} walk away. On machine-made drink the forecast keeps {{x.nm_mdd_ai_staff}} person even on an event day, so {{x.nm_mdd_ai_lost|pct1}} still walk away: the staffing rule's own capacity estimate is the limit there, not the forecast.</p>
+    <p>When does the answer change? We judge by the worst case across demand scenarios and forecast errors. Machine-made drink keeps about A${{x.nm_worst_mdd}} a day, human-only A${{x.nm_worst_hand}}. That flips if a machine unit costs more than about A${{x.nm_flip_machine}} a month; across our wage range, A${{x.nm_wage_lo}} to A${{x.nm_wage_hi}} an hour, machine-made drink stays ahead. Move the sliders to test it. Walk-aways are counted at the peak-hour rate over the busiest hours only, an approximation. About one and a half minutes.</p>
+  </aside>
+</section>
+
+<!-- ======================================================= 8D PILOT, LEARN, THEN EXPAND (temporary label) -->
+<section class="slide content nm" id="n4" data-chapter="Extension" data-title="Pilot, learn, then expand">
+  <div class="leafart" aria-hidden="true"></div>
+  <div class="inner stepper" data-steps="4">
+    <p class="kicker">Extension · New market · pilot, learn, then expand<span class="ext">New-market worked example · Australia · scenario assumptions</span></p>
+    <h2 class="head" style="max-width:1010px">Pilot one machine-made drink counter in the {{s.nm_pilot_name}}, then let the pilot's own data decide the next step</h2>
+    <div class="body" style="grid-template-columns:300px 1fr 280px;gap:16px;margin-top:10px">
+      <div class="bc nmrec" data-s="1"><div class="k">Recommendation · conditional</div>
+        <h4>Where: the {{s.nm_pilot_name}} ({{s.nm_pilot}})</h4><p>First at our weights; {{s.nm_contenders}} are the shortlist. No own-store cannibalisation.</p>
+        <h4>Setup: {{s.nm_robust}}, AI staffing</h4><p>Best worst case, A${{x.nm_worst_mdd}} a day against A${{x.nm_worst_hand}} for {{s.nm_other}}.</p>
+        <h4>Holds only if</h4><ul class="lnote" style="padding-left:16px;margin-top:2px"><li>a machine unit costs under about A${{x.nm_flip_machine}} a month</li><li>volume lands in the placeholder range, {{x.nm_d_low}} to {{x.nm_d_high}} cups a day; break-even is about {{x.nm_be_mdd}}</li><li>the A$ wage, price and rent hold</li><li>the forecast misses by no more than {{x.nm_err|pct}}</li></ul></div>
+      <div class="panel" data-s="2" style="padding-top:10px">
+        <div class="ptop"><span class="ptitle">What the pilot measures, and what it updates</span></div>
+        <table class="res nmmeas">
+          <tr><th>Measure</th><th>How</th><th class="u">Updates</th></tr>
+          <tr><td><b>Orders, cups a day</b></td><td>till and app records, daily</td><td class="u">the placeholder low, base and high range</td></tr>
+          <tr><td><b>Hourly demand</b></td><td>order times by hour, by day type</td><td class="u">the hourly shape and peak the roster is built on</td></tr>
+          <tr><td><b>Conversion, where measurable</b></td><td>store-locator views or footfall against orders</td><td class="u">the first link from score to cups</td></tr>
+          <tr><td><b>Service times</b></td><td>order to hand-over, per station</td><td class="u">station seconds in the counter simulation</td></tr>
+          <tr><td><b>Labour needed</b></td><td>crew against waits and walk-aways each hour</td><td class="u">the staffing rule and minimum crew</td></tr>
+          <tr><td><b>Machine cost and uptime</b></td><td>the lease quote, downtime log</td><td class="u">the A$ machine cost and the setup choice</td></tr>
+        </table>
+        <p class="lnote" data-s="3"><b>Then rerun:</b> the area ranking with the area's real outcome, the setup comparison with real demand and times. Once several outlets trade, outcomes can train the supervised model; until then, weights stay a judgement.</p>
+      </div>
+      <div class="cards" style="gap:8px" data-s="4">
+        <div class="cset sitectl nmtry screenonly"></div>
+        <div class="bc nmtrig"></div>
+      </div>
+    </div>
+    <div class="revctl screenonly" style="top:8px"><span class="lab">Step through</span><span class="ctl"></span></div>
+    <p class="decide" data-s="4"><b>Expand when</b><span>the pilot clears break-even for {{x.nm_weeks}} weeks in a row, and the next area, the {{s.nm_next_name}}, still clears it after losing about {{x.nm_next_cann|pct}} of its cups to the pilot. Every figure here is a scenario assumption until the pilot replaces it.</span></p>
+  </div>
+  <div class="foot"><span>OPIM639 · Group 3 · illustrative assumptions · Australian inputs are scenario assumptions, not sourced · A$</span><span class="rail"></span><span class="pg"></span></div>
+  <aside class="notes">
+    <p>So the answer to where, with what, and what next. Where: the {{s.nm_pilot_name}}, first at our weights, with {{s.nm_contenders}} as the shortlist. With what: a machine-made drink counter with AI staffing, because it keeps the most in the worst case, about A${{x.nm_worst_mdd}} a day. It is conditional: it holds only while a machine unit costs under about A${{x.nm_flip_machine}} a month, the A$ wage, price and rent hold, and volume lands in our placeholder range. Break-even is about {{x.nm_be_mdd}} cups a day.</p>
+    <p>Step two, what the pilot measures: orders and cups a day, demand by hour and day type, conversion where we can measure it, service times per station, the labour each hour actually needs, and the real machine cost and uptime. Step three, how that updates the analysis: real volume replaces the placeholder range, real hourly demand replaces the Singapore shape, service times replace our station seconds, and the area's real outcome is the first calibration from score to cups. Once several outlets trade, those outcomes can train the supervised model.</p>
+    <p>Step four, the evidence to act, each held for {{x.nm_weeks}} weeks in a row. Add staff when peak-hour walk-aways stay above {{sb.walkaway_target|pct}} on the forecast roster. Revisit the setup if the firm machine quote is above about A${{x.nm_flip_machine}} a unit a month. Open the next outlet, the {{s.nm_next_name}}, only if the pilot clears break-even and the next site still clears it after losing about {{x.nm_next_cann|pct}} of its cups to the pilot. Try a pilot result on the right. About one minute.</p>
+  </aside>
+</section>
+
+<section class="slide content" id="an" data-chapter="Appendix" data-title="New market: inputs and method">
+  <div class="leafart" aria-hidden="true"></div>
+  <div class="inner">
+    <p class="kicker">Considered · New market (Things to consider): inputs and method</p>
+    <h2 class="head">Every Australian input is a scenario assumption</h2>
+    <div class="body wide" style="margin-top:12px"><div class="apx"><!--NMAPPENDIX--></div></div>
+  </div>
+  <div class="foot"><span>OPIM639 · Group 3 · explainer figures are illustrative assumptions · Australian inputs are scenario assumptions, not sourced</span><span class="rail"></span><span class="pg"></span></div>
+  <aside class="notes"><p>Soft copy only. Backup for the new-market slides: every new-market input, how the numbers are worked out, and what we do not claim.</p></aside>
 </section>
 
 
