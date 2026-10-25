@@ -2726,276 +2726,33 @@
      while Ana has time to spare, the manager's question, the proposal. 07 one bucket-brigade hand-over cycle, played slowly from the
      same model, then what it needs and the roles. 08 fixed responsibilities against the brigade: two live counters on the same
      orders, the outcomes over the seeds, the assumptions behind them */
-  /* ---------------------------------------------------------------- slides 06 and 07: Proposal 2, AI-enabled in-store planning.
-     Both are slide-level steppers (the deck's Step through controls, Next and Previous, Show all, reveal-all, print). A hook per
-     slide sets each step's state: one step forward plays that step's short animation; any jump (Show all, reveal-all, Previous,
-     print) sets the finished state at once. One frame handle per slide, so Replay never stacks timers. */
+  /* ---------------------------------------------------------------- slides 06 and 07: Proposal 2, as on the reference deck
+     (chagee-deck.vercel.app, slides 8 and 9): the Today / With AI toggle on 06's chart; on 07 the dashboard's Zone / Store filter,
+     its refresh button, and the recommendations report and assistant opening over the slide (close button, a click outside, Esc) */
   (function planning() {
-    const PL = window.ChageePlanning, PD = RAW.planning_demo; if (!PL || !PD) return;
-    const hookOf = id => steppers.find(x => x.p.closest("#" + id))?.S;
-    // so the arrow keys keep driving the deck after a step control or a dashboard button is clicked
-    ["p2p", "p2b"].forEach(id => document.getElementById(id)?.addEventListener("click", e => { const bt = e.target.closest("button"); if (bt) setTimeout(() => bt.blur()); }));
-    const animOK = () => !reduce && !PRINTING;
-    const restart = (el, cls) => { el.classList.remove(cls); void el.getBoundingClientRect(); el.classList.add(cls); };
-    const f1 = x => (+x).toFixed(1);
-
-    /* 06: the business problem, the chart and the four steps */
-    const s6 = document.getElementById("p2p"), S6 = s6 && hookOf("p2p");
-    if (s6 && S6) {
-      const ST = PD.story.value, IP = PD.in_place.value, svg = $(s6, ".ipsvg.screenonly"), tip = $(s6, ".iptip"), tg = $(s6, ".iptg");
-      $(s6, '[data-ip="src"]').textContent = "Chagee Form 20-F, FY 2025 · group-wide";
-      $(s6, '[data-ip="inplace"]').innerHTML = IP.map(x => `<li>${x.label}<q>${x.quote}</q></li>`).join("");
-      const N = ST.demand.length, X0 = 46, X1 = 592, YT = 16, YB = 222, w = (X1 - X0) / N;
-      const y = v => YB - (v - 20) / (96 - 20) * (YB - YT), xc = d => X0 + (d + 0.5) * w;
-      const fc = ST.demand.map((v, d) => v * (1 + ST.forecast_error[d]));
-      const plan = fc.map(v => Math.round(v / ST.step) * ST.step);
-      // demand: a smooth curve through each day's value (Catmull-Rom), flat to the edges
-      const pts = [[X0, y(ST.demand[0])], ...ST.demand.map((v, d) => [xc(d), y(v)]), [X1, y(ST.demand[N - 1])]];
-      let dPath = `M${f1(pts[0][0])} ${f1(pts[0][1])}`;
-      for (let i = 0; i < pts.length - 1; i++) { const p0 = pts[Math.max(0, i - 1)], p1 = pts[i], p2 = pts[i + 1], p3 = pts[Math.min(pts.length - 1, i + 2)];
-        dPath += ` C${f1(p1[0] + (p2[0] - p0[0]) / 6)} ${f1(p1[1] + (p2[1] - p0[1]) / 6)} ${f1(p2[0] - (p3[0] - p1[0]) / 6)} ${f1(p2[1] - (p3[1] - p1[1]) / 6)} ${f1(p2[0])} ${f1(p2[1])}`; }
-      const stepPath = vals => vals.map((v, d) => `${d ? "V" : `M${X0} `}${f1(y(v))} H${f1(X0 + (d + 1) * w)}`).join(" ");
-      const TIPS = {
-        base: { under: ["Demand above the plan", "Queues, longer waits and stock-outs: some customers leave, so sales may be lost. Illustrative."],
-                over: ["Plan above demand", "Crew hours with little to do, and fresh stock prepared but not sold, which may be thrown away. Illustrative."] },
-        ai: { under: ["Smaller gaps remain", "The forecast still misses some days, and the plan moves in whole shifts and stock units, so demand can still exceed it."],
-              over: ["Smaller gaps remain", "Some spare capacity stays: the plan rounds to whole steps and is set before the week. A pilot would measure how much."],
-              band: ["Forecast range", `The plan is set before the week; the range, ±${pct(ST.band)} here, shows how far demand could land either side of the forecast.`] } };
-      function draw(el, view, id, title, both) {
-        const ai = view === "ai", pv = ai ? plan : ST.demand.map(() => ST.fixed_plan), sp = ai ? stepPath(pv) : `M${X0} ${f1(y(ST.fixed_plan))} H${X1}`;
-        const hx0 = X0 + ST.holiday[0] * w, hx1 = X0 + (ST.holiday[1] + 1) * w;
-        el.innerHTML = `<defs><pattern id="${id}h" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="6" height="6" fill="#F3EFE7"/><path d="M0 0 V6" stroke="#CFC5B5" stroke-width="1.6"/></pattern>` +
-          `<clipPath id="${id}a"><path d="${sp} L${X1} 0 L${X0} 0 Z"/></clipPath><clipPath id="${id}b"><path d="${sp} L${X1} 262 L${X0} 262 Z"/></clipPath><clipPath id="${id}s"><rect class="sw" x="${X0}" y="0" width="${X1 - X0}" height="262"/></clipPath></defs>` +
-          `<rect x="${X0 - 8}" y="${YT - 6}" width="${X1 - X0 + 14}" height="${YB - YT + 12}" rx="12" fill="#fff"/><rect x="${f1(hx0)}" y="${YT - 6}" width="${f1(hx1 - hx0)}" height="${YB - YT + 12}" fill="#F7F3EC"/>` +
-          `<text x="${f1((hx0 + hx1) / 2)}" y="${YT + 8}" text-anchor="middle" font-size="9" font-weight="700" letter-spacing="1.4" fill="#9A9387">SCHOOL HOLIDAY</text>` +
-          (ai ? `<g class="ar aip" data-t="band">${fc.map((v, d) => `<rect x="${f1(X0 + d * w + 2)}" y="${f1(y(v * (1 + ST.band)))}" width="${f1(w - 4)}" height="${f1(y(v * (1 - ST.band)) - y(v * (1 + ST.band)))}" rx="3" fill="#DCEBDF" opacity=".85"/>`).join("")}</g>` : "") +
-          `<g clip-path="url(#${id}s)"><g class="ar" data-t="over" clip-path="url(#${id}b)"><path d="${dPath} L${X1} ${YT - 6} L${X0} ${YT - 6} Z" fill="url(#${id}h)"/></g>` +
-          `<g class="ar" data-t="under" clip-path="url(#${id}a)"><path d="${dPath} L${X1} ${YB + 6} L${X0} ${YB + 6} Z" fill="#EBA7A0" opacity=".75"/></g></g>` +
-          `<path class="dl" d="${dPath}" fill="none" stroke="#24406B" stroke-width="2.6" stroke-linecap="round" style="--len:900"/>` +
-          (ai ? `<path class="aip" d="${sp}" fill="none" stroke="#2F6B45" stroke-width="2.4" stroke-linejoin="round"/>` : `<path class="fx" d="${sp}" fill="none" stroke="#B8322B" stroke-width="2.2" stroke-dasharray="6 5"/>`) +
-          (both ? `<path d="M${X0} ${f1(y(ST.fixed_plan))} H${X1}" fill="none" stroke="#B8322B" stroke-width="1.8" stroke-dasharray="6 5" opacity=".8"/>` : "") +
-          `<text x="${X0 - 12}" y="${YT + 10}" text-anchor="end" font-size="9.5" font-weight="700" letter-spacing="1" fill="#9A9387">BUSY</text><text x="${X0 - 12}" y="${YB}" text-anchor="end" font-size="9.5" font-weight="700" letter-spacing="1" fill="#9A9387">QUIET</text>` +
-          `<text x="${f1(X0 + 3.5 * w)}" y="244" text-anchor="middle" font-size="11" fill="#9A9387">this week</text><text x="${f1(X0 + 10.5 * w)}" y="244" text-anchor="middle" font-size="11" fill="#9A9387">next week</text>` +
-          (ai ? `<text x="${X1}" y="258" text-anchor="end" font-size="10.5" fill="#2F6B45">forecast plan: whole steps, set before the week · gaps smaller, not zero</text>`
-              : `<text x="${X1}" y="258" text-anchor="end" font-size="10.5" fill="#B8322B">fixed plan: an illustrative baseline, not Chagee's measured roster</text>`) +
-          (title ? `<text x="${X0 - 8}" y="10" font-size="11" font-weight="700" fill="${ai ? "#2F6B45" : "#24406B"}">${title}</text>` : "");
-      }
-      let view = "base", userView = null, last = 0, raf = 0;
-      const closeTip = () => { tip.classList.remove("on"); $$(svg, ".ar.sel").forEach(e => e.classList.remove("sel")); };
-      // the shaded areas sweep in as the timeline advances
-      const sweep = (delay = 0.9, dur = 1.4) => {
-        cancelAnimationFrame(raf); const r = $(svg, ".sw"), W = X1 - X0, t0 = performance.now();
-        r.setAttribute("width", 0);
-        const fr = t => { const k = Math.min(1, Math.max(0, ((t - t0) / 1000 - delay) / dur)); r.setAttribute("width", f1(W * k)); if (k < 1) raf = requestAnimationFrame(fr); };
-        raf = requestAnimationFrame(fr);
-      };
-      const render = (v, anim) => {
-        cancelAnimationFrame(raf); view = v; closeTip(); draw(svg, v, "ips");
-        svg.classList.toggle("drawing", !!anim); if (anim) { restart(svg, "drawing"); sweep(v === "ai" ? 0.2 : 0.9); }
-        $$(tg, ".btn").forEach(b => b.classList.toggle("on", b.dataset.v === v));
-        $(s6, '[data-ip="view"]').textContent = v === "ai" ? "With AI: forecast-informed plan, same demand" : "Baseline: a fixed plan";
-      };
-      S6.hooks.push(k => {
-        const step = animOK() && s6.classList.contains("active") && (k === last + 1 || (k === 1 && last !== 1)); last = k;
-        if (k < 3) userView = null;
-        const v = k >= 3 ? (userView || "ai") : "base";
-        if (k >= 2) render(v, step && (k === 2 || k === 3)); else { cancelAnimationFrame(raf); closeTip(); }
-        const cap = $(s6, ".ipcap"); cap.classList.remove("seq"); if (step && k === 3) restart(cap, "seq");
-      });
-      tg.addEventListener("click", e => { const b = e.target.closest("[data-v]"); if (!b) return; b.blur(); userView = b.dataset.v; render(userView, false); });
-      svg.addEventListener("click", e => { const a = e.target.closest(".ar"), T = TIPS[view][a?.dataset.t]; if (!T) return closeTip();
-        $$(svg, ".ar.sel").forEach(x => x.classList.remove("sel")); a.classList.add("sel");
-        tip.innerHTML = `<button class="x" aria-label="Close">×</button><b>${T[0]}</b>${T[1]}`; tip.classList.add("on"); });
-      tip.addEventListener("click", e => { if (e.target.closest(".x")) closeTip(); });
-      draw($(s6, '[data-pv="both"]'), "ai", "ipa", "With AI: forecast-informed plan (green); dashed: the fixed baseline; shading: gaps the forecast plan leaves", true);
-      printers.push(() => { cancelAnimationFrame(raf); userView = null; render("ai", false); });
-      render("base", false);
-    }
-
-    /* 07: data to the manager's decision, on the illustrative zone (sim/planning.js) */
-    const s7 = document.getElementById("p2b"), S7 = s7 && hookOf("p2b");
-    if (s7 && S7) {
-      const E = PL.inputs(RAW), P = PL.plan(E), win = $(s7, ".zwin"), flow = $(s7, ".zflow");
-      const nm = id => E.outlets.find(o => o.id === id).name, oi = id => E.outlets.findIndex(o => o.id === id), dr = js => PL.dayRange(E, js);
-      const L = E.stock.litres_per_case, unitShort = "cases";
-      const st = P.staff, mc = P.machines, sk = P.stock;
-      const segs = arr => { const out = []; arr.forEach((v, j) => { const g = out[out.length - 1]; if (g && g.v === v && g.js[g.js.length - 1] === j - 1) g.js.push(j); else out.push({ v, js: [j] }); }); return out; };
-      const peakHi = (o, j) => PL.forecast(E, o)[j].peakHi;
-      $(s7, '[data-z="wk"]').textContent = `${E.week}`;
-      $(s7, '[data-z="unit"]').textContent = `${E.stock.unit}`;
-      $(s7, '[data-z="pick"]').innerHTML = E.outlets.map(o => `<option value="${o.id}">${o.name}</option>`).join("");
-
-      // the recommendations, one per outlet and area
-      const staffRec = o => {
-        const out = st.moves.filter(m => m.from === o.id), inn = st.moves.filter(m => m.to === o.id), sh = st.short.filter(x => x.outlet === o.id), r = [];
-        out.forEach(m => r.push({ cls: "mv", t: `Lend 1 crew → ${nm(m.to)}`, s: `${dr(m.days)} · ${m.minutes} min away` }));
-        inn.forEach(m => r.push({ cls: "in", t: `Receive 1 crew from ${nm(m.from)}`, s: dr(m.days) }));
-        if (sh.length) r.push({ cls: "sh", t: `${Math.max(...sh.map(x => x.missing))} short ${dr(sh.map(x => x.day))}`, s: "no trained crew free nearby" });
-        if (!r.length) r.push({ cls: "ok", t: "Keep current crew", s: "roster covers the forecast" });
-        return r;
-      };
-      const machRec = m => { const g = segs(m.run).map(x => `${x.v} ${dr(x.js)}`).join(" · ");
-        return { t: m.run.every(v => v === m.installed) ? `All ${m.installed} · ${dr(m.run.map((v, j) => j))}` : `${g}`, s: `of ${m.installed} installed`, over: m.over ? `peak wants ${Math.max(...m.want)}: review separately` : "" }; };
-      const arrow = (a, b) => a < b ? `<span class="dn">▼</span>` : a > b ? `<span class="up">▲</span>` : "=";
-
-      // explanations (the side card)
-      const SRC = {
-        orders: ["Orders", "Orders by outlet, day and hour, and what was ordered: the history the forecasts learn from.", "exists", "Chagee processes transactional data (Form 20-F, group-wide); access to Singapore outlets' history for this use: to confirm."],
-        staff: ["Staffing", "Rosters and shifts, and who is trained for which steps and outlets: what crew moves must respect.", "proposed", "Rosters exist at any outlet; a skills and availability record, and access to it: proposed."],
-        equip: ["Equipment", "Tea machines installed and in use at each outlet, and their output: what machine plans need.", "proposed", "Machine usage logs: proposed; they may need instrumentation."],
-        stock: ["Stock", "Fresh-stock deliveries, stock on hand and write-offs: what the milk order and its shelf-life check use.", "exists", "Group forecasts for raw materials exist (Form 20-F, group-wide); outlet-level write-off records: to confirm."] };
-      const fcText = o => { const f = PL.forecast(E, o), i = oi(o.id), up = P.upcoming.filter(u => u.outlet === o.id);
-        return `<p><b>${o.name}</b> · ${o.area}. ${o.why}</p><span class="k">Forecast, orders a day</span><p>${E.days.map((d, j) => `${d} ${Math.round(f[j].point)}`).join(" · ")}</p>` +
-          `<p>Range ±${pct(E.band)} (about an 80% range); usual week ${o.usual[0]} on weekdays, ${o.usual[5]} at weekends.</p>` +
-          `<span class="k">Assumptions</span><ul><li>The busiest hour is ${pct(E.peakShare)} of the day (the deck's hourly profile).</li><li>Plans cover the top of the range.</li></ul>` +
-          `<span class="k">Uncertainty</span><p>Weather, events or a promotion could move any day outside the range; ${up.length ? up.map(u => `${u.kind === "peak" ? "peak" : "quiet"} ${dr(u.days)}`).join(", ") : "no peak or quiet spell"} against a usual week.</p>`; };
-      const recText = (area, id) => {
-        const o = E.outlets.find(x => x.id === id), i = oi(id), f = PL.forecast(E, o);
-        if (area === "staff") {
-          const out = st.moves.find(m => m.from === id), inn = st.moves.find(m => m.to === id), sh = st.short.filter(x => x.outlet === id);
-          const m = out || inn;
-          if (m) { const fi = oi(m.from), ti = oi(m.to), d0 = m.days[0];
-            return `<p><b>${nm(m.from)} lends one cross-trained crew member to ${nm(m.to)}, ${dr(m.days)}.</b></p><span class="k">Reason</span><p>At the top of its range, ${nm(m.to)}'s busiest hour is about ${Math.round(peakHi(E.outlets[ti], d0))} orders on ${E.days[d0]}: it needs ${st.need[ti][d0]} crew and has ${st.roster[ti][d0]} rostered. ${nm(m.from)} needs ${st.need[fi][d0]} and has ${st.roster[fi][d0]}.</p>` +
-              `<span class="k">Checks</span><ul><li><span class="ck">✓</span> skills: ${E.outlets[fi].cross_trained} crew member trained to work at another outlet</li><li><span class="ck">✓</span> travel: ${m.minutes} min, within ${E.maxTravel}</li><li><span class="ck">✓</span> ${nm(m.from)} still covers its own need each of those days</li><li><span class="ck">✓</span> availability: the person is rostered those days (assumed; confirm with them)</li></ul>` +
-              `<span class="k">Trade-offs</span><p>If ${nm(m.from)} is busier than forecast it has no spare; the crew member travels ${m.minutes} min each way.</p>`; }
-          if (sh.length) { const j = sh[0].day, needPt = Math.max(o.min_crew, Math.ceil(f[j].peak / E.perCrew - 1e-9));
-            return `<p><b>${o.name} is ${sh[0].missing} short on ${dr(sh.map(x => x.day))}.</b></p><span class="k">Reason</span><p>At the top of its range the busiest hour is about ${Math.round(f[j].peakHi)} orders: ${st.need[i][j]} crew, against ${st.roster[i][j]} rostered. At the point forecast it would need ${needPt}.</p>` +
-              `<span class="k">Why no move</span><p>No crew member trained for another outlet is free nearby that day; the platform does not invent one.</p><span class="k">Manager's options</span><p>An extra shift, overtime, or accept a longer wait if the day comes in near the forecast.</p>`; }
-          return `<p><b>${o.name}: keep the current crew.</b></p><p>The roster covers the top of the forecast range every day (needs ${dr(E.days.map((d, j) => j))}: ${st.need[i].join(", ")}; rostered ${st.roster[i].join(", ")}).</p>`;
-        }
-        if (area === "mach") { const m = mc[i], j = m.want.indexOf(Math.max(...m.want));
-          return `<p><b>${o.name}: run ${segs(m.run).map(x => `${x.v} ${dr(x.js)}`).join(", ")}, of ${m.installed} installed.</b></p><span class="k">Reason</span><p>One machine, with its operator, supports about ${E.perMachine} orders in the busiest hour; at the top of its range ${o.name}'s busiest hour is about ${Math.round(f[j].peakHi)} orders on ${E.days[j]}.</p>` +
-            (m.over ? `<span class="k">Flag, not a plan</span><p>The peak would want ${Math.max(...m.want)} machines; ${m.installed} are installed. The weekly plan runs all ${m.installed}; buying or moving a machine is an investment question for a separate review.</p>`
-                    : `<span class="k">Trade-offs</span><p>Running fewer machines is an operating choice for the week; the others stay installed and ready. Whether to keep them installed is a separate review.</p>`); }
-        const s_ = sk[i], cv = `${E.days[s_.cover[0]]}–${E.days[s_.cover[1]]}`;
-        return `<p><b>${o.name}: order ${s_.cases} ${unitShort} for Monday (standing order ${s_.standing}).</b></p><span class="k">How</span><ul><li>Unit: ${E.stock.unit}.</li><li>Use ${cv} at the top of the range: about ${Math.round(s_.useHi)} L (${f1(s_.useHi / L)} cases), at ${E.milk} L a cup.</li><li>Less ${s_.onHand} usable cases on hand, rounded up: ${s_.cases}.</li><li>Lead time ${s_.lead} day: order by ${E.days[(s_.cover[0] + 6) % 7]}.</li><li><span class="ck">${s_.fits ? "✓" : "✗"}</span> usable before the ${E.shelf}-day shelf life ends, even at the low end.</li></ul>` +
-          `<span class="k">Trade-offs</span><p>Covering the top of the range may leave milk over at Thursday's delivery; covering the forecast alone risks running out.</p>`;
-      };
-      let sel = null, last = 0, store = null;
-      const exh = $(s7, '[data-z="exh"]'), exb = $(s7, '[data-z="exb"]');
-      function explain() {
-        const k = S7.cur;
-        $$(s7, ".zsrc button,.zrow,.zcv,.zpk").forEach(e => e.classList.remove("sel"));
-        if (sel?.kind === "src") { const [h, t, s_, a] = SRC[sel.id]; exh.textContent = `Data · ${h}`;
-          exb.innerHTML = `<p>${t}</p><span class="k">Access</span><p><span class="st${s_ === "proposed" ? " pr" : ""}">${s_ === "proposed" ? "proposed" : "exists · access to confirm"}</span> ${a}</p>`; $(s7, `.zsrc [data-src="${sel.id}"]`).classList.add("sel"); return; }
-        if (sel?.kind === "outlet") { const o = E.outlets.find(x => x.id === sel.id); exh.textContent = `Forecast · ${o.name}`; exb.innerHTML = fcText(o); $$(s7, `.zpk[data-o="${sel.id}"]`).forEach(e => e.classList.add("sel")); return; }
-        if (sel?.kind === "rec") { exh.textContent = `Recommendation · ${nm(sel.id)} · ${{ staff: "staff", mach: "machines", stock: "fresh milk" }[sel.area]}`; exb.innerHTML = recText(sel.area, sel.id);
-          $$(s7, `[data-rec="${sel.area}:${sel.id}"]`).forEach(e => e.classList.add("sel")); return; }
-        if (k >= 4) { exh.textContent = "The decision"; exb.innerHTML = `<p><b>Zone manager / outlet GM</b>: what staffing, equipment use and fresh-stock plan should we approve for the coming week?</p><p>Approve, edit or keep the current plan. Recommendations only: nothing reaches the outlets without the manager.</p><p>Plans cover the top of each forecast range; crew move only within ${E.maxTravel} min, only people trained for another outlet, and only if the giving outlet stays covered.</p><p>Click any recommendation for its reason, assumptions and trade-offs.</p>`; return; }
-        exh.textContent = "Click to explain"; exb.innerHTML = k >= 3 ? `<p>Click a recommendation.</p><p>Plans cover the top of each forecast range. Crew move only between outlets within ${E.maxTravel} min, only people trained for another outlet, and only if the giving outlet stays covered.</p>` : k >= 2 ? "<p>Click an outlet for its forecast, assumptions and uncertainty.</p>" : "<p>Click a data source: how it is used, and whether access is confirmed or proposed.</p>";
-      }
-      const defaultSel = k => (k === 1 ? { kind: "src", id: "orders" } : k === 2 ? { kind: "outlet", id: "ch" } : k === 3 ? { kind: "rec", area: "staff", id: st.moves[0]?.from || E.outlets[0].id } : null);
-
-      // the zone view
-      function zone(anim) {
-        $(s7, '[data-z="staff"]').innerHTML = E.outlets.map(o => `<button class="zrow" data-rec="staff:${o.id}"><span class="zo" data-o="${o.id}">${o.name}</span><span>${staffRec(o).map(r => `<span class="zact ${r.cls}">${r.t}<small>${r.s}</small></span>`).join(" ")}</span></button>`).join("") +
-          "";
-        $(s7, '[data-z="peaks"]').innerHTML = E.outlets.map(o => { const up = P.upcoming.find(u => u.outlet === o.id), f = PL.forecast(E, o), mx = Math.max(...E.outlets.flatMap(x => x.forecast)) * (1 + E.band);
-          const bars = f.map((x, j) => { const h = 22 * x.point / mx, us = 22 * o.usual[j] / mx, cls = x.point >= o.usual[j] * 1.15 ? "up" : x.point <= o.usual[j] * 0.85 ? "dn" : "";
-            return `<rect class="bar ${cls}" x="${j * 14 + 1}" y="${f1(24 - h)}" width="10" height="${f1(h)}" rx="1.5" style="animation-delay:${j * 0.06}s"/><line class="us" x1="${j * 14}" x2="${j * 14 + 12}" y1="${f1(24 - us)}" y2="${f1(24 - us)}"/>`; }).join("");
-          return `<div class="zpk" data-o="${o.id}"><span class="zo">${o.name}</span><span class="t ${up ? (up.kind === "peak" ? "up" : "dn") : ""}">${up ? (up.kind === "peak" ? "▲ Peak" : "▼ Quiet") : "– Usual"}</span><svg class="zspark${anim ? " drawing" : ""}" viewBox="0 0 98 24" preserveAspectRatio="none" aria-label="${o.name}: forecast by day against a usual week">${bars}</svg></div>`; }).join("") +
-          "";
-        $(s7, '[data-z="mach"]').innerHTML = mc.map(m => { const r = machRec(m); return `<button class="zcv" data-rec="mach:${m.outlet}"><span class="zo" data-o="${m.outlet}">${nm(m.outlet)}</span><span class="v">${r.t} <small>${r.s}</small>${r.over ? `<span class="fl">${r.over}</span>` : ""}</span></button>`; }).join("");
-        $(s7, '[data-z="stock"]').innerHTML = sk.map(s_ => `<button class="zcv" data-rec="stock:${s_.outlet}"><span class="zo" data-o="${s_.outlet}">${nm(s_.outlet)}</span><span class="v">${s_.cases} ${unitShort} ${arrow(s_.cases, s_.standing)} <small>standing order ${s_.standing}</small></span></button>`).join("");
-      }
-      // the store view: one outlet in full
-      function storeView(id) {
-        const o = E.outlets.find(x => x.id === id), i = oi(id), f = PL.forecast(E, o), m = mc[i], s_ = sk[i];
-        const row = (h, xs) => `<tr><td>${h}</td>${xs.map(x => `<td>${x}</td>`).join("")}</tr>`;
-        $(s7, '[data-z="sview"]').innerHTML = `<p style="margin:0 0 4px;font:600 14px var(--sans)">${o.name} <span style="font-weight:400;color:var(--ink2)">· ${o.area} · ${E.week.toLowerCase()}</span></p>` +
-          `<table class="res" style="font-size:12px"><tr><th></th>${E.days.map(d => `<th>${d}</th>`).join("")}</tr>` +
-          row("Forecast, orders a day", f.map(x => Math.round(x.point))) + row(`Range ±${pct(E.band)}`, f.map(x => `${Math.round(x.lo)}–${Math.round(x.hi)}`)) + row("Usual week", o.usual) +
-          row("Busiest hour, top of range", f.map(x => Math.round(x.peakHi))) + row("Crew needed", st.need[i]) + row("Crew rostered", st.roster[i]) + row("Crew planned", st.planned[i]) +
-          row(`Machines to run (of ${m.installed})`, m.run) + `</table>` +
-          `<p style="margin:6px 0 0;font-size:12.5px"><b>Fresh milk, Monday:</b> ${s_.cases} ${unitShort} (${E.stock.unit}; standing order ${s_.standing}); covers ${E.days[s_.cover[0]]}–${E.days[s_.cover[1]]} at the top of the range less ${s_.onHand} on hand; usable within the shelf life ${s_.fits ? "✓" : "✗"}.${m.over ? ` <b>Machines:</b> the peak would want ${Math.max(...m.want)}; flagged for a separate investment review.` : ""}</p>` +
-          `<p class="lnote" style="margin:4px 0 0;font-size:11px">Illustrative scenario; every figure invented. Click Zone to return.</p>`;
-      }
-      function setView(v, id) {
-        if (v === "store") { store = id || store || E.outlets[0].id; storeView(store); $(s7, '[data-z="pick"]').value = store; }
-        win.dataset.v = v; $$(s7, ".zseg button").forEach(b => b.classList.toggle("on", b.dataset.z === v));
-        $(s7, '[data-z="title"]').textContent = v === "store" ? `· ${nm(store)}` : `· ${E.zone}`;
-      }
-
-      // the simulated planning state: only Approve, Edit, Keep or Reset change it
-      const PS = { status: "await", inc: { staff: true, mach: true, stock: true } };
-      const PARTS = { staff: "Staff moves", mach: "Machines to run", stock: "Fresh-milk order" };
-      function stateLabel() {
-        const n = Object.values(PS.inc).filter(Boolean).length, el = $(s7, '[data-z="state"]');
-        el.className = "zstate" + (PS.status === "approve" ? " ok" : PS.status === "edit" ? " ed" : "");
-        el.innerHTML = { await: "Simulated state: awaiting review", approve: "Simulated: approved as recommended", keep: "Simulated: current plan kept", edit: `Simulated: edited, ${n} of 3 parts accepted` }[PS.status] +
-          (PS.status !== "await" ? ` <button class="btn" data-a="reset" style="height:18px;padding:0 6px;font-size:10.5px">↺</button>` : "");
-      }
-      // overlays: report, assistant, execution steps, edit
-      const QS = PD.assistant.value;
-      const answer = q => {
-        const mv = st.moves[0], ti = mv ? oi(mv.to) : 0, fi = mv ? oi(mv.from) : 0, d0 = mv ? mv.days[0] : 0, sh = st.short[0];
-        const A = [
-          mv ? `At the top of its forecast range, ${nm(mv.to)}'s busiest hour is about ${Math.round(peakHi(E.outlets[ti], d0))} orders on ${E.days[d0]}. At ${E.perCrew} orders a crew member that needs ${st.need[ti][d0]}, and ${st.roster[ti][d0]} are rostered. ${nm(mv.from)} needs ${st.need[fi][d0]} and has ${st.roster[fi][d0]}, has a crew member trained for another outlet, and is ${mv.minutes} minutes away, so the move leaves it covered. It applies ${dr(mv.days)}.` : "No move is recommended this week.",
-          `The plans are already sized for the top of the range: crew and the milk order cover it. Two limits remain: ${sh ? `${nm(sh.outlet)} is ${sh.missing} short on ${E.days[sh.day]}, with no trained crew free nearby, and ` : ""}${mc.filter(m => m.over).map(m => `${nm(m.outlet)}'s peak would want ${Math.max(...m.want)} machines but has ${m.installed}`).join("; ") || "no machine limit"}. Beyond the range, the next morning's forecast would show it; I cannot see it in advance.`,
-          (() => { const m = mc.find(x => x.outlet === "rp") || mc[0], o = E.outlets[oi(m.outlet)], f = PL.forecast(E, o), j = m.want.indexOf(Math.max(...m.want));
-            return `${o.name}'s busiest hour, at the top of its range, is about ${Math.round(f[j].peakHi)} orders at most this week; one machine supports about ${E.perMachine}, so running ${segs(m.run).map(x => `${x.v} ${dr(x.js)}`).join(" and ")} covers it. The other machines stay installed. Whether to keep all ${m.installed} installed is a separate review, not part of this week's plan.`; })(),
-          `For each outlet: milk used from Monday to Wednesday at the top of the range (${E.milk} L a cup), less usable cases on hand, rounded up to whole ${E.stock.unit}s. ${sk.map(s_ => `${nm(s_.outlet)}: about ${Math.round(s_.useHi)} L less ${s_.onHand} cases gives ${s_.cases}`).join("; ")}. Each order is checked to be usable within the ${E.shelf}-day shelf life even at the low end; the lead time is ${E.stock.lead_time_days} day.`,
-          `I answer only from this illustrative scenario: invented forecasts, rosters, machine counts and stock for three outlets. I cannot see live sales, weather, events, staff availability beyond the roster, or Chagee's actual data, and I do not take free-text questions, so I cannot make anything up.`];
-        return A[q];
-      };
-      let ovKind = null, aq = null;
-      function ov(kind) {
-        ovKind = kind; const b = $(s7, '[data-z="ovb"]'), t = $(s7, '[data-z="ovt"]');
-        if (!kind) { win.classList.remove("ov"); return; }
-        win.classList.add("ov");
-        if (kind === "report") { t.textContent = `Recommendations report · ${E.zone} · ${E.week.toLowerCase()}`;
-          b.innerHTML = `<p class="lab">Generated from the illustrative scenario; recommendations only: the manager decides.</p>` +
-            `<h5>Staff</h5><ul>${E.outlets.map(o => `<li><b>${o.name}:</b> ${staffRec(o).map(r => `${r.t} (${r.s})`).join("; ")}.</li>`).join("")}</ul>` +
-            `<h5>Upcoming peaks and quiet spells</h5><ul>${P.upcoming.map(u => `<li><b>${nm(u.outlet)}</b> ${u.kind} ${dr(u.days)} against a usual week.</li>`).join("")}</ul>` +
-            `<h5>Machines to run this week</h5><ul>${mc.map(m => `<li><b>${nm(m.outlet)}:</b> ${machRec(m).t}, of ${m.installed} installed${m.over ? `; the peak would want ${Math.max(...m.want)}, flagged for a separate investment review` : ""}.</li>`).join("")}</ul>` +
-            `<h5>Fresh milk, Monday delivery (${E.stock.unit})</h5><ul>${sk.map(s_ => `<li><b>${nm(s_.outlet)}:</b> ${s_.cases} ${unitShort}, against a standing order of ${s_.standing}; usable within shelf life ${s_.fits ? "✓" : "✗"}.</li>`).join("")}</ul>` +
-            `<p class="lab">Plans cover the top of each ±${pct(E.band)} forecast range. Every figure is invented for the presentation; not Chagee data.</p>`; }
-        else if (kind === "ask") { t.textContent = "Store assistant · answers from this scenario only";
-          b.innerHTML = QS.map((q, i) => `<button class="zq2${aq === i ? " sel" : ""}" data-q="${i}">${q}</button>${aq === i ? `<p class="ans">${answer(i)}</p>` : ""}`).join("") + `<p class="lab">Choose a question. The assistant takes no free text, so it cannot invent facts.</p>`; }
-        else if (kind === "exec") { t.textContent = "Execution steps · Proposal 2 · proposed pilot plan";
-          b.innerHTML = `<div class="xs">${PD.execution_steps.value.map((x, i) => `<div><span class="num" style="margin:0">${i + 1}</span><b>${x.step}</b><p>${x.detail}</p></div>`).join("")}</div><p class="lab" style="margin-top:8px">Proposed steps; the zone manager or outlet GM decides after each. No timing, cost or saving is estimated.</p>`; }
-        else if (kind === "edit") { t.textContent = "Edit the plan · simulated";
-          b.innerHTML = Object.entries(PARTS).map(([k, l]) => `<label><input type="checkbox" data-inc="${k}"${PS.inc[k] ? " checked" : ""}> <span><b>${l}</b><br><small>${k === "staff" ? E.outlets.map(o => `${o.name}: ${staffRec(o)[0].t}`).join(" · ") : k === "mach" ? mc.map(m => `${nm(m.outlet)}: ${machRec(m).t}`).join(" · ") : sk.map(s_ => `${nm(s_.outlet)}: ${s_.cases} ${unitShort}`).join(" · ")}</small></span></label>`).join("") +
-            `<button class="btn primary" data-a="save">Save edits (simulated)</button> <span class="lab">Unticked parts keep the current plan.</span>`; }
-      }
-
-      S7.hooks.push(k => {
-        const step = animOK() && s7.classList.contains("active") && (k === last + 1 || (k === 1 && last !== 1)); last = k;
-        $$(flow, ".zst").forEach((e, i) => e.classList.toggle("now", i + 1 === k));
-        flow.classList.remove("flowing"); if (step && k === 1) restart(flow, "flowing");
-        if (k < 4 && ovKind) ov(null);
-        if (k < 2 && win.dataset.v === "store") setView("zone");
-        zone(step && k === 2);
-        const zz = $(s7, ".zzone"); zz.classList.remove("zseq"); $$(s7, ".zrow").forEach(r => r.classList.remove("zhl"));
-        if (step && k === 3) { restart(zz, "zseq"); $$(s7, ".zrow").forEach(r => { if (!$(r, ".zact.ok")) r.classList.add("zhl"); }); }
-        const lp = $(s7, ".zloop"); lp.classList.remove("trace"); if (step && k === 4) restart(lp, "trace");
-        if (step || PRINTING) sel = defaultSel(k);
-        else if (sel && ((sel.kind === "rec" && k < 3) || (sel.kind === "outlet" && k < 2))) sel = defaultSel(k);
-        explain();
-      });
-      s7.addEventListener("click", e => {
-        const t = e.target;
-        const src = t.closest(".zsrc [data-src]"); if (src) { src.blur(); sel = { kind: "src", id: src.dataset.src }; return explain(); }
-        const z = t.closest(".zseg [data-z]"); if (z) { z.blur(); return setView(z.dataset.z, store || sel?.id || E.outlets[0].id); }
-        const on = t.closest(".zo[data-o]"); if (on && S7.cur >= 2) { sel = { kind: "outlet", id: on.dataset.o }; explain(); return setView("store", on.dataset.o); }
-        const pk = t.closest(".zpk"); if (pk) { sel = { kind: "outlet", id: pk.dataset.o }; return explain(); }
-        const rc = t.closest("[data-rec]"); if (rc) { rc.blur(); const [area, id] = rc.dataset.rec.split(":"); sel = { kind: "rec", area, id }; return explain(); }
-        const q = t.closest("[data-q]"); if (q) { aq = +q.dataset.q; return ov("ask"); }
-        const a = t.closest("[data-a]"); if (!a) return; a.blur();
-        const act = a.dataset.a;
-        if (act === "approve") { PS.status = "approve"; PS.inc = { staff: true, mach: true, stock: true }; stateLabel(); }
-        else if (act === "keep") { PS.status = "keep"; stateLabel(); }
-        else if (act === "reset") { PS.status = "await"; PS.inc = { staff: true, mach: true, stock: true }; stateLabel(); }
-        else if (act === "save") { $$(s7, "[data-inc]").forEach(c => (PS.inc[c.dataset.inc] = c.checked)); PS.status = "edit"; stateLabel(); ov(null); }
-        else if (act === "close") ov(null);
-        else ov(act === "ask" ? (aq = aq ?? null, "ask") : act);
-      });
-      $(s7, '[data-z="pick"]').addEventListener("change", e => { sel = { kind: "outlet", id: e.target.value }; explain(); setView("store", e.target.value); });
-      addEventListener("keydown", e => { if (e.key === "Escape" && ovKind) ov(null); });
-      new MutationObserver(() => { if (!s7.classList.contains("active")) ov(null); }).observe(s7, { attributes: true, attributeFilter: ["class"] });
-      printers.push(() => { ov(null); setView("zone"); sel = null; explain(); });
-      setView("zone"); zone(false); stateLabel(); explain();
-    }
+    const s6 = document.getElementById("p2p"), s7 = document.getElementById("p2b");
+    if (s6) $$(s6, ".p2tg").forEach(tg => $$(tg, "button[data-v]").forEach(b => (b.onclick = () => {
+      const box = $(tg.closest(".p2-chart"), ".p2tog"); box.dataset.v = b.dataset.v;
+      $$(tg, "button").forEach(x => x.classList.toggle("on", x === b)); })));
+    if (!s7) return;
+    $$(s7, ".db-rep").forEach(b => {
+      const rep = $(s7, b.classList.contains("db-ask") ? ".db-chat" : ".db-report"); if (!rep) return;
+      const close = () => rep.classList.remove("open");
+      b.onclick = () => rep.classList.add("open");
+      $(rep, ".dr-x, .dc-x").onclick = close;
+      rep.addEventListener("click", e => { if (e.target === rep) close(); });
+      addEventListener("keydown", e => { if (e.key === "Escape" && rep.classList.contains("open")) { e.stopPropagation(); close(); } }, true);
+    });
+    $$(s7, ".db-win").forEach(w => {
+      const vw = $(w, ".db-vw"), pick = $(w, ".db-pick");
+      const apply = () => { vw.textContent = w.dataset.f === "zone" ? "Zone View" : `Store View · ${w.dataset.o}`; };
+      $$(w, ".db-seg button").forEach(b => (b.onclick = () => {
+        w.dataset.f = b.dataset.f; $$(w, ".db-seg button").forEach(x => x.classList.toggle("on", x === b)); apply(); }));
+      if (pick) pick.onchange = () => { w.dataset.o = pick.value; apply(); };
+      const ref = $(w, ".db-ref"), upd = $(w, ".db-upd");
+      if (ref) ref.onclick = () => { ref.classList.remove("spin"); void ref.offsetWidth; ref.classList.add("spin");
+        setTimeout(() => { upd.textContent = "Refreshed just now"; }, 800); };
+    });
   })();
 
   (function toppings() {

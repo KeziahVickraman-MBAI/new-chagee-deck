@@ -3249,336 +3249,49 @@
       "rationale": "Ours, from the brief. No timing or cost is estimated."
     }
   },
-  "planning_demo": {
+  "planning_dashboard": {
     "_note": {
-      "value": "Slides 06 and 07: Proposal 2, AI-enabled in-store planning. The planning story (slide 06) and the zone dashboard (slide 07)",
+      "value": "Slides 06 and 07: Proposal 2, AI-enabled in-store planning. The figures on slide 07's illustrative zone dashboard, its recommendations report and its assistant conversation",
       "unit": "text",
       "range": null,
       "source": "assumption",
-      "rationale": "Every figure here is an illustrative scenario for one zone and one week, not Chagee data. Outlet names are real places used as labels; their orders, crews, machines and stock are invented. sim/planning.js turns them into the dashboard's recommendations; nothing on the dashboard is typed."
+      "rationale": "Every figure here is illustrative, copied from the reference deck so the slide matches it; none is modelled or Chagee data. The build checks that the arrows on the dashboard agree with them."
     },
-    "in_place": {
-      "value": [
-        {
-          "label": "Group-level demand forecasting for stock and inventory",
-          "quote": "To make purchase decisions and manage our inventory, we rely on demand forecasts for various types of raw materials.",
-          "where": "Item 3.D, risk factors"
-        },
-        {
-          "label": "Centralised, digital store management",
-          "quote": "with centralized operations, automated replenishment, and fully integrated management",
-          "where": "Item 4.B, business overview"
-        }
-      ],
-      "unit": "text",
+    "crew_moved": {
+      "value": 1,
+      "unit": "crew members reassigned from Raffles Place to City Hall for the school-holiday week",
       "range": null,
-      "source": "Chagee Holdings Form 20-F for FY2025 (SEC EDGAR, same filing as _sources.L-sec20f)",
-      "rationale": "Both statements describe the whole group; the filing does not say which apply to Singapore outlets, and it does not mention AI. Quotes retrieved 25 Oct 2026 through a web reader; to re-check word for word against the filing."
+      "source": "assumption",
+      "rationale": "Illustrative, as shown on the reference deck's slide 9 (chagee-deck.vercel.app); not Chagee data. Outlet names are real places used as labels."
     },
-    "story": {
+    "refresh_hour": {
+      "value": 7,
+      "unit": "hour (am) the dashboard refreshes each day",
+      "range": null,
+      "source": "assumption",
+      "rationale": "Illustrative, as shown on the reference deck's slide 9 (chagee-deck.vercel.app); not Chagee data. Outlet names are real places used as labels."
+    },
+    "machines": {
       "value": {
-        "days": [
-          "Mon",
-          "Tue",
-          "Wed",
-          "Thu",
-          "Fri",
-          "Sat",
-          "Sun",
-          "Mon",
-          "Tue",
-          "Wed",
-          "Thu",
-          "Fri",
-          "Sat",
-          "Sun"
-        ],
-        "demand": [
-          52,
-          50,
-          53,
-          56,
-          68,
-          84,
-          74,
-          44,
-          36,
-          34,
-          37,
-          50,
-          82,
-          78
-        ],
-        "holiday": [
-          7,
-          11
-        ],
-        "fixed_plan": 60,
-        "forecast_error": [
-          0.05,
-          -0.04,
-          0.03,
-          -0.06,
-          0.04,
-          -0.05,
-          0.06,
-          -0.04,
-          0.07,
-          -0.05,
-          0.04,
-          -0.06,
-          0.05,
-          -0.03
-        ],
-        "band": 0.12,
-        "step": 8
+        "rp": [4, 3],
+        "sc": [4, 4],
+        "ch": [3, 4]
       },
-      "unit": "index of one outlet's daily demand (0 to 100), the fixed plan on the same index, the forecast's error each day, the forecast band (±) and the plan's step (one crew shift or one stock unit, in index points)",
-      "range": null,
-      "source": "assumption, illustrative, to validate with Chagee",
-      "rationale": "Slide 06's chart only: a shape, not measurements. The fixed plan stands for a roster and fresh-stock prep that do not change day to day, an illustrative baseline, not Chagee's measured roster. The forecast plan rounds the forecast's upper end up to whole steps each day, so it is stepped and does not track demand exactly."
-    },
-    "zone": {
-      "value": "City Hall–Marina zone",
-      "unit": "text",
+      "unit": "tea machines in store per outlet: [current, recommended]",
       "range": null,
       "source": "assumption",
-      "rationale": "Display only: three outlets used as an example zone."
-    },
-    "week": {
-      "value": "Coming week · school holiday",
-      "unit": "text",
-      "range": null,
-      "source": "assumption",
-      "rationale": "Display only."
-    },
-    "days": {
-      "value": [
-        "Mon",
-        "Tue",
-        "Wed",
-        "Thu",
-        "Fri",
-        "Sat",
-        "Sun"
-      ],
-      "unit": "text",
-      "range": null,
-      "source": "assumption",
-      "rationale": "The planning week."
-    },
-    "outlets": {
-      "value": [
-        {
-          "id": "rp",
-          "name": "Raffles Place",
-          "area": "office district",
-          "forecast": [
-            420,
-            410,
-            410,
-            400,
-            430,
-            240,
-            210
-          ],
-          "crew": [
-            4,
-            4,
-            4,
-            4,
-            4,
-            3,
-            3
-          ],
-          "min_crew": 2,
-          "cross_trained": 1,
-          "machines": 4,
-          "on_hand_cases": 6,
-          "standing_order_cases": 18,
-          "why": "Office traffic thins in the school holiday, as in past holidays.",
-          "usual": [
-            560,
-            560,
-            560,
-            560,
-            560,
-            260,
-            260
-          ]
-        },
-        {
-          "id": "sc",
-          "name": "Suntec City",
-          "area": "mall",
-          "forecast": [
-            500,
-            490,
-            500,
-            510,
-            540,
-            780,
-            740
-          ],
-          "crew": [
-            3,
-            3,
-            3,
-            3,
-            3,
-            5,
-            5
-          ],
-          "min_crew": 2,
-          "cross_trained": 1,
-          "machines": 4,
-          "on_hand_cases": 5,
-          "standing_order_cases": 22,
-          "why": "Weekend mall peak, as usual.",
-          "usual": [
-            500,
-            500,
-            500,
-            500,
-            500,
-            640,
-            640
-          ]
-        },
-        {
-          "id": "ch",
-          "name": "City Hall",
-          "area": "leisure and shopping",
-          "forecast": [
-            640,
-            650,
-            660,
-            650,
-            690,
-            700,
-            670
-          ],
-          "crew": [
-            3,
-            3,
-            3,
-            3,
-            3,
-            4,
-            4
-          ],
-          "min_crew": 2,
-          "cross_trained": 0,
-          "machines": 3,
-          "on_hand_cases": 4,
-          "standing_order_cases": 20,
-          "why": "Leisure traffic lifts on holiday weekdays.",
-          "usual": [
-            540,
-            540,
-            540,
-            540,
-            540,
-            650,
-            650
-          ]
-        }
-      ],
-      "unit": "per outlet: forecast orders a day (Mon to Sun, the point forecast), crew rostered at the peak each day, the minimum crew, crew trained to work at another outlet, tea machines installed, usable fresh-milk cases on hand on Monday, and today's standing order per delivery; usual = orders a day in a normal (non-holiday) week, Mon to Sun",
-      "range": null,
-      "source": "assumption, illustrative, to validate with Chagee",
-      "rationale": "Invented to show the logic. Forecasts sit near the deck's average outlet (store.cups_per_store_per_year / open days, about 556 cups a day). Peaks and quiet spells compare the forecast with the usual week: at least 15% above or below."
-    },
-    "forecast_band": {
-      "value": 0.15,
-      "unit": "± share around each day's forecast (about an 80% range)",
-      "range": null,
-      "source": "assumption, illustrative, to validate with Chagee",
-      "rationale": "Plans cover the upper end, so a busier day than forecast is still staffed and stocked."
-    },
-    "orders_per_crew_peak_hour": {
-      "value": 22,
-      "unit": "orders one crew member handles in the peak hour",
-      "range": null,
-      "source": "assumption, illustrative, to validate with Chagee",
-      "rationale": "Sets crew needed = peak-hour orders (upper end) / this, rounded up, never below the minimum crew."
-    },
-    "machine_orders_per_hour": {
-      "value": 25,
-      "unit": "orders one tea machine supports in the peak hour, with its operator",
-      "range": null,
-      "source": "assumption, illustrative, to validate with Chagee",
-      "rationale": "Machines to run = peak-hour orders (upper end) / this, rounded up, at most the machines installed. Needing more than installed is flagged for a separate investment review, never decided here."
-    },
-    "travel_minutes": {
-      "value": {
-        "rp_sc": 12,
-        "rp_ch": 10,
-        "sc_ch": 8
-      },
-      "unit": "minutes between outlets",
-      "range": null,
-      "source": "assumption, illustrative, to validate with Chagee",
-      "rationale": "A crew move must be within max_travel_minutes."
-    },
-    "max_travel_minutes": {
-      "value": 20,
-      "unit": "minutes",
-      "range": null,
-      "source": "assumption, illustrative, to validate with Chagee",
-      "rationale": "Longest acceptable trip for a temporary move."
+      "rationale": "Illustrative, as shown on the reference deck's slide 9 (chagee-deck.vercel.app); not Chagee data. Outlet names are real places used as labels."
     },
     "stock": {
       "value": {
-        "unit": "case of fresh milk, 12 × 1 L",
-        "litres_per_case": 12,
-        "deliveries": [
-          "Mon",
-          "Thu"
-        ],
-        "lead_time_days": 1
+        "rp": [9, 7],
+        "sc": [8, 9],
+        "ch": [6, 8]
       },
-      "unit": "the fresh-stock unit, its size, the delivery days and the lead time (order the day before)",
-      "range": null,
-      "source": "assumption, illustrative, to validate with Chagee",
-      "rationale": "Monday's delivery covers Monday to Wednesday at the upper end of the forecast, less usable milk on hand; it is checked against provision.milk_shelf_life_days so that it can be used at the lower end before it expires. Milk per cup is provision.milk_litres_per_cup."
-    },
-    "execution_steps": {
-      "value": [
-        {
-          "step": "Confirm the data for one zone",
-          "detail": "Order history by outlet and day, rosters and skills, machine counts and usage, fresh-stock deliveries and write-offs; who owns each, and access."
-        },
-        {
-          "step": "Build and back-test the forecasts",
-          "detail": "Outlet-day forecasts with a range, tested on past weeks, including school holidays, against today's planning."
-        },
-        {
-          "step": "Shadow mode",
-          "detail": "The dashboard recommends while managers plan as usual; compare its plans with theirs and with what happened."
-        },
-        {
-          "step": "Pilot manager-approved plans",
-          "detail": "One zone approves, edits or keeps each plan; measure waits and lost-sale proxies, crew hours, fresh-milk write-offs and overrides before scaling."
-        }
-      ],
-      "unit": "proposed plan",
+      "unit": "fresh-stock packages per week per outlet: [current, recommended]",
       "range": null,
       "source": "assumption",
-      "rationale": "Proposed steps; no timing, cost or saving is estimated. The zone manager or outlet GM decides after each."
-    },
-    "assistant": {
-      "value": [
-        "Why move a crew member to City Hall?",
-        "What if demand is at the top of the range?",
-        "Why run fewer machines at Raffles Place?",
-        "How was the milk order worked out?",
-        "What can't you tell me?"
-      ],
-      "unit": "scenario questions offered by the assistant",
-      "range": null,
-      "source": "assumption",
-      "rationale": "The assistant answers only from this scenario's inputs and calculations; it takes no free text, so it cannot invent facts."
+      "rationale": "Illustrative, as shown on the reference deck's slide 9 (chagee-deck.vercel.app); not Chagee data. Outlet names are real places used as labels."
     }
   },
   "toppings": {

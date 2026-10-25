@@ -23,7 +23,6 @@ const SQ = require("../sim/squadcast.js");
 const ONL = require("../sim/online.js");
 const CT = require("../sim/crewtool.js");
 const TP = require("../sim/toppings.js");
-const PLN = require("../sim/planning.js");
 
 const RAW = JSON.parse(fs.readFileSync(path.join(__dirname, "..", "assumptions.json"), "utf8"));
 const P = Sim.params(RAW), SB = RAW.storyboard;
@@ -218,17 +217,11 @@ const toppings = {
   })(),
 };
 
-// slides 06 and 07, AI-enabled in-store planning (sim/planning.js): what slide 07's notes quote; the deck computes the same live
-const plE = PLN.inputs(RAW), plP = PLN.plan(plE);
-const planning = { moves: plP.staff.moves.map(m => ({ ...m, dayRange: PLN.dayRange(plE, m.days) })),
-  short: plP.staff.short.map(x => ({ ...x, dayRange: PLN.dayRange(plE, plP.staff.short.filter(y => y.outlet === x.outlet).map(y => y.day)) })),
-  machines: plP.machines, stock: plP.stock };
-
 const pl = Sim.plan(P, "mixed");
 const data = {
   generated: new Date().toISOString(), seeds,
   grid, splits, aiLayer, forecastErr, newMarket, pnl, members, squadcast, site, ladder, benefit, decisions, siteExt, siteModel, sharing,
-  crewTool, toppings, planning,
+  crewTool, toppings,
   online: ONL.compare(ONL.inputs(RAW)),          // slides 03 to 07: the online retailing business case and the brief, reconciled
   sharing_times: { handover: P.humanSec.handover * P.humanMult, all_human: P.stations.reduce((a, k) => a + P.humanSec[k] * P.humanMult, 0),
                    hand_here: P.stations.filter(k => !shRobots.includes(k)).reduce((a, k) => a + P.humanSec[k] * P.humanMult, 0) },
