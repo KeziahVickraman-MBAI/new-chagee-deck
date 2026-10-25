@@ -2591,7 +2591,7 @@
     const B = v("busy_outlet"), AL = v("alt_outlet"), THR = DMr.wait_threshold_min;
 
     const pp = document.getElementById("p1p");
-    if (pp) {
+    if (pp && $(pp, ".p1panel")) {   // slide 03 is now static; this drove its earlier step-through scene
       const panel = $(pp, ".p1panel"), sc = $(pp, ".p1scene"), tip = $(pp, ".p1tip"), rows = $$(pp, ".p1row"), N = rows.length + 1;
       const TIPS = {
         walker: ["Drop-off", "A customer checks the wait and walks away: a sale lost before an order is placed."],
