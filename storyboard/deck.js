@@ -2588,6 +2588,7 @@
         rows.forEach((r, i) => { r.classList.toggle("seen", i < k); r.classList.toggle("cur", i === k - 1); });
         $$(pp, ".p1dots i").forEach((d, i) => d.classList.toggle("on", i < k));
         $(pp, ".p1n").textContent = `${k} / ${N}`; $(pp, '[data-p1="next"]').textContent = k < N ? "Next ▶" : "Next slide ▶"; tip.innerHTML = "";
+        $(pp, '[data-p1="end"]').hidden = k >= N;                                    // Skip to end: gone once there
       };
       const setPlay = on => { sc.classList.toggle("paused", !on); $(pp, '[data-p1="play"]').textContent = on ? "❚❚ Pause" : "▶ Play"; };
       pp._intro = { enter: fromEnd => { k = fromEnd ? N : 1; paint(); },
@@ -2598,6 +2599,7 @@
         if (b) { b.blur(); const a = b.dataset.p1;
           if (a === "next") { if (!pp._intro.next()) show(cur + 1); }
           else if (a === "play") setPlay(sc.classList.contains("paused"));
+          else if (a === "end") { k = N; paint(); }
           else if (a === "replay") { const s = $(sc, "svg"); s.replaceWith(s.cloneNode(true)); k = 1; paint(); setPlay(!still); } }
         else if (row) { k = rows.indexOf(row) + 1; paint(); }
         else if (hs && TIPS[hs.dataset.hs]) { const [h, t] = TIPS[hs.dataset.hs]; tip.innerHTML = `<b>${h}</b>${t}`; }
