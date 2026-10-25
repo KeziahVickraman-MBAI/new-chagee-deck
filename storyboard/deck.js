@@ -2692,7 +2692,7 @@
     if (pa) {
       const S = { pick: null, fill: false, dec: null, ord: false }, inc = v("switch_incentive"), minSave = v("min_saving_min");
       const bt = v("busy_travel_min"), br = v("busy_ready_min"), at = v("alt_travel_min");
-      $(pa, '[data-cx="scen"]').textContent = `${B} is swamped and ${AL}, nearby, has room. The outlets are the reference deck's example; every time is illustrative.`;
+      const scen = $(pa, '[data-cx="scen"]'); if (scen) scen.textContent = `${B} is swamped and ${AL}, nearby, has room. The outlets are the reference deck's example; every time is illustrative.`;
       $$(pa, '[data-cx="clock"]').forEach(e => (e.textContent = "9:41"));
       const render = () => {
         // pickup: collection is the later of walking there and the drink being ready; a switch is offered only if it saves enough
