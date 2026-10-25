@@ -970,6 +970,7 @@
       $(pside, ".pa").innerHTML = pnlAssump(pE);
       PSL.forEach(([k, , , , get, f]) => { const el = $(pside, `.val[data-v="${k}"]`); if (el) el.textContent = f(get()); });
       const say = pnlSay(X, sites, who);
+      if (bandSpans.length < 2) return;                                // slide 08 no longer has the Without AI / With AI band
       bandSpans[0].innerHTML = `Beside ${oname(sites.j)}, the same outlet: ` + say.wo.replace("Beside the nearest outlet: ", "");
       bandSpans[1].innerHTML = say.wi;
     }
@@ -3236,6 +3237,8 @@
   if (pnlBack) pnlBack.onclick = e => { e.stopPropagation(); pnlBack.blur(); const c5 = document.getElementById("c5"); jump = true; show(slides.indexOf(c5), true); c5._pnl?.(); };
   // appendix contents and in-slide links: each jumps to its page
   $$(document, ".apxix li[data-go], .golink[data-go], .auxb[data-go], .exob[data-go]").forEach(li => (li.onclick = () => { jump = true; li.blur(); show(slides.indexOf(document.getElementById(li.dataset.go))); }));
+  // a focusable link (tabindex) also opens with Enter or Space, without the key reaching the deck's own shortcuts
+  $$(document, ".golink[data-go][tabindex]").forEach(el => el.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); e.stopPropagation(); el.click(); } }));
 
   /* ---------------------------------------------------------------- print */
   function preparePrint() {

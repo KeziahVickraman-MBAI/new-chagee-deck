@@ -1759,8 +1759,8 @@ body.print #e2 *{transition:none!important}
 .ag-learn ol:is(#p1x,#p1x *){margin: 0px; padding-left: 20px; font: 13.5px/1.42 var(--sans); color: var(--ink2); display: flex; flex-direction: column; gap: 4px;}
 .ag-learn ol li:is(#p1x,#p1x *)::marker{color: var(--red); font-weight: 700;}
 .ag-learn ol b:is(#p1x,#p1x *){color: var(--ink);}
-.gate:is(#p1x,#p1x *){margin: 10px 0px 0px; padding: 7px 14px; border-radius: 12px; background: rgb(255, 255, 255); border-left: 4px solid var(--navy); font: 13.5px/1.4 var(--sans); color: var(--navy);}
-.gate .lab:is(#p1x,#p1x *){display: block; margin-bottom: 2px; font: 700 10px/1.3 var(--sans); letter-spacing: 0.14em; text-transform: uppercase; color: rgb(74, 102, 153);}
+.gate:is(#p1x,#p1x *,#p3x,#p3x *){margin: 10px 0px 0px; padding: 7px 14px; border-radius: 12px; background: rgb(255, 255, 255); border-left: 4px solid var(--navy); font: 13.5px/1.4 var(--sans); color: var(--navy);}
+.gate .lab:is(#p1x,#p1x *,#p3x,#p3x *){display: block; margin-bottom: 2px; font: 700 10px/1.3 var(--sans); letter-spacing: 0.14em; text-transform: uppercase; color: rgb(74, 102, 153);}
 .slide.content .sub:is(#p1x,#p1x *,#p1r,#p1r *){font-size: 16px; color: rgb(122, 117, 108);}
 @keyframes rtgrow { 
   0% { width: 0px; }
@@ -1772,7 +1772,7 @@ body.print #e2 *{transition:none!important}
    Taken from the reference deck (chagee-deck.vercel.app, slides 8 and 9 and its Proposal 2 pilot page): the rules that style
    those slides, each scoped to them by an :is(#id,#id *) on its subject so nothing reaches the rest of this deck. #p2pilot is
    the reference's #p2x (this deck's #p2x is the toppings execution steps). The reference's theme variables are set here too. */
-:is(#p2p,#p2b,#p2pilot,#p2f){--shadow:0 1px 2px rgba(0,0,0,.04),0 14px 34px -14px rgba(36,64,107,.22); --wash:#FAF8F3}
+:is(#p2p,#p2b,#p2pilot,#p2f,#p3x){--shadow:0 1px 2px rgba(0,0,0,.04),0 14px 34px -14px rgba(36,64,107,.22); --wash:#FAF8F3}
 #p2b{--emb:url({img:emblem})}
 .num:is(#p2b,#p2b *){flex:none;display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;background:var(--red);color:#fff;font:600 11px/1 var(--sans);margin-top:1px}
 #p2p .p2-panel:is(#p2p,#p2p *){flex:1;min-height:0;display:flex;flex-direction:column;margin:16px 0 0;border-radius:22px;background:#FBF7F0}
@@ -2011,22 +2011,30 @@ body.print #e2 *{transition:none!important}
 .slide.content .rail span.cur:is(#p2p,#p2p *,#p2b,#p2b *){color:var(--navy);font-weight:700}
 .slide.content .foot .rail:is(#p2p,#p2p *,#p2b,#p2b *){margin-left:auto;margin-right:14px;padding-right:14px;border-right:1px solid #CFC8BB}
 @keyframes dbspin{to{transform:rotate(360deg)}}
+/* appendix: Proposal 3 validation plan (#p3x): the Proposal 2 pilot's panels and the Proposal 1 gate (scopes above), numbered
+   stages, a back link without the arrow, and a line of links */
+#p3x.slide .p2x-tl ol{counter-reset:p3s} #p3x.slide .p2x-tl li{counter-increment:p3s;grid-template-columns:28px 1fr}
+#p3x.slide .p2x-tl .wk{display:grid;place-items:center;width:28px;height:28px;padding:0;border-radius:50%} #p3x.slide .p2x-tl .wk::before{content:counter(p3s)}
+#p3x .golink.back:after{content:none}
+#p3x .p3x-links{margin:10px 0 0;font:13px/1.4 var(--sans);color:var(--ink2)} #p3x .p3x-links .golink{margin:0 14px 0 6px}
+#p3x .gate b{display:block;font:600 14.5px/1.35 var(--sans)}
+#e2 .e2exec{flex:none;align-self:flex-end;margin:auto 0 0;padding:7px 14px;border-radius:999px;background:var(--navy);color:#fff;border:0;font:600 12.5px/1 var(--sans)}   /* as Proposal 2's Execution steps */
 /* the appendix pilot and financial case (#p2pilot, #p2f) as on the reference deck (its #p2x and #p2f, slides 18 and 19): its
    rules for them, scoped the same way; their headers use the shared style (red label, black title) */
-.slide.content .lede:is(#p2pilot,#p2pilot *,#p2f,#p2f *){margin:10px 0 0;font:400 19px/1.35 var(--sans);color:var(--ink2)}
-.slide.content .sub.lede:is(#p2pilot,#p2pilot *,#p2f,#p2f *){font-style:normal}
-.p2x-grid:is(#p2pilot,#p2pilot *,#p2f,#p2f *){flex:1;min-height:0;display:grid;grid-template-columns:1.1fr 1fr;gap:26px;margin-top:22px;align-items:start}
-.p2x-tl:is(#p2pilot,#p2pilot *),.p2x-diag:is(#p2pilot,#p2pilot *,#p2f,#p2f *),.p2f-case:is(#p2f,#p2f *){border-radius:18px;background:#FBF7F0;padding:20px 26px 22px}
-.p2x-diag:is(#p2pilot,#p2pilot *,#p2f,#p2f *){background:#F4F6FA}
-.p2x-tl ol:is(#p2pilot,#p2pilot *){list-style:none;margin:6px 0 0;padding:0;display:flex;flex-direction:column;gap:14px}
-.p2x-tl li:is(#p2pilot,#p2pilot *){display:grid;grid-template-columns:64px 1fr;gap:12px;align-items:start}
-.p2x-tl .wk:is(#p2pilot,#p2pilot *){padding:3px 0;border-radius:999px;background:var(--navy);color:#fff;text-align:center;font:700 12px/1.4 var(--sans)}
-.p2x-tl b:is(#p2pilot,#p2pilot *),.dg b:is(#p2pilot,#p2pilot *,#p2f,#p2f *){display:block;font:500 19px/1.2 var(--serif);color:var(--navy)}
-.p2x-tl li span:is(#p2pilot,#p2pilot *),.dg span:is(#p2pilot,#p2pilot *,#p2f,#p2f *){font:14px/1.45 var(--sans);color:var(--ink2)}
-.p2x-own:is(#p2pilot,#p2pilot *){margin:16px 0 0;font:13px/1.4 var(--sans);color:var(--ink2)}
-.p2x-own b:is(#p2pilot,#p2pilot *){display:inline;margin-right:8px;font:700 10.5px/1 var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--red)}
-.p2x-diag h4:is(#p2pilot,#p2pilot *){margin:0 0 12px;font:500 22px/1.2 var(--serif);color:var(--ink)}
-.dg:is(#p2pilot,#p2pilot *,#p2f,#p2f *){padding:10px 0;border-top:1px solid #DFE5EE}
+.slide.content .lede:is(#p2pilot,#p2pilot *,#p2f,#p2f *,#p3x,#p3x *){margin:10px 0 0;font:400 19px/1.35 var(--sans);color:var(--ink2)}
+.slide.content .sub.lede:is(#p2pilot,#p2pilot *,#p2f,#p2f *,#p3x,#p3x *){font-style:normal}
+.p2x-grid:is(#p2pilot,#p2pilot *,#p2f,#p2f *,#p3x,#p3x *){flex:1;min-height:0;display:grid;grid-template-columns:1.1fr 1fr;gap:26px;margin-top:22px;align-items:start}
+.p2x-tl:is(#p2pilot,#p2pilot *,#p3x,#p3x *),.p2x-diag:is(#p2pilot,#p2pilot *,#p2f,#p2f *,#p3x,#p3x *),.p2f-case:is(#p2f,#p2f *){border-radius:18px;background:#FBF7F0;padding:20px 26px 22px}
+.p2x-diag:is(#p2pilot,#p2pilot *,#p2f,#p2f *,#p3x,#p3x *){background:#F4F6FA}
+.p2x-tl ol:is(#p2pilot,#p2pilot *,#p3x,#p3x *){list-style:none;margin:6px 0 0;padding:0;display:flex;flex-direction:column;gap:14px}
+.p2x-tl li:is(#p2pilot,#p2pilot *,#p3x,#p3x *){display:grid;grid-template-columns:64px 1fr;gap:12px;align-items:start}
+.p2x-tl .wk:is(#p2pilot,#p2pilot *,#p3x,#p3x *){padding:3px 0;border-radius:999px;background:var(--navy);color:#fff;text-align:center;font:700 12px/1.4 var(--sans)}
+.p2x-tl b:is(#p2pilot,#p2pilot *,#p3x,#p3x *),.dg b:is(#p2pilot,#p2pilot *,#p2f,#p2f *,#p3x,#p3x *){display:block;font:500 19px/1.2 var(--serif);color:var(--navy)}
+.p2x-tl li span:is(#p2pilot,#p2pilot *,#p3x,#p3x *),.dg span:is(#p2pilot,#p2pilot *,#p2f,#p2f *,#p3x,#p3x *){font:14px/1.45 var(--sans);color:var(--ink2)}
+.p2x-own:is(#p2pilot,#p2pilot *,#p3x,#p3x *){margin:16px 0 0;font:13px/1.4 var(--sans);color:var(--ink2)}
+.p2x-own b:is(#p2pilot,#p2pilot *,#p3x,#p3x *){display:inline;margin-right:8px;font:700 10.5px/1 var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--red)}
+.p2x-diag h4:is(#p2pilot,#p2pilot *,#p3x,#p3x *){margin:0 0 12px;font:500 22px/1.2 var(--serif);color:var(--ink)}
+.dg:is(#p2pilot,#p2pilot *,#p2f,#p2f *,#p3x,#p3x *){padding:10px 0;border-top:1px solid #DFE5EE}
 .p2f-t:is(#p2f,#p2f *){width:100%;border-collapse:collapse;margin-top:6px;font:14.5px/1.4 var(--sans)}
 .p2f-t th:is(#p2f,#p2f *){text-align:left;padding:8px 12px;background:var(--navy);color:#fff;font-weight:600}
 .p2f-t th:last-child:is(#p2f,#p2f *),.p2f-t td:last-child:is(#p2f,#p2f *){text-align:right;width:110px}
@@ -2035,11 +2043,11 @@ body.print #e2 *{transition:none!important}
 .p2f-be:is(#p2f,#p2f *){margin-top:16px;display:flex;flex-direction:column;gap:3px}
 .p2f-be b:is(#p2f,#p2f *){font:500 26px/1.1 var(--serif);color:var(--red)}
 .p2f-be span:is(#p2f,#p2f *){font:14px/1.45 var(--sans);color:var(--ink2)}
-.hw-ohd:is(#p2pilot,#p2pilot *,#p2f,#p2f *){margin:0 0 8px;font:700 13px/1.2 var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--red)}
-.slide.content:is(#p2pilot,#p2pilot *,#p2f,#p2f *){background:linear-gradient(180deg,var(--wash) 0,#fff 120px)}
-.slide.content .sub:is(#p2pilot,#p2pilot *,#p2f,#p2f *){font-size:16px;color:#7A756C}
-.slide.content .rail span.cur:is(#p2pilot,#p2pilot *,#p2f,#p2f *){color:var(--navy);font-weight:700}
-.slide.content .foot .rail:is(#p2pilot,#p2pilot *,#p2f,#p2f *){margin-left:auto;margin-right:14px;padding-right:14px;border-right:1px solid #CFC8BB}
+.hw-ohd:is(#p2pilot,#p2pilot *,#p2f,#p2f *,#p3x,#p3x *){margin:0 0 8px;font:700 13px/1.2 var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--red)}
+.slide.content:is(#p2pilot,#p2pilot *,#p2f,#p2f *,#p3x,#p3x *){background:linear-gradient(180deg,var(--wash) 0,#fff 120px)}
+.slide.content .sub:is(#p2pilot,#p2pilot *,#p2f,#p2f *,#p3x,#p3x *){font-size:16px;color:#7A756C}
+.slide.content .rail span.cur:is(#p2pilot,#p2pilot *,#p2f,#p2f *,#p3x,#p3x *){color:var(--navy);font-weight:700}
+.slide.content .foot .rail:is(#p2pilot,#p2pilot *,#p2f,#p2f *,#p3x,#p3x *){margin-left:auto;margin-right:14px;padding-right:14px;border-right:1px solid #CFC8BB}
 /* ---------------------------------------------------------------- the earlier online slides, now in the appendix (overview, offers, pickup rewards, case) */
 #oo .oo3{flex:1;min-height:0;display:grid;grid-template-columns:1fr 44px 1fr 44px 1fr;align-items:center;gap:6px;margin-top:14px}
 #oo .oon{height:100%;display:flex;flex-direction:column;align-items:center;gap:10px;padding:14px 16px 16px;background:#fff;border:1px solid var(--line);border-top:4px solid var(--navy);border-radius:16px;box-shadow:0 1px 2px rgba(0,0,0,.04),0 14px 34px -14px rgba(36,64,107,.22)}
@@ -2965,6 +2973,7 @@ aside.notes{display:none}
           </div>
           <p class="e2take">At {{s.bt_name}}, <b>almost two of every three cups</b> are taken from our own outlets. Near {{s.top_hub}}, <b>{{r.top_new_share|pct}} are new</b>.</p>
         </div>
+        <span class="golink e2exec" data-go="p3x" tabindex="0" role="link">Execution steps</span>
       </div>
       <div class="e2p">
         <span class="e2no"><span class="num">2</span>Does it pay back?</span>
@@ -3085,7 +3094,7 @@ aside.notes{display:none}
     <p class="sub">Supporting detail for the main presentation, in its order: Proposal 1, Proposal 2, Proposal 3, then shared material. Click a line to open it; use the agenda to return.</p>
     <div class="apxix">
       <div><h5>Proposal 1 · online retailing</h5><ol><li data-go="p1x">Pilot smart pickup routing in one zone</li><li data-go="p1r">Your tea, sooner: the pickup race</li></ol><h5>Proposal 2 · in-store planning</h5><ol><li data-go="p2pilot">Eight-week zone pilot</li><li data-go="p2f">Financial case</li></ol></div>
-      <div><h5>Proposal 3 · new store expansion</h5><ol><li data-go="a2">How the site forecast works</li><li data-go="ap">The new store in money: five-year P&amp;L</li><li data-go="x1">Four scores for every location</li><li data-go="e2t">The expansion decision as a table</li><li data-go="xo">Further application: existing outlets</li></ol></div>
+      <div><h5>Proposal 3 · new store expansion</h5><ol><li data-go="p3x">Validation plan: execution steps</li><li data-go="a2">How the site forecast works</li><li data-go="ap">The new store in money: five-year P&amp;L</li><li data-go="x1">Four scores for every location</li><li data-go="e2t">The expansion decision as a table</li><li data-go="xo">Further application: existing outlets</li></ol></div>
       <div><h5>Shared · data and sources</h5><ol><li data-go="adata">Chagee's data collection</li><li data-go="a1">Sources and assumptions</li></ol></div>
     </div>
     <p class="nextl"><b>Also</b><span class="golink" data-go="cnd">Considered but not for presentation</span></p>
@@ -3258,6 +3267,37 @@ aside.notes{display:none}
   </div>
   <div class="foot"><span>OPIM639 · Group 3 · appendix · illustrative assumptions, no Chagee cost or savings data</span><span class="rail"></span><span class="pg"></span></div>
   <aside class="notes"><p>An illustrative monthly case for one pilot zone, on our assumptions, not Chagee's data. Avoiding {{p2f.hours}} overtime hours at the model's wage of about S${{p2f.wage|c2}} an hour saves about S${{p2f.saving}}; less a recurring system cost of S${{p2f.cost}}, that nets about S${{p2f.net}} a month before set-up costs and any sales upside. Put the other way, about {{p2f.be_hours}} paid hours a month cover the recurring cost. Finance should count only real reductions in paid hours, retained sales at contribution margin, and equipment only where the cash benefit justifies it.</p></aside>
+</section>
+
+<!-- ======================================================= APPENDIX: PROPOSAL 3 VALIDATION (execution steps) -->
+<section class="slide content" id="p3x" data-chapter="Appendix" data-title="Proposal 3 validation">
+  <div class="leafart" aria-hidden="true"></div>
+  <div class="inner">
+    <p class="kicker">Appendix · Execution steps · Proposal 3 validation</p>
+    <h2 class="head">Validate the location, then commit on evidence.</h2>
+    <p class="sub lede">Start with the {{s.top_hub}} cluster. Test whether unmet demand translates into viable sales and acceptable returns. <span class="golink back" data-go="e2" tabindex="0" role="link">← Back to proposal</span></p>
+    <div class="p2x-grid">
+      <div class="p2x-tl">
+        <p class="hw-ohd">Three validation stages</p>
+        <ol>
+          <li><span class="wk"></span><div><b>Validate demand</b><span>Rerun the analysis using real app searches and orders. Check distinct potential customers, demand across weeks and coverage by existing outlets.</span></div></li>
+          <li><span class="wk"></span><div><b>Validate the site</b><span>Shortlist available units. Check walking access, footfall, competition and nearby Chagee outlets. Where feasible, test purchase interest through a temporary activation or pickup trial.</span></div></li>
+          <li><span class="wk"></span><div><b>Validate the economics</b><span>Use actual rent quotes, fit-out costs, staffing requirements and realistic sales estimates. Recalculate cannibalisation, operating profit and payback under low, base and high demand.</span></div></li>
+        </ol>
+        <p class="p2x-own"><b>Owners</b> Expansion manager · operations · finance · data team</p>
+        <p class="p3x-links">See also<span class="golink" data-go="e2t" tabindex="0" role="link">Decision table</span><span class="golink" data-go="ap" tabindex="0" role="link">Full calculation breakdown</span></p>
+      </div>
+      <div class="p2x-diag">
+        <p class="hw-ohd">Before signing a lease</p>
+        <div class="dg"><b>Does it improve access?</b><span>Will the site serve customers who currently lack a convenient outlet?</span></div>
+        <div class="dg"><b>Does it add demand to Chagee?</b><span>How much business is incremental after sales transferred from nearby outlets?</span></div>
+        <div class="dg"><b>Does the investment hold up?</b><span>Are expected returns acceptable, and can Chagee tolerate the downside?</span></div>
+        <p class="gate"><span class="lab">Decision gate</span><b>Proceed, investigate further, or reject.</b>Commit only when real demand, site checks and local economics support the case.</p>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>OPIM639 · Group 3 · appendix · validation plan, proposed</span><span class="rail"></span><span class="pg"></span></div>
+  <aside class="notes"><p>The execution steps for proposal three: a proposed validation plan, not a result. Start with the {{s.top_hub}} cluster and test whether its unmet demand becomes viable sales and acceptable returns. First, validate demand: rerun the analysis on real app searches and orders, and check distinct potential customers, demand across weeks and coverage by existing outlets. Second, validate the site: shortlist available units, check walking access, footfall, competition and nearby Chagee outlets, and where feasible test purchase interest with a temporary activation or pickup trial. Third, validate the economics: actual rent quotes, fit-out, staffing and realistic sales, then recalculate cannibalisation, operating profit and payback under low, base and high demand. Before signing a lease, three questions: does it improve access, does it add demand to Chagee after sales moved from nearby outlets, and does the investment hold up, including the downside? The gate: proceed, investigate further or reject, and commit only when real demand, site checks and local economics support the case. The decision table and the full calculation breakdown are linked for questions.</p></aside>
 </section>
 
 <!-- ======================================================= APPENDIX: SITE FORECAST -->
