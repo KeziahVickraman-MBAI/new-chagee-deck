@@ -916,6 +916,9 @@ html,body{margin:0;background:#E7E3DC;color:var(--ink);font-family:var(--sans);-
 .dlist i{display:block;color:var(--red);font-style:normal;font-size:11px;margin-top:2px}
 .bars .grp{font:600 9.5px/1.2 var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--taupe);margin:4px 0 -2px}
 .bars .row.pil .b{opacity:.85}
+/* 08 after its overview: Proposal 3's two-line title costs a line, so the map / P&L stage takes it back from the gaps and the
+   space above the footer; the forecast card and the P&L table end above the takeaway */
+#c5:not(.c5ov)>.inner{padding-bottom:38px} #c5:not(.c5ov) .body{margin-top:12px} #c5:not(.c5ov) .inner>.takeaway{margin-top:10px}
 #c5 .sitectl{gap:2px;padding:6px 12px}
 #c5 .sitectl label{grid-template-columns:150px 1fr 46px;align-items:center;gap:0 8px;font-size:11.5px}
 #c5 .sitectl label input{grid-column:2;grid-row:1}
