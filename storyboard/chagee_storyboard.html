@@ -3518,32 +3518,21 @@ aside.notes{display:none}
 <p><b>P-honeycombers</b> PRESS - in-store sightings, indicative. Honeycombers (Feb 2026), https://thehoneycombers.com/singapore/china-bubble-tea-brand-singapore/ : Chagee price sightings in Singapore; not a current full menu.</p>
 <p><b>P-eatbook</b> PRESS - in-store sightings, indicative. Eatbook (Aug 2024), https://eatbook.sg/?p=168476 : Chagee price sightings in Singapore; not a current full menu, and older than the deck.</p>
 <p><b>I-team-expansion</b> INFORMAL - team research (Oct 2026): Chagee is looking to expand rapidly in Singapore; how many stores it is going for is confidential. Singapore only. Confirm before citing.</p>
-<p><b>I-team-site-framework</b> TEAM WORK (Oct 2026): Jin's site-selection framework, two team slides ('Four Scores for Every Location', 'From Pin to Profit Forecast'): four scores per pin, six steps from a pin to a go / no-go on profit net to Chagee. Used for the appendix pin-to-profit page (earlier extension). Its example values and outlet names are not used; ours are illustrative.</p>
 <p><b>P-appstore</b> CHAGEE app, App Store listing (team research, Oct 2026; no link supplied, not checked by us): 'Order and pay digitally', 'Order for self-pickup ahead of time', 'Locate our outlets and their operating hours'. The listing seen was the Saudi storefront; its privacy-policy URL includes 'SGMY' (our reading: Singapore and Malaysia, an inference). Privacy label: Precise Location under 'Data Not Linked to You'; search history not listed.</p>
 <p><b>P-vulcanpost-comeback</b> PRESS - Vulcan Post, Jayme Teo, 2 Oct 2024, https://vulcanpost.com/872176/chagee-singapore-comeback-after-sudden-exit/ : after the reopening, with some customers 'waiting for as long as an hour to receive their orders', 'the brand rolled out in-app ordering and delivery and constantly upgraded the ordering process.' Its 'kiosks' are a store format ('pivoting from their takeaway kiosks for comfortable dine-in, sit-down tea bars'), not ordering kiosks. Quotes checked by us, 22 Oct 2026.</p>
 <p><b>L-sec20f-data</b> Chagee Holdings Form 20-F for FY2025 (same filing as L-sec20f), risk factors: 'Our business generates and processes personal, transactional and other data.' and 'we may not be able to use our membership program to deepen our understanding of our target consumers.' No share of orders by app or mini program, and nothing on search or location data, in the parts we read. Quotes checked by us, 22 Oct 2026.</p>
 <h5>Assumptions (assumptions.json, illustrative)</h5>
 <p><b>Cups per outlet per year</b>: 200000 cups/store/year</p>
-<p><b>Share of the day's cups in each open hour</b>: 0.04, 0.06, 0.1, 0.11, 0.08, 0.08, 0.09, 0.1, 0.1, 0.09, 0.08, 0.07 share of daily cups per open hour (10:00 to 22:00), sums to 1</p>
-<p><b>Seconds per cup by hand, per station</b>: ticket 5, cup ice 10, tea milk 15, topping finish 12, shake seal 10, handover 8 seconds of one average worker per cup</p>
-<p><b>Seconds per cup by robot, per station</b>: ticket 2, cup ice 8, tea milk 10, topping finish 15, shake seal 8, handover 6 seconds per cup per machine unit</p>
-<p><b>Stations the robots do today</b>: ticket, tea milk, shake seal </p>
-<p><b>Share of new staff</b>: 0.25 share of roster in first months</p>
-<p><b>New staff speed</b>: 0.7 x average speed</p>
-<p><b>Coordination loss, people around robots</b>: 0.9 multiplier on human-pool throughput in the mixed setup</p>
-<p><b>Minimum people on the counter</b>: all human 2, mixed 1, all machine 0 workers per open hour</p>
-<p><b>Roster safety margin over the forecast</b>: 1.2 x forecast peak rate</p>
 <p><b>Labour cost per hour worked (SGD)</b>: 15.06 SGD per hour worked, fully loaded (statutory costs)</p>
-<p><b>Robot cost per station unit per month (SGD)</b>: 1908.75 SGD per station machine unit per month</p>
-<p><b>Synthetic app-intent dots (slide 12)</b>: 3000 synthetic app-intent dots on the map</p>
+<p><b>Synthetic app-intent dots (slide 08)</b>: 3000 synthetic app-intent dots on the map</p>
 <p><b>Walking distance to collect</b>: 1 km a customer will walk to collect</p>
 <p><b>Distance decay, share of the walking distance</b>: 1 distance decay length as a share of walk_km</p>
 <p><b>Pull of not buying</b>: 0.3 pull of not buying, against a store next door (= 1)</p>
 <p><b>DBSCAN cluster radius</b>: 0.6 km</p>
 <p><b>DBSCAN minimum searches</b>: 15 dots within eps to form a cluster core</p>
 <p><b>Map scale</b>: 0.033 km per map pixel</p>
-<p><b>Price per cup, in store (pin to profit, the benefit slide)</b>: 5.9 SGD per cup, in store</p>
-<p><b>Margin per cup, share of price (pin to profit, the benefit slide)</b>: 0.6 share of price (contribution per avoided order: price minus ingredients and packaging)</p>
+<p><b>Price per cup, in store (pin to profit)</b>: 5.9 SGD per cup, in store</p>
+<p><b>Margin per cup, share of price (pin to profit)</b>: 0.6 share of price (contribution per avoided order: price minus ingredients and packaging)</p>
 <p><b>Site scores, hand-set (four scores, pin to profit, illustrative)</b>: demand 84, delivery 78, competition 61 score out of 100</p>
 <p><b>Site score weights (pin to profit, illustrative)</b>: demand 0.5, delivery 0.2, competition 0.3 weight in the site score, sums to 1</p>
 <p><b>Rent per outlet per month (pin to profit, assumption, not Chagee data)</b>: 15000 SGD per outlet per month</p>
@@ -3552,9 +3541,9 @@ aside.notes{display:none}
 <p><b>Delivery platform commission (pin to profit, assumption)</b>: 0.3 share of a delivery order's price paid to the platform</p>
 <p><b>Set-up cost per new outlet (pin to profit, assumption, not Chagee data)</b>: 400000 SGD per new outlet, one-off (fit-out, equipment, deposits, opening)</p>
 <h5>Claims we did not make</h5>
-<p>No Chagee sales, staffing or wait-time data is used; the forecast is not a trained model. Machine breakdowns, breaks and order mix are not modelled.</p>
+<p>No Chagee sales, staffing or wait-time data is used; the forecast is not a trained model.</p>
 <p><b>Singapore ownership:</b> Chagee Singapore operates a company-owned model, not a franchise model, as confirmed by the project owner (I-sg-owned). That outlets run under one company and one data system is from an anonymous Chagee source (I-chagee-contact). Group-wide franchise revenue shares are global context only and are not applied to Singapore.</p>
-<p>We make no claim about: <b>delivery profit by channel</b>; <b>Chagee's own equipment cost</b> (not public); <b>gross margin per cup</b> (our assumption); <b>Chagee's current rostering</b> beyond what an anonymous Chagee source told us (people are deployed on local expertise by the GM and outlet teams).</p></div></div>
+<p>We make no claim about: <b>delivery profit by channel</b>; <b>gross margin per cup</b> (our assumption).</p></div></div>
   </div>
   <div class="foot"><span>OPIM639 · Group 3 · explainer figures are illustrative assumptions</span><span class="rail"></span><span class="pg"></span></div>
   <aside class="notes"><p>Soft copy only.</p></aside>

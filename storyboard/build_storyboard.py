@@ -615,28 +615,18 @@ def values(d: dict) -> dict:
 
 
 # ---------------------------------------------------------------------------- appendix
-USED = [  # (section, key, label) shown in the appendix: every input the main slides and the appendix rely on (not "Considered" or the extension)
+USED = [  # (section, key, label) shown in the appendix: the inputs behind the main slides (the counter and bucket-brigade model is no longer shown)
     ("store", "cups_per_store_per_year", "Cups per outlet per year"),
-    ("store", "hourly_demand_share", "Share of the day's cups in each open hour"),
-    ("stations", "human_seconds_per_cup", "Seconds per cup by hand, per station"),
-    ("stations", "machine_seconds_per_cup", "Seconds per cup by robot, per station"),
-    ("stations", "mixed_machine_stations", "Stations the robots do today"),
-    ("people", "new_staff_share", "Share of new staff"),
-    ("people", "new_staff_relative_speed", "New staff speed"),
-    ("people", "coordination_loss_mixed", "Coordination loss, people around robots"),
-    ("people", "min_staff_on_shift", "Minimum people on the counter"),
-    ("costs", "capacity_safety_margin", "Roster safety margin over the forecast"),
     ("costs", "labour_cost_per_hour", "Labour cost per hour worked (SGD)"),
-    ("costs", "machine_cost_per_unit_per_month", "Robot cost per station unit per month (SGD)"),
-    ("sitepick", "events", "Synthetic app-intent dots (slide 12)"),
+    ("sitepick", "events", "Synthetic app-intent dots (slide 08)"),
     ("sitepick", "walk_km", "Walking distance to collect"),
     ("sitepick", "decay_share", "Distance decay, share of the walking distance"),
     ("sitepick", "outside_option", "Pull of not buying"),
     ("sitepick", "dbscan_eps_km", "DBSCAN cluster radius"),
     ("sitepick", "dbscan_min_points", "DBSCAN minimum searches"),
     ("sitepick", "km_per_px", "Map scale"),
-    ("storyboard", "price_per_cup", "Price per cup, in store (pin to profit, the benefit slide)"),
-    ("storyboard", "gross_margin_per_cup", "Margin per cup, share of price (pin to profit, the benefit slide)"),
+    ("storyboard", "price_per_cup", "Price per cup, in store (pin to profit)"),
+    ("storyboard", "gross_margin_per_cup", "Margin per cup, share of price (pin to profit)"),
     ("site_ext", "scores", "Site scores, hand-set (four scores, pin to profit, illustrative)"),
     ("site_ext", "score_weights", "Site score weights (pin to profit, illustrative)"),
     ("site_ext", "rent_per_month", "Rent per outlet per month (pin to profit, assumption, not Chagee data)"),
@@ -664,7 +654,7 @@ def appendix() -> str:
         f = RAW["facts"][k]
         out.append(f"<p><b>{label}: {short(f['value'])}</b>. {esc(f['rationale'])} <i>[{esc(f['source'])}]</i></p>")
     out.append("<h5>Sources</h5>")
-    for k in ("L-sg-directory", "I-sg-owned", "L-koalagains", "L-yfchuhai", "L-sec20f", "I-chagee-contact", "L-ester1996", "P-honeycombers", "P-eatbook", "I-team-expansion", "I-team-site-framework", "P-appstore", "P-vulcanpost-comeback", "L-sec20f-data"):
+    for k in ("L-sg-directory", "I-sg-owned", "L-koalagains", "L-yfchuhai", "L-sec20f", "I-chagee-contact", "L-ester1996", "P-honeycombers", "P-eatbook", "I-team-expansion", "P-appstore", "P-vulcanpost-comeback", "L-sec20f-data"):
         out.append(f"<p><b>{k}</b> {esc(RAW['_sources'][k])}</p>")
     out.append("<h5>Assumptions (assumptions.json, illustrative)</h5>")
     for sec, key, label in USED:
@@ -672,14 +662,11 @@ def appendix() -> str:
         unit = "" if o.get("unit") == "text" else o.get("unit", "")
         out.append(f"<p><b>{esc(label)}</b>: {esc(short(o['value']))} {esc(unit)}</p>")
     out.append("<h5>Claims we did not make</h5>")
-    out.append("<p>No Chagee sales, staffing or wait-time data is used; the forecast is not a trained model. "
-               "Machine breakdowns, breaks and order mix are not modelled.</p>")
+    out.append("<p>No Chagee sales, staffing or wait-time data is used; the forecast is not a trained model.</p>")
     out.append("<p><b>Singapore ownership:</b> Chagee Singapore operates a company-owned model, not a franchise model, as confirmed by the "
                "project owner (I-sg-owned). That outlets run under one company and one data system is from an anonymous Chagee source "
                "(I-chagee-contact). Group-wide franchise revenue shares are global context only and are not applied to Singapore.</p>")
-    out.append("<p>We make no claim about: <b>delivery profit by channel</b>; "
-               "<b>Chagee's own equipment cost</b> (not public); <b>gross margin per cup</b> (our assumption); "
-               "<b>Chagee's current rostering</b> beyond what an anonymous Chagee source told us (people are deployed on local expertise by the GM and outlet teams).</p>")
+    out.append("<p>We make no claim about: <b>delivery profit by channel</b>; <b>gross margin per cup</b> (our assumption).</p>")
     return "\n".join(out)
 
 
