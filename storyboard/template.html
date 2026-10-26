@@ -2399,6 +2399,9 @@ body.print #p1p :is(.pq-walker,.pq-in){animation:none} @media print{#p1p :is(.pq
 .slide.agenda.long li .why{font-size:13px;margin-top:3px}
 .slide.agenda.long li .why i{font-style:normal;color:var(--red)}
 .slide.agenda.long li:hover .no{transform:translateY(-1px)}
+/* printing from the browser (Print / PDF, Ctrl-P): keep every background colour, as on screen, even with "Background graphics"
+   off; without it the agenda's number pills print white with grey shadow blocks */
+@media print{html,body,body *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important} .slide.agenda.long li .no{box-shadow:none}}
 /* 01 and 02: the reference's clean theme (a tea-wash band, a light takeaway card); headers use the shared style */
 :is(#intro,#es){--shadow:0 1px 2px rgba(0,0,0,.04),0 14px 34px -14px rgba(36,64,107,.22);background:linear-gradient(180deg,#FAF8F3 0,#fff 120px)}
 :is(#intro,#es) .takeaway{background:#fff;color:var(--navy);border:1px solid var(--line);border-left:4px solid var(--red);border-radius:14px;box-shadow:var(--shadow);font-size:16px;font-weight:500}
@@ -2576,10 +2579,10 @@ aside.notes{display:none}
       <li data-go="intro"><span class="no"></span><span class="nm">Introduction<span class="why">Chagee Singapore, our scope and why</span></span></li>
       <li data-go="es"><span class="no"></span><span class="nm">Executive Summary and Business Plan<span class="why">Two key challenges and one strategic decision</span></span></li>
       <li data-go="p1p" data-to="c5"><span class="no"></span><span class="nm">Our Business Recommendations<span class="why">Dynamic demand management · AI-enabled in-store planning · AI-enabled new-store site selection</span></span></li>
-      <li data-go="ep"><span class="no"></span><span class="nm">Execution Plan<span class="why">Three pilots and when to proceed</span></span></li>
-      <li data-go="fi"><span class="no"></span><span class="nm">Business Impact<span class="why">What the plan is worth, in our model</span></span></li>
+      <li data-go="ep"><span class="no"></span><span class="nm">Execution Plan<span class="why">How can we operationalise this business plan</span></span></li>
+      <li data-go="fi"><span class="no"></span><span class="nm">Business Impact<span class="why">Financial and non-financial benefits of the business plan</span></span></li>
       <li data-go="qa"><span class="no"></span><span class="nm">Q &amp; A</span></li>
-      <li data-go="apxd"><span class="no">+</span><span class="nm">Appendix<span class="why">Supporting evidence, derivations and sources</span></span></li>
+      <li data-go="apxd"><span class="no">+</span><span class="nm">Appendix<span class="why">Supporting evidence</span></span></li>
     </ol>
   </div>
   <div class="cups">
