@@ -2401,7 +2401,9 @@ body.print #p1p :is(.pq-walker,.pq-in){animation:none} @media print{#p1p :is(.pq
 .slide.agenda.long li:hover .no{transform:translateY(-1px)}
 /* printing from the browser (Print / PDF, Ctrl-P): keep every background colour, as on screen, even with "Background graphics"
    off; without it the agenda's number pills print white with grey shadow blocks */
-@media print{html,body,body *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important} .slide.agenda.long li .no{box-shadow:none}}
+@media print{html,body,body *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important} .slide.agenda.long li .no{box-shadow:none}
+  /* soft shadows become grey rectangles in Mac PDF viewers (Preview): none in print, on any slide */
+  body *{box-shadow:none!important} #intro .emb img{filter:none}}
 /* 01 and 02: the reference's clean theme (a tea-wash band, a light takeaway card); headers use the shared style */
 :is(#intro,#es){--shadow:0 1px 2px rgba(0,0,0,.04),0 14px 34px -14px rgba(36,64,107,.22);background:linear-gradient(180deg,#FAF8F3 0,#fff 120px)}
 :is(#intro,#es) .takeaway{background:#fff;color:var(--navy);border:1px solid var(--line);border-left:4px solid var(--red);border-radius:14px;box-shadow:var(--shadow);font-size:16px;font-weight:500}
