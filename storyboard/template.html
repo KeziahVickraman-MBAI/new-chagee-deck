@@ -2798,7 +2798,6 @@ aside.notes{display:none}
           <li><b>Forecasts sharpen</b>so this dashboard anticipates better, even after protocol changes</li>
         </ol>
         <p class="db-lkp">Over time, Chagee manages its stores better, ahead of demand rather than reacting to it.</p>
-        <span class="golink hw-link db-exec" data-go="p2pilot">Execution steps</span>
       </div>
     </div>
     <div class="p2-ideas">
@@ -2856,7 +2855,7 @@ aside.notes{display:none}
   <aside class="notes">
     <p>This is what a zone manager would see each week. It runs on the same data foundation as proposal one: orders, staffing, machines, the calendar, and years of history across all {{facts.sg_outlets}} outlets. Predictive AI forecasts each outlet by day; the AI agent turns that into recommendations; managers review and approve.</p>
     <p>This is a dashboard the zone manager views, refreshed at seven each morning, here for a City Hall–Marina zone: the One Raffles Place, Suntec City and Raffles City outlets, which we label by area. Take a school-holiday week. For the coming week, it tells the manager whether to reassign staff between outlets, and how many: move one crew member from Raffles Place, where offices quieten, to City Hall, where leisure traffic picks up, and keep Suntec City's crew as it is. Next to it, upcoming peaks and quiet spells to plan around. For the longer term, it compares each outlet's current number of machines with the recommended number: one fewer at Raffles Place, one more at City Hall. And for fresh stock, it compares this week's packages with the recommended weekly amount. The outlets are real; every figure is illustrative, not Chagee data.</p>
-    <p>On the right, how this connects to proposal one. The two run on one model. Every rerouted pickup, delivery pause and voucher from proposal one is an event the model learns from, together with the demand it shifted. As it retrains, its forecasts sharpen, so this dashboard keeps anticipating demand well, even after protocols change, and plans staff, machines and stock in advance. Over time Chagee manages its stores ahead of demand rather than reacting to it. Behind it are four operations ideas: demand forecasting, capacity planning, throughput, and staff cross-training, so crew can cover different roles when they move between outlets. The pilot is in the appendix.</p>
+    <p>On the right, how this connects to proposal one. The two run on one model. Every rerouted pickup, delivery pause and voucher from proposal one is an event the model learns from, together with the demand it shifted. As it retrains, its forecasts sharpen, so this dashboard keeps anticipating demand well, even after protocols change, and plans staff, machines and stock in advance. Over time Chagee manages its stores ahead of demand rather than reacting to it. Behind it are four operations ideas: demand forecasting, capacity planning, throughput, and staff cross-training, so crew can cover different roles when they move between outlets.</p>
   </aside>
 </section>
 
@@ -3189,7 +3188,7 @@ aside.notes{display:none}
     <h2 class="head">Appendix: the detail behind each chapter</h2>
     <p class="sub">Supporting detail for the main presentation, in its order: Proposal 1, Proposal 2, Proposal 3, then shared material. Click a line to open it; use the agenda to return.</p>
     <div class="apxix">
-      <div><h5>Proposal 1 · online retailing</h5><ol><li data-go="p1r">Your tea, sooner: the pickup race</li></ol><h5>Proposal 2 · in-store planning</h5><ol><li data-go="p2pilot">Eight-week zone pilot</li><li data-go="p2f">Financial case</li></ol></div>
+      <div><h5>Proposal 1 · online retailing</h5><ol><li data-go="p1r">Your tea, sooner: the pickup race</li></ol></div>
       <div><h5>Proposal 3 · new store expansion</h5><ol><li data-go="p3x">Validation plan: execution steps</li><li data-go="a2">How the site forecast works</li><li data-go="ap">The new store in money: five-year P&amp;L</li><li data-go="x1">Four scores for every location</li><li data-go="e2t">The expansion decision as a table</li><li data-go="xo">Further application: existing outlets</li></ol></div>
       <div><h5>Shared · data and sources</h5><ol><li data-go="acr">The five-year model behind the financial impact</li><li data-go="adata">Chagee's data collection</li><li data-go="a1">Sources and assumptions</li></ol></div>
     </div>
@@ -3277,67 +3276,6 @@ aside.notes{display:none}
     <p>Watch the race. Travel and preparation happen at the same time, so you collect when both are done: {{pr.near_collect}} minutes at Suntec, {{pr.far_collect}} at Raffles. That is {{pr.sooner}} minutes sooner for the customer, and the busy outlet's queue gets relief.</p>
     <p>On the right is how it would look in the Chagee app: generative AI writes a short, clear message, with an optional complimentary carrier bag, and the customer chooses before paying. Nothing switches without consent. All times here are illustrative, not live Chagee data. About fifty seconds.</p>
   </aside>
-</section>
-
-<!-- ======================================================= APPENDIX: PROPOSAL 2 PILOT (the reference deck's p2x) -->
-<section class="slide content" id="p2pilot" data-chapter="Appendix" data-title="Proposal 2 pilot">
-  <div class="leafart" aria-hidden="true"></div>
-  <div class="inner">
-    <p class="kicker">Appendix · Execution steps · Proposal 2 pilot</p>
-    <h2 class="head">An eight-week zone pilot that separates demand from constraints</h2>
-    <p class="sub lede">One outlet can test forecasting and rosters; a zone is needed to test staff moves and their effect on the network. <span class="golink" data-go="p2b">Back to how it works</span></p>
-    <div class="p2x-grid">
-      <div class="p2x-tl">
-        <p class="hw-ohd">Eight-week zone pilot</p>
-        <ol>
-          <li><span class="wk">W1–2</span><div><b>Baseline and shadow forecasts</b><span>Choose one busy outlet and one or two support outlets. Audit the data and today's planning.</span></div></li>
-          <li><span class="wk">W3–6</span><div><b>Test rosters and staff moves</b><span>Compare matched periods. Include travel time, cover at the lending outlet and holiday demand.</span></div></li>
-          <li><span class="wk">W7–8</span><div><b>Review, diagnose and decide</b><span>Check the benefit across the whole zone. Extend if holiday or peak data is too thin.</span></div></li>
-        </ol>
-        <p class="p2x-own"><b>Owners</b> regional operations · outlet managers · data team · finance</p>
-      </div>
-      <div class="p2x-diag">
-        <p class="hw-ohd">If one outlet takes about three times longer</p>
-        <h4>Investigate before adding capacity</h4>
-        <div class="dg"><b>Before preparation</b><span>Arrival surges, staffing, how orders are released</span></div>
-        <div class="dg"><b>During preparation</b><span>Machine queues, downtime, layout, restocking</span></div>
-        <div class="dg"><b>After drinks are ready</b><span>Hand-over, and customer or rider arrival</span></div>
-      </div>
-    </div>
-  </div>
-  <div class="foot"><span>OPIM639 · Group 3 · Course Link: Topics 3 &amp; 4 · Demand forecasting and resource allocation</span><span class="rail"></span><span class="pg"></span></div>
-  <aside class="notes"><p>The pilot for proposal two. Weeks one and two: pick one busy outlet and one or two support outlets, audit the data and today's planning, and run shadow forecasts. Weeks three to six: test the AI rosters and staff moves against matched periods, counting travel time, cover at the lending outlet and holiday demand. Weeks seven and eight: review the benefit across the whole zone, and extend if holiday or peak observations are too thin. If one outlet takes about three times longer than its peers, investigate before adding capacity: arrivals and staffing before preparation, machines and layout during it, and the hand-over after.</p></aside>
-</section>
-
-<!-- ======================================================= APPENDIX: PROPOSAL 2 FINANCIAL CASE (the reference deck's p2f) -->
-<section class="slide content" id="p2f" data-chapter="Appendix" data-title="Proposal 2 financial case">
-  <div class="leafart" aria-hidden="true"></div>
-  <div class="inner">
-    <p class="kicker">Appendix · Business impact · Proposal 2 financial case</p>
-    <h2 class="head">The financial case depends on realised improvements</h2>
-    <p class="sub lede">Measure avoided paid hours, retained sales and equipment returns across the whole zone. <span class="golink" data-go="p2b">Back to how it works</span></p>
-    <div class="p2x-grid">
-      <div class="p2f-case">
-        <p class="hw-ohd">Illustrative monthly zone case</p>
-        <table class="p2f-t">
-          <tr><th>Benefit or cost</th><th>S$ a month</th></tr>
-          <tr><td>Avoided overtime: {{p2f.hours}} h × S${{p2f.wage|c2}}</td><td>{{p2f.saving}}</td></tr>
-          <tr><td>Recurring system and support cost</td><td>−{{p2f.cost}}</td></tr>
-          <tr class="tot"><td>Net, before set-up and sales upside</td><td>{{p2f.net}}</td></tr>
-        </table>
-        <div class="p2f-be"><b>{{p2f.be_hours}} paid hours a month</b><span>cover the S${{p2f.cost}} recurring cost. Set-up, training and transfer costs are extra.</span></div>
-      </div>
-      <div class="p2x-diag">
-        <p class="hw-ohd">What finance must verify</p>
-        <div class="dg"><b>Labour savings</b><span>Count only fewer paid hours or less overtime. Moving an employee is not itself a saving.</span></div>
-        <div class="dg"><b>Retained sales</b><span>Count otherwise-lost purchases at contribution margin, net of added costs.</span></div>
-        <div class="dg"><b>Waste</b><span>Count only lower write-offs of perishables, not stock moved between outlets.</span></div>
-        <div class="dg"><b>Equipment</b><span>Approve only if the extra cash benefit justifies the installed cost and running expense.</span></div>
-      </div>
-    </div>
-  </div>
-  <div class="foot"><span>OPIM639 · Group 3 · Course Link: Topics 3 &amp; 4 · Demand forecasting and resource allocation</span><span class="rail"></span><span class="pg"></span></div>
-  <aside class="notes"><p>An illustrative monthly case for one pilot zone, on our assumptions, not Chagee's data. Avoiding {{p2f.hours}} overtime hours at the model's wage of about S${{p2f.wage|c2}} an hour saves about S${{p2f.saving}}; less a recurring system cost of S${{p2f.cost}}, that nets about S${{p2f.net}} a month before set-up costs and any sales upside. Put the other way, about {{p2f.be_hours}} paid hours a month cover the recurring cost. Finance should count only real reductions in paid hours, retained sales at contribution margin, and equipment only where the cash benefit justifies it.</p></aside>
 </section>
 
 <!-- ======================================================= APPENDIX: PROPOSAL 3 VALIDATION (execution steps) -->
@@ -4077,7 +4015,7 @@ aside.notes{display:none}
         <div class="rch"><span class="num">2</span><div><span class="own">In-store planning</span><span class="dm"><i>Decision-maker</i>Zone manager / outlet GM</span></div>
           <svg class="rci" viewBox="0 0 32 32" aria-hidden="true"><rect x="4.5" y="7" width="23" height="21" rx="3"/><path d="M4.5 13h23M10.5 4v6M21.5 4v6M11.5 20.5l3.2 3.2 6-6.4"/></svg></div>
         <h5>Which zone should pilot AI-enabled in-store planning?</h5>
-        <div class="act"><span class="k">Recommend<span class="golink" data-go="p2pilot">Execution steps</span></span>An eight-week zone pilot: one busy outlet and one or two support outlets, testing recommended rosters, staff moves, equipment-use and fresh-stock plans, for a manager to approve.</div>
+        <div class="act"><span class="k">Recommend<span class="golink" data-go="p2x">Execution steps</span></span>An eight-week zone pilot: one busy outlet and one or two support outlets, testing recommended rosters, staff moves, equipment-use and fresh-stock plans, for a manager to approve.</div>
         <div class="chk"><span class="k">Proceed only if</span><ul><li>Paid hours and waste fall</li><li>Waits hold or improve</li><li>Net benefit across the zone is positive</li></ul></div>
         <p class="jdg"><span class="k">Judged on</span>Proposed eight-week zone pilot</p>
       </div>
