@@ -719,6 +719,7 @@ html,body{margin:0;background:#E7E3DC;color:var(--ink);font-family:var(--sans);-
 .c5intro.static .c5cap{padding-right:0;font-size:12.5px;margin-top:auto;padding-top:6px}
 .c5intro.static{height:428px;align-items:stretch}
 #c5p .c5intro.static{flex:none;height:440px}
+#c5p .c5intro.static{height:auto} #c5p .c5intro.static .c5g{flex:none}   /* print / .pptx: each card takes its content height, so the caption sits below the pictures, not over them */
 #c5 .c5intro:not(.static){height:436px}   /* the same title on screen: the panel ends above the footer */   /* Proposal 3's two-line title: the panel takes its content height, still above the footer */ .c5intro.static .c5s{min-height:0;overflow:hidden}
 .c5intro.static .c5art{max-height:96px} .c5intro.static .c5clu{max-height:84px} .c5intro.static .c5team{max-height:64px}
 .c5intro.static .c5mini{display:none} .c5intro.static .c5sh{padding:4px 8px} .c5intro.static .c5kp{gap:5px}
