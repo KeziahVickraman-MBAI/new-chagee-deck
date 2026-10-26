@@ -2123,6 +2123,61 @@ body.print #p1p :is(.pq-walker,.pq-in){animation:none} @media print{#p1p :is(.pq
 .fi-chips:is(#fi,#fi *){display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
 .fi-chips span:is(#fi,#fi *){padding:4px 11px;border-radius:999px;background:#fff;font:12px var(--sans);color:var(--ink2)}
 .fi-chips b:is(#fi,#fi *){color:#2F6B45}
+/* ---------------------------------------------------------------- appendix: Chagee Singapore forecast (#sgf)
+   Taken from the reference deck (chagee-deck.vercel.app #17): the rules that style that slide, each scoped to it by an
+   :is(#sgf,#sgf *) on its subject; the footer rail keeps this deck's shared position and red current chapter. */
+#sgf{--shadow:0 1px 2px rgba(0,0,0,.04),0 14px 34px -14px rgba(36,64,107,.22); --wash:#FAF8F3}
+.slide.content .lede:is(#sgf,#sgf *){margin:10px 0 0;font:400 19px/1.35 var(--sans);color:var(--ink2)}
+.slide.content .sub.lede:is(#sgf,#sgf *){font-style:normal}
+.slide.content .sub.lede:is(#sgf,#sgf *){font-size:16px;color:#7A756C}   /* as the reference, where .slide.content .sub comes last */
+#sgf .head{max-width:1000px}
+.sg-left:is(#sgf,#sgf *){display:flex;flex-direction:column;gap:8px;min-height:0}
+.sg-left .sg-tab:is(#sgf,#sgf *){flex:1}
+.sg-memo:is(#sgf,#sgf *){padding:8px 16px 8px;border-radius:14px;background:#FAF8F3}
+.sg-mh:is(#sgf,#sgf *){margin:0 0 2px;font:700 10px var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--taupe)}
+.sg-memo .fit thead:is(#sgf,#sgf *){display:none}
+.sg-memo .fit td:last-child:is(#sgf,#sgf *){background:#F3EFE6}
+.sg-left .fit:is(#sgf,#sgf *){table-layout:fixed}
+.sg-left .fit td:first-child:is(#sgf,#sgf *),.sg-left .fit th:first-child:is(#sgf,#sgf *){width:40%}
+.sg-memo:is(#sgf,#sgf *){padding:6px 16px}
+.sg-memo .fit td:is(#sgf,#sgf *){padding:1.4px 6px}
+.sg-body:is(#sgf,#sgf *){flex:1;min-height:0;margin-top:12px;display:grid;grid-template-columns:1fr 400px;gap:18px}
+.sg-tab .fit td:is(#sgf,#sgf *){padding:1.4px 6px}
+.sgt tr.s td:is(#sgf,#sgf *){color:var(--taupe)}
+.sgt tr.ai td:is(#sgf,#sgf *){color:#2F6B45}
+.sgt tr.ai.b td:is(#sgf,#sgf *){color:#2F6B45}
+.sg-side:is(#sgf,#sgf *){display:flex;flex-direction:column;gap:12px;min-height:0}
+.sg-chart:is(#sgf,#sgf *){flex:1;padding:12px 16px 6px;border-radius:16px;background:#fff;border:1px solid #EEE7DA;box-shadow:var(--shadow);display:flex;flex-direction:column;min-height:0}
+.sgch:is(#sgf,#sgf *){flex:1;min-height:0;width:100%;margin-top:4px}
+.sgv:is(#sgf,#sgf *){font:700 11px var(--sans);fill:#2F6B45}
+.sg-kpis:is(#sgf,#sgf *){display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.sg-kpis>div:is(#sgf,#sgf *){padding:12px 16px;border-radius:16px;background:#F4F8F5;display:flex;flex-direction:column;gap:3px}
+.fi-top:is(#sgf,#sgf *){display:flex;flex-direction:column;gap:6px}
+.fi-t:is(#sgf,#sgf *){font:500 19px var(--serif);color:var(--ink)}
+.fi-key:is(#sgf,#sgf *){display:flex;flex-wrap:wrap;gap:4px 14px;font:11.5px var(--sans);color:var(--ink2)}
+.fi-key span:is(#sgf,#sgf *){display:inline-flex;align-items:center;gap:6px}
+.fi-key i:is(#sgf,#sgf *){display:inline-block;width:11px;height:11px;border-radius:3px}
+.fiax:is(#sgf,#sgf *){font:10.5px var(--sans);fill:#9A9387}
+.fiyr:is(#sgf,#sgf *){font:700 12px var(--sans);fill:var(--ink2);letter-spacing:.04em}
+.fi-k:is(#sgf,#sgf *){margin:0;font:700 10.5px/1.2 var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--navy)}
+.fi-big:is(#sgf,#sgf *){margin:0;font:500 24px/1.1 var(--serif);color:var(--ink)}
+.fi-big.g:is(#sgf,#sgf *){color:#2F6B45}
+.fi-p:is(#sgf,#sgf *){margin:0;font:12px/1.35 var(--sans);color:var(--ink2)}
+.fix-tab:is(#sgf,#sgf *){display:flex;flex-direction:column}
+.fix-tab .fit:is(#sgf,#sgf *){flex:1;height:100%}
+.fix-tab:is(#sgf,#sgf *){padding:10px 16px;border-radius:16px;background:#fff;border:1px solid #EEE7DA}
+.fit:is(#sgf,#sgf *){width:100%;border-collapse:collapse;font:11px/1.25 var(--sans);color:var(--ink2)}
+.fit th:is(#sgf,#sgf *){font:700 10px var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--taupe);text-align:right;padding:2px 6px 5px}
+.fit th:first-child:is(#sgf,#sgf *){text-align:left}
+.fit td:is(#sgf,#sgf *){padding:1.1px 6px;text-align:right;white-space:nowrap}
+.fit td:first-child:is(#sgf,#sgf *){text-align:left;white-space:normal}
+.fit td:last-child:is(#sgf,#sgf *),.fit th:last-child:is(#sgf,#sgf *){background:#FAF8F3}
+.fit tr.h td:is(#sgf,#sgf *){padding-top:5px;font:700 10px var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--navy);text-align:left;background:none}
+.fit tr.b td:is(#sgf,#sgf *){font-weight:700;color:var(--ink)}
+.fit tr.t td:is(#sgf,#sgf *){border-top:1px solid #EEE7DA}
+.fit tr.n td:is(#sgf,#sgf *){border-top:1px solid #BFB6A6;border-bottom:3px double #BFB6A6;color:#2F6B45;background:#F4F8F5}
+.fit tr.i td:is(#sgf,#sgf *){font-style:italic}
+.fit td.neg:is(#sgf,#sgf *){color:var(--red)}
 .slide.content:is(#fi,#fi *){background:linear-gradient(180deg,var(--wash) 0,#fff 120px)}
 .slide.content .kicker:is(#fi,#fi *){font:600 12px/1.2 var(--sans);letter-spacing:.16em;color:#4A6699;margin:0 0 10px}
 .slide.content .head:is(#fi,#fi *){font:500 42px/1.08 var(--serif);color:var(--navy);letter-spacing:-.01em;max-width:1000px}
@@ -3104,11 +3159,61 @@ aside.notes{display:none}
   <img class="sand" src="{img:sand}" alt="">
   <div class="t" style="top:190px">
     <h1>Appendix</h1>
-    <p class="tl">Supporting detail for the main presentation</p>
+    <p class="tl">Supporting details for the presentation</p>
     <div class="rule"></div>
     <p class="meta">Financials &amp; Supporting illustrations for Proposals</p>
   </div>
   <aside class="notes"><p>The appendix, for questions: the detail behind the main slides, in their order. The contents follow on the next slide.</p></aside>
+</section>
+
+<!-- ======================================================= APPENDIX: THE FIVE-YEAR MODEL BEHIND THE FINANCIAL IMPACT
+     The team's five-year model, shown exactly as their screenshot (26 Oct 2026). The table and the assumptions panel are built by
+     build_storyboard.py (fin_model_page) from assumptions.json "financial_model"; the build checks that the rows add up. -->
+<section class="slide content" id="acr" data-chapter="Appendix" data-title="The five-year model behind the financial impact">
+  <div class="leafart" aria-hidden="true"></div>
+  <div class="inner">
+    <p class="kicker">Appendix · Financial impact · Five-year model</p>
+    <p class="exoback screenonly" style="position:absolute;right:250px;top:40px;margin:0"><span class="golink back" data-go="fi" tabindex="0" role="link">← Back to financial impact</span></p>
+    <h2 class="head">The five-year model behind the financial impact</h2>
+    <div class="fmw"><!--FINMODEL--></div>
+  </div>
+  <div class="foot"><span>OPIM639 · Group 3 · illustrative assumptions, not Chagee data</span><span class="rail"></span><span class="pg"></span></div>
+  <aside class="notes">
+    <p>The five-year model behind the financial impact, in thousands of Singapore dollars. Revenue comes from extra cups: cups recovered from walk-aways with proposal one, extra cups served at the peak with proposal two, and extra cups at better-chosen sites with proposal three. Less ingredients and packaging, that gives the gross profit from additional sales.</p>
+    <p>Proposal two also lowers operating costs: staff overhead, fresh-stock waste and tea machines avoided. Against that sit the initiatives' costs: the project team, the platform build, data and cloud set-up, a security and PDPA review, then a run team, maintenance, cloud and AI services, and the switch perks. The net impact turns positive in the first full year of roll-out and the cumulative impact by the year after. The key assumptions are on the right; they are illustrative and to be confirmed with Chagee.</p>
+  </aside>
+</section>
+
+<!-- appendix: Chagee Singapore forecast (#sgf), copied from the reference deck (chagee-deck.vercel.app #17). The tables are built by
+     build_storyboard.py (sgf_table) and the chart is storyboard/sgf_chart.svg, both from assumptions.json "sg_forecast"; the build
+     checks the rows add up, the chart matches and the uplift equals the five-year model's net impact. -->
+<section class="slide content" id="sgf" data-chapter="Appendix" data-title="Financial impact: Chagee Singapore forecast">
+  <div class="leafart" aria-hidden="true"></div>
+  <div class="inner">
+    <p class="kicker">Appendix · Financial impact · Chagee Singapore forecast</p>
+    <h2 class="head">With the proposals, Chagee Singapore profit grows to {{sgf.profit}} by 2030 with a {{sgf.margin}} margin</h2>
+    <p class="sub lede">The whole Singapore business, growing {{sgf.growth}} a year with new outlets ({{sgf.outlets}} by 2030), with and without the proposals.</p>
+    <div class="sg-body">
+      <div class="sg-left"><!--SGFTABLE--></div>
+      <div class="sg-side">
+        <div class="sg-chart">
+          <div class="fi-top"><span class="fi-t">Outlet operating profit, S$m</span>
+            <span class="fi-key"><span><i style="background:#D9D2C5"></i>Without the proposals</span><span><i style="background:#2F6B45"></i>With the proposals</span></span></div>
+          <!--SGFCHART-->
+        </div>
+        <div class="sg-kpis">
+          <div><p class="fi-k">Revenue in 2030</p><p class="fi-big">{{sgf.rev}}</p><p class="fi-p">up {{sgf.revup}} on 2026, with {{sgf.outlets}} outlets</p></div>
+          <div><p class="fi-k">Margin in 2030</p><p class="fi-big g">{{sgf.margin}}</p><p class="fi-p">against {{sgf.margin0}} without the proposals</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>OPIM639 · Group 3</span><span class="rail"></span><span class="pg"></span></div>
+  <aside class="notes">
+    <p>This is the whole Singapore business, not just the impact. We assume {{sgf.growth}} organic growth in cups a year, wages rising {{sgf.wages}} a year, two new outlets in 2027 and one a year after that, so revenue grows from {{sgf.rev0}} in 2026 to {{sgf.rev}} in 2030 across {{sgf.outlets}} outlets.</p>
+    <p>Gross margin is {{sgf.gm}}, in line with Chagee's reported corporate margin. Outlet costs are staff, rent and utilities, and delivery-app commissions. This is outlet-level profit, before head-office costs and the set-up cost of new outlets.</p>
+    <p>The green bars add the three proposals: extra sales, Proposal 2's savings, minus the cost of the initiatives. The uplift row matches the previous slide's net impact. By 2030, outlet profit is {{sgf.profit}} against {{sgf.profit0}} without the proposals, and the margin rises from {{sgf.margin0}} to {{sgf.margin}}. About forty-five seconds.</p>
+  </aside>
 </section>
 
 <!-- ======================================================= APPENDIX: PROPOSAL 1 PICKUP RACE (the reference deck's p1r, opened from slide 08's See illustration,
@@ -3233,23 +3338,6 @@ aside.notes{display:none}
   </aside>
 </section>
 
-<!-- ======================================================= APPENDIX: THE FIVE-YEAR MODEL BEHIND THE FINANCIAL IMPACT
-     The team's five-year model, shown exactly as their screenshot (26 Oct 2026). The table and the assumptions panel are built by
-     build_storyboard.py (fin_model_page) from assumptions.json "financial_model"; the build checks that the rows add up. -->
-<section class="slide content" id="acr" data-chapter="Appendix" data-title="The five-year model behind the financial impact">
-  <div class="leafart" aria-hidden="true"></div>
-  <div class="inner">
-    <p class="kicker">Appendix · Financial impact · Five-year model</p>
-    <p class="exoback screenonly" style="position:absolute;right:250px;top:40px;margin:0"><span class="golink back" data-go="fi" tabindex="0" role="link">← Back to financial impact</span></p>
-    <h2 class="head">The five-year model behind the financial impact</h2>
-    <div class="fmw"><!--FINMODEL--></div>
-  </div>
-  <div class="foot"><span>OPIM639 · Group 3 · illustrative assumptions, not Chagee data</span><span class="rail"></span><span class="pg"></span></div>
-  <aside class="notes">
-    <p>The five-year model behind the financial impact, in thousands of Singapore dollars. Revenue comes from extra cups: cups recovered from walk-aways with proposal one, extra cups served at the peak with proposal two, and extra cups at better-chosen sites with proposal three. Less ingredients and packaging, that gives the gross profit from additional sales.</p>
-    <p>Proposal two also lowers operating costs: staff overhead, fresh-stock waste and tea machines avoided. Against that sit the initiatives' costs: the project team, the platform build, data and cloud set-up, a security and PDPA review, then a run team, maintenance, cloud and AI services, and the switch perks. The net impact turns positive in the first full year of roll-out and the cumulative impact by the year after. The key assumptions are on the right; they are illustrative and to be confirmed with Chagee.</p>
-  </aside>
-</section>
 
 </div></div>
 

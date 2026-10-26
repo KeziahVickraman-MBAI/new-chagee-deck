@@ -626,6 +626,39 @@ def values(d: dict) -> dict:
     got = re.findall(r'class="fiv g"[^>]*>([^<]*)<', svg) + re.findall(r'class="fiv c"[^>]*>([^<]*)<', svg) + re.findall(r'class="fic(?: n)?"[^>]*>([^<]*)<', svg)
     if want != got:
         raise SystemExit(f"build: the financial impact chart's labels differ from financial_model: {got} vs {want}")
+    # appendix, Chagee Singapore forecast (reference deck #17): the team's table (sg_forecast); it must add up, and its uplift is the model's net
+    SG = RAW["sg_forecast"]; SGr = {r[1]: r for r in SG["rows"]["value"] if len(r) > 2}; SGm = {r[1]: r for r in SG["memo"]["value"]}
+    sg = lambda k: [x or 0 for x in SGr[k][2]]
+    close = lambda a, b, t=0.15: abs(a - b) <= t
+    for r in SG["rows"]["value"] + SG["memo"]["value"]:
+        if len(r) > 2 and r[3] is not None and "i" not in r[0].split() and r[1] != "Outlets at year end" and not close(sum(x or 0 for x in r[2]), r[3], 0.25):
+            raise SystemExit(f"build: Singapore forecast row '{r[1]}' does not add up to its total")
+    opex = ("Staff", "Rent and utilities", "Delivery-app commissions", "Equipment: tea machines avoided", "AI platform and team")
+    for i in range(len(SG["years"]["value"])):
+        rev, gp, op = sg("Total revenue")[i], sg("Gross profit")[i], sg("Outlet operating profit")[i]
+        if not (close(sg("Baseline sales")[i] + sg("Additional sales from the proposals")[i], rev) and close(rev + sg("Cost of goods sold")[i], gp)
+                and close(sum(sg(k)[i] for k in opex), sg("Total operating expenses")[i]) and close(gp + sg("Total operating expenses")[i], op)
+                and close(gp / rev * 100, SGr["Gross margin"][2][i]) and close(op / rev * 100, SGr["Operating margin"][2][i])
+                and close(SGm["Outlet operating profit without the proposals"][2][i] + SGm["Uplift from the proposals"][2][i], op)
+                and close(SGm["Uplift from the proposals"][2][i] * 1e3, net[i], 55)):
+            raise SystemExit(f"build: the Singapore forecast does not add up in {SG['years']['value'][i]}, or its uplift is not the five-year model's net impact")
+    outl, yrs_sg = SGr["Outlets at year end"][2], SG["years"]["value"]
+    svg = (HERE / "sgf_chart.svg").read_text(encoding="utf-8")
+    if re.findall(r'class="sgv"[^>]*>([^<]*)<', svg) != [f"{x:.1f}" for x in sg("Outlet operating profit")]:
+        raise SystemExit("build: the Singapore forecast chart's labels differ from sg_forecast")
+    hs = [float(h) for h in re.findall(r'<rect [^>]*height="([\d.]+)"', svg)]
+    bars = [x for pair in zip(SGm["Outlet operating profit without the proposals"][2], sg("Outlet operating profit")) for x in pair]
+    if len(hs) != len(bars) or any(abs(h / 8.08 - b) > 0.1 for h, b in zip(hs, bars)):
+        raise SystemExit("build: the Singapore forecast chart's bars differ from sg_forecast")
+    pc = lambda x: f"{x * 100:.0f}%"
+    v.update({"sgf.profit": f"S${sg('Outlet operating profit')[-1]:.1f}m", "sgf.margin": f"{SGr['Operating margin'][2][-1]:.1f}%",
+              "sgf.margin0": f"{SGm['Operating margin without the proposals'][2][-1]:.1f}%", "sgf.profit0": f"S${SGm['Outlet operating profit without the proposals'][2][-1]:.1f}m",
+              "sgf.growth": pc(SG["growth"]["value"]), "sgf.wages": pc(SG["wage_growth"]["value"]), "sgf.gm": pc(SG["gross_margin"]["value"]),
+              "sgf.outlets": str(outl[-1]), "sgf.rev0": f"S${sg('Total revenue')[0]:.1f}m", "sgf.rev": f"S${sg('Total revenue')[-1]:.1f}m",
+              "sgf.revup": pc(sg("Total revenue")[-1] / sg("Total revenue")[0] - 1), "sgf.y0": str(yrs_sg[0]), "sgf.y1": str(yrs_sg[1])})
+    new = [b - a for a, b in zip(outl, outl[1:])]
+    if new != [2] + [1] * (len(new) - 1):
+        raise SystemExit("build: the Singapore forecast's notes say two new outlets in the second year and one a year after; check sg_forecast outlets")
     for kind, key in (("mach", "machines"), ("stock", "stock")):
         for o, (now, rec) in PDB[key].items():
             v[f"p2.{kind}_{o}_now"], v[f"p2.{kind}_{o}_rec"] = now, rec
@@ -1117,6 +1150,26 @@ def fin_model_page() -> str:
     return "".join(h)
 
 
+def sgf_table() -> str:
+    """Appendix: the team's Chagee Singapore forecast (assumptions.json sg_forecast), in the reference deck's markup."""
+    SG = RAW["sg_forecast"]; years = SG["years"]["value"]
+    def cell(x, pct, tot=False):
+        if x is None: return "<td>–</td>"
+        if pct: return f"<td>{x:.1f}%</td>"
+        t = f"{x}" if isinstance(x, int) else f"({abs(x):.1f})" if x < 0 else f"{x:.1f}"
+        return f"<td{'' if tot or x >= 0 else ' class=neg'}>{t}</td>"
+    def table(rows):
+        h = [f"<table class=\"fit sgt\"><thead><tr><th>S$ millions unless stated</th>{''.join(f'<th>{y}</th>' for y in years)}<th>Total</th></tr></thead><tbody>"]
+        for r in rows:
+            if r[0] == "h":
+                h.append(f"<tr class=\"h\"><td colspan=\"{len(years) + 2}\">{r[1]}</td></tr>"); continue
+            pct = "i" in r[0].split()
+            h.append(f"<tr class=\"{r[0]}\"><td>{r[1]}</td>{''.join(cell(x, pct) for x in r[2])}{'<td></td>' if r[3] is None else cell(r[3], pct, True)}</tr>")
+        return "".join(h) + "</tbody></table>"
+    return (f"<div class=\"fix-tab sg-tab\">{table(SG['rows']['value'])}</div>"
+            f"<div class=\"sg-memo\"><p class=\"sg-mh\">For comparison · without the proposals</p>{table(SG['memo']['value'])}</div>")
+
+
 def build() -> Path:
     d = ensure_data()
     # the GM's decisions, recomputed from sim/ on every build (not read from data.json)
@@ -1147,6 +1200,7 @@ def build() -> Path:
     html = html.replace("<!--MBAPPX1-->", mx[0]).replace("<!--MBAPPX2-->", mx[1]).replace("<!--MBAPPX3-->", mx[2])
     html = html.replace("<!--FINMODEL-->", fin_model_page())
     html = html.replace("<!--FICHART-->", (HERE / "fi_chart.svg").read_text(encoding="utf-8").strip())
+    html = html.replace("<!--SGFTABLE-->", sgf_table()).replace("<!--SGFCHART-->", (HERE / "sgf_chart.svg").read_text(encoding="utf-8").strip())
     html = html.replace("<!--APPENDIX-->", appendix()).replace("<!--NMAPPENDIX-->", nm_appendix()).replace("<!--TIERS-->", tiers_table())
     js = "\n".join((ROOT / "sim" / f).read_text(encoding="utf-8") for f in ("sim.js", "store.js", "counter.js", "sitepick.js", "ladder.js", "benefit.js", "siteext.js", "sitemodel.js", "newmarket.js", "pnl.js", "members.js", "squadcast.js", "crewtool.js", "toppings.js"))
     js += "\n" + (HERE / "deck.js").read_text(encoding="utf-8")

@@ -18,6 +18,7 @@
     }
   },
   "_sources": {
+    "T-team-sg-forecast": "The team's Chagee Singapore forecast, the reference deck's appendix slide (chagee-deck.vercel.app #17, 'Financial impact: Chagee Singapore forecast', fetched 26 Oct 2026), shown exactly on the appendix page of the same name. The team's figures and assumptions, not Chagee data.",
     "T-team-five-year-model": "The team's five-year financial model (screenshot supplied by the user, 26 Oct 2026), shown exactly on the appendix page 'The five-year model behind the financial impact'. Its inputs are the team's; its claim that some are based on Chagee's real online data is not verified in this deck.",
     "T-online-brief": "Team brief 'CHAGEE Singapore: AI-Enabled Online Retailing Business Plan' (Revan, Oct 2026; local copy 'CHAGEE online retailing (Revan).docx.pdf'). Its figures are reconciled in the appendix, not copied; its '1,500 cups a day' (Q2 2025 call) could not be verified and is not used.",
     "L-sg-locator-oct26": "CHAGEE Singapore store locator, https://www.chagee.com.sg/en/stores, checked 24 Oct 2026: 46 outlets listed (a 'Nearby stores' list, possibly incomplete).",
@@ -3979,6 +3980,301 @@
       "range": null,
       "source": "T-team-five-year-model",
       "rationale": "As shown. UNVERIFIED: this deck holds no Chagee online data; flagged to the user."
+    }
+  },
+  "sg_forecast": {
+    "_note": {
+      "value": "Appendix: Chagee Singapore forecast (slide id sgf), copied exactly from the team's reference deck (chagee-deck.vercel.app #17) on 26 Oct 2026",
+      "unit": "text",
+      "range": null,
+      "source": "T-team-sg-forecast",
+      "rationale": "The whole Singapore business, 2026 to 2030, S$ millions unless stated, with and without the proposals. Rows are [row style, label, values by year, total]; percentages are in percent; None is shown as a dash. The build checks the rows add up, the margins follow, the chart matches and the uplift row equals the five-year model's net impact (financial_model). Outlet-level profit, before head-office costs and new-outlet set-up. The team's figures, not Chagee data; 54% gross margin is Chagee's group-wide figure (L-chagee-q2-2026-call), not Singapore's."
+    },
+    "years": {
+      "value": [
+        2026,
+        2027,
+        2028,
+        2029,
+        2030
+      ],
+      "unit": "calendar years",
+      "range": null,
+      "source": "T-team-sg-forecast",
+      "rationale": "As shown."
+    },
+    "rows": {
+      "value": [
+        [
+          "s",
+          "Outlets at year end",
+          [
+            44,
+            46,
+            47,
+            48,
+            49
+          ],
+          null
+        ],
+        [
+          "s",
+          "Cups sold (millions)",
+          [
+            10.6,
+            11.2,
+            12.0,
+            12.7,
+            13.4
+          ],
+          59.9
+        ],
+        [
+          "h",
+          "Revenue"
+        ],
+        [
+          "",
+          "Baseline sales",
+          [
+            62.3,
+            65.6,
+            69.9,
+            73.5,
+            77.3
+          ],
+          348.6
+        ],
+        [
+          "ai",
+          "Additional sales from the proposals",
+          [
+            null,
+            0.5,
+            1.2,
+            1.5,
+            1.8
+          ],
+          5.0
+        ],
+        [
+          "b t",
+          "Total revenue",
+          [
+            62.3,
+            66.1,
+            71.1,
+            75.0,
+            79.1
+          ],
+          353.6
+        ],
+        [
+          "",
+          "Cost of goods sold",
+          [
+            -28.7,
+            -30.3,
+            -32.3,
+            -34.1,
+            -35.9
+          ],
+          -161.3
+        ],
+        [
+          "b t",
+          "Gross profit",
+          [
+            33.6,
+            35.9,
+            38.7,
+            40.9,
+            43.2
+          ],
+          192.3
+        ],
+        [
+          "i",
+          "Gross margin",
+          [
+            54.0,
+            54.2,
+            54.5,
+            54.6,
+            54.6
+          ],
+          null
+        ],
+        [
+          "h",
+          "Operating expenses"
+        ],
+        [
+          "",
+          "Staff",
+          [
+            -8.6,
+            -8.9,
+            -9.3,
+            -9.7,
+            -10.2
+          ],
+          -46.8
+        ],
+        [
+          "",
+          "Rent and utilities",
+          [
+            -9.2,
+            -9.4,
+            -9.8,
+            -10.0,
+            -10.2
+          ],
+          -48.6
+        ],
+        [
+          "",
+          "Delivery-app commissions",
+          [
+            -5.6,
+            -5.9,
+            -6.3,
+            -6.6,
+            -7.0
+          ],
+          -31.4
+        ],
+        [
+          "ai",
+          "Equipment: tea machines avoided",
+          [
+            null,
+            0.0,
+            0.1,
+            0.1,
+            0.1
+          ],
+          0.3
+        ],
+        [
+          "ai",
+          "AI platform and team",
+          [
+            -0.1,
+            -0.6,
+            -0.4,
+            -0.4,
+            -0.4
+          ],
+          -1.8
+        ],
+        [
+          "b t",
+          "Total operating expenses",
+          [
+            -23.5,
+            -24.8,
+            -25.6,
+            -26.6,
+            -27.7
+          ],
+          -128.2
+        ],
+        [
+          "b n",
+          "Outlet operating profit",
+          [
+            10.1,
+            11.1,
+            13.1,
+            14.3,
+            15.5
+          ],
+          64.1
+        ],
+        [
+          "i",
+          "Operating margin",
+          [
+            16.3,
+            16.7,
+            18.4,
+            19.1,
+            19.6
+          ],
+          null
+        ]
+      ],
+      "unit": "S$ millions unless stated",
+      "range": null,
+      "source": "T-team-sg-forecast",
+      "rationale": "As shown on the reference slide."
+    },
+    "memo": {
+      "value": [
+        [
+          "",
+          "Outlet operating profit without the proposals",
+          [
+            10.2,
+            11.0,
+            12.0,
+            13.0,
+            13.9
+          ],
+          60.2
+        ],
+        [
+          "i",
+          "Operating margin without the proposals",
+          [
+            16.4,
+            16.8,
+            17.2,
+            17.6,
+            18.0
+          ],
+          null
+        ],
+        [
+          "b ai t",
+          "Uplift from the proposals",
+          [
+            -0.1,
+            0.0,
+            1.0,
+            1.3,
+            1.6
+          ],
+          3.9
+        ]
+      ],
+      "unit": "S$ millions unless stated",
+      "range": null,
+      "source": "T-team-sg-forecast",
+      "rationale": "The 'For comparison · without the proposals' box, as shown."
+    },
+    "growth": {
+      "value": 0.03,
+      "unit": "organic growth in cups a year",
+      "range": null,
+      "source": "T-team-sg-forecast",
+      "rationale": "As in the reference slide's subtitle and notes; the team's assumption."
+    },
+    "wage_growth": {
+      "value": 0.03,
+      "unit": "rise in wages a year",
+      "range": null,
+      "source": "T-team-sg-forecast",
+      "rationale": "As in the reference slide's notes; the team's assumption."
+    },
+    "gross_margin": {
+      "value": 0.54,
+      "unit": "gross margin, share of revenue",
+      "range": null,
+      "source": "L-chagee-q2-2026-call",
+      "rationale": "The reference slide's notes: 'in line with Chagee's reported corporate margin'. The Q2 2026 earnings call reports a group gross margin of 54%, flat year on year; group-wide, not Singapore."
     }
   }
 }
