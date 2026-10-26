@@ -42,9 +42,10 @@ test("members: the scenario table equals members.expected_table", () => {
 
 test("members: each quote is word for word in its source text", () => {
   const tpl = fs.readFileSync(path.join(__dirname, "..", "storyboard", "template.html"), "utf8");
+  const onDeck = tpl.includes('id="am2"');   // the membership slides left the deck on 26 Oct 2026; the quotes stay checked against their sources
   for (const q of RAW.members.quotes.value) {
     assert.ok(q.excerpt.includes(q.text), q.id);
-    assert.ok(tpl.includes(`{{s.${q.id}}}`), `${q.id} is placed on the slide by placeholder`);
+    if (onDeck) assert.ok(tpl.includes(`{{s.${q.id}}}`), `${q.id} is placed on the slide by placeholder`);
   }
   // the course quote against the course file itself, when it is on this machine
   const pptx = path.join(process.env.HOME || "", "Desktop", "SMU_MBAI", "Term1", "OPIM639", "slides08-Service-Platforms.pptx");
