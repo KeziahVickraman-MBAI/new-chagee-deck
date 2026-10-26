@@ -702,7 +702,6 @@ html,body{margin:0;background:#E7E3DC;color:var(--ink);font-family:var(--sans);-
 .c5intro.play .c5s[data-k="3"] .c5bub{animation:c5fade .5s ease-out 1.1s both}
 @media (prefers-reduced-motion: reduce){.c5intro *{animation:none!important}}
 /* static copy for print: the three steps side by side on their own page, before the forecaster */
-.ovslide .c5back{position:absolute;left:16px;top:-11px;z-index:3;height:22px;padding:0 9px;font-size:11px;color:var(--taupe);border-color:var(--line);background:#fff} .ovslide .c5back:hover{color:var(--navy)}
 .c5intro.static{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;height:auto;flex:1;padding:12px 14px;margin-top:12px}
 .c5intro.static .c5s{display:flex!important;background:#fff;border-radius:10px;padding:10px 12px}
 .c5intro.static *{animation:none!important}
@@ -3034,7 +3033,7 @@ aside.notes{display:none}
     </div>
     <div class="body" style="grid-template-columns:1fr 300px">
       <div class="panel stepper" data-steps="5" data-kind="site">
-        <div class="ptop"><button class="btn c5back screenonly" title="Back to the three-step overview">← Overview</button><span class="ptitle">New-store forecast</span>
+        <div class="ptop"><span class="ptitle">New-store forecast</span>
           <button class="btn howb screenonly" title="Watch DBSCAN find the clusters, one search at a time">How it works</button>
           <input class="sitesearch screenonly" list="sitelist" placeholder="Find an outlet or town…" aria-label="Find an outlet or town"><datalist id="sitelist"></datalist>
           <span class="ctl screenonly"></span><span class="pnlctl screenonly"></span></div>

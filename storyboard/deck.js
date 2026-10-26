@@ -2262,7 +2262,6 @@
         $(box, ".c5why").innerHTML = `<b>${$(b, ".lb").textContent}</b>: ${b.dataset.why}`;
       }
     });
-    $(sl, ".c5back").addEventListener("click", e => { e.currentTarget.blur(); I.open(1); });
     I.printCopy = () => {
       const pg = document.createElement("section"); pg.className = "slide content"; pg.id = `${sl.id}p`; pg.dataset.chapter = sl.dataset.chapter;
       pg.innerHTML = `<div class="leafart" aria-hidden="true"></div><div class="inner"></div>`;
