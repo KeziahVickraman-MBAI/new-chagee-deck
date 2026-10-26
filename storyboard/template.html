@@ -2490,7 +2490,7 @@ aside.notes{display:none}
     <ol>
       <li data-go="intro"><span class="no"></span><span class="nm">Introduction<span class="why">Chagee Singapore, our scope and why</span></span></li>
       <li data-go="es"><span class="no"></span><span class="nm">Executive Summary and Business Plan<span class="why">Two key challenges and one strategic decision</span></span></li>
-      <li data-go="p1p" data-to="e2"><span class="no"></span><span class="nm">Our Business Recommendations<span class="why">Dynamic demand management · AI-enabled in-store planning · AI-enabled new-store site selection</span></span></li>
+      <li data-go="p1p" data-to="c5"><span class="no"></span><span class="nm">Our Business Recommendations<span class="why">Dynamic demand management · AI-enabled in-store planning · AI-enabled new-store site selection</span></span></li>
       <li data-go="ep"><span class="no"></span><span class="nm">Execution Plan<span class="why">Three pilots and when to proceed</span></span></li>
       <li data-go="fi"><span class="no"></span><span class="nm">Business Impact<span class="why">What the plan is worth, in our model</span></span></li>
       <li data-go="qa"><span class="no"></span><span class="nm">Q &amp; A</span></li>
@@ -2996,75 +2996,6 @@ aside.notes{display:none}
   </aside>
 </section>
 
-<!-- ======================================================= 09 EXPAND: THE EXPANSION MANAGER'S DECISION
-     Two charts in three steps (customer access; new vs moved cups; five-year profit range and payback), drawn by deck.js
-     from DATA.site and DATA.pnl; the table version is in the appendix (#e2t). -->
-<section class="slide content" id="e2" data-no="09" data-chapter="Expand" data-reveal="all" data-title="The expansion manager's decision">
-  <div class="leafart" aria-hidden="true"></div>
-  <div class="inner stepper" data-steps="3">
-    <p class="kicker">Expand · the expansion manager's decision</p>
-    <h2 class="head">{{s.top_hub}} brings in over three times the new cups. Investigate it first, then check the downside</h2>
-    <div class="revctl screenonly" style="top:8px"><span class="lab">Step through</span><span class="ctl"></span></div>
-    <div class="e2v">
-      <div class="e2p">
-        <span class="e2no"><span class="num">1</span>Who the new store serves</span>
-        <button class="btn exob screenonly" data-go="e2t" title="The same comparison with every criterion in one table (appendix)">See decision table →</button>
-        <div class="e2blk" data-s="1">
-          <h3>Customer access<i class="e2tip screenonly" tabindex="0" data-tip="Who buys there: the share of the store's cups bought by people with no Chagee outlet within {{sp.walk_km|g1}} km. It is not the share of new cups; some of these customers already travel further to an outlet.">i</i></h3>
-          <p class="e2sub">Share of its cups from people with no outlet within walking distance</p>
-          <div class="e2hb" data-e2="acc">
-            <span>Beside {{s.bt_outlet}}</span><span class="e2tr"><b class="e2f wo" data-k="wo"></b></span><em>{{r.nd_unmet|pct}}</em>
-            <span>Cluster near {{s.top_hub}}</span><span class="e2tr"><b class="e2f wi" data-k="wi"></b></span><em class="wi">{{r.top_unmet|pct}}</em>
-          </div>
-        </div>
-        <div class="e2blk e2cups" data-s="2">
-          <h3>Cups a day: new demand vs. cups moved from nearby outlets<i class="e2tip screenonly" tabindex="0" data-tip="Whether the cup is new to Chagee: net new cups are sales the network did not make before; moved cups are sales that leave our nearby outlets for the new one.">i</i></h3>
-          <p class="e2sub">Same new outlet, two sites</p>
-          <p class="e2lg"><span class="sw wi"></span>Net new cups <span class="sw mv"></span>Moved from our nearby outlets</p>
-          <div class="e2sb" data-e2="cups">
-            <span>{{s.bt_name}}</span><span class="e2st"><b class="e2f wo" data-k="wo-net">+{{r.nd_net|int}} new</b><b class="e2f mv" data-k="wo-mv">{{r.nd_moved_cups|int}}</b><em>{{r.nd_cups|int}} sold</em></span>
-            <span>{{s.top_hub}}</span><span class="e2st"><b class="e2f wi" data-k="wi-net">+{{r.top_net|int}} new</b><b class="e2f mv" data-k="wi-mv">{{r.top_moved|int}}</b><em class="wi">{{r.top_cups|int}} sold</em></span>
-          </div>
-          <p class="e2take">At {{s.bt_name}}, <b>almost two of every three cups</b> are taken from our own outlets. Near {{s.top_hub}}, <b>{{r.top_new_share|pct}} are new</b>.</p>
-        </div>
-        <span class="golink e2exec" data-go="p3x" tabindex="0" role="link">Execution steps</span>
-      </div>
-      <div class="e2p">
-        <span class="e2no"><span class="num">2</span>Does it pay back?</span>
-        <button class="btn exob screenonly" data-exo="open" title="A further application of the same network view">What about existing outlets?</button>
-        <div class="e2blk e2fin" data-s="3">
-          <h3>Incremental operating profit over five years<i class="e2tip screenonly" tabindex="0" data-tip="Operating profit before depreciation, interest and tax, after the contribution lost at nearby outlets; the range runs from low to high volume. A site pays back when its cumulative cash flow after the opening investment turns positive.">i</i></h3>
-          <p class="e2lg"><span class="dot"></span>Base volume <span class="sw rg"></span>Low to high volume <span class="inv"></span>Investment at opening</p>
-          <svg class="e2rng" viewBox="0 0 520 268" aria-label="Five-year incremental operating profit at each site: low to high volume range, base case and investment at opening"></svg>
-          <div class="e2pb">
-            <div><span>{{s.bt_name}} payback</span><b>Not within {{r.pnl_years}} years</b><small>at low, base or high volume</small></div>
-            <div class="wi"><span>{{s.top_hub}} payback</span><b>About {{r.pnl_wi_payback|g1}} years</b><small>base volume; not within {{r.pnl_years}} years at low volume</small></div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <p class="lnote e2fn">Synthetic searches; illustrative assumptions, not a demonstrated causal gain from AI.</p>
-    <div class="exo keep" role="dialog" aria-label="Further application: optimise the existing store network">
-      <div class="exohd"><span class="exotag">Further application · optimise the existing store network</span><button class="btn screenonly" data-exo="close">← Back to the decision</button></div>
-      <h3>Where should we open, strengthen, relocate or consolidate?</h3>
-      <p class="exosub">The network view can also help investigate existing locations—not just choose new ones.</p>
-      <div class="exog">
-        <div class="exol"><div class="exomap"><svg class="exosvg" viewBox="0 0 1672 640" preserveAspectRatio="xMidYMid meet" aria-label="Singapore outlets; the selected outlet and where its demand would go"></svg><span class="exohint screenonly">Click an outlet to select it</span></div>
-          <div class="exock"><span class="k">Evidence needed before a real decision</span><ul><li>Costs actually avoided, lease commitments and exit costs</li><li>Customer willingness to switch locations</li><li>Capacity and service levels at nearby outlets</li><li>Customer access and the store's strategic role</li></ul></div></div>
-        <div class="exoside"></div>
-      </div>
-      <p class="exonote">Low sales alone do not justify closure. DBSCAN identifies demand clusters; closure or relocation decisions require a separate network and financial assessment. No closure savings are added to any financial total in this deck.</p>
-    </div>
-  </div>
-  <div class="foot"><span>OPIM639 · Group 3 · Course Link: Topic 3 · Analytics and AI: data-driven demand prediction</span><span class="rail"></span><span class="pg"></span></div>
-  <aside class="notes">
-    <p>The decision for solution three belongs to the expansion manager: which location should we investigate or pilot next? The same new outlet at two sites, in three clicks. One, who it serves: about {{r.top_unmet|pct}} of the cluster site's cups come from people with no outlet within walking distance, against {{r.nd_unmet|pct}} beside {{s.bt_outlet}}. Two, new or moved: near {{s.top_hub}} about {{r.top_net|int}} of {{r.top_cups|int}} cups a day are new to Chagee, over three times the {{r.nd_net|int}} beside the existing outlet, where almost two of every three cups are taken from our own outlets. Keep the two measures apart: access is who buys there; net new is whether the cup would otherwise have been sold by Chagee at all.</p>
-    <p>Three, does it pay back: incremental operating profit over {{r.pnl_years}} years, the dot at base volume, the bar from low to high volume, the dashed marker the investment at opening. The cluster site makes about {{r.pnl_wi_op5|sgm}} at base volume on {{r.pnl_wi_invest|sgm}} invested, including its share of the AI cost, and pays back in about {{r.pnl_wi_payback|g1}} years. Beside the existing outlet it loses about {{r.pnl_wo_op5|sgm}} and never pays back. Then the downside: at low volume the cluster site makes only {{r.pnl_wi_op5_lo|sgm2}} and does not pay back within {{r.pnl_years}} years. Operating profit is before depreciation, interest and tax, after the contribution lost at nearby outlets; payback is when cumulative cash flow after the opening investment turns positive.</p>
-    <p>Say it plainly: DBSCAN does not predict sales or profit. It finds where unserved searches gather; a separate demand model, on our assumptions, estimates sales and cannibalisation, and the searches are synthetic. So the proposal is to investigate, not to open: rerun the method on Chagee's app logs before any lease, and proceed only if most cups come from customers without convenient access, net additional cups carry the case, and profit covers the investment with an acceptable downside. The same comparison as a table is in the appendix. About fifty seconds.</p>
-    <p>If asked about existing outlets, press What about existing outlets? at the top right of the profit panel. The same network view can investigate locations Chagee already has: select an outlet and explore it being temporarily unavailable. The same demand model, run in reverse, shows how much of its demand nearby outlets might keep, how much Chagee might lose, how far customers would travel and how much extra work lands on the receiving outlets. Say clearly: it is an illustrative scenario, not a closure recommendation; low sales alone do not justify closure, and no closure savings are added to any total. Back to the decision returns to this slide. The printed version is in the appendix.</p>
-  </aside>
-</section>
-
 <!-- ======================================================= 10 EXECUTION PLAN
      Copied from the reference deck (chagee-deck.vercel.app #12): static, the whole slide at once. Its styles are the
      reference's, scoped to #ep (the reference's #rc; this deck's #rc, the three-pilot plan, is now in "Considered"). -->
@@ -3189,7 +3120,7 @@ aside.notes{display:none}
     <p class="sub">Supporting detail for the main presentation, in its order: Proposal 1, Proposal 2, Proposal 3, then shared material. Click a line to open it; use the agenda to return.</p>
     <div class="apxix">
       <div><h5>Proposal 1 · online retailing</h5><ol><li data-go="p1r">Your tea, sooner: the pickup race</li></ol></div>
-      <div><h5>Proposal 3 · new store expansion</h5><ol><li data-go="p3x">Validation plan: execution steps</li><li data-go="a2">How the site forecast works</li><li data-go="ap">The new store in money: five-year P&amp;L</li><li data-go="x1">Four scores for every location</li><li data-go="e2t">The expansion decision as a table</li><li data-go="xo">Further application: existing outlets</li></ol></div>
+      <div><h5>Proposal 3 · new store expansion</h5><ol><li data-go="a2">How the site forecast works</li><li data-go="x1">Four scores for every location</li></ol></div>
       <div><h5>Shared · data and sources</h5><ol><li data-go="acr">The five-year model behind the financial impact</li><li data-go="adata">Chagee's data collection</li><li data-go="a1">Sources and assumptions</li></ol></div>
     </div>
     <p class="nextl"><b>Also</b><span class="golink" data-go="cnd">Considered but not for presentation</span></p>
@@ -3278,42 +3209,11 @@ aside.notes{display:none}
   </aside>
 </section>
 
-<!-- ======================================================= APPENDIX: PROPOSAL 3 VALIDATION (execution steps) -->
-<section class="slide content" id="p3x" data-chapter="Appendix" data-title="Proposal 3 validation">
-  <div class="leafart" aria-hidden="true"></div>
-  <div class="inner">
-    <p class="kicker">Appendix · Execution steps · Proposal 3 validation</p>
-    <h2 class="head">Validate the location, then commit on evidence.</h2>
-    <p class="sub lede">Start with the {{s.top_hub}} cluster. Test whether unmet demand translates into viable sales and acceptable returns. <span class="golink back" data-go="e2" tabindex="0" role="link">← Back to proposal</span></p>
-    <div class="p2x-grid">
-      <div class="p2x-tl">
-        <p class="hw-ohd">Three validation stages</p>
-        <ol>
-          <li><span class="wk"></span><div><b>Validate demand</b><span>Rerun the analysis using real app searches and orders. Check distinct potential customers, demand across weeks and coverage by existing outlets.</span></div></li>
-          <li><span class="wk"></span><div><b>Validate the site</b><span>Shortlist available units. Check walking access, footfall, competition and nearby Chagee outlets. Where feasible, test purchase interest through a temporary activation or pickup trial. (<span class="golink mlref" data-go="x1b" tabindex="0" role="link">see simulated ML model</span>)</span></div></li>
-          <li><span class="wk"></span><div><b>Validate the economics</b><span>Use actual rent quotes, fit-out costs, staffing requirements and realistic sales estimates. Recalculate cannibalisation, operating profit and payback under low, base and high demand.</span></div></li>
-        </ol>
-        <p class="p2x-own"><b>Owners</b> Expansion manager · operations · finance · data team</p>
-        <p class="p3x-links">See also<span class="golink" data-go="e2t" tabindex="0" role="link">Decision table</span><span class="golink" data-go="ap" tabindex="0" role="link">Full calculation breakdown</span></p>
-      </div>
-      <div class="p2x-diag">
-        <p class="hw-ohd">Before signing a lease</p>
-        <div class="dg"><b>Does it improve access?</b><span>Will the site serve customers who currently lack a convenient outlet?</span></div>
-        <div class="dg"><b>Does it add demand to Chagee?</b><span>How much business is incremental after sales transferred from nearby outlets?</span></div>
-        <div class="dg"><b>Does the investment hold up?</b><span>Are expected returns acceptable, and can Chagee tolerate the downside?</span></div>
-        <p class="gate"><span class="lab">Decision gate</span><b>Proceed, investigate further, or reject.</b>Commit only when real demand, site checks and local economics support the case.</p>
-      </div>
-    </div>
-  </div>
-  <div class="foot"><span>OPIM639 · Group 3 · Course Link: Topic 3 · Analytics and AI: data-driven demand prediction</span><span class="rail"></span><span class="pg"></span></div>
-  <aside class="notes"><p>The execution steps for proposal three: a proposed validation plan, not a result. Start with the {{s.top_hub}} cluster and test whether its unmet demand becomes viable sales and acceptable returns. First, validate demand: rerun the analysis on real app searches and orders, and check distinct potential customers, demand across weeks and coverage by existing outlets. Second, validate the site: shortlist available units, check walking access, footfall, competition and nearby Chagee outlets, and where feasible test purchase interest with a temporary activation or pickup trial. Third, validate the economics: actual rent quotes, fit-out, staffing and realistic sales, then recalculate cannibalisation, operating profit and payback under low, base and high demand. Before signing a lease, three questions: does it improve access, does it add demand to Chagee after sales moved from nearby outlets, and does the investment hold up, including the downside? The gate: proceed, investigate further or reject, and commit only when real demand, site checks and local economics support the case. The decision table and the full calculation breakdown are linked for questions.</p></aside>
-</section>
-
 <!-- ======================================================= APPENDIX: SITE FORECAST -->
 <section class="slide content a2" id="a2" data-chapter="Appendix" data-title="How the site forecast works">
   <div class="leafart" aria-hidden="true"></div>
   <div class="inner">
-    <p class="kicker">Appendix · How the site forecast works (slide 08)</p>
+    <p class="kicker">Appendix · How the site forecast works</p>
     <h2 class="head">DBSCAN finds where searches bunch up; a proximity model turns a pin into cups</h2>
     <div class="body" style="margin-top:12px">
       <div class="panel">
@@ -3348,90 +3248,6 @@ aside.notes{display:none}
   <aside class="notes">
     <p>Backup for questions on slide 08. Left: DBSCAN in four moves on a toy set. A search is a core point if enough searches sit within the radius; clusters grow from core to core; border points join; the rest is noise. We do not choose the number of clusters.</p>
     <p>Right: every simulated number, in the order the model uses it. The forecast is only as good as these assumptions; with Chagee's real app logs, the first two rows would be replaced by data and the rest would run as is.</p>
-  </aside>
-</section>
-
-<!-- ======================================================= APPENDIX: SLIDE 10 IN MONEY (print companion of the P&L view) -->
-<section class="slide content pnlx" id="ap" data-chapter="Appendix" data-title="The new store in money: five-year P&amp;L">
-  <div class="leafart" aria-hidden="true"></div>
-  <div class="inner">
-    <p class="kicker">Appendix · The new store in money, slide 08 · the printed copy of "What does this mean for P&amp;L?"</p>
-    <p class="exoback screenonly" style="position:absolute;right:250px;top:40px;margin:0"><button class="golink pnlback" title="Back to slide 08's P&amp;L view">← Back to P&amp;L</button></p>
-    <h2 class="head" style="max-width:1010px">Same new outlet, same opening, same counter: the AI site adds about {{r.pnl_up_op5|sgm}} more operating profit over {{r.pnl_years}} years, in our model</h2>
-    <div class="body" style="grid-template-columns:430px 1fr 290px;gap:14px;margin-top:10px">
-      <div style="display:flex;flex-direction:column;gap:10px"><div class="chart"><h5>Annual incremental revenue to Chagee, S$</h5><svg class="pxa" viewBox="0 0 540 250" preserveAspectRatio="xMidYMid meet"></svg></div>
-        <div class="chart"><h5>Cumulative incremental operating profit, S$</h5><svg class="pxc" viewBox="0 0 540 250" preserveAspectRatio="xMidYMid meet"></svg></div></div>
-      <div><div class="ptitle" style="margin-bottom:2px">The bridge, five-year totals, base scenario</div><table class="res pnlbr pxb"></table>
-        <p class="flag" style="margin-top:6px">Illustrative scenarios on our assumptions, not a demonstrated causal gain from AI. DBSCAN finds the search clusters; the assumed demand model estimates the sales. Shaded: the scenario range (our per-outlet volume range), not a confidence interval.</p></div>
-      <div class="pxs" style="display:flex;flex-direction:column;gap:8px"></div>
-    </div>
-  </div>
-  <div class="foot"><span>OPIM639 · Group 3 · Course Link: Topic 3 · Analytics and AI: data-driven demand prediction</span><span class="rail"></span><span class="pg"></span></div>
-  <aside class="notes"><p>Soft copy and print companion of slide 08's P&amp;L view, at the default inputs and the suggested site. The on-screen view updates with the selected site and the assumption sliders; this page shows the defaults.</p></aside>
-</section>
-
-<!-- ======================================================= APPENDIX: THE EXPANSION MANAGER'S DECISION AS A TABLE
-     The earlier main slide 09, kept as it was; its What about existing outlets? opens the same overlay as slide 09. -->
-<section class="slide content" id="e2t" data-chapter="Appendix" data-title="The expansion manager's decision as a table">
-  <div class="leafart" aria-hidden="true"></div>
-  <div class="inner">
-    <p class="kicker">Appendix · Expand · the expansion manager's decision as a table</p>
-    <h2 class="head">Investigate the site that adds customers, then check the downside</h2>
-    <div class="body" style="grid-template-columns:1fr;margin-top:10px">
-      <div class="panel">
-        <div class="ptop"><span class="ptitle">The same new outlet at two sites · synthetic app data · five years, our assumptions</span><button class="btn exob screenonly" data-exo="open" title="A further application of the same network view">What about existing outlets?</button></div>
-        <table class="res e2tab">
-          <tr><th>Criterion</th><th>Beside {{s.bt_outlet}}<br><small>our assumed baseline</small></th><th>Cluster near {{s.top_hub}}<br><small>DBSCAN + demand model</small></th></tr>
-          <tr><td>Customer access: cups from people with no outlet within walking distance</td><td>{{r.nd_unmet|pct}}</td><td><b>{{r.top_unmet|pct}}</b></td></tr>
-          <tr><td>Cups a day the store sells</td><td>{{r.nd_cups|int}}</td><td>{{r.top_cups|int}}</td></tr>
-          <tr><td>Net additional cups a day, after cups moved from nearby outlets</td><td>+{{r.nd_net|int}}</td><td><b>+{{r.top_net|int}}</b></td></tr>
-          <tr><td>Incremental operating profit, five years, base volume</td><td>{{r.pnl_wo_op5|sgm}}</td><td><b>{{r.pnl_wi_op5|sgm}}</b></td></tr>
-          <tr><td>Investment at opening</td><td>{{r.pnl_wo_invest|sgm}}</td><td>{{r.pnl_wi_invest|sgm}} <small>incl. AI share</small></td></tr>
-          <tr><td>Payback</td><td>not within {{r.pnl_years}} years</td><td>about {{r.pnl_wi_payback|g1}} years</td></tr>
-          <tr><td>Downside: low volume, five years</td><td>{{r.pnl_wo_op5_lo|sgm}}</td><td>{{r.pnl_wi_op5_lo|sgm2}}, not paid back in {{r.pnl_years}} years</td></tr>
-          <tr><td>Upside: high volume, five years</td><td>{{r.pnl_wo_op5_hi|sgm}}</td><td>{{r.pnl_wi_op5_hi|sgm}}</td></tr>
-        </table>
-        <p class="lnote" style="margin-top:6px">DBSCAN only finds where unserved searches gather; a separate demand model, on our assumptions, estimates sales. Synthetic searches. Operating profit before depreciation, interest and tax, after the contribution lost at nearby outlets. Every input and year: appendix, Expand.</p>
-      </div>
-    </div>
-    <div class="mdec"><div class="who"><span class="lab">Manager's decision</span><b>Expansion manager</b></div>
-      <div><span class="q">Which location should we investigate or pilot next?</span>
-        <span class="k">Proposed</span>Investigate the cluster near {{s.top_hub}}: rerun the method on Chagee's app logs before any lease or pilot.</div>
-      <div><span class="k">Proceed if, on real data</span><ul><li>most of its cups come from customers without convenient access</li><li>net additional cups, not moved cups, carry the case</li><li>profit covers the investment, with an acceptable downside</li></ul></div></div>
-    <p class="nextl"><b>Back</b><span class="golink" data-go="e2">the expansion manager's decision, as charts</span></p>
-  </div>
-  <div class="foot"><span>OPIM639 · Group 3 · Course Link: Topic 3 · Analytics and AI: data-driven demand prediction</span><span class="rail"></span><span class="pg"></span></div>
-  <aside class="notes">
-    <p>Appendix: the expansion manager's decision as a table, the same comparison as slide 09's charts with every criterion in one place.</p>
-    <p>The decision for solution three belongs to the expansion manager: which location should we investigate or pilot next? The solution: identify underserved search clusters, evaluate candidate locations, and assess net additional demand and financial outcomes. The test: do its expected incremental returns justify the investment?</p>
-    <p>The table puts the same new outlet at two sites and reads down the criteria. Customer access: about {{r.top_unmet|pct}} of the cluster site's cups come from people with no outlet within walking distance, against {{r.nd_unmet|pct}} beside the existing outlet. Net additional demand: about {{r.top_net}} cups a day against {{r.nd_net}}. Incremental operating profit over {{r.pnl_years}} years: about {{r.pnl_wi_op5|sgm}} against {{r.pnl_wo_op5|sgm}}, on {{r.pnl_wi_invest|sgm}} invested, paying back in about {{r.pnl_wi_payback|g1}} years. Then the downside: at low volume the cluster site makes about {{r.pnl_wi_op5_lo|sgm2}} and does not pay back within {{r.pnl_years}} years.</p>
-    <p>Say it plainly: DBSCAN does not predict sales or profit. It finds where unserved searches gather; a separate demand model, on our assumptions, estimates sales and cannibalisation, and the searches are synthetic. So the proposal is to investigate, not to open: rerun the method on Chagee's app logs before any lease. For a new market without app history, external area features and demand scenarios stand in: the optional extension after the close. About fifty seconds.</p>
-    <p>If asked about existing outlets, press What about existing outlets? on the table. The same network view can investigate locations Chagee already has: select an outlet and explore it being temporarily unavailable. The same demand model, run in reverse, shows how much of its demand nearby outlets might keep, how much Chagee might lose, how far customers would travel and how much extra work lands on the receiving outlets. Say clearly: it is an illustrative scenario, not a closure recommendation. The manager's question is whether the location needs operational improvement, relocation or a deeper consolidation review, and that needs costs actually avoided, lease and exit costs, customers' willingness to switch, nearby capacity and service levels, and the store's strategic role. Low sales alone do not justify closure; no closure savings are added to any total. Back to the decision returns to the table. The printed version is in the appendix.</p>
-  </aside>
-</section>
-
-<!-- ======================================================= APPENDIX: FURTHER APPLICATION, EXISTING OUTLETS -->
-<section class="slide content" id="xo" data-chapter="Appendix" data-title="Further application: existing outlets">
-  <div class="leafart" aria-hidden="true"></div>
-  <div class="inner">
-    <p class="kicker">Appendix · Expand · further application</p>
-    <p class="exoback screenonly" style="position:absolute;right:250px;top:40px;margin:0">Opened from <span class="golink" data-go="e2">the expansion manager's decision</span></p>
-    <div class="exo static">
-      <div class="exohd"><span class="exotag">Further application · optimise the existing store network</span><button class="btn screenonly" data-exo="close">← Back to the decision</button></div>
-      <h3>Where should we open, strengthen, relocate or consolidate?</h3>
-      <p class="exosub">The network view can also help investigate existing locations—not just choose new ones.</p>
-      <div class="exog">
-        <div class="exol"><div class="exomap"><svg class="exosvg" viewBox="0 0 1672 640" preserveAspectRatio="xMidYMid meet" aria-label="Singapore outlets; the selected outlet and where its demand would go"></svg><span class="exohint screenonly">Click an outlet to select it</span></div>
-          <div class="exock"><span class="k">Evidence needed before a real decision</span><ul><li>Costs actually avoided, lease commitments and exit costs</li><li>Customer willingness to switch locations</li><li>Capacity and service levels at nearby outlets</li><li>Customer access and the store's strategic role</li></ul></div></div>
-        <div class="exoside"></div>
-      </div>
-      <p class="exonote">Low sales alone do not justify closure. DBSCAN identifies demand clusters; closure or relocation decisions require a separate network and financial assessment. No closure savings are added to any financial total in this deck.</p>
-    </div>
-  </div>
-  <div class="foot"><span>OPIM639 · Group 3 · Course Link: Topic 3 · Analytics and AI: data-driven demand prediction</span><span class="rail"></span><span class="pg"></span></div>
-  <aside class="notes">
-    <p>A further application of the expansion network view, opened from the expansion manager's decision slide. New-store selection stays the main story; this shows the same model looking at an existing outlet instead. The printed scenario takes the outlet whose nearest neighbour is closest and makes it temporarily unavailable: the demand model, run in reverse, splits its cups between nearby outlets and customers lost to Chagee, and compares how far customers travel before and after.</p>
-    <p>It is an illustrative scenario, not a closure recommendation. The model has no capacity limit, so the extra work at receiving outlets needs checking against their real capacity and service levels. Low sales alone do not justify closure: a real decision needs costs actually avoided, lease and exit costs, customers' willingness to switch, nearby capacity, customer access and the store's strategic role. DBSCAN identifies demand clusters; closure or relocation needs a separate network and financial assessment, and no closure savings are added to any total.</p>
   </aside>
 </section>
 
@@ -4023,7 +3839,7 @@ aside.notes{display:none}
         <div class="rch"><span class="num">3</span><div><span class="own">New store expansion</span><span class="dm"><i>Decision-maker</i>Expansion manager</span></div>
           <svg class="rci" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 29s-9-8.2-9-15a9 9 0 0 1 18 0c0 6.8-9 15-9 15Z"/><path d="M16 9.5v8M12 13.5h8"/></svg></div>
         <h5>Which location justifies investment?</h5>
-        <div class="act"><span class="k">Recommend<span class="golink" data-go="p3x">Execution steps</span></span>Investigate the cluster near {{s.top_hub}} using Chagee's real app logs before any lease.</div>
+        <div class="act"><span class="k">Recommend</span>Investigate the cluster near {{s.top_hub}} using Chagee's real app logs before any lease.</div>
         <div class="chk"><span class="k">Proceed only if</span><ul><li>It adds net new demand</li><li>Expected returns cover the investment</li><li>The downside is acceptable</li></ul></div>
         <p class="jdg"><span class="k">Judged on</span>Real app data, site validation and financial assumptions</p>
       </div>
@@ -4919,7 +4735,7 @@ aside.notes{display:none}
   <div class="leafart" aria-hidden="true"></div>
   <div class="inner stepper" data-steps="4">
     <p class="kicker">Considered · The supervised model behind the scores<span class="ext">Extension: where this scales next. Not included in the S$ benefit.</span></p>
-    <p class="exoback screenonly" style="position:absolute;right:72px;top:84px;margin:0;z-index:3;padding:2px 6px;border-radius:4px;background:rgba(255,255,255,.92)"><span class="golink back" data-go="p3x" tabindex="0" role="link">← Back to appendix</span></p>
+    <p class="exoback screenonly" style="position:absolute;right:72px;top:84px;margin:0;z-index:3;padding:2px 6px;border-radius:4px;background:rgba(255,255,255,.92)"><span class="golink back" data-go="ax" tabindex="0" role="link">← Back to appendix</span></p>
     <h2 class="head" style="max-width:1000px">Trained on Singapore's outlets, the model picks where to open in a city where Chagee has no data yet</h2>
     <p class="sub">Supervised learning: keep only the inputs a new city has, test the model on outlets it has not seen, then let it score every spot in a hypothetical city (illustrative, synthetic).</p>
     <div class="body" style="grid-template-columns:1fr 318px;gap:18px;margin-top:10px">
@@ -4956,7 +4772,7 @@ aside.notes{display:none}
   <div class="leafart" aria-hidden="true"></div>
   <div class="inner stepper" data-steps="6">
     <p class="kicker">Considered · From pin to net profit · corporate expansion planning<span class="ext">Extension: where this scales next. Not included in the S$ benefit.</span></p>
-    <p class="exoback screenonly" style="position:absolute;right:72px;top:84px;margin:0;z-index:3;padding:2px 6px;border-radius:4px;background:rgba(255,255,255,.92)"><span class="golink back" data-go="p3x" tabindex="0" role="link">← Back to appendix</span></p>
+    <p class="exoback screenonly" style="position:absolute;right:72px;top:84px;margin:0;z-index:3;padding:2px 6px;border-radius:4px;background:rgba(255,255,255,.92)"><span class="golink back" data-go="ax" tabindex="0" role="link">← Back to appendix</span></p>
     <h2 class="head">From pin to net profit</h2>
     <p class="sub">Six steps from a pin to a go / no-go, on profit net to Chagee overall (illustrative). Decision owner here: the expansion manager.</p>
     <div class="xsteps">
