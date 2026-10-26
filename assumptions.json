@@ -1306,6 +1306,16 @@
       "source": "assumption",
       "rationale": "Proximity split (Huff-style): share bought at store j = pull_j / (outside + sum of pulls). A session next to one store converts 1 / 1.3, about 77%."
     },
+    "pull_example": {
+      "value": {
+        "new_km": 0.3,
+        "outlet_km": 1.2
+      },
+      "unit": "km from one illustrative customer to the new store and to an existing outlet",
+      "range": null,
+      "source": "assumption",
+      "rationale": "Worked example on the appendix page 'The site forecast, simply' (#a2b): one made-up customer, split before and after the new store opens with the same pull and outside-option rule as the model. Not a data point."
+    },
     "dbscan_eps_km": {
       "value": 0.6,
       "unit": "km",

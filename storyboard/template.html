@@ -330,6 +330,16 @@ html,body{margin:0;background:#E7E3DC;color:var(--ink);font-family:var(--sans);-
 .a2bk{display:flex;gap:14px;font-size:11px!important;color:var(--taupe)!important} .a2bk i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
 .a2bk i.nw{background:#2F6B45} .a2bk i.mv{background:#B9B2A6}
 .a2bv{margin-top:auto!important;padding-top:8px;border-top:1px solid var(--line);font-weight:600!important;color:#2F6B45!important}
+.a2bex{background:#fff;border-radius:10px;padding:8px 12px 10px;display:flex;flex-direction:column;gap:5px}
+.a2bmap{width:100%;height:58px;display:block} .a2bmap .rd{stroke:#CFC8BB;stroke-width:2;stroke-dasharray:2 4} .a2bmap .pin{fill:var(--red);stroke:#fff;stroke-width:1.5}
+.a2bmap .you{fill:var(--navy)} .a2bmap .yt{font:700 8.5px var(--sans);fill:#fff} .a2bmap .out{fill:#8E99AD}
+.a2bmap .lab{font:10px var(--sans);fill:var(--ink2)} .a2bmap .km{font:600 10px var(--sans);fill:var(--taupe)}
+.a2brow{display:grid;grid-template-columns:44px 1fr;align-items:center;gap:8px}
+.a2bl{font:600 10px var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--taupe)}
+.a2bsb{display:flex;height:24px;border-radius:6px;overflow:hidden}
+.a2bsb b{display:flex;align-items:center;justify-content:center;min-width:0;font:600 10.5px var(--sans);white-space:nowrap;overflow:hidden}
+.a2bsb .s{background:var(--red);color:#fff} .a2bsb .o{background:#8E99AD;color:#fff} .a2bsb .z{background:#EDE7DC;color:var(--ink2)}
+.a2bch{padding:0 5px;border-radius:4px;font-weight:600;white-space:nowrap} .a2bch.mv{background:#E7E3DC;color:#5E584F} .a2bch.nw{background:#E3EFE6;color:#2F6B45}
 .a2bline{margin:14px 0 6px;padding:10px 16px;border-radius:10px;background:#F4F8F5;font:14px/1.4 var(--sans);color:var(--ink2)}
 .a2bline b{margin-right:10px;font:700 10.5px var(--sans);letter-spacing:.14em;text-transform:uppercase;color:#2F6B45} .a2bline em{font-style:normal;font-weight:600;color:var(--ink)}
 /* ---------- 08 machine ladder ---------- */
@@ -3375,8 +3385,20 @@ aside.notes{display:none}
       </div>
       <div class="a2bc">
         <p class="a2bh"><span class="num">2</span>Feel the pull <i>demand model</i></p>
-        <svg class="a2bsvg" viewBox="0 0 300 140" aria-label="A store's pull: full next door, fading with distance"><line x1="30" y1="118" x2="282" y2="118" class="ax"/><line x1="30" y1="22" x2="30" y2="118" class="ax"/><polygon points="30,118 30.0,26.0 34.1,26.1 38.2,26.5 42.3,27.0 46.4,27.8 50.5,28.8 54.6,30.0 58.7,31.5 62.8,33.1 66.9,34.9 71.0,36.8 75.1,38.9 79.2,41.2 83.3,43.5 87.4,46.0 91.5,48.6 95.6,51.2 99.7,53.9 103.8,56.6 107.9,59.4 112.0,62.2 116.1,65.0 120.2,67.8 124.3,70.5 128.4,73.2 132.5,75.9 136.6,78.5 140.7,81.0 144.8,83.5 148.9,85.8 153.0,88.1 157.1,90.3 161.2,92.4 165.3,94.4 169.4,96.3 173.5,98.1 177.6,99.8 181.7,101.4 185.8,102.9 189.9,104.3 194.0,105.5 198.1,106.7 202.2,107.9 206.3,108.9 210.4,109.8 214.5,110.7 218.6,111.5 222.7,112.2 226.8,112.8 230.9,113.4 235.0,114.0 239.1,114.4 243.2,114.9 247.3,115.3 251.4,115.6 255.5,115.9 259.6,116.2 263.7,116.4 267.8,116.6 271.9,116.8 276.0,117.0 276,118" class="area"/><polyline points="30.0,26.0 34.1,26.1 38.2,26.5 42.3,27.0 46.4,27.8 50.5,28.8 54.6,30.0 58.7,31.5 62.8,33.1 66.9,34.9 71.0,36.8 75.1,38.9 79.2,41.2 83.3,43.5 87.4,46.0 91.5,48.6 95.6,51.2 99.7,53.9 103.8,56.6 107.9,59.4 112.0,62.2 116.1,65.0 120.2,67.8 124.3,70.5 128.4,73.2 132.5,75.9 136.6,78.5 140.7,81.0 144.8,83.5 148.9,85.8 153.0,88.1 157.1,90.3 161.2,92.4 165.3,94.4 169.4,96.3 173.5,98.1 177.6,99.8 181.7,101.4 185.8,102.9 189.9,104.3 194.0,105.5 198.1,106.7 202.2,107.9 206.3,108.9 210.4,109.8 214.5,110.7 218.6,111.5 222.7,112.2 226.8,112.8 230.9,113.4 235.0,114.0 239.1,114.4 243.2,114.9 247.3,115.3 251.4,115.6 255.5,115.9 259.6,116.2 263.7,116.4 267.8,116.6 271.9,116.8 276.0,117.0" class="crv"/><line x1="112.0" y1="118" x2="112.0" y2="62.2" class="gd"/><circle cx="112.0" cy="62.2" r="4" class="pt"/><line x1="194.0" y1="118" x2="194.0" y2="105.5" class="gd"/><circle cx="194.0" cy="105.5" r="4" class="pt"/><circle cx="30" cy="26.0" r="4" class="pt"/><text x="42" y="18" class="lab">next door: full pull</text><text x="112" y="134" class="lab" text-anchor="middle">walking distance</text><text x="194" y="134" class="lab" text-anchor="middle">twice as far</text><text x="282" y="22" class="lab mute" text-anchor="end">pull of a store</text></svg>
-        <p>Every customer near the pin is pulled towards every store, and <b>the pull fades with distance</b>: full next door, about {{r.pull_L|pct}} at walking distance, about {{r.pull_2L|pct}} at twice that. Not buying pulls too ({{sp.outside_option|g}}). Each customer's cups split in proportion to the pulls.</p>
+        <div class="a2bex">
+          <svg class="a2bmap" viewBox="0 0 310 58" aria-label="One customer: the new store nearby, an existing outlet further away">
+            <line x1="36" y1="30" x2="291" y2="30" class="rd"/>
+            <path d="M36 30 l-7 -16 a8 8 0 1 1 14 0 z" class="pin"/><circle cx="36" cy="12" r="2.8" fill="#fff"/>
+            <circle cx="87" cy="30" r="7" class="you"/><text x="87" y="33.5" class="yt" text-anchor="middle">C</text>
+            <rect x="282" y="21" width="18" height="18" rx="4" class="out"/>
+            <text x="36" y="52" class="lab" text-anchor="middle">new store</text><text x="87" y="52" class="lab" text-anchor="middle">customer</text><text x="302" y="52" class="lab" text-anchor="end">our outlet</text>
+            <text x="50" y="16" class="km">{{x.ex_new_km|g}} km</text><text x="185" y="21" class="km" text-anchor="middle">{{x.ex_out_km|g}} km</text>
+          </svg>
+          <div class="a2brow"><span class="a2bl">Before</span><div class="a2bsb"><b class="o" style="flex:{{x.ex_b_out}}">outlet {{x.ex_b_out}}%</b><b class="z" style="flex:{{x.ex_b_none}}">no cup {{x.ex_b_none}}%</b></div></div>
+          <div class="a2brow"><span class="a2bl">After</span><div class="a2bsb"><b class="s" style="flex:{{x.ex_a_new}}">new {{x.ex_a_new}}%</b><b class="o" style="flex:{{x.ex_a_out}}">outlet {{x.ex_a_out}}%</b><b class="z" style="flex:{{x.ex_a_none}}">{{x.ex_a_none}}%</b></div></div>
+        </div>
+        <p>Every store pulls on a customer, and <b>nearer pulls harder</b>: at walking distance a store pulls about {{r.pull_L|pct}} as hard as one next door. Not buying pulls too. Their cups split in proportion to the pulls.</p>
+        <p>So when this store opens, its {{x.ex_a_new}}% comes from two places: <span class="a2bch mv">{{x.ex_moved}} points moved from our outlet</span> and <span class="a2bch nw">{{x.ex_gained}} points new</span>, from cups that would not have been bought.</p>
       </div>
       <div class="a2bc">
         <p class="a2bh"><span class="num">3</span>Count new, not moved</p>
@@ -3392,7 +3414,7 @@ aside.notes{display:none}
   <div class="foot"><span>OPIM639 · Group 3 · Course Link: Topic 3 · Analytics and AI: data-driven demand prediction</span><span class="rail"></span><span class="pg"></span></div>
   <aside class="notes">
     <p>The intuition, in three moves. One: DBSCAN looks only at searches from people with no outlet within walking distance, and asks each one whether enough other searches sit close by. Where they crowd together, the centre of the crowd becomes a candidate site; lone searches are ignored, and nobody chooses the number of crowds.</p>
-    <p>Two: DBSCAN does not predict sales. The cups come from a separate distance-based demand model. Every customer near the pin feels a pull towards every store, strongest next door and fading with distance; not buying at all has a pull too. Each customer's cups split in proportion to those pulls, so a new store wins most of the customers right beside it and some of those who used to walk to another outlet.</p>
+    <p>Two: DBSCAN does not predict sales. The cups come from a separate distance-based demand model. Every store pulls on a customer, nearer pulls harder, and not buying at all pulls too; the customer's cups split in proportion to those pulls. Take one customer, {{x.ex_new_km|g}} km from the new store and {{x.ex_out_km|g}} km from our outlet. Before the store opens, {{x.ex_b_out}}% of their potential cups go to the outlet and {{x.ex_b_none}}% are never bought. After it opens, the new store gets {{x.ex_a_new}}%: {{x.ex_moved}} points it takes from our outlet, which are moved cups, and {{x.ex_gained}} points that would not have been bought at all, which are new cups.</p>
     <p>Three: add those shares up. At the top site the new store sells about {{r.top_cups}} cups a day, but {{r.top_moved}} of them would have gone to our own outlets anyway, so about {{r.top_net}} are new to Chagee. That share of new cups decides strong, mixed or weak. The model is calibrated so the average outlet sells {{r.avg_cups}} cups a day, and the searches are synthetic: with Chagee's real app logs, the method runs unchanged.</p>
   </aside>
 </section>

@@ -181,7 +181,18 @@ def values(d: dict) -> dict:
     v["r.decay_km"] = SP["walk_km"]["value"] * SP["decay_share"]["value"]
     v["r.pull_L"] = math.exp(-0.5 * (SP["walk_km"]["value"] / v["r.decay_km"]) ** 2)        # a store's pull at the walking distance and twice it (#a2b)
     v["r.pull_2L"] = math.exp(-0.5 * (2 * SP["walk_km"]["value"] / v["r.decay_km"]) ** 2)
-    if SP["decay_share"]["value"] != 1: raise SystemExit("#a2b labels the pull curve at the walking distance: decay_share must be 1, or relabel the curve")
+    # #a2b's worked example: one customer, an existing outlet, then a new store opens nearer (the model's split rule)
+    EX, OUT = SP["pull_example"]["value"], SP["outside_option"]["value"]
+    pull = lambda km: math.exp(-0.5 * (km / v["r.decay_km"]) ** 2)
+    pn, po = pull(EX["new_km"]), pull(EX["outlet_km"])
+    pc = lambda x: round(100 * x)
+    v["x.ex_new_km"], v["x.ex_out_km"] = EX["new_km"], EX["outlet_km"]
+    v["x.ex_b_out"], v["x.ex_b_none"] = pc(po / (OUT + po)), 100 - pc(po / (OUT + po))
+    v["x.ex_a_new"], v["x.ex_a_out"] = pc(pn / (OUT + po + pn)), pc(po / (OUT + po + pn))
+    v["x.ex_a_none"] = 100 - v["x.ex_a_new"] - v["x.ex_a_out"]
+    v["x.ex_moved"], v["x.ex_gained"] = v["x.ex_b_out"] - v["x.ex_a_out"], v["x.ex_b_none"] - v["x.ex_a_none"]
+    if v["x.ex_moved"] + v["x.ex_gained"] != v["x.ex_a_new"] or min(v["x.ex_moved"], v["x.ex_gained"], v["x.ex_a_none"]) <= 0:
+        raise SystemExit("#a2b worked example: the rounded split no longer adds up")
     v["r.avg_cups"] = RAW["store"]["cups_per_store_per_year"]["value"] / RAW["store"]["open_days_per_year"]["value"]
     v["r.top_moved"] = st["top"]["cannibal"]
     v["r.strong"] = SP["verdict"]["value"]["strong_new_share"]
