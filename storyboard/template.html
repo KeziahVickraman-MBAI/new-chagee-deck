@@ -2621,12 +2621,11 @@ aside.notes{display:none}
   </aside>
 </section>
 
-<!-- ======================================================= 04 ONLINE RETAILING · PROPOSAL 1: HOW IT WORKS (overview; its illustrative explanation, #p1b, follows as an auxiliary view) -->
+<!-- ======================================================= 04 ONLINE RETAILING · PROPOSAL 1: HOW IT WORKS (overview) -->
 <section class="slide content" id="p1h" data-no="04" data-chapter="Online" data-title="Proposal 1: how it works">
   <div class="leafart" aria-hidden="true"></div>
   <div class="inner">
     <p class="kicker hk">Online retailing · how it works</p>
-    <button class="btn auxb screenonly keep" data-go="p1b" title="The same solution, animated step by step (optional)">See illustrative explanation →</button>
     <h2 class="head">From Chagee's data to demand spread across outlets</h2>
     <p class="hsub keep">An AI agent uses predictive AI to recommend, generative AI explains, and people make the final call.</p>
     <div class="h3c keep">
@@ -2660,115 +2659,8 @@ aside.notes{display:none}
   </div>
   <div class="foot"><span>OPIM639 · Group 3 · Course Link: Topics 3 &amp; 9 · Demand prediction and omnichannel fulfilment</span><span class="rail"></span><span class="pg"></span></div>
   <aside class="notes">
-    <p>Section 04, a one-page summary of Proposal 1. For an animated walk-through, press See illustrative explanation at the top right; Back to proposal returns here, and Next carries on to 05. The data: Chagee's app and sales, outlet operations, delivery apps and historical events, meaning decisions made and their profitability outcomes. The proposed AI agent: a trigger when a store's wait is, or is about to go, above {{dm.wait_threshold}} minutes, an illustrative setting; predictive AI recommends an outlet, an action and an incentive within approved rules; generative AI explains it, and customers and managers accept or decline.</p>
+    <p>Section 04, a one-page summary of Proposal 1. The data: Chagee's app and sales, outlet operations, delivery apps and historical events, meaning decisions made and their profitability outcomes. The proposed AI agent: a trigger when a store's wait is, or is about to go, above {{dm.wait_threshold}} minutes, an illustrative setting; predictive AI recommends an outlet, an action and an incentive within approved rules; generative AI explains it, and customers and managers accept or decline.</p>
     <p>What it does at the peak: offers a faster outlet for pickups, and recommends a delivery pause that the zone manager reviews and approves. Every decision and its outcome feed back in, so the model keeps learning. The operations ideas: demand shaping, capacity pooling with nearby outlets, and reducing bottlenecks dynamically. The benefits we expect, to be tested in the pilot: a better-balanced zone and more sales, and higher profit with a better customer experience. About thirty seconds.</p>
-  </aside>
-</section>
-
-<!-- ======================================================= ONLINE RETAILING · PROPOSAL 1: ILLUSTRATIVE EXPLANATION (auxiliary view of 04, #p1h: off the
-     Next path; opened from 04's button, and Back to proposal, Next past its end or Previous before its start return to 04) -->
-<section class="slide content" id="p1b" data-chapter="Online" data-reveal="all" data-aux="p1h" data-title="How the solution works: illustrative explanation">
-  <div class="leafart" aria-hidden="true"></div>
-  <div class="inner">
-    <p class="kicker">Online retailing · illustrative explanation</p>
-    <button class="btn auxb back screenonly" data-go="p1h">← Back to proposal</button>
-    <h2 class="head">From Chagee's data to better-balanced demand</h2>
-    <p class="bprob keep"><b>The solution</b><span>Predictive AI recommends, generative AI explains, and people decide.</span></p>
-    <div class="bsum printonly">
-      <div><h5><span class="num">1</span>Data flows in</h5><p>App and sales, outlet operations, delivery apps and past outcomes feed one planning workspace. Only orders by outlet and time are recorded today; the rest is access to confirm.</p></div>
-      <div><h5><span class="num">2</span>AI recommends; people decide</h5><p>A predicted wait crossing an illustrative trigger prompts the proposal "Offer a nearby outlet with available capacity". Generative AI explains it; the customer accepts or keeps the pickup, and the zone manager approves or declines any delivery pause or promotion.</p></div>
-      <div><h5><span class="num">3</span>Demand is better distributed</h5><p>Some new orders move to the outlet with room; placed orders stay. Outcomes are logged to evaluate and update the model.</p></div>
-    </div>
-    <div class="c5intro keep p1bi" data-st="1" aria-label="How the solution works, in three steps">
-      <ol class="sx"><li data-s="1"><span class="num">1</span>Data flows in</li><li data-s="2"><span class="num">2</span>AI recommends; people decide</li><li data-s="3"><span class="num">3</span>Demand is better distributed</li></ol>
-
-      <div class="c5s" data-k="1">
-        <div class="sc sc1">
-          <svg class="flw" viewBox="0 0 1092 300" aria-hidden="true">
-            <path id="p1fa" d="M344 70 C380 70 376 128 406 128"/><path id="p1fb" d="M344 230 C380 230 376 172 406 172"/>
-            <path id="p1fc" d="M748 70 C712 70 716 128 686 128"/><path id="p1fd" d="M748 230 C712 230 716 172 686 172"/>
-            <g class="dots"><circle r="4.5"><animateMotion dur="1.8s" repeatCount="indefinite" begin="0s"><mpath href="#p1fa"/></animateMotion></circle><circle r="4.5"><animateMotion dur="1.8s" repeatCount="indefinite" begin="-0.9s"><mpath href="#p1fa"/></animateMotion></circle>
-              <circle r="4.5"><animateMotion dur="1.8s" repeatCount="indefinite" begin="-0.4s"><mpath href="#p1fb"/></animateMotion></circle><circle r="4.5"><animateMotion dur="1.8s" repeatCount="indefinite" begin="-1.3s"><mpath href="#p1fb"/></animateMotion></circle>
-              <circle r="4.5"><animateMotion dur="1.8s" repeatCount="indefinite" begin="-0.2s"><mpath href="#p1fc"/></animateMotion></circle><circle r="4.5"><animateMotion dur="1.8s" repeatCount="indefinite" begin="-1.1s"><mpath href="#p1fc"/></animateMotion></circle>
-              <circle r="4.5"><animateMotion dur="1.8s" repeatCount="indefinite" begin="-0.6s"><mpath href="#p1fd"/></animateMotion></circle><circle r="4.5"><animateMotion dur="1.8s" repeatCount="indefinite" begin="-1.5s"><mpath href="#p1fd"/></animateMotion></circle></g>
-          </svg>
-          <button class="src part" data-d="app" style="left:24px;top:18px;--i:0"><span class="ic"><svg viewBox="0 0 24 24"><rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M10 18 h4"/></svg></span><span class="tx"><b>App and sales</b><small>orders, location, drink margins</small><span class="tg">orders recorded · rest to confirm</span></span><i class="ii">i</i></button>
-          <button class="src prop" data-d="ops" style="left:24px;top:178px;--i:1"><span class="ic"><svg viewBox="0 0 24 24"><path d="M3 9 L5 4 H19 L21 9 Z M4 9 V20 H20 V9 M9 20 V14 H15 V20"/></svg></span><span class="tx"><b>Outlet operations</b><small>open orders, crew, machines</small><span class="tg">crew and machines to confirm</span></span><i class="ii">i</i></button>
-          <button class="src prop" data-d="dlv" style="left:748px;top:18px;--i:2"><span class="ic"><svg viewBox="0 0 24 24"><circle cx="6" cy="17" r="3"/><circle cx="18" cy="17" r="3"/><path d="M6 17 H13 L16 8 H19 M13 17 L11 11 H7"/></svg></span><span class="tx"><b>Delivery apps</b><small>orders, rider waits</small><span class="tg">platform access to confirm</span></span><i class="ii">i</i></button>
-          <button class="src prop" data-d="past" style="left:748px;top:178px;--i:3"><span class="ic"><svg viewBox="0 0 24 24"><path d="M4 12 a8 8 0 1 0 2.5 -5.8 M4 4 V8 H8 M12 8 V12 L15 14"/></svg></span><span class="tx"><b>Past outcomes</b><small>previous decisions, results</small><span class="tg">not logged yet</span></span><i class="ii">i</i></button>
-          <div class="ws"><span class="ring" aria-hidden="true"></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 L21 8 L12 13 L3 8 Z M3 12 L12 17 L21 12 M3 16 L12 21 L21 16"/></svg><b>Planning workspace</b><small>forecasts · outlet readiness · approved rules</small></div>
-          <p class="leg"><i class="s"></i>solid: recorded today<i class="d"></i>dashed: access Chagee would need to confirm · click a source for details</p>
-        </div>
-        <p class="c5cap">Four sources feed one workspace; most still need access confirmed.</p>
-      </div>
-
-      <div class="c5s" data-k="2">
-        <div class="sc sc2">
-          <div class="zcol">
-            <span class="rt pred">Prediction · predictive AI</span>
-            <div class="zc chart"><p class="zh">Predicted wait at <span data-p1b="busy"></span></p>
-              <svg class="p1tc" viewBox="0 0 372 150" aria-label="Predicted wait at the busy outlet rising past the illustrative trigger"></svg>
-              <label class="thr screenonly">Trigger, illustrative<input type="range" data-p1b="thr"><span data-p1b="th"></span></label>
-              <span class="al"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 16 V11 a6 6 0 0 1 12 0 V16 L20 18 H4 Z M10 21 h4"/></svg>Alert</span>
-              <i class="ii" data-d="pred">i</i></div>
-            <div class="zc rec"><span class="zl">AI proposes</span><b>Offer a nearby outlet with available capacity.</b><i class="ii" data-d="rec">i</i></div>
-          </div>
-          <svg class="zar a1" viewBox="0 0 36 40" aria-hidden="true"><path d="M4 20 H28 M21 12 L30 20 L21 28"/></svg>
-          <div class="zcol">
-            <span class="rt exp">Explanation · generative AI</span>
-            <div class="zc bub"><svg class="spk" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 L13.8 10.2 L21 12 L13.8 13.8 L12 21 L10.2 13.8 L3 12 L10.2 10.2 Z"/></svg>
-              <p>“<span data-p1b="busy"></span> is very busy right now. <span data-p1b="alt"></span>, nearby, has room and can have your drink ready sooner, walk included.”</p>
-              <small>Plain words for the customer; no new figures or reasons.</small><i class="ii" data-d="exp">i</i></div>
-          </div>
-          <svg class="zar a2" viewBox="0 0 36 40" aria-hidden="true"><path d="M4 20 H28 M21 12 L30 20 L21 28"/></svg>
-          <div class="zcol">
-            <span class="rt hum">Human choice</span>
-            <div class="zc who c1"><span class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21 Q4 14 12 14 Q20 14 20 21"/></svg></span>
-              <span class="tx"><b>Customer</b><small>takes the nearby outlet or keeps the original pickup</small><span class="ch"><i class="y">Accept</i><i>Keep original</i></span></span><i class="ii" data-d="cust">i</i></div>
-            <div class="zc who c2"><span class="ic"><svg viewBox="0 0 24 24"><circle cx="10" cy="8" r="3.5"/><path d="M3 20 Q3 13.5 10 13.5 Q13.5 13.5 15 15.5"/><rect x="15" y="12" width="7" height="9" rx="1"/><path d="M17 15 h3 M17 18 h3"/></svg></span>
-              <span class="tx"><b>Zone manager</b><small>reviews a proposed delivery pause or promotion</small><span class="ch"><i class="y">Approve</i><i>Decline</i></span></span><i class="ii" data-d="mgr">i</i></div>
-          </div>
-        </div>
-        <p class="c5cap">The alert comes before the peak; nothing changes until a person decides.</p>
-      </div>
-
-      <div class="c5s" data-k="3">
-        <div class="sc sc3">
-          <svg class="fbk" viewBox="0 0 1092 300" aria-hidden="true"><path class="fl" pathLength="1" d="M165 236 V254 H1084 V80 H1080"/><path class="fl" pathLength="1" d="M750 236 V254"/><path class="hd" d="M1084 72 L1074 80 L1084 88"/></svg>
-          <div class="o busy"><p class="oh"><span class="ic"><svg viewBox="0 0 24 24"><path d="M3 9 L5 4 H19 L21 9 Z M4 9 V20 H20 V9 M9 20 V14 H15 V20"/></svg></span><b data-p1b="busy"></b><span class="tg">busy</span></p>
-            <div class="q" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
-            <p class="nl">New orders</p>
-            <div class="wl"><span>Workload</span><i style="--w0:96%;--w:82%"></i><em>still busy, less so</em></div>
-            <p class="po"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11 V8 a4 4 0 0 1 8 0 V11"/></svg>Placed orders stay here<span class="rc"><i></i><i></i><i></i><i></i></span><i class="ii" data-d="placed">i</i></p></div>
-          <div class="ph"><svg viewBox="0 0 60 96" aria-hidden="true"><rect x="4" y="2" width="52" height="92" rx="9"/><rect class="scr" x="9" y="12" width="42" height="68" rx="3"/><path d="M24 87 h12"/></svg><p>New pickup orders</p></div>
-          <div class="o alt"><p class="oh"><span class="ic"><svg viewBox="0 0 24 24"><path d="M3 9 L5 4 H19 L21 9 Z M4 9 V20 H20 V9 M9 20 V14 H15 V20"/></svg></span><b data-p1b="alt"></b><span class="tg">spare capacity</span></p>
-            <div class="q" aria-hidden="true"><i></i><i></i></div>
-            <p class="nl">Accepted the switch</p>
-            <div class="wl"><span>Workload</span><i style="--w0:30%;--w:52%"></i><em>spare room used</em></div>
-            <p class="po soft">Suggestions stop if it would fill up<i class="ii" data-d="load">i</i></p></div>
-          <span class="tok k" style="left:112px;top:104px;--fx:338px;--fy:-44px;--d:.9s"></span><span class="tok s" style="left:770px;top:104px;--fx:-320px;--fy:-44px;--d:1.25s"></span>
-          <span class="tok k" style="left:148px;top:104px;--fx:302px;--fy:-44px;--d:1.6s"></span><span class="tok s" style="left:806px;top:104px;--fx:-356px;--fy:-44px;--d:1.95s"></span>
-          <span class="tok k" style="left:184px;top:104px;--fx:266px;--fy:-44px;--d:2.3s"></span>
-          <div class="fbx"><div class="mini" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M10 18 h4"/></svg><svg viewBox="0 0 24 24"><path d="M3 9 L5 4 H19 L21 9 Z M4 9 V20 H20 V9 M9 20 V14 H15 V20"/></svg><svg viewBox="0 0 24 24"><circle cx="6" cy="17" r="3"/><circle cx="18" cy="17" r="3"/><path d="M6 17 H13 L16 8 H19 M13 17 L11 11 H7"/></svg><svg viewBox="0 0 24 24"><path d="M4 12 a8 8 0 1 0 2.5 -5.8 M4 4 V8 H8 M12 8 V12 L15 14"/></svg></div><b>Data sources</b></div>
-          <p class="fbl">Evaluate outcomes and update the model.<small>(continuous learning)</small><i class="ii" data-d="fb">i</i></p>
-          <div class="cons"><span>Course concepts</span><button class="con" data-d="shape">Demand shaping<i class="ii">i</i></button><button class="con" data-d="pool">Capacity pooling<i class="ii">i</i></button><button class="con" data-d="bott">Bottleneck management<i class="ii">i</i></button></div>
-          <span class="golink xl exchip" data-go="p1x">Execution steps</span>
-        </div>
-        <p class="c5cap">A few new orders move to the outlet with room; placed orders stay put.</p>
-      </div>
-
-      <div class="pop" role="status" aria-live="polite"><button class="x" aria-label="Close">×</button><b></b><p></p></div>
-      <div class="c5nav screenonly"><span class="c5dots"><i></i><i></i><i></i></span><span class="c5n"></span>
-        <button class="btn" data-c5="replay" title="Play this step's animation again">↻ Replay</button>
-        <button class="btn" data-c5="prev">◀ Previous</button><button class="btn primary" data-c5="next">Next ▶</button></div>
-    </div>
-    <div class="takeaway btake"><span class="lab">TAKEAWAY</span><span>Help customers find convenient options while making better use of nearby capacity.<small>Expected outcomes to test in the pilot, not a promised increase in sales or profit.</small></span></div>
-  </div>
-  <div class="foot"><span>OPIM639 · Group 3 · Course Link: Topics 3 &amp; 9 · Demand prediction and omnichannel fulfilment</span><span class="rail"></span><span class="pg"></span></div>
-  <aside class="notes">
-    <p>How the solution works, in three steps; Next, Previous and Replay drive it, and the small i icons open the detail. Step one, data flows in. Four sources feed one planning workspace: app and sales, meaning orders, customer location and drink margins; outlet operations, meaning open orders, crew and machines; delivery apps, meaning delivery orders and rider waits; and past outcomes, meaning earlier recommendations, decisions and results. Only orders by outlet and time are recorded today, as far as we know; location needs the customer's permission, and the rest needs access or logging that Chagee would have to confirm.</p>
-    <p>Step two, AI recommends and people decide. The busy outlet's predicted wait rises and crosses the trigger; the forty minutes is the reference example, an illustrative setting, not a validated rule. Predictive AI proposes one thing: offer a nearby outlet with available capacity. Generative AI only explains that in plain words; it does not add figures or reasons. Then people decide: the customer accepts or keeps the original pickup, and the zone manager approves or declines any delivery pause or promotion.</p>
-    <p>Step three, demand is better distributed. A few new orders go to the outlet with room, others keep their choice, and orders already placed stay where they were placed. The busy outlet is still busy, just less so. Every decision and outcome goes back to the data, to evaluate it and update the model. The course ideas: demand shaping, capacity pooling, limited by travel, delivery coverage and willingness to switch, and bottleneck management. The takeaway: help customers find convenient options while making better use of nearby capacity. These are outcomes to test in the pilot, not promised sales. Then try the customer experience on the next slide. About one minute.</p>
   </aside>
 </section>
 
