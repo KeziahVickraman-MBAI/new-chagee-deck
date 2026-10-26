@@ -312,6 +312,26 @@ html,body{margin:0;background:#E7E3DC;color:var(--ink);font-family:var(--sans);-
 .simtab td:first-child{font-weight:600;color:var(--ink);white-space:nowrap}
 .simtab td:last-child{text-align:right;color:var(--navy);font-weight:600;white-space:nowrap}
 .simtab .num{width:17px;height:17px;font-size:10px;margin-right:6px}
+/* appendix: the site forecast, simply (#a2b): three cards, schematic pictures, one-line summary */
+#a2b .sub{margin-top:8px}
+.a2bg{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:16px}
+.a2bc{background:var(--cream);border-radius:12px;padding:14px 18px;display:flex;flex-direction:column;gap:8px}
+.a2bc>p{margin:0;font:13px/1.45 var(--sans);color:var(--ink2)} .a2bc b{color:var(--ink)}
+.a2bh{display:flex;align-items:center;gap:8px;font:500 19px/1.2 var(--serif)!important;color:var(--ink)!important}
+.a2bh i{margin-left:auto;font:600 10px/1 var(--sans);font-style:normal;letter-spacing:.12em;text-transform:uppercase;color:var(--taupe)}
+.a2bsvg{width:100%;height:150px;display:block;background:#fff;border-radius:10px}
+.a2bsvg .dn{fill:#C9C2B5} .a2bsvg .dc{fill:var(--red);opacity:.8} .a2bsvg .crowd{fill:none;stroke:var(--red);stroke-width:1.5;stroke-dasharray:4 3}
+.a2bsvg .pin{fill:var(--red);stroke:#fff;stroke-width:1.5} .a2bsvg .lab{font:10.5px var(--sans);fill:var(--ink2)} .a2bsvg .lab.mute{fill:var(--taupe)}
+.a2bsvg .ax{stroke:#CFC8BB;stroke-width:1} .a2bsvg .area{fill:var(--red);opacity:.1} .a2bsvg .crv{fill:none;stroke:var(--red);stroke-width:2.2}
+.a2bsvg .gd{stroke:var(--red);stroke-width:1;stroke-dasharray:3 3;opacity:.6} .a2bsvg .pt{fill:#fff;stroke:var(--red);stroke-width:2}
+.a2bbar{display:flex;height:150px;border-radius:10px;overflow:hidden;align-items:stretch;background:#fff}
+.a2bbar span{display:flex;align-items:center;justify-content:center;font:600 13px var(--sans);color:#fff;min-width:88px;white-space:nowrap}
+.a2bbar .nw{flex:var(--n) 1 0;background:#2F6B45} .a2bbar .mv{flex:var(--m) 1 0;background:#B9B2A6}
+.a2bk{display:flex;gap:14px;font-size:11px!important;color:var(--taupe)!important} .a2bk i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+.a2bk i.nw{background:#2F6B45} .a2bk i.mv{background:#B9B2A6}
+.a2bv{margin-top:auto!important;padding-top:8px;border-top:1px solid var(--line);font-weight:600!important;color:#2F6B45!important}
+.a2bline{margin:14px 0 6px;padding:10px 16px;border-radius:10px;background:#F4F8F5;font:14px/1.4 var(--sans);color:var(--ink2)}
+.a2bline b{margin-right:10px;font:700 10.5px var(--sans);letter-spacing:.14em;text-transform:uppercase;color:#2F6B45} .a2bline em{font-style:normal;font-weight:600;color:var(--ink)}
 /* ---------- 08 machine ladder ---------- */
 .lad{display:flex;flex-direction:column;gap:5px;margin-top:6px}
 .lad .hd,.lad .rung{display:grid;grid-template-columns:22px 1.3fr 1.1fr 146px 112px;gap:8px;align-items:center}
@@ -3035,7 +3055,7 @@ aside.notes{display:none}
         <div class="pnlside"></div>
       </div>
     </div>
-    <div class="takeaway"><span class="lab">TAKEAWAY</span><span>Judge a site by the cups it adds to Chagee, not the cups it sells: the cluster near {{s.top_hub}} adds about <b>+{{r.top_net}}</b> a day; beside an existing outlet, the same store adds <b>+{{r.nd_net}}</b>.</span></div>
+    <div class="takeaway"><span class="lab">TAKEAWAY</span><span>Our model picks the site that adds the most cups to Chagee: the cluster near {{s.top_hub}}, about <b>+{{r.top_net}}</b> a day. Judged on sales alone, the same store beside an existing outlet looks busy (about {{r.nd_cups}} cups a day) but adds only <b>+{{r.nd_net}}</b>: the rest moves from the outlet next door.</span></div>
   </div>
   <div class="foot"><span>OPIM639 · Group 3 · Course Link: Topic 3 · Analytics and AI: data-driven demand prediction</span><span class="rail"></span><span class="pg"></span></div>
   <aside class="notes">
@@ -3335,6 +3355,45 @@ aside.notes{display:none}
   <aside class="notes">
     <p>Backup for questions on slide 08. Left: DBSCAN in four moves on a toy set. A search is a core point if enough searches sit within the radius; clusters grow from core to core; border points join; the rest is noise. We do not choose the number of clusters.</p>
     <p>Right: every simulated number, in the order the model uses it. The forecast is only as good as these assumptions; with Chagee's real app logs, the first two rows would be replaced by data and the rest would run as is.</p>
+  </aside>
+</section>
+
+<!-- ======================================================= APPENDIX: THE SITE FORECAST, SIMPLY (#a2b)
+     The intuition behind #a2: DBSCAN only picks the spot; the distance-based demand model turns the spot into cups, then
+     splits them into new and moved. The pictures are schematic; every figure is a token from the build. -->
+<section class="slide content" id="a2b" data-chapter="Appendix" data-title="The site forecast, simply">
+  <div class="leafart" aria-hidden="true"></div>
+  <div class="inner">
+    <p class="kicker">Appendix · How the site forecast works, simply</p>
+    <h2 class="head">DBSCAN picks the spot; a distance model counts the cups</h2>
+    <p class="sub">Two separate jobs. DBSCAN never predicts sales: it only finds where unserved searches crowd together.</p>
+    <div class="a2bg">
+      <div class="a2bc">
+        <p class="a2bh"><span class="num">1</span>Find the crowd <i>DBSCAN</i></p>
+        <svg class="a2bsvg" viewBox="0 0 300 150" aria-label="Scattered searches; one dense crowd circled, with a pin at its centre"><circle cx="102" cy="34" r="3" class="dn"/><circle cx="191" cy="24" r="3" class="dn"/><circle cx="30" cy="81" r="3" class="dn"/><circle cx="24" cy="71" r="3" class="dn"/><circle cx="33" cy="26" r="3" class="dn"/><circle cx="129" cy="123" r="3" class="dn"/><circle cx="48" cy="43" r="3" class="dn"/><circle cx="280" cy="20" r="3" class="dn"/><circle cx="248" cy="52" r="3" class="dn"/><circle cx="53" cy="30" r="3" class="dn"/><circle cx="98" cy="122" r="3" class="dn"/><circle cx="63" cy="91" r="3" class="dn"/><circle cx="163" cy="22" r="3" class="dn"/><circle cx="30" cy="41" r="3" class="dn"/><circle cx="99" cy="91" r="3" class="dn"/><circle cx="230" cy="106" r="3" class="dn"/><circle cx="80" cy="90" r="3" class="dn"/><circle cx="281" cy="30" r="3" class="dn"/><circle cx="153" cy="93" r="3.6" class="dc"/><circle cx="189" cy="94" r="3.6" class="dc"/><circle cx="202" cy="87" r="3.6" class="dc"/><circle cx="180" cy="65" r="3.6" class="dc"/><circle cx="186" cy="75" r="3.6" class="dc"/><circle cx="170" cy="65" r="3.6" class="dc"/><circle cx="163" cy="75" r="3.6" class="dc"/><circle cx="197" cy="58" r="3.6" class="dc"/><circle cx="153" cy="85" r="3.6" class="dc"/><circle cx="202" cy="90" r="3.6" class="dc"/><circle cx="156" cy="58" r="3.6" class="dc"/><circle cx="183" cy="74" r="3.6" class="dc"/><circle cx="159" cy="95" r="3.6" class="dc"/><circle cx="195" cy="84" r="3.6" class="dc"/><circle cx="180" cy="85" r="3.6" class="dc"/><circle cx="205" cy="90" r="3.6" class="dc"/><circle cx="184" cy="87" r="3.6" class="dc"/><circle cx="153" cy="99" r="3.6" class="dc"/><circle cx="193" cy="89" r="3.6" class="dc"/><circle cx="146" cy="74" r="3.6" class="dc"/><circle cx="192" cy="58" r="3.6" class="dc"/><circle cx="175" cy="94" r="3.6" class="dc"/><ellipse cx="178" cy="82" rx="46" ry="38" class="crowd"/><path d="M178 80 l-8 -19 a9 9 0 1 1 16 0 z" class="pin"/><circle cx="178" cy="57" r="3.2" fill="#fff"/><text x="10" y="143" class="lab mute">lone searches: ignored</text><text x="290" y="143" class="lab" text-anchor="end">crowd → candidate pin</text></svg>
+        <p>Keep the searches with no outlet within {{sp.walk_km|g}} km. Ask each one: <b>are at least {{sp.dbscan_min_points}} searches within {{sp.dbscan_eps_km|g}} km of me?</b> Crowds that touch merge into one; lone searches are ignored. The centre of each crowd is a candidate site.</p>
+      </div>
+      <div class="a2bc">
+        <p class="a2bh"><span class="num">2</span>Feel the pull <i>demand model</i></p>
+        <svg class="a2bsvg" viewBox="0 0 300 140" aria-label="A store's pull: full next door, fading with distance"><line x1="30" y1="118" x2="282" y2="118" class="ax"/><line x1="30" y1="22" x2="30" y2="118" class="ax"/><polygon points="30,118 30.0,26.0 34.1,26.1 38.2,26.5 42.3,27.0 46.4,27.8 50.5,28.8 54.6,30.0 58.7,31.5 62.8,33.1 66.9,34.9 71.0,36.8 75.1,38.9 79.2,41.2 83.3,43.5 87.4,46.0 91.5,48.6 95.6,51.2 99.7,53.9 103.8,56.6 107.9,59.4 112.0,62.2 116.1,65.0 120.2,67.8 124.3,70.5 128.4,73.2 132.5,75.9 136.6,78.5 140.7,81.0 144.8,83.5 148.9,85.8 153.0,88.1 157.1,90.3 161.2,92.4 165.3,94.4 169.4,96.3 173.5,98.1 177.6,99.8 181.7,101.4 185.8,102.9 189.9,104.3 194.0,105.5 198.1,106.7 202.2,107.9 206.3,108.9 210.4,109.8 214.5,110.7 218.6,111.5 222.7,112.2 226.8,112.8 230.9,113.4 235.0,114.0 239.1,114.4 243.2,114.9 247.3,115.3 251.4,115.6 255.5,115.9 259.6,116.2 263.7,116.4 267.8,116.6 271.9,116.8 276.0,117.0 276,118" class="area"/><polyline points="30.0,26.0 34.1,26.1 38.2,26.5 42.3,27.0 46.4,27.8 50.5,28.8 54.6,30.0 58.7,31.5 62.8,33.1 66.9,34.9 71.0,36.8 75.1,38.9 79.2,41.2 83.3,43.5 87.4,46.0 91.5,48.6 95.6,51.2 99.7,53.9 103.8,56.6 107.9,59.4 112.0,62.2 116.1,65.0 120.2,67.8 124.3,70.5 128.4,73.2 132.5,75.9 136.6,78.5 140.7,81.0 144.8,83.5 148.9,85.8 153.0,88.1 157.1,90.3 161.2,92.4 165.3,94.4 169.4,96.3 173.5,98.1 177.6,99.8 181.7,101.4 185.8,102.9 189.9,104.3 194.0,105.5 198.1,106.7 202.2,107.9 206.3,108.9 210.4,109.8 214.5,110.7 218.6,111.5 222.7,112.2 226.8,112.8 230.9,113.4 235.0,114.0 239.1,114.4 243.2,114.9 247.3,115.3 251.4,115.6 255.5,115.9 259.6,116.2 263.7,116.4 267.8,116.6 271.9,116.8 276.0,117.0" class="crv"/><line x1="112.0" y1="118" x2="112.0" y2="62.2" class="gd"/><circle cx="112.0" cy="62.2" r="4" class="pt"/><line x1="194.0" y1="118" x2="194.0" y2="105.5" class="gd"/><circle cx="194.0" cy="105.5" r="4" class="pt"/><circle cx="30" cy="26.0" r="4" class="pt"/><text x="42" y="18" class="lab">next door: full pull</text><text x="112" y="134" class="lab" text-anchor="middle">walking distance</text><text x="194" y="134" class="lab" text-anchor="middle">twice as far</text><text x="282" y="22" class="lab mute" text-anchor="end">pull of a store</text></svg>
+        <p>Every customer near the pin is pulled towards every store, and <b>the pull fades with distance</b>: full next door, about {{r.pull_L|pct}} at walking distance, about {{r.pull_2L|pct}} at twice that. Not buying pulls too ({{sp.outside_option|g}}). Each customer's cups split in proportion to the pulls.</p>
+      </div>
+      <div class="a2bc">
+        <p class="a2bh"><span class="num">3</span>Count new, not moved</p>
+        <div class="a2bbar" style="--n:{{r.top_net}};--m:{{r.top_moved}}"><span class="nw">+{{r.top_net}} new</span><span class="mv">{{r.top_moved}} moved</span></div>
+        <p class="a2bk"><span><i class="nw"></i>new to Chagee</span><span><i class="mv"></i>taken from our nearby outlets</span></p>
+        <p>Add up every customer's share: a new store at the top site sells <b>{{r.top_cups}} cups a day</b>. {{r.top_moved}} of them would otherwise have gone to our existing outlets, so <b>+{{r.top_net}} are new to Chagee</b>.</p>
+        <p class="a2bv">Strong site if at least {{r.strong|pct}} of its cups are new; weak below {{r.weak|pct}}.</p>
+      </div>
+    </div>
+    <p class="a2bline"><b>In one line</b>DBSCAN says <em>where</em> to look; the distance model says <em>how many</em> cups a store there would sell, and how many of those are really new.</p>
+    <p class="flag">Calibrated so the average outlet sells {{r.avg_cups}} cups a day. All synthetic: the searches, towns and weights are the team's assumptions, not Chagee app logs. The full step list is on the previous page.</p>
+  </div>
+  <div class="foot"><span>OPIM639 · Group 3 · Course Link: Topic 3 · Analytics and AI: data-driven demand prediction</span><span class="rail"></span><span class="pg"></span></div>
+  <aside class="notes">
+    <p>The intuition, in three moves. One: DBSCAN looks only at searches from people with no outlet within walking distance, and asks each one whether enough other searches sit close by. Where they crowd together, the centre of the crowd becomes a candidate site; lone searches are ignored, and nobody chooses the number of crowds.</p>
+    <p>Two: DBSCAN does not predict sales. The cups come from a separate distance-based demand model. Every customer near the pin feels a pull towards every store, strongest next door and fading with distance; not buying at all has a pull too. Each customer's cups split in proportion to those pulls, so a new store wins most of the customers right beside it and some of those who used to walk to another outlet.</p>
+    <p>Three: add those shares up. At the top site the new store sells about {{r.top_cups}} cups a day, but {{r.top_moved}} of them would have gone to our own outlets anyway, so about {{r.top_net}} are new to Chagee. That share of new cups decides strong, mixed or weak. The model is calibrated so the average outlet sells {{r.avg_cups}} cups a day, and the searches are synthetic: with Chagee's real app logs, the method runs unchanged.</p>
   </aside>
 </section>
 

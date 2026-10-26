@@ -179,6 +179,9 @@ def values(d: dict) -> dict:
     v["r.top_unmet"] = st["top"]["fromUnmet"] / st["top"]["cups"]          # slides 10b and 11: customer access
     v["r.clusters"] = st["clusters"]
     v["r.decay_km"] = SP["walk_km"]["value"] * SP["decay_share"]["value"]
+    v["r.pull_L"] = math.exp(-0.5 * (SP["walk_km"]["value"] / v["r.decay_km"]) ** 2)        # a store's pull at the walking distance and twice it (#a2b)
+    v["r.pull_2L"] = math.exp(-0.5 * (2 * SP["walk_km"]["value"] / v["r.decay_km"]) ** 2)
+    if SP["decay_share"]["value"] != 1: raise SystemExit("#a2b labels the pull curve at the walking distance: decay_share must be 1, or relabel the curve")
     v["r.avg_cups"] = RAW["store"]["cups_per_store_per_year"]["value"] / RAW["store"]["open_days_per_year"]["value"]
     v["r.top_moved"] = st["top"]["cannibal"]
     v["r.strong"] = SP["verdict"]["value"]["strong_new_share"]
