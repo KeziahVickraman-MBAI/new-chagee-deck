@@ -184,13 +184,23 @@
   try { Object.assign(edits, JSON.parse(localStorage.getItem(STORE) || "{}")); } catch (e) {}
   $$(document, "[data-ek]").forEach(el => { if (edits[el.dataset.ek] != null) el.innerHTML = edits[el.dataset.ek]; });
   function setEditing(on) {
-    document.body.classList.toggle("editing", on); $(document, "#editb").classList.toggle("on", on);
+    document.body.classList.toggle("editing", on); $(document, "#editb")?.classList.toggle("on", on);
     $$(document, "[data-ek]").forEach(el => (on ? el.setAttribute("contenteditable", "true") : el.removeAttribute("contenteditable")));
     if (!on && document.activeElement?.blur) document.activeElement.blur();
     if (on) slides.forEach(sl => buildTo(sl, Infinity));                                // edit mode shows every block and step
     toast(on ? "Edit mode: click any text to change it" : "Edits saved in this browser");
   }
-  $(document, "#editb").onclick = () => setEditing(!editingNow());
+  // the toolbar's Download .pptx: the file is built into the deck (build_storyboard.py pptx_file); edit mode stays on the E key
+  $(document, "#pptxb").onclick = () => {
+    const b64 = $(document, "#pptx-data")?.textContent.trim();
+    if (!b64) { toast("No PowerPoint file in this copy: rebuild the deck"); return; }
+    const bin = atob(b64), bytes = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([bytes], { type: "application/vnd.openxmlformats-officedocument.presentationml.presentation" }));
+    a.download = "chagee_storyboard.pptx"; document.body.appendChild(a); a.click(); a.remove();
+    toast("Downloaded the deck as a PowerPoint file");
+  };
   document.addEventListener("input", e => { const el = e.target.closest?.("[data-ek]"); if (!el) return;
     edits[el.dataset.ek] = el.innerHTML; try { localStorage.setItem(STORE, JSON.stringify(edits)); } catch (x) {} });
   document.addEventListener("paste", e => { if (!e.target.closest?.("[data-ek]")) return; e.preventDefault();

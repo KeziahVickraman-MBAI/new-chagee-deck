@@ -1216,8 +1216,29 @@ def build() -> Path:
         if not src.exists():
             raise SystemExit(f"build: slide 09's video needs {src.relative_to(ROOT)}; render it with video/render.js")
         shutil.copyfile(src, MEDIA / dst)
+    # the toolbar's Download .pptx: a picture of every slide as printed (every step shown) with its speaker notes, built in
+    OUT.write_text(OUT.read_text(encoding="utf-8").replace('<script id="pptx-data" type="application/octet-stream"></script>',
+                   f'<script id="pptx-data" type="application/octet-stream">{base64.b64encode(pptx_file()).decode()}</script>'), encoding="utf-8")
     print(f"wrote {OUT.relative_to(ROOT)} ({OUT.stat().st_size / 1e6:.1f} MB)")
     return OUT
+
+
+def pptx_file() -> bytes:
+    """The deck as a PowerPoint file: one full-slide picture per slide (storyboard/export_pptx.js), notes in the notes pane."""
+    import io, tempfile
+    from pptx import Presentation
+    from pptx.util import Emu
+    with tempfile.TemporaryDirectory() as tmp:
+        subprocess.run(["node", str(HERE / "export_pptx.js"), str(OUT), tmp], check=True, cwd=ROOT)
+        notes = json.loads((Path(tmp) / "notes.json").read_text(encoding="utf-8"))
+        prs = Presentation(); prs.slide_width, prs.slide_height = Emu(12192000), Emu(6858000)       # 16:9, 13.33 x 7.5 in
+        for i, ns in enumerate(notes):
+            sl = prs.slides.add_slide(prs.slide_layouts[6])
+            sl.shapes.add_picture(str(Path(tmp) / f"slide-{i + 1:02d}.png"), 0, 0, prs.slide_width, prs.slide_height)
+            if ns:
+                sl.notes_slide.notes_text_frame.text = "\n\n".join(ns)
+        buf = io.BytesIO(); prs.save(buf)
+    return buf.getvalue()
 
 
 if __name__ == "__main__":

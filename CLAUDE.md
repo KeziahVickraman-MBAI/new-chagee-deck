@@ -6,7 +6,7 @@ Style: mirror reference/week5 and week6 (claim headline, explainer panel,
 conclusion, reasoning cards, speaker notes).
 Rules:
 - All numbers come from assumptions.json.
-- Footer reads "OPIM 639 · Group 3", plus the course link on proposal slides
+- Footer reads "OPIM639 · Group 3", plus the course link on proposal slides
   and their appendix pages.
 - Hedge novelty ("to our knowledge"); never invent sources or statistics.
 - If a claim can't be supported, flag it instead of writing it.
