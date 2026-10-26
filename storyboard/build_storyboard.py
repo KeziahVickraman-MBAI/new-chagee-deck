@@ -179,8 +179,6 @@ def values(d: dict) -> dict:
     v["r.top_unmet"] = st["top"]["fromUnmet"] / st["top"]["cups"]          # slides 10b and 11: customer access
     v["r.clusters"] = st["clusters"]
     v["r.decay_km"] = SP["walk_km"]["value"] * SP["decay_share"]["value"]
-    v["r.pull_L"] = math.exp(-0.5 * (SP["walk_km"]["value"] / v["r.decay_km"]) ** 2)        # a store's pull at the walking distance and twice it (#a2b)
-    v["r.pull_2L"] = math.exp(-0.5 * (2 * SP["walk_km"]["value"] / v["r.decay_km"]) ** 2)
     # #a2b's worked example: one customer, an existing outlet, then a new store opens nearer (the model's split rule)
     EX, OUT = SP["pull_example"]["value"], SP["outside_option"]["value"]
     pull = lambda km: math.exp(-0.5 * (km / v["r.decay_km"]) ** 2)

@@ -3384,7 +3384,7 @@ aside.notes{display:none}
         <p>Keep the searches with no outlet within {{sp.walk_km|g}} km. Ask each one: <b>are at least {{sp.dbscan_min_points}} searches within {{sp.dbscan_eps_km|g}} km of me?</b> Crowds that touch merge into one; lone searches are ignored. The centre of each crowd is a candidate site.</p>
       </div>
       <div class="a2bc">
-        <p class="a2bh"><span class="num">2</span>Feel the pull <i>demand model</i></p>
+        <p class="a2bh"><span class="num">2</span>Feel the pull <i>distance model</i></p>
         <div class="a2bex">
           <svg class="a2bmap" viewBox="0 0 310 58" aria-label="One customer: the new store nearby, an existing outlet further away">
             <line x1="36" y1="30" x2="291" y2="30" class="rd"/>
@@ -3397,8 +3397,8 @@ aside.notes{display:none}
           <div class="a2brow"><span class="a2bl">Before</span><div class="a2bsb"><b class="o" style="flex:{{x.ex_b_out}}">outlet {{x.ex_b_out}}%</b><b class="z" style="flex:{{x.ex_b_none}}">no cup {{x.ex_b_none}}%</b></div></div>
           <div class="a2brow"><span class="a2bl">After</span><div class="a2bsb"><b class="s" style="flex:{{x.ex_a_new}}">new {{x.ex_a_new}}%</b><b class="o" style="flex:{{x.ex_a_out}}">outlet {{x.ex_a_out}}%</b><b class="z" style="flex:{{x.ex_a_none}}">{{x.ex_a_none}}%</b></div></div>
         </div>
-        <p>Every store pulls on a customer, and <b>nearer pulls harder</b>: at walking distance a store pulls about {{r.pull_L|pct}} as hard as one next door. Not buying pulls too. Their cups split in proportion to the pulls.</p>
-        <p>So when this store opens, its {{x.ex_a_new}}% comes from two places: <span class="a2bch mv">{{x.ex_moved}} points moved from our outlet</span> and <span class="a2bch nw">{{x.ex_gained}} points new</span>, from cups that would not have been bought.</p>
+        <p><b>The closer a store, the more of a customer's cups it gets.</b> Some cups are never bought at all.</p>
+        <p>When the new store opens, it gets {{x.ex_a_new}}% of this customer's cups: <span class="a2bch mv">{{x.ex_moved}}% taken from our outlet</span> + <span class="a2bch nw">{{x.ex_gained}}% never bought before</span>.</p>
       </div>
       <div class="a2bc">
         <p class="a2bh"><span class="num">3</span>Count new, not moved</p>
@@ -3409,12 +3409,11 @@ aside.notes{display:none}
       </div>
     </div>
     <p class="a2bline"><b>In one line</b>DBSCAN says <em>where</em> to look; the distance model says <em>how many</em> cups a store there would sell, and how many of those are really new.</p>
-    <p class="flag">Calibrated so the average outlet sells {{r.avg_cups}} cups a day. All synthetic: the searches, towns and weights are the team's assumptions, not Chagee app logs. The full step list is on the previous page.</p>
   </div>
   <div class="foot"><span>OPIM639 · Group 3 · Course Link: Topic 3 · Analytics and AI: data-driven demand prediction</span><span class="rail"></span><span class="pg"></span></div>
   <aside class="notes">
     <p>The intuition, in three moves. One: DBSCAN looks only at searches from people with no outlet within walking distance, and asks each one whether enough other searches sit close by. Where they crowd together, the centre of the crowd becomes a candidate site; lone searches are ignored, and nobody chooses the number of crowds.</p>
-    <p>Two: DBSCAN does not predict sales. The cups come from a separate distance-based demand model. Every store pulls on a customer, nearer pulls harder, and not buying at all pulls too; the customer's cups split in proportion to those pulls. Take one customer, {{x.ex_new_km|g}} km from the new store and {{x.ex_out_km|g}} km from our outlet. Before the store opens, {{x.ex_b_out}}% of their potential cups go to the outlet and {{x.ex_b_none}}% are never bought. After it opens, the new store gets {{x.ex_a_new}}%: {{x.ex_moved}} points it takes from our outlet, which are moved cups, and {{x.ex_gained}} points that would not have been bought at all, which are new cups.</p>
+    <p>Two: DBSCAN does not predict sales. The cups come from a separate distance model. Every store pulls on a customer, nearer pulls harder, and not buying at all pulls too; the customer's cups split in proportion to those pulls. Take one customer, {{x.ex_new_km|g}} km from the new store and {{x.ex_out_km|g}} km from our outlet. Before the store opens, {{x.ex_b_out}}% of their potential cups go to the outlet and {{x.ex_b_none}}% are never bought. After it opens, the new store gets {{x.ex_a_new}}%: {{x.ex_moved}} points it takes from our outlet, which are moved cups, and {{x.ex_gained}} points that would not have been bought at all, which are new cups.</p>
     <p>Three: add those shares up. At the top site the new store sells about {{r.top_cups}} cups a day, but {{r.top_moved}} of them would have gone to our own outlets anyway, so about {{r.top_net}} are new to Chagee. That share of new cups decides strong, mixed or weak. The model is calibrated so the average outlet sells {{r.avg_cups}} cups a day, and the searches are synthetic: with Chagee's real app logs, the method runs unchanged.</p>
   </aside>
 </section>
