@@ -2699,7 +2699,7 @@
 
     const pa = document.getElementById("p1a");
     if (pa) {
-      const S = { pick: null, fill: false, dec: null, ord: false }, inc = v("switch_incentive"), minSave = v("min_saving_min");
+      const S = { pick: null, fill: false, dec: "pause", ord: false }, inc = v("switch_incentive"), minSave = v("min_saving_min");
       const bt = v("busy_travel_min"), br = v("busy_ready_min"), at = v("alt_travel_min");
       const scen = $(pa, '[data-cx="scen"]'); if (scen) scen.textContent = `${B} is swamped and ${AL}, nearby, has room. The outlets are the reference deck's example; every time is illustrative.`;
       $$(pa, '[data-cx="clock"]').forEach(e => (e.textContent = "9:41"));
@@ -2746,7 +2746,7 @@
         else if (a === "fill") { S.fill = !S.fill; S.pick = null; }
         else if (a === "dec") { S.dec = S.dec === b.dataset.v ? null : b.dataset.v; S.ord = false; }
         else if (a === "ord") S.ord = true; else if (a === "ordx") S.ord = false;
-        else if (a === "reset") Object.assign(S, { pick: null, fill: false, dec: null, ord: false });
+        else if (a === "reset") Object.assign(S, { pick: null, fill: false, dec: "pause", ord: false });   // the delivery side opens on Approve pause; Voucher only or Decline change it
         else if (a === "exec") { $(pa, ".cxw").classList.add("exec"); return; } else if (a === "back") { $(pa, ".cxw").classList.remove("exec"); return; }
         else return;
         render();

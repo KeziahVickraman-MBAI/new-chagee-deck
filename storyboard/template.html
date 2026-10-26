@@ -2062,7 +2062,7 @@ body.print #p1p :is(.pq-walker,.pq-in){animation:none} @media print{#p1p :is(.pq
    stages, a back link without the arrow, and a line of links */
 #p3x.slide .p2x-tl ol{counter-reset:p3s} #p3x.slide .p2x-tl li{counter-increment:p3s;grid-template-columns:28px 1fr}
 #p3x.slide .p2x-tl .wk{display:grid;place-items:center;width:28px;height:28px;padding:0;border-radius:50%} #p3x.slide .p2x-tl .wk::before{content:counter(p3s)}
-#p3x .golink.back:after{content:none} :is(#x1b,#x2,#acr) .golink.back:after{content:none} #p3x .golink.mlref{margin-left:0}
+#p3x .golink.back:after{content:none} :is(#x1b,#x2,#acr,#p1r) .golink.back:after{content:none} #p3x .golink.mlref{margin-left:0}
 #p3x .p3x-links{margin:10px 0 0;font:13px/1.4 var(--sans);color:var(--ink2)} #p3x .p3x-links .golink{margin:0 14px 0 6px}
 #p3x .gate b{display:block;font:600 14.5px/1.35 var(--sans)}
 #e2 .e2exec{flex:none;align-self:flex-end;margin:auto 0 0;padding:7px 14px;border-radius:999px;background:var(--navy);color:#fff;border:0;font:600 12.5px/1 var(--sans)}   /* as Proposal 2's Execution steps */
@@ -2688,13 +2688,13 @@ aside.notes{display:none}
       
       <div class="cxexecp"><div class="ptop"><span class="ptitle">Execution steps · proposed plan, reusing the online roadmap's timing and gates</span><button class="btn" data-cx="back">← Back to the demonstration</button></div><div class="p1xsteps"><!--P1XSTEPS--></div></div>
     </div>
-    <p class="cxmore screenonly"><button class="btn" data-cx="reset">↺ Reset both</button><span class="golink exchip" data-go="p1x">Execution steps</span></p>
+    <p class="cxmore screenonly"><button class="btn" data-cx="reset">↺ Reset both</button><span class="golink exchip" data-go="p1r">See illustration</span></p>
   </div>
   <div class="foot"><span>OPIM639 · Group 3 · Course Link: Topics 3 &amp; 9 · Demand prediction and omnichannel fulfilment</span><span class="rail"></span><span class="pg"></span></div>
   <aside class="notes">
     <p>What the customer sees, in two channels; switch with the toggle. Pickup, in the Chagee app: the customer near Suntec City sees their outlet and an estimated collection time, a suggested alternative at Raffles City with its collection time, including the walk, and an optional switch incentive. Choose Switch outlet or Keep my outlet: the confirmation and both outlets' workload update. The customer chooses before paying. Tick the fill-up box: once Raffles City is busy too, the saving falls below the approved minimum and the suggestion is withdrawn.</p>
     <p>Delivery, in an illustrative third-party app: the agent's recommendation goes to the zone manager first, who can approve a temporary pause at the busy outlet, promote the alternative outlet instead, or decline. Only then does the customer-facing screen change. Orders already placed are not moved, customers are free to order elsewhere or not at all, and the platform, not Chagee, controls its ranking; platform integration and permissions are requirements to confirm.</p>
-    <p>Execution steps opens the pilot in the appendix: one zone, a busy origin outlet with a nearby support outlet, normal checkout, then routing alone, then routing with the bag offer, measured and refined against a rollout gate; the pickup race follows it. Every time here is an illustrative scenario from the reference deck, not Chagee data. Then the transition: with demand spread across outlets, how should each outlet plan its staff, machines and fresh stock for the week? About one minute.</p>
+    <p>See illustration opens the pickup race in the appendix: the customer's journey to the faster outlet, step by step; Back to proposal 1 returns here. Every time here is an illustrative scenario from the reference deck, not Chagee data. Then the transition: with demand spread across outlets, how should each outlet plan its staff, machines and fresh stock for the week? About one minute.</p>
   </aside>
 </section>
 
@@ -3189,7 +3189,7 @@ aside.notes{display:none}
     <h2 class="head">Appendix: the detail behind each chapter</h2>
     <p class="sub">Supporting detail for the main presentation, in its order: Proposal 1, Proposal 2, Proposal 3, then shared material. Click a line to open it; use the agenda to return.</p>
     <div class="apxix">
-      <div><h5>Proposal 1 · online retailing</h5><ol><li data-go="p1x">Pilot smart pickup routing in one zone</li><li data-go="p1r">Your tea, sooner: the pickup race</li></ol><h5>Proposal 2 · in-store planning</h5><ol><li data-go="p2pilot">Eight-week zone pilot</li><li data-go="p2f">Financial case</li></ol></div>
+      <div><h5>Proposal 1 · online retailing</h5><ol><li data-go="p1r">Your tea, sooner: the pickup race</li></ol><h5>Proposal 2 · in-store planning</h5><ol><li data-go="p2pilot">Eight-week zone pilot</li><li data-go="p2f">Financial case</li></ol></div>
       <div><h5>Proposal 3 · new store expansion</h5><ol><li data-go="p3x">Validation plan: execution steps</li><li data-go="a2">How the site forecast works</li><li data-go="ap">The new store in money: five-year P&amp;L</li><li data-go="x1">Four scores for every location</li><li data-go="e2t">The expansion decision as a table</li><li data-go="xo">Further application: existing outlets</li></ol></div>
       <div><h5>Shared · data and sources</h5><ol><li data-go="acr">The five-year model behind the financial impact</li><li data-go="adata">Chagee's data collection</li><li data-go="a1">Sources and assumptions</li></ol></div>
     </div>
@@ -3199,38 +3199,13 @@ aside.notes{display:none}
   <aside class="notes"><p>The appendix holds the supporting detail for the main presentation, in its order: the execution steps for Proposal 1 and the pilot for Proposal 2, the site forecast, P&amp;L, scores and decision table for Proposal 3, then the data and sources. Click a line to jump to it. Earlier and exploratory material is in the next section, considered but not for presentation.</p></aside>
 </section>
 
-<!-- ======================================================= APPENDIX: PROPOSAL 1 PILOT AND THE PICKUP RACE (the reference deck's p1x and p1r,
+<!-- ======================================================= APPENDIX: PROPOSAL 1 PICKUP RACE (the reference deck's p1r, opened from slide 08's See illustration,
      reproduced as they are there; its times are pickup_race.* placeholders) -->
-<section class="slide content" id="p1x" data-chapter="Appendix" data-title="Proposal 1 pilot">
-  <div class="leafart" aria-hidden="true"></div>
-  <div class="inner">
-    <p class="kicker">Appendix · Execution steps · Proposal 1 pilot</p>
-    <h2 class="head">Pilot smart pickup routing in one zone, then expand on evidence</h2>
-    <p class="sub lede">A zone is a group of reachable outlets. Start with one busy outlet and a nearby support outlet. <span class="golink" data-go="p1h">Back to how it works</span></p>
-    <div class="ag-bottom p1x-bottom">
-      <div class="ag-pilot">
-        <h4>Zone pilot</h4>
-        <div class="zone"><div class="zo busy"><b>Suntec City</b><small>busy origin outlet</small></div><span class="zarrow">⇄</span><div class="zo sup"><b>Raffles City</b><small>support when capacity permits</small></div></div>
-        <p class="zn">A zone is a group of reachable outlets; an outlet can change roles as demand shifts.</p>
-        <div class="ag-arms"><span>Normal checkout</span><i>→</i><span>Routing alone</span><i>→</i><span>Routing + bag offer</span></div>
-      </div>
-      <div class="ag-learn">
-        <h4>Measure, assess, refine</h4>
-        <ol><li><b>Measure</b> switches, actual collection times, both queues and zone contribution</li>
-          <li><b>Assess</b> the traffic shift: generative AI summarises results and flags congestion moving</li>
-          <li><b>Refine and expand</b>: managers approve policy changes and new zones</li></ol>
-        <p class="gate"><span class="lab">Rollout gate</span>Faster collection, reliable support outlets and positive net contribution across the zone.</p>
-      </div>
-    </div>
-  </div>
-  <div class="foot"><span>OPIM639 · Group 3 · Course Link: Topics 3 &amp; 9 · Demand prediction and omnichannel fulfilment</span><span class="rail"></span><span class="pg"></span></div>
-  <aside class="notes"><p>The pilot for proposal one, kept here with the execution steps. Pilot in one zone: a busy origin outlet like Suntec City with a nearby support outlet like Raffles City; roles can swap as demand shifts. Test normal checkout, then routing alone, then routing with the bag offer. Measure switches, actual collection times, both queues and zone contribution; generative AI summarises the results and flags congestion moving. Managers approve policy changes and new zones. The rollout gate: faster collection, reliable support outlets and positive net contribution across the zone.</p></aside>
-</section>
-
 <section class="slide content" id="p1r" data-chapter="Appendix" data-title="The pickup race (earlier version)" data-reveal="all">
   <div class="leafart" aria-hidden="true"></div>
   <div class="inner">
     <p class="kicker">Appendix · Proposal 1 · The pickup race (earlier version)</p>
+    <p class="exoback screenonly" style="position:absolute;right:250px;top:40px;margin:0"><span class="golink back" data-go="p1a" tabindex="0" role="link">← Back to proposal 1</span></p>
     <h2 class="head">Your tea, sooner: AI routes pickups to a faster outlet</h2>
     <p class="sub lede">When one outlet is swamped, the app offers a nearby outlet that can hand over the drink sooner, and the customer chooses.</p>
     <div class="rt-body">
@@ -4094,7 +4069,7 @@ aside.notes{display:none}
         <div class="rch"><span class="num">1</span><div><span class="own">Online retailing</span><span class="dm"><i>Decision-maker</i>Digital commerce manager</span></div>
           <svg class="rci" viewBox="0 0 32 32" aria-hidden="true"><path d="M6 26c4 0 5-6 10-8s7-4 7-8" stroke-dasharray="2.5 3"/><circle cx="6" cy="26" r="2.2" class="f"/><path d="M23 4.5a4.5 4.5 0 0 1 4.5 4.5c0 3.3-4.5 7.5-4.5 7.5S18.5 12.3 18.5 9A4.5 4.5 0 0 1 23 4.5Z"/><circle cx="23" cy="9" r="1.5"/></svg></div>
         <h5>Which zone should we pilot routing in?</h5>
-        <div class="act"><span class="k">Recommend<span class="golink" data-go="p1x">Execution steps</span></span>Pilot one busy outlet and nearby support capacity: normal checkout, then routing alone, then routing with the proposed switch perk, {{s.dm_incentive}}.</div>
+        <div class="act"><span class="k">Recommend<span class="golink" data-go="p1xo">Execution steps</span></span>Pilot one busy outlet and nearby support capacity: normal checkout, then routing alone, then routing with the proposed switch perk, {{s.dm_incentive}}.</div>
         <div class="chk"><span class="k">Proceed only if</span><ul><li>Collection is faster</li><li>Support outlets stay reliable</li><li>Net contribution across the zone is positive</li></ul></div>
         <p class="jdg"><span class="k">Judged on</span>One-zone pilot, three comparison stages</p>
       </div>
