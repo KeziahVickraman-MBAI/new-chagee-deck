@@ -31,6 +31,19 @@
     return el;
   };
 
+  /* ---------------------------------------------------------------- 08 and 09: Proposal 2's chart, Today then With AI.
+     09 (#p2q) is a copy of 08 made here, set to With AI with the gains band showing; each keeps its own notes */
+  (function p2q() {
+    const a = document.getElementById("p2p"); if (!a) return;
+    const b = a.cloneNode(true); b.id = "p2q"; b.dataset.title = "AI-enabled in-store planning: with AI"; b.dataset.reveal = "all";
+    $$(b, "svg [id]").forEach(e => (e.id += "q"));                 // its own clip paths and hatch, so neither copy borrows the other's
+    $$(b, "svg [clip-path],svg [fill^='url(#']").forEach(e => ["clip-path", "fill"].forEach(k => {
+      const v = e.getAttribute(k); if (v?.startsWith("url(#")) e.setAttribute(k, v.replace(/\)$/, "q)")); }));
+    $(b, ".p2tog").dataset.v = "ai"; $$(b, ".p2tg button").forEach(x => x.classList.toggle("on", x.dataset.v === "ai"));
+    $$(b, "aside.notes:not([data-for])").forEach(n => n.remove()); $$(a, "aside.notes[data-for]").forEach(n => n.remove());
+    a.after(b);
+  })();
+
   /* ---------------------------------------------------------------- slides, scaling, rail */
   const deck = $(document, "#deck"), slides = $$(document, ".slide");
   let cur = 0, jump = false;                                       // jump: an explicit link or slide number, which may open an auxiliary view
@@ -2778,9 +2791,17 @@
      its refresh button, and the recommendations report and assistant opening over the slide (close button, a click outside, Esc) */
   (function planning() {
     const s6 = document.getElementById("p2p"), s7 = document.getElementById("p2b");
-    if (s6) $$(s6, ".p2tg").forEach(tg => $$(tg, "button[data-v]").forEach(b => (b.onclick = () => {
-      const box = $(tg.closest(".p2-chart"), ".p2tog"); box.dataset.v = b.dataset.v;
-      $$(tg, "button").forEach(x => x.classList.toggle("on", x === b)); })));
+    const s9 = document.getElementById("p2q");
+    const setV = (sl, v) => { $(sl, ".p2tog").dataset.v = v; $$(sl, ".p2tg button").forEach(x => x.classList.toggle("on", x.dataset.v === v)); };
+    [s6, s9].forEach(sl => sl && $$(sl, ".p2tg button[data-v]").forEach(b => (b.onclick = () => { b.blur(); setV(sl, b.dataset.v); })));
+    if (s9) {                                                       // 09 opens as 08 left it, then switches to With AI and brings in the band
+      const band = $(s9, ".p2-with");
+      s9._intro = { enter: fromEnd => { clearTimeout(s9._t);
+          if (fromEnd || reduce || PRINT) { setV(s9, "ai"); band.classList.remove("pre"); return; }
+          setV(s9, "today"); band.classList.add("pre"); void s9.offsetWidth;
+          s9._t = setTimeout(() => { setV(s9, "ai"); band.classList.remove("pre"); }, 350); },
+        next: () => false, prev: () => false };
+    }
     if (!s7) return;
     $$(s7, ".db-rep").forEach(b => {
       const rep = $(s7, b.classList.contains("db-ask") ? ".db-chat" : ".db-report"); if (!rep) return;
